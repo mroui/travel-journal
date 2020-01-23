@@ -5,7 +5,8 @@
     <string name="board">Board</string>
     <string name="profile">Profile</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_title">Start\nyour\nadventure</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
 
 </resources>
