@@ -12,5 +12,7 @@
     <string name="login_image">Rocket</string>
     <string name="login_OR_separator">OR</string>
     <string name="login_forgot_password"><u>Forgot your Password?</u></string>
+    <string name="login_no_acc_question">Don\'t have an account?</string>
+    <string name="login_no_acc_sign_up"><u>Sign up</u></string>
 
 </resources>
