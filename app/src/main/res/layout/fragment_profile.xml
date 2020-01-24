@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:fillViewport="true">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,7 +68,7 @@
             app:layout_constraintBottom_toTopOf="@id/login_log_in_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_regular"
             style="@style/LoginTextInput"
             app:errorEnabled="true">
             <com.google.android.material.textfield.TextInputEditText
@@ -90,10 +89,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/login_title"
-            app:layout_constraintTop_toBottomOf="@id/login_password"
             app:layout_constraintBottom_toTopOf="@+id/login_log_in_button"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_marginBottom="@dimen/margin_bigger"
+            android:layout_marginBottom="18dp"
             android:layout_marginEnd="4dp"
             android:fontFamily="@font/raleway_regular"
             android:textAlignment="textEnd"
@@ -120,10 +117,10 @@
             android:id="@+id/login_OR_separator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/login_not_account"
+            app:layout_constraintBottom_toTopOf="@id/login_google_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_regular"
             android:gravity="center_horizontal">
 
             <TextView
@@ -155,6 +152,17 @@
 
         </RelativeLayout>
 
+        <com.shobhitpuri.custombuttons.GoogleSignInButton
+            android:id="@+id/login_google_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/login_not_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="@dimen/margin_regular"
+            android:text="@string/google_sign_in"
+            app:isDarkTheme="false"/>
+
         <RelativeLayout
             android:id="@+id/login_not_account"
             android:layout_width="match_parent"
@@ -162,7 +170,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_regular"
             android:gravity="center_horizontal">
 
             <TextView
