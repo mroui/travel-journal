@@ -11,26 +11,8 @@
         <item name="boxCornerRadiusTopEnd">0dp</item>
         <item name="boxCornerRadiusBottomEnd">5dp</item>
         <item name="boxBackgroundColor">@color/white</item>
-
-        <item name="boxStrokeColor">#eeeeee</item>
-
-        <item name="hintTextAppearance">@style/HintText</item>
-        <item name="errorTextAppearance">@style/ErrorText</item>
-
-        <item name="colorControlActivated">@color/blue_active</item>
-
-    </style>
-
-
-    <style name="ErrorText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@android:color/holo_red_light</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="HintText" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/blue_active</item>
-        <item name="android:textSize">12sp</item>
-
+        <item name="boxStrokeColor">@color/blue_active</item>
+        <item name="android:textColorHint">@color/black</item>
     </style>
 
 </resources>

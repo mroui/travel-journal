@@ -6,7 +6,11 @@
     <string name="profile">Profile</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
-    <string name="login_email">Email</string>
-    <string name="login_password">Password</string>
+    <string name="login_email">EMAIL</string>
+    <string name="login_password">PASSWORD</string>
+    <string name="login_log_in">Log In</string>
+    <string name="login_image">Rocket</string>
+    <string name="login_OR_separator">OR</string>
+    <string name="login_forgot_password"><u>Forgot your Password?</u></string>
 
 </resources>
