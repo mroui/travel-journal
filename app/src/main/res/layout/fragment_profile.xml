@@ -93,7 +93,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_bigger"
             android:layout_marginEnd="4dp"
-            android:fontFamily="@font/raleway_medium"
+            android:fontFamily="@font/raleway_regular"
             android:textAlignment="textEnd"
             android:text="@string/login_forgot_password"
             android:textColor="@color/blue_active"
@@ -110,17 +110,19 @@
             android:padding="@dimen/padding_small"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="@string/login_log_in"
-            app:backgroundTint="@color/blue_active"/>
+            android:textColor="@color/white"
+            android:fontFamily="@font/raleway_bold"
+            app:backgroundTint="@color/blue_active" />
 
         <RelativeLayout
             android:id="@+id/login_OR_separator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/login_not_account"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="@dimen/margin_bigger"
-            android:layout_centerVertical="true">
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:id="@+id/login_OR_separator_text"
@@ -148,6 +150,36 @@
                 android:layout_marginRight="@dimen/margin_small"
                 android:layout_toEndOf="@id/login_OR_separator_text"
                 android:background="@color/gray"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/login_not_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/login_no_account_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_regular"
+                android:text="@string/login_no_acc_question"
+                android:textColor="@color/gray"/>
+
+            <TextView
+                android:id="@+id/login_sign_up_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/login_no_account_question"
+                android:layout_marginStart="@dimen/margin_smaller"
+                android:fontFamily="@font/raleway_regular"
+                android:text="@string/login_no_acc_sign_up"
+                android:textColor="@color/blue_active"/>
 
         </RelativeLayout>
 
