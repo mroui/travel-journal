@@ -8,7 +8,7 @@
     android:fillViewport="true">
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/margin_regular"
@@ -41,7 +41,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/rocket"/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toTopOf="@id/login_password"
             style="@style/LoginTextInput"
             app:errorEnabled="true">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_regular"
@@ -58,10 +58,11 @@
                 android:hint="@string/login_email"
                 android:drawablePadding="@dimen/padding_small"
                 android:drawableStart="@drawable/ic_account"
+                android:textCursorDrawable="@null"
                 android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +72,7 @@
             android:layout_marginBottom="@dimen/margin_medium"
             style="@style/LoginTextInput"
             app:errorEnabled="true">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_regular"
@@ -79,8 +80,9 @@
                 android:hint="@string/login_password"
                 android:drawablePadding="@dimen/padding_small"
                 android:drawableStart="@drawable/ic_lock"
+                android:textCursorDrawable="@null"
                 android:inputType="text"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/login_forgot_password"
@@ -99,7 +101,7 @@
             android:textColor="@color/blue_active"
             android:textSize="@dimen/text_small"/>
 
-        <android.support.design.button.MaterialButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login_log_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -183,6 +185,6 @@
 
         </RelativeLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

@@ -1,7 +1,8 @@
 package com.martynaroj.traveljournal.Base;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.Interfaces.NavigationListener;
 

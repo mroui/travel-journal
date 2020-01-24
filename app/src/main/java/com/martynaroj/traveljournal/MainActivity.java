@@ -1,12 +1,12 @@
-package com.martynaroj.traveljournal.Activities;
+package com.martynaroj.traveljournal;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.gauravk.bubblenavigation.BubbleNavigationLinearView;
 import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
@@ -14,7 +14,6 @@ import com.martynaroj.traveljournal.Adapters.NavigationBarAdapter;
 import com.martynaroj.traveljournal.Fragments.BoardFragment;
 import com.martynaroj.traveljournal.Fragments.HomeFragment;
 import com.martynaroj.traveljournal.Fragments.ProfileFragment;
-import com.martynaroj.traveljournal.R;
 
 import java.util.ArrayList;
 import java.util.List;
