@@ -3,6 +3,7 @@
     <style name = "NoActionBar" parent = "Theme.MaterialComponents.Light.NoActionBar">
         <item name = "colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/black</item>
+        <item name="colorPrimary">@color/blue_active</item>
     </style>
 
     <style name="LoginTextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -15,5 +16,4 @@
         <item name="android:textColorHint">@color/black</item>
         <item name="hintTextColor">@color/black</item>
     </style>
-
 </resources>
