@@ -18,4 +18,6 @@
     <dimen name="text_regular">16sp</dimen>
     <dimen name="text_medium">24sp</dimen>
     <dimen name="text_big">36sp</dimen>
+
+    <dimen name="line_spacing_small">8dp</dimen>
 </resources>
