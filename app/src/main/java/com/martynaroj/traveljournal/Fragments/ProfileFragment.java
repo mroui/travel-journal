@@ -29,8 +29,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private GoogleSignInButton buttonGoogleSignIn;
     private TextView buttonSignUp;
 
-
-    public ProfileFragment() {
+    public static ProfileFragment newInstance() {
+        return new ProfileFragment();
     }
 
 
@@ -86,15 +86,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private boolean validatePassword() {
-
         String password = inputPassword.getText() == null ? "" : inputPassword.getText().toString();
         layoutInputPassword.setErrorEnabled(true);
         if (password.isEmpty()) {
             layoutInputPassword.setError("Field can't be empty");
-            inputPassword.requestFocus();
-            return false;
-        } else if (password.length() < 8) {
-            layoutInputPassword.setError("Password is too short");
             inputPassword.requestFocus();
             return false;
         } else
@@ -124,6 +119,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -134,7 +130,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Toast.makeText(getContext(), "Google button", Toast.LENGTH_SHORT).show();
                 return;
             case R.id.login_forgot_password_button:
-                Toast.makeText(getContext(), "Forgot password", Toast.LENGTH_SHORT).show();
+                getNavigationInteractions().changeFragment(this, ResetPasswordFragment.newInstance(), true);
                 return;
             case R.id.login_sign_up_button:
                 Toast.makeText(getContext(), "sign up", Toast.LENGTH_SHORT).show();

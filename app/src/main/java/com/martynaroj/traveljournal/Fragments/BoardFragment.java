@@ -11,7 +11,8 @@ import com.martynaroj.traveljournal.R;
 
 public class BoardFragment extends BaseFragment {
 
-    public BoardFragment() {
+    public static BoardFragment newInstance() {
+        return new BoardFragment();
     }
 
 

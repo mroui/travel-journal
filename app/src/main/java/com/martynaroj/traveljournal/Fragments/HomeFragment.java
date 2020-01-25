@@ -11,7 +11,8 @@ import com.martynaroj.traveljournal.R;
 
 public class HomeFragment extends BaseFragment {
 
-    public HomeFragment() {
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
 
