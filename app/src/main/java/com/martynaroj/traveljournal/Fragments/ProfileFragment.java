@@ -4,20 +4,21 @@ package com.martynaroj.traveljournal.Fragments;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.Base.BaseFragment;
+import com.martynaroj.traveljournal.Others.InputTextWatcher;
 import com.martynaroj.traveljournal.R;
 import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
-public class ProfileFragment extends BaseFragment implements TextWatcher {
+public class ProfileFragment extends BaseFragment {
 
     private TextInputEditText inputEmail;
     private TextInputEditText inputPassword;
@@ -28,6 +29,7 @@ public class ProfileFragment extends BaseFragment implements TextWatcher {
     private GoogleSignInButton buttonGoogleSignIn;
     private TextView buttonSignUp;
 
+
     public ProfileFragment() {
     }
 
@@ -37,15 +39,41 @@ public class ProfileFragment extends BaseFragment implements TextWatcher {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         findViews(view);
-        setListeners(view);
+        setListeners();
 
         return view;
     }
 
-    private void setListeners(View view) {
-        inputEmail.addTextChangedListener(this);
-        inputPassword.addTextChangedListener(this);
+
+    private void setListeners() {
+        inputEmail.addTextChangedListener(new InputTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateEmail();
+            }
+        });
+        inputPassword.addTextChangedListener(new InputTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                validatePassword();
+            }
+        });
+        buttonLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logIn();
+            }
+        });
     }
+
+
+    private void logIn() {
+        if (validateEmail() && validatePassword())
+            Toast.makeText(getContext(), "Login successed", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getContext(), "Login failed", Toast.LENGTH_SHORT).show();
+    }
+
 
     private void findViews(View view) {
         inputEmail = view.findViewById(R.id.login_email_input);
@@ -58,22 +86,10 @@ public class ProfileFragment extends BaseFragment implements TextWatcher {
         buttonSignUp = view.findViewById(R.id.login_sign_up_button);
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (inputEmail.getText().hashCode() == s.hashCode())
-            validateEmail();
-        else if (inputPassword.getText().hashCode() == s.hashCode())
-            validatePassword();
-}
 
     private boolean validatePassword() {
-        String password = inputPassword.getText().toString().trim();
+
+        String password = inputPassword.getText() == null ? "" : inputPassword.getText().toString();
         layoutInputPassword.setErrorEnabled(true);
         if (password.isEmpty()) {
             layoutInputPassword.setError("Field can't be empty");
@@ -88,8 +104,9 @@ public class ProfileFragment extends BaseFragment implements TextWatcher {
         return true;
     }
 
+
     private boolean validateEmail() {
-        String email = inputEmail.getText().toString().trim();
+        String email = inputEmail.getText() == null ? "" : inputEmail.getText().toString();
         layoutInputEmail.setErrorEnabled(true);
         if (email.isEmpty()) {
             layoutInputEmail.setError("Field can't be empty");
@@ -103,6 +120,7 @@ public class ProfileFragment extends BaseFragment implements TextWatcher {
             layoutInputEmail.setErrorEnabled(false);
         return true;
     }
+
 
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
