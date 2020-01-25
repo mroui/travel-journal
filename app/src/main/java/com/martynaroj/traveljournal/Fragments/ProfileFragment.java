@@ -18,7 +18,7 @@ import com.martynaroj.traveljournal.Others.InputTextWatcher;
 import com.martynaroj.traveljournal.R;
 import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
     private TextInputEditText inputEmail;
     private TextInputEditText inputPassword;
@@ -58,12 +58,10 @@ public class ProfileFragment extends BaseFragment {
                 validatePassword();
             }
         });
-        buttonLogIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logIn();
-            }
-        });
+        buttonForgotPassword.setOnClickListener(this);
+        buttonLogIn.setOnClickListener(this);
+        buttonGoogleSignIn.setOnClickListener(this);
+        buttonSignUp.setOnClickListener(this);
     }
 
 
@@ -80,7 +78,7 @@ public class ProfileFragment extends BaseFragment {
         inputPassword = view.findViewById(R.id.login_password_input);
         layoutInputEmail = view.findViewById(R.id.login_email_layout);
         layoutInputPassword = view.findViewById(R.id.login_password_layout);
-        buttonForgotPassword = view.findViewById(R.id.login_forgot_password);
+        buttonForgotPassword = view.findViewById(R.id.login_forgot_password_button);
         buttonLogIn = view.findViewById(R.id.login_log_in_button);
         buttonGoogleSignIn = view.findViewById(R.id.login_google_button);
         buttonSignUp = view.findViewById(R.id.login_sign_up_button);
@@ -124,5 +122,22 @@ public class ProfileFragment extends BaseFragment {
 
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.login_log_in_button:
+                logIn();
+                return;
+            case R.id.login_google_button:
+                Toast.makeText(getContext(), "Google button", Toast.LENGTH_SHORT).show();
+                return;
+            case R.id.login_forgot_password_button:
+                Toast.makeText(getContext(), "Forgot password", Toast.LENGTH_SHORT).show();
+                return;
+            case R.id.login_sign_up_button:
+                Toast.makeText(getContext(), "sign up", Toast.LENGTH_SHORT).show();
+        }
     }
 }
