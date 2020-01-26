@@ -7,27 +7,18 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import androidx.annotation.NonNull;
+
 import com.martynaroj.traveljournal.Base.BaseFragment;
 import com.martynaroj.traveljournal.Others.InputTextWatcher;
 import com.martynaroj.traveljournal.R;
-import com.shobhitpuri.custombuttons.GoogleSignInButton;
+import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
-    private TextInputEditText inputEmail;
-    private TextInputEditText inputPassword;
-    private TextInputLayout layoutInputEmail;
-    private TextInputLayout layoutInputPassword;
-    private TextView buttonForgotPassword;
-    private MaterialButton buttonLogIn;
-    private GoogleSignInButton buttonGoogleSignIn;
-    private TextView buttonSignUp;
+    private FragmentProfileBinding binding;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -35,10 +26,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
-        findViews(view);
         setListeners();
 
         return view;
@@ -46,22 +37,22 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void setListeners() {
-        inputEmail.addTextChangedListener(new InputTextWatcher() {
+        binding.loginEmailInput.addTextChangedListener(new InputTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 validateEmail();
             }
         });
-        inputPassword.addTextChangedListener(new InputTextWatcher() {
+        binding.loginPasswordInput.addTextChangedListener(new InputTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 validatePassword();
             }
         });
-        buttonForgotPassword.setOnClickListener(this);
-        buttonLogIn.setOnClickListener(this);
-        buttonGoogleSignIn.setOnClickListener(this);
-        buttonSignUp.setOnClickListener(this);
+        binding.loginForgotPasswordButton.setOnClickListener(this);
+        binding.loginLogInButton.setOnClickListener(this);
+        binding.loginGoogleButton.setOnClickListener(this);
+        binding.loginSignUpButton.setOnClickListener(this);
     }
 
 
@@ -73,44 +64,32 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void findViews(View view) {
-        inputEmail = view.findViewById(R.id.login_email_input);
-        inputPassword = view.findViewById(R.id.login_password_input);
-        layoutInputEmail = view.findViewById(R.id.login_email_layout);
-        layoutInputPassword = view.findViewById(R.id.login_password_layout);
-        buttonForgotPassword = view.findViewById(R.id.login_forgot_password_button);
-        buttonLogIn = view.findViewById(R.id.login_log_in_button);
-        buttonGoogleSignIn = view.findViewById(R.id.login_google_button);
-        buttonSignUp = view.findViewById(R.id.login_sign_up_button);
-    }
-
-
     private boolean validatePassword() {
-        String password = inputPassword.getText() == null ? "" : inputPassword.getText().toString();
-        layoutInputPassword.setErrorEnabled(true);
+        String password = binding.loginPasswordInput.getText() == null ? "" : binding.loginPasswordInput.getText().toString();
+        binding.loginPasswordLayout.setErrorEnabled(true);
         if (password.isEmpty()) {
-            layoutInputPassword.setError("Field can't be empty");
-            inputPassword.requestFocus();
+            binding.loginPasswordLayout.setError("Field can't be empty");
+            binding.loginPasswordInput.requestFocus();
             return false;
         } else
-            layoutInputPassword.setErrorEnabled(false);
+            binding.loginPasswordLayout.setErrorEnabled(false);
         return true;
     }
 
 
     private boolean validateEmail() {
-        String email = inputEmail.getText() == null ? "" : inputEmail.getText().toString();
-        layoutInputEmail.setErrorEnabled(true);
+        String email = binding.loginEmailInput.getText() == null ? "" : binding.loginEmailInput.getText().toString();
+        binding.loginEmailLayout.setErrorEnabled(true);
         if (email.isEmpty()) {
-            layoutInputEmail.setError("Field can't be empty");
-            inputEmail.requestFocus();
+            binding.loginEmailLayout.setError("Field can't be empty");
+            binding.loginEmailInput.requestFocus();
             return false;
         } else if (!isValidEmail(email)) {
-            layoutInputEmail.setError("Invalid email");
-            inputEmail.requestFocus();
+            binding.loginEmailLayout.setError("Invalid email");
+            binding.loginEmailInput.requestFocus();
             return false;
         } else
-            layoutInputEmail.setErrorEnabled(false);
+            binding.loginEmailLayout.setErrorEnabled(false);
         return true;
     }
 
@@ -136,4 +115,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Toast.makeText(getContext(), "sign up", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

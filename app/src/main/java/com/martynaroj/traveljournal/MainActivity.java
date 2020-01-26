@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 
-import com.gauravk.bubblenavigation.BubbleNavigationLinearView;
 import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
 import com.martynaroj.traveljournal.Adapters.NavigationBarAdapter;
 import com.martynaroj.traveljournal.Fragments.BoardFragment;
@@ -19,60 +17,60 @@ import com.martynaroj.traveljournal.Fragments.HomeFragment;
 import com.martynaroj.traveljournal.Fragments.ProfileFragment;
 import com.martynaroj.traveljournal.Interfaces.NavigationListener;
 import com.martynaroj.traveljournal.Others.ViewPagerListener;
+import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationListener {
 
-    private BubbleNavigationLinearView navigation;
-    private ViewPager viewPager;
     private NavigationBarAdapter adapter;
     private List<Fragment> fragmentsList = new ArrayList<>();
     private boolean backPressedOnce = false;
+    private ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        findViews();
+        initNavAdapter();
         setListeners();
-        viewPager.setAdapter(adapter);
-        navigation.setTypeface(ResourcesCompat.getFont(this, R.font.roboto_light));
+        binding.bottomNavigationView.setTypeface(ResourcesCompat.getFont(this, R.font.roboto_light));
     }
 
 
     private void setListeners() {
-        viewPager.addOnPageChangeListener(new ViewPagerListener() {
+        binding.viewPager.addOnPageChangeListener(new ViewPagerListener() {
             @Override
             public void onPageSelected(int i) {
-                navigation.setCurrentActiveItem(i);
+                binding.bottomNavigationView.setCurrentActiveItem(i);
             }
         });
-        navigation.setNavigationChangeListener(new BubbleNavigationChangeListener() {
+        binding.bottomNavigationView.setNavigationChangeListener(new BubbleNavigationChangeListener() {
             @Override
             public void onNavigationChanged(View view, int position) {
-                viewPager.setCurrentItem(position, true);
+                binding.viewPager.setCurrentItem(position, true);
             }
         });
     }
 
 
-    private void findViews() {
+    private void initNavAdapter() {
         fragmentsList.add(0, HomeFragment.newInstance());
         fragmentsList.add(1, BoardFragment.newInstance());
         fragmentsList.add(2, ProfileFragment.newInstance());
-        navigation = findViewById(R.id.bottom_navigation_view);
-        viewPager = findViewById(R.id.view_pager);
         adapter = new NavigationBarAdapter(fragmentsList, getSupportFragmentManager());
+        binding.viewPager.setAdapter(adapter);
     }
 
 
     @Override
     public void onBackPressed() {
-        if (adapter.getItem(navigation.getCurrentActiveItemPosition()).getChildFragmentManager().getBackStackEntryCount() >= 1) {
-            adapter.getItem(navigation.getCurrentActiveItemPosition()).getChildFragmentManager().popBackStack();
+        if (adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition()).getChildFragmentManager().getBackStackEntryCount() >= 1) {
+            adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition()).getChildFragmentManager().popBackStack();
             return;
         }
         if (backPressedOnce) {
