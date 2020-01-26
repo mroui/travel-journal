@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.Base;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.Interfaces.NavigationListener;
@@ -10,7 +11,7 @@ public class BaseFragment extends Fragment {
 
     private NavigationListener navigationListener;
 
-    public NavigationListener getNavigationInteractions() {
+    protected NavigationListener getNavigationInteractions() {
         return navigationListener;
     }
 
@@ -23,7 +24,7 @@ public class BaseFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof NavigationListener)
             navigationListener = (NavigationListener) context;

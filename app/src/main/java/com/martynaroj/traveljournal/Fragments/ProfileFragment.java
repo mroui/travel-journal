@@ -10,13 +10,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.Base.BaseFragment;
+import com.martynaroj.traveljournal.Interfaces.Form;
 import com.martynaroj.traveljournal.Others.InputTextWatcher;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener, Form {
 
     private FragmentProfileBinding binding;
 
@@ -35,18 +37,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         return view;
     }
 
-
     private void setListeners() {
         binding.loginEmailInput.addTextChangedListener(new InputTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                validateEmail();
+                if (binding.loginEmailInput.hasFocus())
+                    validateEmail();
             }
         });
         binding.loginPasswordInput.addTextChangedListener(new InputTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                validatePassword();
+                if (binding.loginPasswordInput.hasFocus())
+                    validatePassword();
             }
         });
         binding.loginForgotPasswordButton.setOnClickListener(this);
@@ -109,7 +112,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Toast.makeText(getContext(), "Google button", Toast.LENGTH_SHORT).show();
                 return;
             case R.id.login_forgot_password_button:
-                getNavigationInteractions().changeFragment(this, ResetPasswordFragment.newInstance(), true);
+                changeFragment(ResetPasswordFragment.newInstance());
                 return;
             case R.id.login_sign_up_button:
                 Toast.makeText(getContext(), "sign up", Toast.LENGTH_SHORT).show();
@@ -117,10 +120,35 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
+    private void changeFragment(Fragment next) {
+        clearText();
+        offWatcher();
+        clearFocus();
+        getNavigationInteractions().changeFragment(this, next, true);
+    }
+
+
+    @Override
+    public void clearText() {
+        binding.loginEmailInput.setText("");
+        binding.loginPasswordInput.setText("");
+    }
+
+    @Override
+    public void offWatcher() {
+        binding.loginEmailLayout.setErrorEnabled(false);
+        binding.loginPasswordLayout.setErrorEnabled(false);
+    }
+
+    @Override
+    public void clearFocus() {
+        binding.loginEmailInput.clearFocus();
+        binding.loginPasswordInput.clearFocus();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
 }
