@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -33,7 +32,6 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
         return view;
     }
 
-
     private void setListeners() {
         new FormHandler().addWatcher(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
         binding.forgotPasswordArrowButton.setOnClickListener(this);
@@ -51,14 +49,35 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
                     getFragmentManager().popBackStack();
                 return;
             case R.id.forgot_password_send_button:
-                resetPassword();
+                if (validateEmail())
+                    resetPassword();
         }
     }
 
+    private boolean validateEmail() {
+        return new FormHandler().validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
+    }
+
     private void resetPassword() {
-        if (new FormHandler().validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout))
-            Toast.makeText(getContext(), "sending...", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(getContext(), "not sending", Toast.LENGTH_SHORT).show();
+//        FirebaseAuth.getInstance().sendPasswordResetEmail(binding.forgotPasswordEmailInput.getText().toString())
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "Email sent.");
+//                            hideProgressDialog();
+//                            Toast.makeText(ForgotPasswordActivity.this, getString(R.string.alert_passwordResetConfirm),
+//                                    Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            Exception e = task.getException();
+//                            Log.w(TAG, "passwordResetRequest:failure " + e.getMessage(), task.getException());
+//                            hideProgressDialog();
+//                            Toast.makeText(ForgotPasswordActivity.this, e.getMessage(),
+//                                    Toast.LENGTH_SHORT).show();
+//                       }
+//
+//                    }
+//                });
     }
 
 
