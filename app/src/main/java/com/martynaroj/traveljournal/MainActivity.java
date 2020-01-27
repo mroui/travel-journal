@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     public void changeFragment(Fragment previous, Fragment next, Boolean addToBackStack) {
         if (previous.getView() != null) {
             FragmentTransaction fragmentTransaction = previous.getChildFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                    R.anim.enter_left_to_right, R.anim.exit_left_to_right);
             fragmentTransaction.replace(previous.getView().getId(), next);
             if (addToBackStack) fragmentTransaction.addToBackStack(next.getTag());
             fragmentTransaction.commit();
