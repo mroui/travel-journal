@@ -20,8 +20,20 @@
         Just fill your email and we\'ll help you to reset your password.</string>
     <string name="forgot_password_image">Suitcase</string>
     <string name="forgot_password_back"><u>Back to Login</u></string>
-    <string name="forgot_password_send">Send</string>
+    <string name="forgot_password_send">Send link</string>
     <string name="forgot_password_email">EMAIL</string>
     <string name="forgot_password_back_arrow">Back</string>
+
+    <string name="signup_title">Welcome\non\nBoard!</string>
+    <string name="signup_image">Van</string>
+    <string name="signup_username">USERNAME</string>
+    <string name="signup_email">EMAIL</string>
+    <string name="signup_password">PASSWORD</string>
+    <string name="signup_repeat_password">REPEAT PASSWORD</string>
+    <string name="signup_sign_up">Sign Up</string>
+    <string name="signup_account_question">Already have an account?</string>
+    <string name="signup_account_log_in"><u>Log in</u></string>
+    <string name="signup_back">Back to Login</string>
+    <string name="signup_back_arrow">Back</string>
 
 </resources>
