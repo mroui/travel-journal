@@ -58,7 +58,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/login_password_layout"
                 android:layout_marginBottom="@dimen/margin_small"
-                style="@style/LoginTextInput"
+                style="@style/TextInput"
                 app:errorEnabled="false"
                 app:errorIconDrawable="@null">
                 <com.google.android.material.textfield.TextInputEditText
@@ -82,7 +82,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="@dimen/margin_big"
-                style="@style/LoginTextInput"
+                style="@style/TextInput"
                 app:passwordToggleEnabled="true"
                 app:errorEnabled="false"
                 app:errorIconDrawable="@null">
