@@ -76,7 +76,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 changeFragment(ResetPasswordFragment.newInstance());
                 return;
             case R.id.login_sign_up_button:
-                Toast.makeText(getContext(), "sign up", Toast.LENGTH_SHORT).show();
+                changeFragment(SignUpFragment.newInstance());
         }
     }
 
