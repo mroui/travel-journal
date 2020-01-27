@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.Base.BaseFragment;
 import com.martynaroj.traveljournal.Others.FormHandler;
 import com.martynaroj.traveljournal.R;
@@ -42,6 +44,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding.signupSignUpButton.setOnClickListener(this);
         binding.signupGoogleButton.setOnClickListener(this);
         binding.signupLogInButton.setOnClickListener(this);
+        binding.signupPasswordStrengthMeter.setEditText(binding.signupPasswordInput);
     }
 
 
@@ -51,14 +54,28 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private boolean validateUsername() {
-        return new FormHandler().validateInput(binding.signupUsernameInput, binding.signupUsernameLayout);
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText input = binding.signupUsernameInput;
+        TextInputLayout layout = binding.signupUsernameLayout;
+        int minLength = 4;
+
+        return formHandler.validateInput(input, layout)
+            && formHandler.validateLength(input, layout, minLength);
     }
 
 
     private boolean validatePasswords() {
-        return new FormHandler().validateInput(binding.signupPasswordInput, binding.signupPasswordLayout)
-            && new FormHandler().validateInput(binding.signupRepeatPasswordInput, binding.signupRepeatPasswordLayout)
-            && new FormHandler().validateInputsEquality(binding.signupPasswordInput, binding.signupRepeatPasswordInput, binding.signupRepeatPasswordLayout);
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText passInput = binding.signupPasswordInput;
+        TextInputEditText repeatInput = binding.signupRepeatPasswordInput;
+        TextInputLayout passLayout = binding.signupPasswordLayout;
+        TextInputLayout repeatLayout = binding.signupRepeatPasswordLayout;
+        int minLength = 8;
+
+        return formHandler.validateInput(passInput, passLayout)
+            && formHandler.validateInput(repeatInput, repeatLayout)
+            && formHandler.validateLength(passInput, passLayout, minLength)
+            && formHandler.validateInputsEquality(passInput, repeatInput, repeatLayout);
     }
 
 

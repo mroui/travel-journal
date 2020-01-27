@@ -67,6 +67,19 @@ public class FormHandler {
     }
 
 
+    public boolean validateLength(TextInputEditText input, TextInputLayout layout, int minLength) {
+        String value = input.getText() == null ? "" : input.getText().toString();
+        layout.setErrorEnabled(true);
+        if (value.length() < minLength) {
+            layout.setError("Enter at least " + minLength + " characters");
+            input.requestFocus();
+            return false;
+        } else
+            layout.setErrorEnabled(false);
+        return true;
+    }
+
+
     public void clearInput(TextInputEditText input, TextInputLayout layout) {
         clearText(input);
         offWatcher(layout);

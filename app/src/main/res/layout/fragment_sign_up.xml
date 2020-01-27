@@ -112,21 +112,37 @@
                 app:layout_constraintBottom_toTopOf="@id/signup_repeat_password_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_regular"
                 style="@style/TextInput"
                 app:passwordToggleEnabled="true"
                 app:errorEnabled="false"
                 app:errorIconDrawable="@null">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_password_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="59dp"
                     android:fontFamily="@font/raleway_regular"
-                    android:textSize="@dimen/text_small"
                     android:hint="@string/signup_password"
+                    android:inputType="textPassword"
                     android:textCursorDrawable="@null"
-                    android:inputType="textPassword"/>
+                    android:textSize="@dimen/text_small" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <se.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter
+                android:id="@+id/signup_password_strength_meter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/signup_password_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="1dp"
+                app:strengthBarHeight="4dp"
+                app:animateChanges="true"
+                app:showStrengthLabel="true"
+                app:showStrengthBar="true"
+                app:animationDuration="250"
+                app:labelTextSize="@dimen/text_small"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signup_repeat_password_layout"
