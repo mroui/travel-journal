@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.View.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,17 +9,34 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.martynaroj.traveljournal.Base.BaseFragment;
-import com.martynaroj.traveljournal.Others.FormHandler;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.View.Base.BaseFragment;
+import com.martynaroj.traveljournal.View.Others.FormHandler;
+import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentSignUpBinding;
+
+import java.util.Objects;
 
 public class SignUpFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentSignUpBinding binding;
+    private AuthViewModel authViewModel;
+    private GoogleSignInClient googleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -30,10 +48,18 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        initAuthViewModel();
         setListeners();
+        initGoogleSignInClient();
 
         return view;
     }
+
+
+    private void initAuthViewModel() {
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+    }
+
 
     private void setListeners() {
         new FormHandler().addWatcher(binding.signupUsernameInput, binding.signupUsernameLayout);
@@ -45,6 +71,17 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding.signupGoogleButton.setOnClickListener(this);
         binding.signupLogInButton.setOnClickListener(this);
         binding.signupPasswordStrengthMeter.setEditText(binding.signupPasswordInput);
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private void initGoogleSignInClient() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
     }
 
 
@@ -60,7 +97,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         int minLength = 4;
 
         return formHandler.validateInput(input, layout)
-            && formHandler.validateLength(input, layout, minLength);
+                && formHandler.validateLength(input, layout, minLength);
     }
 
 
@@ -73,9 +110,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         int minLength = 8;
 
         return formHandler.validateInput(passInput, passLayout)
-            && formHandler.validateInput(repeatInput, repeatLayout)
-            && formHandler.validateLength(passInput, passLayout, minLength)
-            && formHandler.validateInputsEquality(passInput, repeatInput, repeatLayout);
+                && formHandler.validateInput(repeatInput, repeatLayout)
+                && formHandler.validateLength(passInput, passLayout, minLength)
+                && formHandler.validateInputsEquality(passInput, repeatInput, repeatLayout);
     }
 
 
@@ -84,11 +121,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         switch (v.getId()) {
             case R.id.signup_arrow_button:
             case R.id.signup_log_in_button:
-                if (getFragmentManager() != null && getFragmentManager().getBackStackEntryCount() > 0)
-                    getFragmentManager().popBackStack();
+                //TODO: getFragmentManager() deprecated -> Parent?
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
                 return;
             case R.id.signup_google_button:
-                Toast.makeText(getContext(), "Google button", Toast.LENGTH_SHORT).show();
+                signUpWithGoogle();
                 return;
             case R.id.signup_sign_up_button:
                 signUp();
@@ -101,6 +139,77 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             Toast.makeText(getContext(), "SignUp successed", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void startProgressBar() {
+        binding.signupProgressbarLayout.setVisibility(View.VISIBLE);
+        binding.signupProgressbar.start();
+        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+    }
+
+
+    private void stopProgressBar() {
+        binding.signupProgressbarLayout.setVisibility(View.INVISIBLE);
+        binding.signupProgressbar.stop();
+        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, duration);
+        snackbar.setAnchorView(Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation_view));
+        snackbar.show();
+    }
+
+
+    private void signUpWithGoogle() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startProgressBar();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
+                if (googleSignInAccount != null)
+                    getGoogleAuthCredential(googleSignInAccount);
+            } catch (ApiException e) {
+                String statusCode = CommonStatusCodes.getStatusCodeString(e.getStatusCode());
+                String message = "Error: Internal API error";
+                if (statusCode.equals("NETWORK_ERROR"))
+                    message = "Error: Please check your network connection";
+                else if (statusCode.equals("TIMEOUT"))
+                    message = "Error: Timed out while awaiting the result";
+
+                showSnackBar(message, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        } else {
+            showSnackBar("Error: Activity request error", Snackbar.LENGTH_LONG);
+            stopProgressBar();
+        }
+    }
+
+
+    private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
+        String googleTokenId = googleSignInAccount.getIdToken();
+        AuthCredential googleAuthCredential = GoogleAuthProvider.getCredential(googleTokenId, null);
+        signInWithGoogleAuthCredential(googleAuthCredential);
+    }
+
+
+    private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
+        authViewModel.signInWithGoogle(googleAuthCredential);
+        authViewModel.getUserLiveData().observe(this, user -> {
+            showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+            stopProgressBar();
+        });
     }
 
 

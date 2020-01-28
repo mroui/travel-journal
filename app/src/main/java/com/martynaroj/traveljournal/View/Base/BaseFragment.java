@@ -1,6 +1,8 @@
 package com.martynaroj.traveljournal.View.Base;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,4 +32,15 @@ public class BaseFragment extends Fragment {
             navigationListener = (NavigationListener) context;
     }
 
+
+    protected void enableDisableViewGroup(ViewGroup viewGroup, boolean enabled) {
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = viewGroup.getChildAt(i);
+            view.setEnabled(enabled);
+            if (view instanceof ViewGroup) {
+                enableDisableViewGroup((ViewGroup) view, enabled);
+            }
+        }
+    }
 }
