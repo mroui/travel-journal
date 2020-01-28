@@ -24,6 +24,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.Services.Models.DataWrapper;
+import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.View.Others.FormHandler;
 import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
@@ -206,8 +208,24 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, user -> {
-            showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
-            stopProgressBar();
+            if (user.getData().isNew()) {
+                addNewUser(user);
+            } else {
+                //TODO change fragment logged in -> not new user
+                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        });
+    }
+
+    private void addNewUser(DataWrapper<User> user) {
+        authViewModel.addUser(user);
+        authViewModel.getAddedUserLiveData().observe(this, newUser -> {
+            if (newUser.getData().isAdded()) {
+                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+            //TODO change fragment logged in -> new user
         });
     }
 
