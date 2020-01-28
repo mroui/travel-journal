@@ -13,7 +13,7 @@ public class NavigationBarAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragmentsList;
 
     public NavigationBarAdapter(List<Fragment> list, FragmentManager manager) {
-        super(manager);
+        super(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         fragmentsList = list;
     }
 

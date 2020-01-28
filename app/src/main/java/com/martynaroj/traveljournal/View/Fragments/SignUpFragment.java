@@ -121,7 +121,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         switch (v.getId()) {
             case R.id.signup_arrow_button:
             case R.id.signup_log_in_button:
-                //TODO: getFragmentManager() deprecated -> Parent?
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 return;
