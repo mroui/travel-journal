@@ -208,7 +208,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.getData().isNew()) {
+            if (user.isNew()) {
                 addNewUser(user);
             } else {
                 //TODO change fragment logged in -> not new user
@@ -221,7 +221,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void addNewUser(DataWrapper<User> user) {
         authViewModel.addUser(user);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
-            if (newUser.getData().isAdded()) {
+            if (newUser.isAdded()) {
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
                 stopProgressBar();
             }

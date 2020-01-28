@@ -37,8 +37,8 @@ public class AuthRepository {
                     String email = firebaseUser.getEmail();
                     boolean isNew = (authTask.getResult() != null && authTask.getResult().getAdditionalUserInfo() != null)
                                     && authTask.getResult().getAdditionalUserInfo().isNewUser();
-                    User user = new User(uid, name, email, isNew);
-                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS, "Authorization successful!"));
+                    User user = new User(uid, name, email);
+                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS, "Authorization successful!", isNew, false));
                 }
             } else if (authTask.getException() != null) {
                 try {
@@ -64,11 +64,12 @@ public class AuthRepository {
             if (uidTask.isSuccessful()) {
                 DocumentSnapshot document = uidTask.getResult();
                 if (document != null && !document.exists()) {
-                    uidRef.set(user).addOnCompleteListener(addingTask -> {
+                    user.setAdded(true);
+                    uidRef.set(user.getData()).addOnCompleteListener(addingTask -> {
                         if (addingTask.isSuccessful()) {
-                            user.getData().setAdded(true);
                             newUserMutableLiveData.setValue(user);
                         } else {
+                            user.setAdded(false);
                             //TODO: error handling
                         }
                     });
