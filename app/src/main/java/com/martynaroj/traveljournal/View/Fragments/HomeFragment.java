@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.Fragments;
+package com.martynaroj.traveljournal.View.Fragments;
 
 
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.martynaroj.traveljournal.Base.BaseFragment;
+import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.R;
 
 public class HomeFragment extends BaseFragment {

@@ -1,11 +1,11 @@
-package com.martynaroj.traveljournal.Base;
+package com.martynaroj.traveljournal.View.Base;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.martynaroj.traveljournal.Interfaces.NavigationListener;
+import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
 
 public class BaseFragment extends Fragment {
 

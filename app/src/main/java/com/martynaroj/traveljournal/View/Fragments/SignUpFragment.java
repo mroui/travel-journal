@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.Fragments;
+package com.martynaroj.traveljournal.View.Fragments;
 
 
 import android.os.Bundle;

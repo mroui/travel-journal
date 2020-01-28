@@ -1,8 +1,7 @@
-package com.martynaroj.traveljournal;
+package com.martynaroj.traveljournal.View;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +9,13 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.gauravk.bubblenavigation.listener.BubbleNavigationChangeListener;
-import com.martynaroj.traveljournal.Adapters.NavigationBarAdapter;
-import com.martynaroj.traveljournal.Fragments.BoardFragment;
-import com.martynaroj.traveljournal.Fragments.HomeFragment;
-import com.martynaroj.traveljournal.Fragments.ProfileFragment;
-import com.martynaroj.traveljournal.Interfaces.NavigationListener;
-import com.martynaroj.traveljournal.Others.ViewPagerListener;
+import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.View.Adapters.NavigationBarAdapter;
+import com.martynaroj.traveljournal.View.Fragments.BoardFragment;
+import com.martynaroj.traveljournal.View.Fragments.HomeFragment;
+import com.martynaroj.traveljournal.View.Fragments.ProfileFragment;
+import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
+import com.martynaroj.traveljournal.View.Others.ViewPagerListener;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -49,12 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                 binding.bottomNavigationView.setCurrentActiveItem(i);
             }
         });
-        binding.bottomNavigationView.setNavigationChangeListener(new BubbleNavigationChangeListener() {
-            @Override
-            public void onNavigationChanged(View view, int position) {
-                binding.viewPager.setCurrentItem(position, true);
-            }
-        });
+        binding.bottomNavigationView.setNavigationChangeListener((view, position) -> binding.viewPager.setCurrentItem(position, true));
     }
 
 
@@ -79,12 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         }
         this.backPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                backPressedOnce = false;
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> backPressedOnce = false, 2000);
     }
 
 

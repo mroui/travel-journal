@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.Fragments;
+package com.martynaroj.traveljournal.View.Fragments;
 
 
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.martynaroj.traveljournal.Base.BaseFragment;
-import com.martynaroj.traveljournal.Others.FormHandler;
+import com.martynaroj.traveljournal.View.Base.BaseFragment;
+import com.martynaroj.traveljournal.View.Others.FormHandler;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 

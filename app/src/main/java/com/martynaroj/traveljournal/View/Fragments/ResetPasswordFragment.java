@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.Fragments;
+package com.martynaroj.traveljournal.View.Fragments;
 
 
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.martynaroj.traveljournal.Base.BaseFragment;
-import com.martynaroj.traveljournal.Others.FormHandler;
+import com.martynaroj.traveljournal.View.Base.BaseFragment;
+import com.martynaroj.traveljournal.View.Others.FormHandler;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentResetPasswordBinding;
 
@@ -45,8 +45,9 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.forgot_password_arrow_button:
             case R.id.forgot_password_back_button:
-                if (getFragmentManager() != null && getFragmentManager().getBackStackEntryCount() > 0)
-                    getFragmentManager().popBackStack();
+                //TODO: getFragmentManager deprecated -> getParentFragmentManager?
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
                 return;
             case R.id.forgot_password_send_button:
                 if (validateEmail())

@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.Interfaces;
+package com.martynaroj.traveljournal.View.Interfaces;
 
 import androidx.fragment.app.Fragment;
 

@@ -1,6 +1,7 @@
-package com.martynaroj.traveljournal.Adapters;
+package com.martynaroj.traveljournal.View.Adapters;
 
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -17,6 +18,7 @@ public class NavigationBarAdapter extends FragmentPagerAdapter {
     }
 
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         if (position >= 0 && position < fragmentsList.size())
