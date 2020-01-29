@@ -13,7 +13,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.View.Adapters.NavigationBarAdapter;
 import com.martynaroj.traveljournal.View.Fragments.BoardFragment;
 import com.martynaroj.traveljournal.View.Fragments.HomeFragment;
-import com.martynaroj.traveljournal.View.Fragments.ProfileFragment;
+import com.martynaroj.traveljournal.View.Fragments.LogInFragment;
 import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
 import com.martynaroj.traveljournal.View.Others.ViewPagerListener;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     private void initNavAdapter() {
         fragmentsList.add(0, HomeFragment.newInstance());
         fragmentsList.add(1, BoardFragment.newInstance());
-        fragmentsList.add(2, ProfileFragment.newInstance());
+        fragmentsList.add(2, LogInFragment.newInstance());
         adapter = new NavigationBarAdapter(fragmentsList, getSupportFragmentManager());
         binding.viewPager.setAdapter(adapter);
     }

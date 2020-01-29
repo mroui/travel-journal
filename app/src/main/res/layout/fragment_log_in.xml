@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".View.Fragments.ProfileFragment"
+    tools:context=".View.Fragments.LogInFragment"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:background="@color/white"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:id="@+id/fragment_profile">
+    android:id="@+id/fragment_log_in">
 
     <ScrollView
         android:layout_height="match_parent"

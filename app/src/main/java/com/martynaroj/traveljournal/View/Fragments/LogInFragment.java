@@ -10,23 +10,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.View.Others.FormHandler;
-import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
+import com.martynaroj.traveljournal.databinding.FragmentLogInBinding;
 
-public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+public class LogInFragment extends BaseFragment implements View.OnClickListener {
 
-    private FragmentProfileBinding binding;
+    private FragmentLogInBinding binding;
 
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+    public static LogInFragment newInstance() {
+        return new LogInFragment();
     }
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = FragmentLogInBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         setListeners();
