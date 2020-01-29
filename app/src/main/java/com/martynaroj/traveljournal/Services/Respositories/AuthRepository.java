@@ -58,7 +58,7 @@ public class AuthRepository {
 
 
     public LiveData<DataWrapper<User>> addUserToDatabase(DataWrapper<User> user) {
-        MutableLiveData<DataWrapper<User>> newUserMutableLiveData = new MutableLiveData<>();
+        MutableLiveData<DataWrapper<User>> newUserLiveData = new MutableLiveData<>();
         DocumentReference uidRef = usersRef.document(user.getData().getUid());
         uidRef.get().addOnCompleteListener(uidTask -> {
             if (uidTask.isSuccessful()) {
@@ -67,20 +67,19 @@ public class AuthRepository {
                     user.setAdded(true);
                     uidRef.set(user.getData()).addOnCompleteListener(addingTask -> {
                         if (addingTask.isSuccessful()) {
-                            newUserMutableLiveData.setValue(user);
-                        } else {
-                            user.setAdded(false);
-                            //TODO: error handling
+                            newUserLiveData.setValue(user);
+                        } else if (addingTask.getException() != null){
+                            newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: " + addingTask.getException().getMessage()));
                         }
                     });
                 } else {
-                    newUserMutableLiveData.setValue(user);
+                    newUserLiveData.setValue(user);
                 }
-            } else {
-                //TODO: error handling
+            } else if (uidTask.getException() != null) {
+                newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: " + uidTask.getException().getMessage()));
             }
         });
-        return newUserMutableLiveData;
+        return newUserLiveData;
     }
 
 }

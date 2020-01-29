@@ -28,6 +28,7 @@ import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.View.Others.FormHandler;
+import com.martynaroj.traveljournal.View.Others.Status;
 import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentSignUpBinding;
 
@@ -208,12 +209,17 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.isNew()) {
-                addNewUser(user);
+            if (user.getStatus() == Status.SUCCESS) {
+                if (user.isNew()) {
+                    addNewUser(user);
+                } else {
+                    stopProgressBar();
+                    showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
+                    //TODO change fragment logged in -> not new user
+                }
             } else {
-                //TODO change fragment logged in -> not new user
-                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
                 stopProgressBar();
+                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
             }
         });
     }
@@ -221,11 +227,14 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void addNewUser(DataWrapper<User> user) {
         authViewModel.addUser(user);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
-            if (newUser.isAdded()) {
-                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
+            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
                 stopProgressBar();
+                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
+                //TODO change fragment logged in -> new user
+            } else {
+                stopProgressBar();
+                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
             }
-            //TODO change fragment logged in -> new user
         });
     }
 
