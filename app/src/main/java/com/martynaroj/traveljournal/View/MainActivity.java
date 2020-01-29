@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.martynaroj.traveljournal.R;
@@ -88,5 +89,13 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
             if (addToBackStack) fragmentTransaction.addToBackStack(next.getTag());
             fragmentTransaction.commit();
         }
+    }
+
+
+    @Override
+    public void changeNavigationBarItem(int id, Fragment fragment) {
+        adapter.getItem(id).getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        adapter.changeItem(id, fragment);
+        adapter.notifyDataSetChanged();
     }
 }

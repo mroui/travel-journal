@@ -215,7 +215,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 } else {
                     stopProgressBar();
                     showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
-                    //TODO change fragment logged in -> not new user
+                    getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
                 }
             } else {
                 stopProgressBar();
@@ -224,13 +224,14 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         });
     }
 
+
     private void addNewUser(DataWrapper<User> user) {
         authViewModel.addUser(user);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
             if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
                 stopProgressBar();
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
-                //TODO change fragment logged in -> new user
+                getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
             } else {
                 stopProgressBar();
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
