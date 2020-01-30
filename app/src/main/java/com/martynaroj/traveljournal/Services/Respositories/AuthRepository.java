@@ -13,8 +13,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
-import com.martynaroj.traveljournal.View.Others.Constants;
-import com.martynaroj.traveljournal.View.Others.Status;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
+import com.martynaroj.traveljournal.View.Others.Enums.Status;
 
 public class AuthRepository {
 
@@ -27,7 +27,36 @@ public class AuthRepository {
     }
 
 
-    public MutableLiveData<DataWrapper<User>> firebaseSignInWithGoogle(AuthCredential googleAuthCredential) {
+    public MutableLiveData<DataWrapper<User>> signUpWithEmail(String email, String password, String username) {
+        MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(authTask -> {
+            if (authTask.isSuccessful()) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    User user = new User(firebaseUser.getUid(), username, email);
+                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
+                            "Authorization successful!"));
+                }
+            } else if (authTask.getException() != null) {
+                try {
+                    throw authTask.getException();
+                } catch (FirebaseNetworkException e) {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "Error: Please check your network connection"));
+                } catch (Exception e) {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "Error: " + e.getMessage()));
+                }
+            } else {
+                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "Error: Unhandled authorization error"));
+            }
+        });
+        return userLiveData;
+    }
+
+
+    public MutableLiveData<DataWrapper<User>> signInWithGoogle(AuthCredential googleAuthCredential) {
         MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
         firebaseAuth.signInWithCredential(googleAuthCredential).addOnCompleteListener(authTask -> {
             if (authTask.isSuccessful()) {
@@ -39,7 +68,8 @@ public class AuthRepository {
                     boolean isNew = (authTask.getResult() != null && authTask.getResult().getAdditionalUserInfo() != null)
                                     && authTask.getResult().getAdditionalUserInfo().isNewUser();
                     User user = new User(uid, name, email);
-                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS, "Authorization successful!", isNew, false));
+                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
+                            "Authorization successful!", isNew, false));
                 }
             } else if (authTask.getException() != null) {
                 try {
@@ -48,10 +78,12 @@ public class AuthRepository {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             "Error: Please check your network connection"));
                 } catch (Exception e) {
-                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: " + e.getMessage()));
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "Error: " + e.getMessage()));
                 }
             } else {
-                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: Unhandled authorization error"));
+                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "Error: Unhandled authorization error"));
             }
         });
         return userLiveData;
@@ -70,14 +102,16 @@ public class AuthRepository {
                         if (addingTask.isSuccessful()) {
                             newUserLiveData.setValue(user);
                         } else if (addingTask.getException() != null){
-                            newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: " + addingTask.getException().getMessage()));
+                            newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                                    "Error: " + addingTask.getException().getMessage()));
                         }
                     });
                 } else {
                     newUserLiveData.setValue(user);
                 }
             } else if (uidTask.getException() != null) {
-                newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "Error: " + uidTask.getException().getMessage()));
+                newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "Error: " + uidTask.getException().getMessage()));
             }
         });
         return newUserLiveData;

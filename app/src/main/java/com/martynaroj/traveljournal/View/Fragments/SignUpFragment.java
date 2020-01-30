@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,9 +26,9 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
-import com.martynaroj.traveljournal.View.Others.Constants;
-import com.martynaroj.traveljournal.View.Others.FormHandler;
-import com.martynaroj.traveljournal.View.Others.Status;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
+import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
+import com.martynaroj.traveljournal.View.Others.Enums.Status;
 import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentSignUpBinding;
 
@@ -131,16 +130,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                 signUpWithGoogle();
                 return;
             case R.id.signup_sign_up_button:
-                signUp();
+                signUpWithEmail();
         }
-    }
-
-
-    private void signUp() {
-        if (validateUsername() && validateEmail() && validatePasswords())
-            Toast.makeText(getContext(), "SignUp successed", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(getContext(), "SignUp failed", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -162,6 +153,45 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         Snackbar snackbar = Snackbar.make(binding.getRoot(), message, duration);
         snackbar.setAnchorView(Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation_view));
         snackbar.show();
+    }
+
+
+    private void signUpWithEmail() {
+        if (validateUsername() && validateEmail() && validatePasswords()) {
+            startProgressBar();
+
+            String email = Objects.requireNonNull(binding.signupEmailInput.getText()).toString();
+            String username = Objects.requireNonNull(binding.signupUsernameInput.getText()).toString();
+            String password = Objects.requireNonNull(binding.signupPasswordInput.getText()).toString();
+            signUpWithEmailAuthCredential(email, password, username);
+        }
+    }
+
+
+    private void signUpWithEmailAuthCredential(String email, String password, String username) {
+        authViewModel.signUpWithEmail(email, password, username);
+        authViewModel.getUserLiveData().observe(this, user -> {
+            if (user.getStatus() == Status.SUCCESS) {
+                sendSignInLink(user);
+            } else {
+                stopProgressBar();
+                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+            }
+        });
+    }
+
+    private void sendSignInLink(DataWrapper<User> user) {
+//        authViewModel.sendSignInLink(user);
+//        authViewModel.getUserVerificationLiveData().observe(this, newUser -> {
+//            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
+//                stopProgressBar();
+//                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
+//                getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+//            } else {
+//                stopProgressBar();
+//                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
+//            }
+//        });
     }
 
 

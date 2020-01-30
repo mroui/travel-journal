@@ -22,7 +22,11 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void signInWithGoogle(AuthCredential googleAuthCredential) {
-        userLiveData = authRepository.firebaseSignInWithGoogle(googleAuthCredential);
+        userLiveData = authRepository.signInWithGoogle(googleAuthCredential);
+    }
+
+    public void signUpWithEmail(String email, String password, String username) {
+        userLiveData = authRepository.signUpWithEmail(email, password, username);
     }
 
     public LiveData<DataWrapper<User>> getUserLiveData() {
