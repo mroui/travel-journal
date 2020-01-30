@@ -1,12 +1,14 @@
 package com.martynaroj.traveljournal.Services.Models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String uid;
     private String username;
     private String email;
 
-    protected User() {
+    public User() {
     }
 
     public User(String uid, String username, String email) {
