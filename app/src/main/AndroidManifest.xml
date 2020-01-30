@@ -16,14 +16,16 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
         android:theme="@style/NoActionBar"
         tools:ignore="AllowBackup">
-        <activity android:name="$View.SplashActivity"
-            android:theme="@style/SplashScreen">
+        <activity android:name=".View.SplashActivity"
+            android:theme="@style/SplashScreen"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="$View.MainActivity"/>
+        <activity android:name=".View.MainActivity"
+            tools:ignore="InnerclassSeparator" />
 
     </application>
 
