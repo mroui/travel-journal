@@ -1,6 +1,6 @@
 <resources>
 
-    <style name = "NoActionBar" parent = "Theme.MaterialComponents.Light.NoActionBar">
+    <style name="NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name = "colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/black</item>
         <item name="colorPrimary">@color/blue_active</item>
@@ -16,4 +16,9 @@
         <item name="android:textColorHint">@color/black</item>
         <item name="hintTextColor">@color/black</item>
     </style>
+
+    <style name="SplashScreen" parent="NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
 </resources>
