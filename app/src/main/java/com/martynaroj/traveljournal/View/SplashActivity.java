@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.ViewModels.SplashViewModel;
 
-import static com.martynaroj.traveljournal.View.Others.Constants.USER;
+import static com.martynaroj.traveljournal.View.Others.Interfaces.Constants.USER;
 
 public class SplashActivity extends AppCompatActivity {
 

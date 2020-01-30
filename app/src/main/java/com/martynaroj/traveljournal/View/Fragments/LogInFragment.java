@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
-import com.martynaroj.traveljournal.View.Others.FormHandler;
+import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
 import com.martynaroj.traveljournal.databinding.FragmentLogInBinding;
 
 public class LogInFragment extends BaseFragment implements View.OnClickListener {

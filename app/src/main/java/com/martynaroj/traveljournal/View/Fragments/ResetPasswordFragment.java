@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
-import com.martynaroj.traveljournal.View.Others.FormHandler;
+import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentResetPasswordBinding;
 

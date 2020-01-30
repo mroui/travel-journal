@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.View.Others;
+package com.martynaroj.traveljournal.View.Others.Classes;
 
 import androidx.viewpager.widget.ViewPager;
 

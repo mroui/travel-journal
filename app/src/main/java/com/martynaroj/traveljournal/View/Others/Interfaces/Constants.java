@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.View.Others;
+package com.martynaroj.traveljournal.View.Others.Interfaces;
 
 public interface Constants {
     int RC_SIGN_IN = 9001;

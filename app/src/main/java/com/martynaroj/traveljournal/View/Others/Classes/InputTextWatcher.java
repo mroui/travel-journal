@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.View.Others;
+package com.martynaroj.traveljournal.View.Others.Classes;
 
 import android.text.Editable;
 import android.text.TextWatcher;

@@ -9,8 +9,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
-import com.martynaroj.traveljournal.View.Others.Constants;
-import com.martynaroj.traveljournal.View.Others.Status;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
+import com.martynaroj.traveljournal.View.Others.Enums.Status;
 
 public class SplashRepository {
 

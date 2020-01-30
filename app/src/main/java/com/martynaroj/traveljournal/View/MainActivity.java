@@ -18,8 +18,8 @@ import com.martynaroj.traveljournal.View.Fragments.HomeFragment;
 import com.martynaroj.traveljournal.View.Fragments.LogInFragment;
 import com.martynaroj.traveljournal.View.Fragments.ProfileFragment;
 import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
-import com.martynaroj.traveljournal.View.Others.Constants;
-import com.martynaroj.traveljournal.View.Others.ViewPagerListener;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
+import com.martynaroj.traveljournal.View.Others.Classes.ViewPagerListener;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;

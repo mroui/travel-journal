@@ -1,6 +1,6 @@
 package com.martynaroj.traveljournal.Services.Models;
 
-import com.martynaroj.traveljournal.View.Others.Status;
+import com.martynaroj.traveljournal.View.Others.Enums.Status;
 
 public class DataWrapper<T> {
 
