@@ -27,6 +27,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
+import com.martynaroj.traveljournal.View.Others.Constants;
 import com.martynaroj.traveljournal.View.Others.FormHandler;
 import com.martynaroj.traveljournal.View.Others.Status;
 import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
@@ -39,7 +40,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private FragmentSignUpBinding binding;
     private AuthViewModel authViewModel;
     private GoogleSignInClient googleSignInClient;
-    private static final int RC_SIGN_IN = 9001;
 
     static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -167,7 +167,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void signUpWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
         startProgressBar();
     }
 
@@ -175,7 +175,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Constants.RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
