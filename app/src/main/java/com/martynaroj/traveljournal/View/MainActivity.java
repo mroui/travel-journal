@@ -11,11 +11,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Adapters.NavigationBarAdapter;
 import com.martynaroj.traveljournal.View.Fragments.BoardFragment;
 import com.martynaroj.traveljournal.View.Fragments.HomeFragment;
 import com.martynaroj.traveljournal.View.Fragments.LogInFragment;
+import com.martynaroj.traveljournal.View.Fragments.ProfileFragment;
 import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
+import com.martynaroj.traveljournal.View.Others.Constants;
 import com.martynaroj.traveljournal.View.Others.ViewPagerListener;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 
@@ -36,9 +39,15 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initNavAdapter();
+        User user = getUserFromIntent();
+        initNavAdapter(user);
         setListeners();
         binding.bottomNavigationView.setTypeface(ResourcesCompat.getFont(this, R.font.roboto_light));
+    }
+
+
+    private User getUserFromIntent() {
+        return (User) getIntent().getSerializableExtra(Constants.USER);
     }
 
 
@@ -53,10 +62,14 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
 
-    private void initNavAdapter() {
+    private void initNavAdapter(User user) {
         fragmentsList.add(0, HomeFragment.newInstance());
         fragmentsList.add(1, BoardFragment.newInstance());
-        fragmentsList.add(2, LogInFragment.newInstance());
+        if (user != null)
+            fragmentsList.add(2, ProfileFragment.newInstance());
+        else
+            fragmentsList.add(2, LogInFragment.newInstance());
+
         adapter = new NavigationBarAdapter(fragmentsList, getSupportFragmentManager());
         binding.viewPager.setAdapter(adapter);
     }
