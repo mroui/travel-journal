@@ -171,8 +171,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void signUpWithEmailAuthCredential(String email, String password, String username) {
         authViewModel.signUpWithEmail(email, password, username);
         authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.getStatus() == Status.SUCCESS) {
-                sendSignInLink(user);
+            if (user.getStatus() == Status.LOADING) {
+                sendVerificationMail(user);
             } else {
                 stopProgressBar();
                 showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
@@ -180,18 +180,17 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         });
     }
 
-    private void sendSignInLink(DataWrapper<User> user) {
-//        authViewModel.sendSignInLink(user);
-//        authViewModel.getUserVerificationLiveData().observe(this, newUser -> {
-//            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
-//                stopProgressBar();
-//                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
-//                getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
-//            } else {
-//                stopProgressBar();
-//                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
-//            }
-//        });
+    private void sendVerificationMail(DataWrapper<User> user) {
+        authViewModel.sendVerificationMail(user);
+        authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
+            stopProgressBar();
+            if (verificationUser.getStatus() == Status.SUCCESS) {
+                showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
+                getParentFragmentManager().popBackStack();
+            } else {
+                showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
+            }
+        });
     }
 
 

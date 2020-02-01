@@ -3,6 +3,7 @@ package com.martynaroj.traveljournal.Services.Respositories;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,8 +14,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
-import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 import com.martynaroj.traveljournal.View.Others.Enums.Status;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 
 public class AuthRepository {
 
@@ -34,24 +35,31 @@ public class AuthRepository {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     User user = new User(firebaseUser.getUid(), username, email);
-                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Authorization successful!"));
-                }
-            } else if (authTask.getException() != null) {
-                try {
-                    throw authTask.getException();
-                } catch (FirebaseNetworkException e) {
-                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "Error: Please check your network connection"));
-                } catch (Exception e) {
-                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "Error: " + e.getMessage()));
+                    userLiveData.setValue(new DataWrapper<>(user, Status.LOADING,
+                            "Sending verification email..."));
                 }
             } else {
-                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "Error: Unhandled authorization error"));
+                handleUserLiveDataErrors(authTask, userLiveData);
             }
         });
+        return userLiveData;
+    }
+
+
+    public MutableLiveData<DataWrapper<User>> sendVerificationMail(DataWrapper<User> user) {
+        MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    userLiveData.setValue(new DataWrapper<>(user.getData(), Status.SUCCESS,
+                            "Check your email and verify your account to log in",
+                            true, false));
+                } else {
+                    handleUserLiveDataErrors(task, userLiveData);
+                }
+            });
+        }
         return userLiveData;
     }
 
@@ -71,19 +79,8 @@ public class AuthRepository {
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                             "Authorization successful!", isNew, false));
                 }
-            } else if (authTask.getException() != null) {
-                try {
-                    throw authTask.getException();
-                } catch (FirebaseNetworkException e) {
-                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "Error: Please check your network connection"));
-                } catch (Exception e) {
-                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "Error: " + e.getMessage()));
-                }
             } else {
-                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "Error: Unhandled authorization error"));
+                handleUserLiveDataErrors(authTask, userLiveData);
             }
         });
         return userLiveData;
@@ -115,6 +112,24 @@ public class AuthRepository {
             }
         });
         return newUserLiveData;
+    }
+
+
+    private void handleUserLiveDataErrors(Task authTask, MutableLiveData<DataWrapper<User>> userLiveData) {
+        if (authTask.getException() != null) {
+            try {
+                throw authTask.getException();
+            } catch (FirebaseNetworkException e) {
+                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "Error: Please check your network connection"));
+            } catch (Exception e) {
+                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "Error: " + e.getMessage()));
+            }
+        } else {
+            userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                    "Error: Unhandled authorization error"));
+        }
     }
 
 }
