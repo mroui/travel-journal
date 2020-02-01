@@ -28,4 +28,6 @@
 
     <color name="transparent">#66000000</color>
 
+    <color name="splash_background">#72C4E3</color>
+
 </resources>
