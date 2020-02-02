@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +35,9 @@ public class AuthRepository {
             if (authTask.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                    firebaseUser.updateProfile(profileUpdates);
+
                     User user = new User(firebaseUser.getUid(), username, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.LOADING,
                             "Sending verification email..."));
