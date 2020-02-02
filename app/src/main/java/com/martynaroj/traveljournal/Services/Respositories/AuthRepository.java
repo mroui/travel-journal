@@ -46,20 +46,34 @@ public class AuthRepository {
     }
 
 
-    public MutableLiveData<DataWrapper<User>> sendVerificationMail(DataWrapper<User> user) {
+    public MutableLiveData<DataWrapper<User>> sendVerificationMail() {
         MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    userLiveData.setValue(new DataWrapper<>(user.getData(), Status.SUCCESS,
-                            "Check your email and verify your account to log in",
+                    userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
+                            "Verification email has been sent. Check your email and verify your account to log in",
                             true, false));
                 } else {
                     handleUserLiveDataErrors(task, userLiveData);
                 }
             });
         }
+        return userLiveData;
+    }
+
+
+    public LiveData<DataWrapper<User>> sendPasswordResetEmail(String email) {
+        MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
+        firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
+                        "Password reset email has been sent. Click the link in the email to reset your password"));
+            } else {
+                handleUserLiveDataErrors(task, userLiveData);
+            }
+        });
         return userLiveData;
     }
 

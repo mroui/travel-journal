@@ -26,9 +26,9 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
-import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
 import com.martynaroj.traveljournal.View.Others.Enums.Status;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentSignUpBinding;
 
@@ -172,7 +172,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         authViewModel.signUpWithEmail(email, password, username);
         authViewModel.getUserLiveData().observe(this, user -> {
             if (user.getStatus() == Status.LOADING) {
-                sendVerificationMail(user);
+                sendVerificationMail();
             } else {
                 stopProgressBar();
                 showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
@@ -180,8 +180,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         });
     }
 
-    private void sendVerificationMail(DataWrapper<User> user) {
-        authViewModel.sendVerificationMail(user);
+    private void sendVerificationMail() {
+        authViewModel.sendVerificationMail();
         authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
             stopProgressBar();
             if (verificationUser.getStatus() == Status.SUCCESS) {

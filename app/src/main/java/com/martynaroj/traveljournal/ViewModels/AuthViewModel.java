@@ -16,6 +16,7 @@ public class AuthViewModel extends AndroidViewModel {
     private LiveData<DataWrapper<User>> userLiveData;
     private LiveData<DataWrapper<User>> addedUserLiveData;
     private LiveData<DataWrapper<User>> userVerificationLiveData;
+    private LiveData<DataWrapper<User>> userForgotPasswordLiveData;
 
     public AuthViewModel(Application application) {
         super(application);
@@ -42,11 +43,19 @@ public class AuthViewModel extends AndroidViewModel {
         return addedUserLiveData;
     }
 
-    public void sendVerificationMail(DataWrapper<User> user) {
-        userVerificationLiveData = authRepository.sendVerificationMail(user);
+    public void sendVerificationMail() {
+        userVerificationLiveData = authRepository.sendVerificationMail();
     }
 
     public LiveData<DataWrapper<User>> getUserVerificationLiveData() {
         return userVerificationLiveData;
+    }
+
+    public void sendPasswordResetEmail(String email) {
+        userForgotPasswordLiveData = authRepository.sendPasswordResetEmail(email);
+    }
+
+    public LiveData<DataWrapper<User>> getUserForgotPasswordLiveData() {
+        return userForgotPasswordLiveData;
     }
 }

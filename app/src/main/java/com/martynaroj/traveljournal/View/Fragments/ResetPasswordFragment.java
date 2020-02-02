@@ -7,15 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.View.Others.Enums.Status;
+import com.martynaroj.traveljournal.ViewModels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentResetPasswordBinding;
+
+import java.util.Objects;
 
 public class ResetPasswordFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentResetPasswordBinding binding;
+    private AuthViewModel authViewModel;
 
     static ResetPasswordFragment newInstance() {
         return new ResetPasswordFragment();
@@ -27,10 +34,17 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
         binding = FragmentResetPasswordBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        initAuthViewModel();
         setListeners();
 
         return view;
     }
+
+
+    private void initAuthViewModel() {
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+    }
+
 
     private void setListeners() {
         new FormHandler().addWatcher(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
@@ -45,40 +59,58 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.forgot_password_arrow_button:
             case R.id.forgot_password_back_button:
-                //TODO: getFragmentManager deprecated -> getParentFragmentManager?
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 return;
             case R.id.forgot_password_send_button:
                 if (validateEmail())
-                    resetPassword();
+                    sendResetPasswordMail();
         }
     }
+
+
+    private void startProgressBar() {
+        binding.forgotPasswordProgressbarLayout.setVisibility(View.VISIBLE);
+        binding.forgotPasswordProgressbar.start();
+        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+    }
+
+
+    private void stopProgressBar() {
+        binding.forgotPasswordProgressbarLayout.setVisibility(View.INVISIBLE);
+        binding.forgotPasswordProgressbar.stop();
+        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, duration);
+        snackbar.setAnchorView(Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation_view));
+        snackbar.show();
+    }
+
 
     private boolean validateEmail() {
         return new FormHandler().validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
     }
 
-    private void resetPassword() {
-//        FirebaseAuth.getInstance().sendPasswordResetEmail(binding.forgotPasswordEmailInput.getText().toString())
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            Log.d(TAG, "Email sent.");
-//                            hideProgressDialog();
-//                            Toast.makeText(ForgotPasswordActivity.this, getString(R.string.alert_passwordResetConfirm),
-//                                    Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Exception e = task.getException();
-//                            Log.w(TAG, "passwordResetRequest:failure " + e.getMessage(), task.getException());
-//                            hideProgressDialog();
-//                            Toast.makeText(ForgotPasswordActivity.this, e.getMessage(),
-//                                    Toast.LENGTH_SHORT).show();
-//                       }
-//
-//                    }
-//                });
+
+    private void sendResetPasswordMail() {
+        if (validateEmail()) {
+            startProgressBar();
+            String email = Objects.requireNonNull(binding.forgotPasswordEmailInput.getText()).toString();
+
+            authViewModel.sendPasswordResetEmail(email);
+            authViewModel.getUserForgotPasswordLiveData().observe(this, user -> {
+                stopProgressBar();
+                if (user.getStatus() == Status.SUCCESS) {
+                    showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                    getParentFragmentManager().popBackStack();
+                } else {
+                    showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                }
+            });
+        }
     }
 
 
