@@ -10,6 +10,7 @@ public class DataWrapper<T> {
     private boolean isNew = false;
     private boolean isAdded = false;
     private boolean isAuthenticated = false;
+    private boolean isVerified = false;
 
     public DataWrapper(T data, Status status, String message, boolean isNew, boolean isAdded) {
         this.data = data;
@@ -59,5 +60,9 @@ public class DataWrapper<T> {
 
     public void setAuthenticated(boolean authenticated) {
         isAuthenticated = authenticated;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 }
