@@ -54,7 +54,7 @@ public class AuthRepository {
                 if (task.isSuccessful()) {
                     userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
                             "Verification email has been sent. Check your email and verify your account to log in",
-                            true, false));
+                            true, false, false));
                 } else {
                     handleUserLiveDataErrors(task, userLiveData);
                 }
@@ -91,7 +91,7 @@ public class AuthRepository {
                                     && authTask.getResult().getAdditionalUserInfo().isNewUser();
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Authorization successful!", isNew, false));
+                            "Authorization successful!", isNew, false, true));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -129,6 +129,29 @@ public class AuthRepository {
     }
 
 
+    public LiveData<DataWrapper<User>> logInWithEmail(String email, String password) {
+        MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(authTask -> {
+            if (authTask.isSuccessful()) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    String uid = firebaseUser.getUid();
+                    String name = firebaseUser.getDisplayName();
+                    boolean isNew = (authTask.getResult() != null && authTask.getResult().getAdditionalUserInfo() != null)
+                            && authTask.getResult().getAdditionalUserInfo().isNewUser();
+                    boolean isVerified = firebaseUser.isEmailVerified();
+                    User user = new User(uid, name, email);
+                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
+                            "Authorization successful!", isNew, false, isVerified));
+                }
+            } else {
+                handleUserLiveDataErrors(authTask, userLiveData);
+            }
+        });
+        return userLiveData;
+    }
+
+
     private void handleUserLiveDataErrors(Task authTask, MutableLiveData<DataWrapper<User>> userLiveData) {
         if (authTask.getException() != null) {
             try {
@@ -145,5 +168,4 @@ public class AuthRepository {
                     "Error: Unhandled authorization error"));
         }
     }
-
 }

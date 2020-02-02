@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -95,14 +94,6 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void logInWithEmail() {
-        if (validateEmail() && validatePassword())
-            Toast.makeText(getContext(), "Login successed", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(getContext(), "Login failed", Toast.LENGTH_SHORT).show();
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -118,6 +109,44 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             case R.id.login_sign_up_button:
                 changeFragment(SignUpFragment.newInstance());
         }
+    }
+
+
+    private void logInWithEmail() {
+        if (validateEmail() && validatePassword()) {
+            startProgressBar();
+
+            String email = Objects.requireNonNull(binding.loginEmailInput.getText()).toString();
+            String password = Objects.requireNonNull(binding.loginPasswordInput.getText()).toString();
+
+            authViewModel.logInWithEmail(email, password);
+            authViewModel.getUserLiveData().observe(this, user -> {
+                if (user.getStatus() == Status.SUCCESS) {
+                    if (user.isVerified()) {
+                        addNewUser(user);
+                    } else {
+                        showSnackBar("Error: Account is not verified.", Snackbar.LENGTH_SHORT);
+                        resendVerificationMail();
+                    }
+                } else {
+                    stopProgressBar();
+                    showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                }
+            });
+        }
+    }
+
+    private void resendVerificationMail() {
+        authViewModel.sendVerificationMail();
+        authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
+            stopProgressBar();
+            if (verificationUser.getStatus() == Status.SUCCESS) {
+                stopProgressBar();
+                showSnackBar("Verification email has been sent. Check your email and verify your account to log in", Snackbar.LENGTH_LONG);
+            } else {
+                showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
+            }
+        });
     }
 
 

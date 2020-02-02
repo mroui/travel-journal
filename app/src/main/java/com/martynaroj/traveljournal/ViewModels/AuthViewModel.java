@@ -58,4 +58,8 @@ public class AuthViewModel extends AndroidViewModel {
     public LiveData<DataWrapper<User>> getUserForgotPasswordLiveData() {
         return userForgotPasswordLiveData;
     }
+
+    public void logInWithEmail(String email, String password) {
+        userLiveData = authRepository.logInWithEmail(email, password);
+    }
 }
