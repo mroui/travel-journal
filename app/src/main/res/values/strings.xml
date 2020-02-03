@@ -36,4 +36,6 @@
     <string name="signup_back">Back to Login</string>
     <string name="signup_back_arrow">Back</string>
 
+    <string name="profile_sign_out">Sign out</string>
+
 </resources>
