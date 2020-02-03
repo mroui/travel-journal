@@ -23,12 +23,13 @@
 
             <ImageView
                 android:id="@+id/signup_arrow_button"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/icon_size"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="@dimen/margin_regular"
                 android:contentDescription="@string/signup_back_arrow"
+                android:background="?android:attr/selectableItemBackground"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_back"/>
@@ -175,7 +176,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="@dimen/margin_big"
                 android:padding="@dimen/padding_small"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="@string/signup_sign_up"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
@@ -255,6 +255,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/signup_account_question"
                     android:layout_marginStart="@dimen/margin_smaller"
+                    android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_regular"
                     android:text="@string/signup_account_log_in"
                     android:textColor="@color/blue_active"/>

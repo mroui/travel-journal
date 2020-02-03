@@ -101,15 +101,14 @@
 
             <TextView
                 android:id="@+id/login_forgot_password_button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_password_layout"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginEnd="4dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/raleway_regular"
-                android:textAlignment="textEnd"
                 android:text="@string/login_forgot_password"
                 android:textColor="@color/blue_active"
                 android:textSize="@dimen/text_small"/>
@@ -123,7 +122,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="@dimen/margin_big"
                 android:padding="@dimen/padding_small"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="@string/login_log_in"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
@@ -203,6 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/login_no_account_question"
                     android:layout_marginStart="@dimen/margin_smaller"
+                    android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_regular"
                     android:text="@string/login_no_acc_sign_up"
                     android:textColor="@color/blue_active"/>
