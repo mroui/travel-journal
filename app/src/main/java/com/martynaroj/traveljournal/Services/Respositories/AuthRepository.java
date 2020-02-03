@@ -37,10 +37,11 @@ public class AuthRepository {
                 if (firebaseUser != null) {
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
                     firebaseUser.updateProfile(profileUpdates);
-
                     User user = new User(firebaseUser.getUid(), username, email);
-                    userLiveData.setValue(new DataWrapper<>(user, Status.LOADING,
-                            "Sending verification email..."));
+                    userLiveData.setValue(new DataWrapper<>(user, Status.LOADING, null));
+                } else {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "ERROR: User identity error. Please try again later"));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -57,12 +58,15 @@ public class AuthRepository {
             firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
-                            "Verification email has been sent. Check your email and verify your account to log in",
+                            "Verification email has been sent. Check your email to verify account",
                             true, false, false));
                 } else {
                     handleUserLiveDataErrors(task, userLiveData);
                 }
             });
+        } else {
+            userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                    "ERROR: User identity error. Please try again later"));
         }
         return userLiveData;
     }
@@ -73,7 +77,7 @@ public class AuthRepository {
         firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
-                        "Password reset email has been sent. Click the link in the email to reset your password"));
+                        "Password reset email has been sent. Check your email to reset your password"));
             } else {
                 handleUserLiveDataErrors(task, userLiveData);
             }
@@ -96,6 +100,9 @@ public class AuthRepository {
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                             "Authorization successful!", isNew, false, true));
+                } else {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "ERROR: User identity error. Please try again later"));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -147,6 +154,9 @@ public class AuthRepository {
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                             "Authorization successful!", isNew, false, isVerified));
+                } else {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "ERROR: User identity error. Please try again later"));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
