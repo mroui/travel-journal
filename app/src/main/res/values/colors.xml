@@ -27,6 +27,7 @@
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/light_gray</color>
 
     <color name="transparent">#66000000</color>
+    <color name="transparent_light">#10000000</color>
 
     <color name="splash_background">#72C4E3</color>
 
