@@ -17,10 +17,139 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_regular"
-            android:paddingEnd="@dimen/margin_regular">
+            android:layout_height="wrap_content">
 
+            <View
+                android:id="@+id/profile_background"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/light_gray"/>
+
+            <ImageView
+                android:id="@+id/profile_notifications"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/profile_notifications"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_notifications"/>
+
+            <TextView
+                android:id="@+id/profile_notifications_badge"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:layout_constraintEnd_toEndOf="@id/profile_notifications"
+                app:layout_constraintTop_toTopOf="@id/profile_notifications"
+                android:padding="2sp"
+                android:gravity="center"
+                android:background="@drawable/notifications_badge"/>
+
+            <ImageView
+                android:id="@+id/profile_edit"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/profile_notifications"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/profile_edit"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_edit" />
+
+            <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
+                android:id="@+id/profile_user_details_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/ms9_DefaultShadowStyle"
+                app:ms9_shadowTranslationZ="2dp"
+                app:ms9_shadowElevation="4dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/profile_user_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginStart="@dimen/margin_regular"
+                    android:layout_marginEnd="@dimen/margin_regular"
+                    android:layout_marginBottom="@dimen/margin_regular"
+                    android:layout_marginTop="120dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:id="@+id/profile_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@+id/profile_user_details"
+                        app:layout_constraintEnd_toEndOf="@id/profile_user_details"
+                        app:layout_constraintTop_toTopOf="@id/profile_user_details"
+                        android:layout_marginTop="@dimen/margin_big"
+                        android:text="username"/>
+
+                    <TextView
+                        android:id="@+id/profile_bio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@+id/profile_user_details"
+                        app:layout_constraintEnd_toEndOf="@id/profile_user_details"
+                        app:layout_constraintTop_toBottomOf="@id/profile_username"
+                        android:text="bio"/>
+
+                    <TextView
+                        android:id="@+id/profile_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@+id/profile_user_details"
+                        app:layout_constraintEnd_toEndOf="@id/profile_user_details"
+                        app:layout_constraintTop_toBottomOf="@id/profile_bio"
+                        android:text="location"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profile_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:layout_constraintStart_toStartOf="@+id/profile_user_details_container"
+                app:layout_constraintEnd_toEndOf="@+id/profile_user_details_container"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="60dp"
+                android:contentDescription="@string/profile_image"
+                android:src="@drawable/ic_avatar"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/white"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="10"
+                app:civ_shadow_color="@color/gray"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/profile_settings_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/profile_sign_out_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="@dimen/margin_big"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                android:padding="@dimen/padding_small"
+                android:text="@string/profile_settings"
+                android:textColor="@color/white"
+                android:fontFamily="@font/raleway_bold"
+                app:backgroundTint="@color/blue_active" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_sign_out_button"
@@ -30,13 +159,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginBottom="@dimen/margin_big"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
                 android:padding="@dimen/padding_small"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="@string/profile_sign_out"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
                 app:backgroundTint="@color/blue_active" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

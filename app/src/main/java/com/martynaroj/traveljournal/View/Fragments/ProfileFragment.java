@@ -38,6 +38,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void setListeners() {
         binding.profileSignOutButton.setOnClickListener(this);
+        binding.profileNotifications.setOnClickListener(this);
+        binding.profileEdit.setOnClickListener(this);
     }
 
 
@@ -46,6 +48,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.profile_sign_out_button:
                 signOut();
+                return;
+            case R.id.profile_notifications:
+                showSnackBar("clicked: notifications", Snackbar.LENGTH_SHORT);
+                return;
+            case R.id.profile_edit:
+                showSnackBar("clicked: edit", Snackbar.LENGTH_SHORT);
         }
     }
 
