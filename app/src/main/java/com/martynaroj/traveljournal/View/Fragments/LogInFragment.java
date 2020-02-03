@@ -111,11 +111,15 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             authViewModel.logInWithEmail(email, password);
             authViewModel.getUserLiveData().observe(this, user -> {
                 if (user.getStatus() == Status.SUCCESS) {
-                    if (user.isVerified()) {
+                    if (user.isVerified() && user.isNew()) {
                         addNewUser(user);
-                    } else {
+                    } else if (!user.isVerified()) {
                         showSnackBar("Error: Account is not verified", Snackbar.LENGTH_SHORT);
                         resendVerificationMail();
+                    } else if (!user.isNew()){
+                        stopProgressBar();
+                        showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
+                        getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
                     }
                 } else {
                     stopProgressBar();
