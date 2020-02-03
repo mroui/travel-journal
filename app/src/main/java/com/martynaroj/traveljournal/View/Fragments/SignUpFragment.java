@@ -11,21 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.Services.Models.DataWrapper;
 import com.martynaroj.traveljournal.Services.Models.User;
+import com.martynaroj.traveljournal.Services.Others.GoogleClient;
 import com.martynaroj.traveljournal.View.Base.BaseFragment;
 import com.martynaroj.traveljournal.View.Others.Classes.FormHandler;
 import com.martynaroj.traveljournal.View.Others.Enums.Status;
@@ -39,7 +33,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private FragmentSignUpBinding binding;
     private AuthViewModel authViewModel;
-    private GoogleSignInClient googleSignInClient;
+    private GoogleClient googleClient;
 
     static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -53,9 +47,15 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
         initAuthViewModel();
         setListeners();
-        initGoogleSignInClient();
+        initGoogleClient();
 
         return view;
+    }
+
+
+    private void initGoogleClient() {
+        googleClient = new GoogleClient();
+        googleClient.initGoogleSignInClient(binding.getRoot().getContext());
     }
 
 
@@ -74,17 +74,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding.signupGoogleButton.setOnClickListener(this);
         binding.signupLogInButton.setOnClickListener(this);
         binding.signupPasswordStrengthMeter.setEditText(binding.signupPasswordInput);
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    private void initGoogleSignInClient() {
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
-                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
     }
 
 
@@ -183,6 +172,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         });
     }
 
+
     private void sendVerificationMail() {
         authViewModel.sendVerificationMail();
         authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
@@ -198,7 +188,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void signUpWithGoogle() {
-        Intent signInIntent = googleSignInClient.getSignInIntent();
+        Intent signInIntent = googleClient.getGoogleSignInClient().getSignInIntent();
         startActivityForResult(signInIntent, Constants.RC_SIGN_IN);
         startProgressBar();
     }
@@ -207,33 +197,18 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
-                if (googleSignInAccount != null)
-                    getGoogleAuthCredential(googleSignInAccount);
-            } catch (ApiException e) {
-                String statusCode = CommonStatusCodes.getStatusCodeString(e.getStatusCode());
-                String message = "Error: Internal API error";
-                if (statusCode.equals("NETWORK_ERROR"))
-                    message = "Error: Please check your network connection";
-                else if (statusCode.equals("TIMEOUT"))
-                    message = "Error: Timed out while awaiting the result";
-
-                showSnackBar(message, Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            }
+        String status = googleClient.getGoogleSignInAccount(requestCode, resultCode, data);
+        if (status.equals(Constants.SUCCESS)) {
+            getGoogleAuthCredential(googleClient.getGoogleSignInAccount());
         } else {
-            showSnackBar("Error: Activity request error", Snackbar.LENGTH_LONG);
+            showSnackBar(status, Snackbar.LENGTH_LONG);
             stopProgressBar();
         }
     }
 
 
     private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
-        String googleTokenId = googleSignInAccount.getIdToken();
-        AuthCredential googleAuthCredential = GoogleAuthProvider.getCredential(googleTokenId, null);
+        AuthCredential googleAuthCredential = googleClient.getGoogleAuthCredential(googleSignInAccount);
         signInWithGoogleAuthCredential(googleAuthCredential);
     }
 
