@@ -81,6 +81,7 @@
                     android:textSize="@dimen/text_small"
                     android:hint="@string/signup_username"
                     android:textCursorDrawable="@null"
+                    android:maxLength="18"
                     android:inputType="text"/>
             </com.google.android.material.textfield.TextInputLayout>
 
