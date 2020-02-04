@@ -37,9 +37,12 @@
     <string name="signup_back_arrow">Back</string>
 
     <string name="profile_sign_out">Sign out</string>
+    <string name="profile_settings">settings</string>
     <string name="profile_notifications">Notifications</string>
     <string name="profile_edit">Edit</string>
     <string name="profile_image">User Image</string>
-    <string name="profile_settings">settings</string>
+    <string name="profile_username">Username</string>
+    <string name="profile_bio">Some words about you…</string>
+    <string name="profile_location">Location</string>
 
 </resources>
