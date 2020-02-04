@@ -94,8 +94,11 @@
                         app:layout_constraintStart_toStartOf="@+id/profile_user_details"
                         app:layout_constraintEnd_toEndOf="@id/profile_user_details"
                         app:layout_constraintTop_toTopOf="@id/profile_user_details"
-                        android:layout_marginTop="@dimen/margin_big"
-                        android:text="username"/>
+                        android:layout_marginTop="60dp"
+                        android:fontFamily="@font/raleway_bold"
+                        android:text="@string/profile_username"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_medium"/>
 
                     <TextView
                         android:id="@+id/profile_bio"
@@ -104,7 +107,11 @@
                         app:layout_constraintStart_toStartOf="@+id/profile_user_details"
                         app:layout_constraintEnd_toEndOf="@id/profile_user_details"
                         app:layout_constraintTop_toBottomOf="@id/profile_username"
-                        android:text="bio"/>
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_medium"
+                        android:text="@string/profile_bio"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/text_regular"/>
 
                     <TextView
                         android:id="@+id/profile_location"
@@ -113,7 +120,75 @@
                         app:layout_constraintStart_toStartOf="@+id/profile_user_details"
                         app:layout_constraintEnd_toEndOf="@id/profile_user_details"
                         app:layout_constraintTop_toBottomOf="@id/profile_bio"
-                        android:text="location"/>
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_bold"
+                        android:text="@string/profile_location"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/text_regular"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/ic_location"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_small"
+                            app:backgroundTint="@color/light_gray"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="contact"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="@dimen/text_smaller"
+                            android:drawableTop="@drawable/ic_location"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetRight="0dp"
+                            android:insetLeft="0dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_weight="1"/>
+
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_small"
+                            app:backgroundTint="@color/light_gray"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="trips"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="@dimen/text_smaller"
+                            android:drawableTop="@drawable/ic_location"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetRight="0dp"
+                            android:insetLeft="0dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_weight="1"/>
+
+                        <Button
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_small"
+                            app:backgroundTint="@color/light_gray"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="friends"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="@dimen/text_smaller"
+                            android:drawableTop="@drawable/ic_location"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:insetRight="0dp"
+                            android:insetLeft="0dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:minHeight="0dp"
+                            android:minWidth="0dp"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -142,7 +217,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/profile_sign_out_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/margin_big"
                 android:layout_marginStart="@dimen/margin_regular"
                 android:layout_marginEnd="@dimen/margin_regular"
                 android:padding="@dimen/padding_small"
