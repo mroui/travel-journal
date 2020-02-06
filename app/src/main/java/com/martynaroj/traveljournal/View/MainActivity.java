@@ -18,8 +18,8 @@ import com.martynaroj.traveljournal.View.Fragments.HomeFragment;
 import com.martynaroj.traveljournal.View.Fragments.LogInFragment;
 import com.martynaroj.traveljournal.View.Fragments.ProfileFragment;
 import com.martynaroj.traveljournal.View.Interfaces.NavigationListener;
-import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 import com.martynaroj.traveljournal.View.Others.Classes.ViewPagerListener;
+import com.martynaroj.traveljournal.View.Others.Interfaces.Constants;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
     @Override
     public void changeNavigationBarItem(int id, Fragment fragment) {
-        adapter.getItem(id).getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if(adapter.getItem(id).getChildFragmentManager().getBackStackEntryCount() > 0)
+            adapter.getItem(id).getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         adapter.changeItem(id, fragment);
         adapter.notifyDataSetChanged();
     }
