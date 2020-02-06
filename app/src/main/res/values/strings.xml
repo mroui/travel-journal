@@ -48,5 +48,6 @@
     <string name="profile_travels">travels</string>
     <string name="profile_friends">friends</string>
     <string name="profile_see_all_pref"><u>+ See all preferences</u></string>
+    <string name="profile_see_less_pref"><u>- See less preferences</u></string>
 
 </resources>

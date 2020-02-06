@@ -7,6 +7,7 @@
     <dimen name="margin_big">48dp</dimen>
     <dimen name="margin_bigger">64dp</dimen>
 
+    <dimen name="padding_minimal">2sp</dimen>
     <dimen name="padding_tiny">8dp</dimen>
     <dimen name="padding_smaller">12dp</dimen>
     <dimen name="padding_small">18dp</dimen>
@@ -24,4 +25,7 @@
     <dimen name="badge_size">15dp</dimen>
 
     <dimen name="line_spacing_small">8dp</dimen>
+
+    <dimen name="shadow_transition_minimal">2dp</dimen>
+    <dimen name="shadow_elevation_minimal">4dp</dimen>
 </resources>
