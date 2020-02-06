@@ -22,11 +22,11 @@
             <View
                 android:id="@+id/profile_background"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
+                android:layout_height="250dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@color/blue_active"/>
+                android:background="@color/main_light_blue"/>
 
             <ImageView
                 android:id="@+id/profile_notifications"
@@ -44,11 +44,11 @@
 
             <TextView
                 android:id="@+id/profile_notifications_badge"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="@dimen/badge_size"
+                android:layout_height="@dimen/badge_size"
                 app:layout_constraintEnd_toEndOf="@id/profile_notifications"
                 app:layout_constraintTop_toTopOf="@id/profile_notifications"
-                android:padding="2sp"
+                android:padding="@dimen/padding_minimal"
                 android:gravity="center"
                 android:background="@drawable/notifications_badge"/>
 
@@ -74,16 +74,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 style="@style/ms9_DefaultShadowStyle"
-                app:ms9_shadowTranslationZ="2dp"
-                app:ms9_shadowElevation="4dp">
+                app:ms9_shadowTranslationZ="@dimen/shadow_transition_minimal"
+                app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/profile_user_details"
                     android:layout_width="match_parent"
-                    android:layout_height="260dp"
+                    android:layout_height="275dp"
                     android:layout_marginStart="@dimen/margin_regular"
                     android:layout_marginEnd="@dimen/margin_regular"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="100dp"
                     android:background="@color/white">
 
                     <TextView
@@ -93,7 +93,7 @@
                         app:layout_constraintStart_toStartOf="@+id/profile_user_details"
                         app:layout_constraintEnd_toEndOf="@id/profile_user_details"
                         app:layout_constraintTop_toTopOf="@id/profile_user_details"
-                        android:layout_marginTop="60dp"
+                        android:layout_marginTop="@dimen/margin_bigger"
                         android:fontFamily="@font/raleway_bold"
                         android:text="@string/profile_username"
                         android:textColor="@color/black"
@@ -203,7 +203,7 @@
                 app:layout_constraintStart_toStartOf="@+id/profile_user_details_container"
                 app:layout_constraintEnd_toEndOf="@+id/profile_user_details_container"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="40dp"
                 android:contentDescription="@string/profile_image"
                 android:src="@drawable/ic_avatar"
                 app:civ_border_width="1dp"
@@ -215,8 +215,8 @@
             <com.greenfrvr.hashtagview.HashtagView
                 android:id="@+id/profile_preferences"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_height="105dp"
+                android:layout_marginTop="@dimen/margin_regular"
                 android:layout_marginStart="@dimen/margin_regular"
                 android:layout_marginEnd="@dimen/margin_regular"
                 app:layout_constraintStart_toStartOf="parent"
@@ -235,7 +235,7 @@
                 app:tagTextColor="@color/dark_gray"/>
 
             <TextView
-                android:id="@+id/profile_see_more_pref"
+                android:id="@+id/profile_see_all_preferences"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -255,7 +255,7 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_see_more_pref"
+                app:layout_constraintTop_toBottomOf="@+id/profile_see_all_preferences"
                 app:layout_constraintBottom_toTopOf="@+id/profile_settings_button"/>
 
             <com.google.android.material.button.MaterialButton
@@ -271,7 +271,7 @@
                 android:text="@string/profile_settings"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
-                app:backgroundTint="@color/blue_active" />
+                app:backgroundTint="@color/main_light_blue" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_sign_out_button"
@@ -287,7 +287,7 @@
                 android:text="@string/profile_sign_out"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
-                app:backgroundTint="@color/blue_active" />
+                app:backgroundTint="@color/main_light_blue" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
