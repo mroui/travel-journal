@@ -5,4 +5,6 @@ public interface Constants {
     String USER = "user";
     String USERS = "users";
     String SUCCESS = "SUCCESS";
+
+    int HASHTAG_HEIGHT = 303;
 }
