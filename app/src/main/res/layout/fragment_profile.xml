@@ -22,11 +22,11 @@
             <View
                 android:id="@+id/profile_background"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="260dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@color/light_gray"/>
+                android:background="@color/blue_active"/>
 
             <ImageView
                 android:id="@+id/profile_notifications"
@@ -80,10 +80,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/profile_user_details"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="260dp"
                     android:layout_marginStart="@dimen/margin_regular"
                     android:layout_marginEnd="@dimen/margin_regular"
-                    android:layout_marginBottom="@dimen/margin_regular"
                     android:layout_marginTop="120dp"
                     android:background="@color/white">
 
@@ -135,50 +134,52 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent">
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/padding_small"
                             app:backgroundTint="@color/light_gray"
                             android:fontFamily="@font/raleway_regular"
-                            android:text="contact"
+                            android:text="@string/profile_contact"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_smaller"
-                            android:drawableTop="@drawable/ic_location"
+                            android:drawableTop="@drawable/ic_email"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:insetRight="0dp"
                             android:insetLeft="0dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
+                            app:cornerRadius="0dp"
                             android:layout_weight="1"/>
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/padding_small"
                             app:backgroundTint="@color/light_gray"
                             android:fontFamily="@font/raleway_regular"
-                            android:text="trips"
+                            android:text="@string/profile_travels"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_smaller"
-                            android:drawableTop="@drawable/ic_location"
+                            android:drawableTop="@drawable/ic_map"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:insetRight="0dp"
                             android:insetLeft="0dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
+                            app:cornerRadius="0dp"
                             android:layout_weight="1"/>
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/padding_small"
                             app:backgroundTint="@color/light_gray"
                             android:fontFamily="@font/raleway_regular"
-                            android:text="friends"
+                            android:text="@string/profile_friends"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_smaller"
-                            android:drawableTop="@drawable/ic_location"
+                            android:drawableTop="@drawable/ic_people"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:insetRight="0dp"
@@ -186,6 +187,7 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:minHeight="0dp"
                             android:minWidth="0dp"
+                            app:cornerRadius="0dp"
                             android:layout_weight="1"/>
 
                     </LinearLayout>
@@ -210,6 +212,52 @@
                 app:civ_shadow_radius="10"
                 app:civ_shadow_color="@color/gray"/>
 
+            <com.greenfrvr.hashtagview.HashtagView
+                android:id="@+id/profile_preferences"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_user_details_container"
+                app:tagTextGravity="center"
+                app:tagMargin="@dimen/margin_smaller"
+                app:rowMargin="@dimen/margin_smaller"
+                app:tagPaddingBottom="@dimen/padding_tiny"
+                app:tagPaddingLeft="@dimen/padding_tiny"
+                app:tagPaddingTop="@dimen/padding_tiny"
+                app:tagPaddingRight="@dimen/padding_tiny"
+                app:tagBackground="@drawable/oval_background_hashtag"
+                app:tagForeground="?android:attr/selectableItemBackground"
+                app:tagTextSize="@dimen/text_small"
+                app:tagTextColor="@color/dark_gray"/>
+
+            <TextView
+                android:id="@+id/profile_see_more_pref"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_preferences"
+                android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/raleway_bold"
+                android:textSize="@dimen/text_regular"
+                android:textColor="@color/main_blue"
+                android:layout_gravity="center"
+                android:text="@string/profile_see_all_pref"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_see_more_pref"
+                app:layout_constraintBottom_toTopOf="@+id/profile_settings_button"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/profile_settings_button"
                 android:layout_width="match_parent"
@@ -232,7 +280,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/margin_big"
+                android:layout_marginBottom="@dimen/margin_regular"
                 android:layout_marginStart="@dimen/margin_regular"
                 android:layout_marginEnd="@dimen/margin_regular"
                 android:padding="@dimen/padding_small"
