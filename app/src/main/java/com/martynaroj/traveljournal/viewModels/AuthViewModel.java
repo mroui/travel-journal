@@ -62,4 +62,8 @@ public class AuthViewModel extends AndroidViewModel {
     public void logInWithEmail(String email, String password) {
         userLiveData = authRepository.logInWithEmail(email, password);
     }
+
+    public void getUserFromDatabase(String uid) {
+        userLiveData = authRepository.getUser(uid);
+    }
 }

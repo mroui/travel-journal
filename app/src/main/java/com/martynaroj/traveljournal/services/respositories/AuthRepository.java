@@ -166,6 +166,29 @@ public class AuthRepository {
     }
 
 
+    public LiveData<DataWrapper<User>> getUser(String uid) {
+        MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
+        DocumentReference userReference = usersRef.document(uid);
+        userReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    User user = document.toObject(User.class);
+                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
+                            "Getting user successful!"));
+                } else {
+                    userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                            "ERROR: No such user in database"));
+                }
+            } else {
+                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
+                        "ERROR: Failed with " + task.getException()));
+            }
+        });
+        return userLiveData;
+    }
+
+
     private void handleUserLiveDataErrors(Task authTask, MutableLiveData<DataWrapper<User>> userLiveData) {
         if (authTask.getException() != null) {
             try {
@@ -182,4 +205,5 @@ public class AuthRepository {
                     "Error: Unhandled authorization error"));
         }
     }
+
 }
