@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.viewModels;
+package com.martynaroj.traveljournal.viewmodels;
 
 import android.app.Application;
 

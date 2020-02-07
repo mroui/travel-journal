@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.viewModels.SplashViewModel;
+import com.martynaroj.traveljournal.viewmodels.SplashViewModel;
 
 import static com.martynaroj.traveljournal.view.others.interfaces.Constants.USER;
 

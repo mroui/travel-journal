@@ -18,7 +18,7 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
-import com.martynaroj.traveljournal.viewModels.AuthViewModel;
+import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 
 import java.util.Objects;
