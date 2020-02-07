@@ -36,7 +36,7 @@
                 android:fontFamily="@font/robotoslab_medium"
                 android:text="@string/login_title"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_big"/>
+                android:textSize="@dimen/text_bigger"/>
 
             <ImageView
                 android:id="@+id/login_image"

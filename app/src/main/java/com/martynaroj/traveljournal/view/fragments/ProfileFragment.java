@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
-import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 
 import java.util.Objects;
 
@@ -93,7 +93,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setListeners() {
         binding.profileSignOutButton.setOnClickListener(this);
         binding.profileNotifications.setOnClickListener(this);
-        binding.profileEdit.setOnClickListener(this);
         binding.profileContact.setOnClickListener(this);
         binding.profileTravels.setOnClickListener(this);
         binding.profileFriends.setOnClickListener(this);
@@ -105,14 +104,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.profile_sign_out_button:
-                signOut();
-                return;
             case R.id.profile_notifications:
                 showSnackBar("clicked: notifications", Snackbar.LENGTH_SHORT);
-                return;
-            case R.id.profile_edit:
-                showSnackBar("clicked: edit", Snackbar.LENGTH_SHORT);
                 return;
             case R.id.profile_contact:
                 showSnackBar("clicked: contact", Snackbar.LENGTH_SHORT);
@@ -127,8 +120,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 seeAllPreferences();
                 return;
             case R.id.profile_settings_button:
-                showSnackBar("clicked: settings", Snackbar.LENGTH_SHORT);
+                openSettings();
+                return;
+            case R.id.profile_sign_out_button:
+                signOut();
         }
+    }
+
+
+    private void openSettings() {
+        getNavigationInteractions().changeFragment(this, ProfileSettingsFragment.newInstance(), true);
     }
 
 
@@ -142,7 +143,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             constraintLayout.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
             seePreferences = getResources().getString(R.string.profile_see_less_pref);
         }
-        binding.profileSeeAllPreferences.setPaintFlags(binding.profileSeeAllPreferences.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        binding.profileSeeAllPreferences.setPaintFlags(binding.profileSeeAllPreferences.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         binding.profileSeeAllPreferences.setText(seePreferences);
         binding.profilePreferences.setLayoutParams(constraintLayout);
     }

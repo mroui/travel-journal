@@ -18,8 +18,11 @@
     <dimen name="text_smaller">12sp</dimen>
     <dimen name="text_small">14sp</dimen>
     <dimen name="text_regular">16sp</dimen>
-    <dimen name="text_medium">24sp</dimen>
-    <dimen name="text_big">36sp</dimen>
+    <dimen name="text_medium">20sp</dimen>
+    <dimen name="text_big">24sp</dimen>
+    <dimen name="text_bigger">36sp</dimen>
+
+    <dimen name="text_settings_title">18sp</dimen>
 
     <dimen name="icon_size">36dp</dimen>
     <dimen name="badge_size">15dp</dimen>
