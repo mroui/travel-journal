@@ -61,20 +61,6 @@
                     android:gravity="center"
                     android:background="@drawable/notifications_badge"/>
 
-                <ImageView
-                    android:id="@+id/profile_edit"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toStartOf="@id/profile_notifications"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="@dimen/margin_regular"
-                    android:layout_marginEnd="@dimen/margin_regular"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:contentDescription="@string/profile_edit"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_edit" />
-
                 <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
                     android:id="@+id/profile_user_details_container"
                     android:layout_width="match_parent"
@@ -106,7 +92,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@{user.username}"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/text_medium"/>
+                            android:textSize="@dimen/text_big"/>
 
                         <TextView
                             android:id="@+id/profile_bio"
