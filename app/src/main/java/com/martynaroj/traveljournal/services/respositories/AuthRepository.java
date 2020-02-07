@@ -181,8 +181,7 @@ public class AuthRepository {
                             "ERROR: No such user in database"));
                 }
             } else {
-                userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "ERROR: Failed with " + task.getException()));
+                handleUserLiveDataErrors(task, userLiveData);
             }
         });
         return userLiveData;
