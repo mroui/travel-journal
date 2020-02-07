@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.martynaroj.traveljournal.View.MainActivity">
+    tools:context="com.martynaroj.traveljournal.view.MainActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
