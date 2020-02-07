@@ -5,6 +5,8 @@
     <string name="board">Board</string>
     <string name="profile">Profile</string>
 
+    <string name="back_arrow">Back</string>
+
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
     <string name="login_password">PASSWORD</string>
@@ -22,7 +24,6 @@
     <string name="forgot_password_back"><u>Back to Login</u></string>
     <string name="forgot_password_send">Send link</string>
     <string name="forgot_password_email">EMAIL</string>
-    <string name="forgot_password_back_arrow">Back</string>
 
     <string name="signup_title">Welcome\non\nBoard!</string>
     <string name="signup_image">Van</string>
@@ -34,7 +35,6 @@
     <string name="signup_account_question">Already have an account?</string>
     <string name="signup_account_log_in"><u>Log in</u></string>
     <string name="signup_back">Back to Login</string>
-    <string name="signup_back_arrow">Back</string>
 
     <string name="profile_sign_out">Sign out</string>
     <string name="profile_settings">settings</string>
