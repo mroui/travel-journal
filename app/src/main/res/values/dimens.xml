@@ -30,7 +30,7 @@
 
     <dimen name="line_spacing_small">8dp</dimen>
 
-    <dimen name="shadow_transition_minimal">2dp</dimen>
+    <dimen name="shadow_translation_z_minimal">2dp</dimen>
     <dimen name="shadow_elevation_minimal">4dp</dimen>
 
     <dimen name="padding_text_input">14dp</dimen>

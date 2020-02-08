@@ -69,7 +69,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     style="@style/ms9_DefaultShadowStyle"
-                    app:ms9_shadowTranslationZ="@dimen/shadow_transition_minimal"
+                    app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
                     app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
