@@ -35,6 +35,11 @@ public class ProfileSettingsFragment extends BaseFragment {
         binding.profileSettingsPersonalPreferencesInput.setAdapter(adapter);
         binding.profileSettingsPersonalPreferencesInput.setThreshold(1);
 
+        String[] strings = new String[] {"Item 1", "Item 2", "Item 3", "Item 4"};
+        binding.profileSettingsPrivacyEmailSelect.setItems(strings);
+        binding.profileSettingsPrivacyLocationSelect.setItems(strings);
+        binding.profileSettingsPrivacyPreferencesSelect.setItems(strings);
+
         return view;
     }
 
