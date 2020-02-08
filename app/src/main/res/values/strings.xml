@@ -53,28 +53,46 @@
     <string name="profile_settings_settings">Settings</string>
     <string name="profile_settings_personal">PERSONAL</string>
     <string name="profile_settings_personal_picture_title">Profile picture</string>
-    <string name="profile_settings_personal_picture_desc">Click on a photo to change your profile picture</string>
+    <string name="profile_settings_personal_picture_desc">Click on a photo to change
+        your profile picture</string>
     <string name="profile_settings_personal_bio_title">Bio</string>
-    <string name="profile_settings_personal_bio_desc">Update short description about yourself</string>
+    <string name="profile_settings_personal_bio_desc">Update short description
+        about yourself</string>
     <string name="profile_settings_personal_location_title">Location</string>
-    <string name="profile_settings_personal_location_desc">Set your current location or let us find You</string>
+    <string name="profile_settings_personal_location_desc">Set your current location
+        or let us find You</string>
     <string name="profile_settings_personal_location_find_me">Find me</string>
     <string name="profile_settings_personal_preferences_title">Preferences</string>
-    <string name="profile_settings_personal_preferences_desc">Choose some preferences tags which you identify with</string>
-    <string name="profile_settings_personal_username_title">Username</string>
-    <string name="profile_settings_personal_username_desc">Change your username</string>
-    <string name="profile_settings_personal_save">Save all changes</string>
+    <string name="profile_settings_personal_preferences_desc">Choose some preferences tags
+        which you identify with</string>
+    <string name="profile_settings_personal_save">Save personal changes</string>
     <string name="profile_settings_account">ACCOUNT</string>
+    <string name="profile_settings_account_username_title">Username</string>
+    <string name="profile_settings_account_username_desc">Change your username</string>
+    <string name="profile_settings_account_username">USERNAME</string>
     <string name="profile_settings_account_email_title">Email</string>
-    <string name="profile_settings_account_email_desc">Change your email address and confirm it</string>
+    <string name="profile_settings_account_email_desc">Change your email address</string>
     <string name="profile_settings_account_email_new_email">NEW EMAIL</string>
     <string name="profile_settings_account_email_confirm_email">CONFIRM NEW EMAIL</string>
     <string name="profile_settings_account_email_change">Change</string>
     <string name="profile_settings_account_password_title">Password</string>
-    <string name="profile_settings_account_password_desc">Change your password and confirm it</string>
+    <string name="profile_settings_account_password_desc">Change your password</string>
     <string name="profile_settings_account_password_current_password">CURRENT PASSWORD</string>
     <string name="profile_settings_account_password_new_password">NEW PASSWORD</string>
     <string name="profile_settings_account_password_confirm_password">CONFIRM NEW PASSWORD</string>
     <string name="profile_settings_account_password_change">Change</string>
+    <string name="profile_settings_privacy">PRIVACY</string>
+    <string name="profile_settings_privacy_email_title">Email</string>
+    <string name="profile_settings_privacy_email_desc">Who can see your email?</string>
+    <string name="profile_settings_privacy_location_title">Location</string>
+    <string name="profile_settings_privacy_location_desc">Who can see your location?</string>
+    <string name="profile_settings_privacy_preferences_title">Preferences</string>
+    <string name="profile_settings_privacy_preferences_desc">Who can see your preferences?</string>
+    <string name="profile_settings_privacy_save">Save privacy changes</string>
+    <string name="profile_settings_about">ABOUT</string>
+    <string name="profile_settings_about_creator_title">Creator</string>
+    <string name="profile_settings_about_creator_desc">Martyna Rój</string>
+    <string name="profile_settings_about_version_title">Version</string>
+    <string name="profile_settings_about_version_desc">1.0</string>
 
 </resources>
