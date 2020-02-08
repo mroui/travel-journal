@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="margin_tiny">4dp</dimen>
     <dimen name="margin_smaller">8dp</dimen>
     <dimen name="margin_small">12dp</dimen>
     <dimen name="margin_regular">24dp</dimen>
@@ -31,4 +32,9 @@
 
     <dimen name="shadow_transition_minimal">2dp</dimen>
     <dimen name="shadow_elevation_minimal">4dp</dimen>
+
+    <dimen name="padding_text_input">14dp</dimen>
+
+    <dimen name="chip_height">24dp</dimen>
+    <dimen name="chip_text_size">14dp</dimen>
 </resources>
