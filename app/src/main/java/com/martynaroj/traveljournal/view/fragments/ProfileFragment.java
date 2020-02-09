@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -129,7 +130,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void openSettings() {
-        getNavigationInteractions().changeFragment(this, ProfileSettingsFragment.newInstance(), true);
+        Fragment settingsFragment = ProfileSettingsFragment.newInstance();
+        Bundle args = new Bundle();
+        args.putSerializable(Constants.USER, user);
+        settingsFragment.setArguments(args);
+        getNavigationInteractions().changeFragment(this, settingsFragment, true);
     }
 
 
@@ -137,7 +142,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         ConstraintLayout.LayoutParams constraintLayout = (ConstraintLayout.LayoutParams) binding.profilePreferences.getLayoutParams();
         String seePreferences;
         if (binding.profilePreferences.getLayoutParams().height == ConstraintLayout.LayoutParams.WRAP_CONTENT) {
-            constraintLayout.height = Constants.HASHTAG_HEIGHT;
+            constraintLayout.height = Constants.PREFERENCES_VIEW_HEIGHT;
             seePreferences = getResources().getString(R.string.profile_see_all_pref);
         } else {
             constraintLayout.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;

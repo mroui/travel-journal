@@ -9,16 +9,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
+import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ProfileSettingsFragment extends BaseFragment {
 
     private FragmentProfileSettingsBinding binding;
+    private User user;
 
     static ProfileSettingsFragment newInstance() {
         return new ProfileSettingsFragment();
@@ -35,12 +39,37 @@ public class ProfileSettingsFragment extends BaseFragment {
         binding.profileSettingsPersonalPreferencesInput.setAdapter(adapter);
         binding.profileSettingsPersonalPreferencesInput.setThreshold(1);
 
-        String[] strings = new String[] {"Item 1", "Item 2", "Item 3", "Item 4"};
-        binding.profileSettingsPrivacyEmailSelect.setItems(strings);
-        binding.profileSettingsPrivacyLocationSelect.setItems(strings);
-        binding.profileSettingsPrivacyPreferencesSelect.setItems(strings);
+        initUser();
+        initPrivacySelectItems();
+        initUserData();
 
         return view;
+    }
+
+    private void initUser() {
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            user = (User) bundle.getSerializable(Constants.USER);
+            binding.setUser(user);
+        } else user = new User();
+    }
+
+
+    private void initPrivacySelectItems() {
+        binding.profileSettingsPrivacyEmailSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+        binding.profileSettingsPrivacyLocationSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+        binding.profileSettingsPrivacyPreferencesSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+    }
+
+    private void initUserData() {
+        int index = Objects.requireNonNull(user.getPrivacy().get(Constants.EMAIL));
+        binding.profileSettingsPrivacyEmailSelect.setSelectedIndex(index);
+
+        index = Objects.requireNonNull(user.getPrivacy().get(Constants.LOCATION));
+        binding.profileSettingsPrivacyLocationSelect.setSelectedIndex(index);
+
+        index = Objects.requireNonNull(user.getPrivacy().get(Constants.PREFERENCES));
+        binding.profileSettingsPrivacyPreferencesSelect.setSelectedIndex(index);
     }
 
 
