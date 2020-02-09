@@ -2,9 +2,13 @@ package com.martynaroj.traveljournal.services.models;
 
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentReference;
+import com.martynaroj.traveljournal.view.others.enums.Privacy;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User implements Serializable {
 
@@ -16,6 +20,7 @@ public class User implements Serializable {
     private Place location;
     private List<String> preferences;
     private List<DocumentReference> friends;
+    private Map<String, Integer> privacy;
     //private List<Travel> travels;
 
     public User() {
@@ -25,6 +30,15 @@ public class User implements Serializable {
         this.uid = uid;
         this.username = username;
         this.email = email;
+
+        this.privacy = new HashMap<>();
+        defineDefaultPrivacy();
+    }
+
+    private void defineDefaultPrivacy() {
+        privacy.put(Constants.EMAIL, Privacy.PUBLIC.ordinal());
+        privacy.put(Constants.LOCATION, Privacy.PUBLIC.ordinal());
+        privacy.put(Constants.PREFERENCES, Privacy.PUBLIC.ordinal());
     }
 
     public String getUsername() {
@@ -89,5 +103,13 @@ public class User implements Serializable {
 
     public void setFriends(List<DocumentReference> friends) {
         this.friends = friends;
+    }
+
+    public Map<String, Integer> getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Map<String, Integer> privacy) {
+        this.privacy = privacy;
     }
 }
