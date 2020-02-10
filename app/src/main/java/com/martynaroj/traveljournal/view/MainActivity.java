@@ -1,9 +1,11 @@
 package com.martynaroj.traveljournal.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 import com.martynaroj.traveljournal.services.models.User;
@@ -22,6 +25,7 @@ import com.martynaroj.traveljournal.view.fragments.LogInFragment;
 import com.martynaroj.traveljournal.view.fragments.ProfileFragment;
 import com.martynaroj.traveljournal.view.interfaces.NavigationListener;
 import com.martynaroj.traveljournal.view.interfaces.ProgressBarListener;
+import com.martynaroj.traveljournal.view.interfaces.SnackbarListener;
 import com.martynaroj.traveljournal.view.others.classes.ViewPagerListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.victor.loading.rotate.RotateLoading;
@@ -29,7 +33,8 @@ import com.victor.loading.rotate.RotateLoading;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationListener, ProgressBarListener {
+public class MainActivity extends AppCompatActivity implements NavigationListener,
+        ProgressBarListener, SnackbarListener {
 
     private NavigationBarAdapter adapter;
     private List<Fragment> fragmentsList = new ArrayList<>();
@@ -141,6 +146,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         progressBarLayout.setVisibility(View.INVISIBLE);
         progressBar.stop();
         enableDisableViewGroup((ViewGroup) root, true);
+    }
+
+
+    @Override
+    public void showSnackBar(View root, Activity activity, String message, int duration) {
+        Snackbar snackbar = Snackbar.make(root, message, duration);
+        snackbar.setAnchorView(activity.findViewById(R.id.bottom_navigation_view));
+        TextView textView = snackbar.getView().findViewById(R.id.snackbar_text);
+        textView.setMaxLines(3);
+        snackbar.show();
     }
 
 }

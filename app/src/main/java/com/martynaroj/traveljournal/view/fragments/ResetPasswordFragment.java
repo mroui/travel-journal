@@ -5,18 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.FragmentResetPasswordBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
-import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
-import com.martynaroj.traveljournal.databinding.FragmentResetPasswordBinding;
 
 import java.util.Objects;
 
@@ -81,11 +80,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     private void showSnackBar(String message, int duration) {
-        Snackbar snackbar = Snackbar.make(binding.getRoot(), message, duration);
-        snackbar.setAnchorView(Objects.requireNonNull(getActivity()).findViewById(R.id.bottom_navigation_view));
-        TextView textView = snackbar.getView().findViewById(R.id.snackbar_text);
-        textView.setMaxLines(3);
-        snackbar.show();
+        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 
