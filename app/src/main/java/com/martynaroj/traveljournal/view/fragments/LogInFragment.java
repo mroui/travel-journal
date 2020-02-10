@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.Credentials;
+import com.google.android.gms.auth.api.credentials.CredentialsClient;
+import com.google.android.gms.auth.api.credentials.CredentialsOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.martynaroj.traveljournal.R;
@@ -32,6 +38,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     private FragmentLogInBinding binding;
     private AuthViewModel authViewModel;
     private GoogleClient googleClient;
+    private CredentialsClient credentialsClient;
 
     public static LogInFragment newInstance() {
         return new LogInFragment();
@@ -46,8 +53,19 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         initAuthViewModel();
         setListeners();
         initGoogleClient();
+        initCredentialsClient();
 
         return view;
+    }
+
+
+    private void initCredentialsClient() {
+        CredentialsOptions options = new CredentialsOptions.Builder()
+                .forceEnableSaveDialog()
+                .build();
+        if (getActivity() != null) {
+            credentialsClient = Credentials.getClient(getActivity(), options);
+        }
     }
 
 
@@ -107,6 +125,9 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             String email = Objects.requireNonNull(binding.loginEmailInput.getText()).toString();
             String password = Objects.requireNonNull(binding.loginPasswordInput.getText()).toString();
 
+            Credential credential = new Credential.Builder(email).setPassword(password).build();
+            saveCredentials(credential);
+
             authViewModel.logInWithEmail(email, password);
             authViewModel.getUserLiveData().observe(this, user -> {
                 if (user.getStatus() == Status.SUCCESS) {
@@ -123,6 +144,24 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
                 } else {
                     stopProgressBar();
                     showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                }
+            });
+        }
+    }
+
+
+    private void saveCredentials(Credential credential) {
+        if (credentialsClient != null) {
+            credentialsClient.save(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful())
+                    return;
+                Exception e = task.getException();
+                if (e instanceof ResolvableApiException) {
+                    ResolvableApiException rae = (ResolvableApiException) e;
+                    try {
+                        rae.startResolutionForResult(getActivity(), Constants.RC_SAVE_CREDENTIALS);
+                    } catch (IntentSender.SendIntentException ignored) {
+                    }
                 }
             });
         }
