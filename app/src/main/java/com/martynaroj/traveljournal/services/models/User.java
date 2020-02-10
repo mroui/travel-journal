@@ -1,7 +1,11 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentReference;
+import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
@@ -10,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class User implements Serializable {
+public class User extends BaseObservable implements Serializable {
 
     private String uid;
     private String username;
@@ -41,75 +45,93 @@ public class User implements Serializable {
         privacy.put(Constants.PREFERENCES, Privacy.PUBLIC.ordinal());
     }
 
+    @Bindable
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+        notifyPropertyChanged(BR.username);
     }
 
+    @Bindable
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+        notifyPropertyChanged(BR.email);
     }
 
+    @Bindable
     public String getUid() {
         return uid;
     }
 
     public void setUid(String uid) {
         this.uid = uid;
+        notifyPropertyChanged(BR.uid);
     }
 
+    @Bindable
     public String getPhoto() {
         return photo;
     }
 
     public void setPhoto(String photo) {
         this.photo = photo;
+        notifyPropertyChanged(BR.photo);
     }
 
+    @Bindable
     public String getBio() {
         return bio;
     }
 
     public void setBio(String bio) {
         this.bio = bio;
+        notifyPropertyChanged(BR.bio);
     }
 
+    @Bindable
     public Place getLocation() {
         return location;
     }
 
     public void setLocation(Place location) {
         this.location = location;
+        notifyPropertyChanged(BR.location);
     }
 
+    @Bindable
     public List<String> getPreferences() {
         return preferences;
     }
 
     public void setPreferences(List<String> preferences) {
         this.preferences = preferences;
+        notifyPropertyChanged(BR.preferences);
     }
 
+    @Bindable
     public List<DocumentReference> getFriends() {
         return friends;
     }
 
     public void setFriends(List<DocumentReference> friends) {
         this.friends = friends;
+        notifyPropertyChanged(BR.friends);
     }
 
+    @Bindable
     public Map<String, Integer> getPrivacy() {
         return privacy;
     }
 
     public void setPrivacy(Map<String, Integer> privacy) {
         this.privacy = privacy;
+        notifyPropertyChanged(BR.privacy);
     }
 }
