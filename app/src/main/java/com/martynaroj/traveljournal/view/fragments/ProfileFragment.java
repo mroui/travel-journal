@@ -164,16 +164,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void startProgressBar() {
-        binding.profileProgressbarLayout.setVisibility(View.VISIBLE);
-        binding.profileProgressbar.start();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.profileProgressbarLayout, binding.profileProgressbar);
     }
 
 
     private void stopProgressBar() {
-        binding.profileProgressbarLayout.setVisibility(View.INVISIBLE);
-        binding.profileProgressbar.stop();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.profileProgressbarLayout, binding.profileProgressbar);
     }
 
 

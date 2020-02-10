@@ -71,16 +71,12 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     private void startProgressBar() {
-        binding.forgotPasswordProgressbarLayout.setVisibility(View.VISIBLE);
-        binding.forgotPasswordProgressbar.start();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
     }
 
 
     private void stopProgressBar() {
-        binding.forgotPasswordProgressbarLayout.setVisibility(View.INVISIBLE);
-        binding.forgotPasswordProgressbar.stop();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
     }
 
 

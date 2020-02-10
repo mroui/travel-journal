@@ -1,27 +1,31 @@
 package com.martynaroj.traveljournal.view.base;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.view.interfaces.NavigationListener;
+import com.martynaroj.traveljournal.view.interfaces.ProgressBarListener;
 
 public class BaseFragment extends Fragment {
 
     private NavigationListener navigationListener;
+    private ProgressBarListener progressBarListener;
 
     protected NavigationListener getNavigationInteractions() {
         return navigationListener;
     }
 
+    protected ProgressBarListener getProgressBarInteractions() {
+        return progressBarListener;
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         navigationListener = null;
+        progressBarListener = null;
     }
 
 
@@ -30,17 +34,6 @@ public class BaseFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof NavigationListener)
             navigationListener = (NavigationListener) context;
-    }
-
-
-    protected void enableDisableViewGroup(ViewGroup viewGroup, boolean enabled) {
-        int childCount = viewGroup.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View view = viewGroup.getChildAt(i);
-            view.setEnabled(enabled);
-            if (view instanceof ViewGroup) {
-                enableDisableViewGroup((ViewGroup) view, enabled);
-            }
-        }
+        progressBarListener = (ProgressBarListener) context;
     }
 }

@@ -2,6 +2,8 @@ package com.martynaroj.traveljournal.view;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.NavigationBarAdapter;
 import com.martynaroj.traveljournal.view.fragments.BoardFragment;
@@ -18,14 +21,15 @@ import com.martynaroj.traveljournal.view.fragments.HomeFragment;
 import com.martynaroj.traveljournal.view.fragments.LogInFragment;
 import com.martynaroj.traveljournal.view.fragments.ProfileFragment;
 import com.martynaroj.traveljournal.view.interfaces.NavigationListener;
+import com.martynaroj.traveljournal.view.interfaces.ProgressBarListener;
 import com.martynaroj.traveljournal.view.others.classes.ViewPagerListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
-import com.martynaroj.traveljournal.databinding.ActivityMainBinding;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationListener {
+public class MainActivity extends AppCompatActivity implements NavigationListener, ProgressBarListener {
 
     private NavigationBarAdapter adapter;
     private List<Fragment> fragmentsList = new ArrayList<>();
@@ -112,4 +116,31 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         adapter.changeItem(id, fragment);
         adapter.notifyDataSetChanged();
     }
+
+
+    protected void enableDisableViewGroup(ViewGroup viewGroup, boolean enabled) {
+        int childCount = viewGroup.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = viewGroup.getChildAt(i);
+            view.setEnabled(enabled);
+            if (view instanceof ViewGroup) {
+                enableDisableViewGroup((ViewGroup) view, enabled);
+            }
+        }
+    }
+
+
+    public void startProgressBar(View root, View progressBarLayout, RotateLoading progressBar) {
+        progressBarLayout.setVisibility(View.VISIBLE);
+        progressBar.start();
+        enableDisableViewGroup((ViewGroup) root, false);
+    }
+
+
+    public void stopProgressBar(View root, View progressBarLayout, RotateLoading progressBar) {
+        progressBarLayout.setVisibility(View.INVISIBLE);
+        progressBar.stop();
+        enableDisableViewGroup((ViewGroup) root, true);
+    }
+
 }

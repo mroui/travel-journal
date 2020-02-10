@@ -126,16 +126,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void startProgressBar() {
-        binding.signupProgressbarLayout.setVisibility(View.VISIBLE);
-        binding.signupProgressbar.start();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
     }
 
 
     private void stopProgressBar() {
-        binding.signupProgressbarLayout.setVisibility(View.INVISIBLE);
-        binding.signupProgressbar.stop();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
     }
 
 

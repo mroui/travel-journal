@@ -218,16 +218,12 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void startProgressBar() {
-        binding.loginProgressbarLayout.setVisibility(View.VISIBLE);
-        binding.loginProgressbar.start();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), false);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.loginProgressbarLayout, binding.loginProgressbar);
     }
 
 
     private void stopProgressBar() {
-        binding.loginProgressbarLayout.setVisibility(View.INVISIBLE);
-        binding.loginProgressbar.stop();
-        enableDisableViewGroup((ViewGroup) binding.getRoot(), true);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.loginProgressbarLayout, binding.loginProgressbar);
     }
 
 
