@@ -7,16 +7,15 @@ public class DataWrapper<T> {
     private T data;
     private Status status;
     private String message;
-    private boolean isNew = false;
     private boolean isAdded = false;
     private boolean isAuthenticated = false;
     private boolean isVerified = false;
 
-    public DataWrapper(T data, Status status, String message, boolean isNew, boolean isAdded, boolean isVerified) {
+    public DataWrapper(T data, Status status, String message, boolean isAuthenticated, boolean isAdded, boolean isVerified) {
         this.data = data;
         this.status = status;
         this.message = message;
-        this.isNew = isNew;
+        this.isAuthenticated = isAuthenticated;
         this.isAdded = isAdded;
         this.isVerified = isVerified;
     }
@@ -35,16 +34,16 @@ public class DataWrapper<T> {
         return status;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public String getMessage() {
         return message;
     }
 
-    public boolean isNew() {
-        return isNew;
-    }
-
-    public void setNew(boolean aNew) {
-        isNew = aNew;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isAdded() {
