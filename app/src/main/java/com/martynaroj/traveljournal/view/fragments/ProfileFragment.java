@@ -17,14 +17,13 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
-import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
-import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentProfileBinding binding;
-    private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private User user;
 
     public static ProfileFragment newInstance() {
@@ -37,9 +36,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initAuthViewModel();
+        initUserViewModel();
         setListeners();
-        initUser();
+        getCurrentUser();
 
 //        List<String> names = new ArrayList<>(Arrays.asList("andfgna", "olaasdgfd", "ansdaasdna", "ola","anggna", "ola","asdfsdfnna", "ola", "dsfgsdfsdfs", "asfddsgdfg"));
 //        binding.profilePreferences.setData(names, item -> {
@@ -52,28 +51,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void initUser() {
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            user = (User) bundle.getSerializable(Constants.USER);
-            binding.setUser(user);
-        } else {
-            getCurrentUser();
-        }
-    }
-
-
     private void getCurrentUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             startProgressBar();
-            authViewModel.getUserFromDatabase(firebaseAuth.getCurrentUser().getUid());
-            authViewModel.getUserLiveData().observe(getViewLifecycleOwner(), userData -> {
-                if (userData.getStatus() == Status.SUCCESS) {
-                    user = userData.getData();
+            userViewModel.getDataSnapshotLiveData(firebaseAuth.getCurrentUser().getUid());
+            userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+                if (user != null) {
+                    this.user = user;
                     binding.setUser(user);
                 } else {
-                    showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
+                    showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
                 stopProgressBar();
             });
@@ -83,8 +71,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void initAuthViewModel() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+    private void initUserViewModel() {
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
 
