@@ -32,15 +32,7 @@ public class SplashViewModel extends AndroidViewModel {
         return isUserAuthLiveData;
     }
 
-    public void setIsUserAuthLiveData(LiveData<DataWrapper<User>> isUserAuthLiveData) {
-        this.isUserAuthLiveData = isUserAuthLiveData;
-    }
-
     public LiveData<DataWrapper<User>> getUserLiveData() {
         return userLiveData;
-    }
-
-    public void setUserLiveData(LiveData<DataWrapper<User>> userLiveData) {
-        this.userLiveData = userLiveData;
     }
 }
