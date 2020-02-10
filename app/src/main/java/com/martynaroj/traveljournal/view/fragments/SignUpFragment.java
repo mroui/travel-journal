@@ -130,7 +130,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
     }
 
 
