@@ -58,8 +58,7 @@ public class AuthRepository {
             firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
-                            "Verification email has been sent. Check your email to verify account",
-                            true, false, false));
+                            "Verification email has been sent. Check your email to verify account"));
                 } else {
                     handleUserLiveDataErrors(task, userLiveData);
                 }
@@ -95,11 +94,18 @@ public class AuthRepository {
                     String uid = firebaseUser.getUid();
                     String name = firebaseUser.getDisplayName();
                     String email = firebaseUser.getEmail();
-                    boolean isNew = (authTask.getResult() != null && authTask.getResult().getAdditionalUserInfo() != null)
-                                    && authTask.getResult().getAdditionalUserInfo().isNewUser();
                     User user = new User(uid, name, email);
-                    userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Authorization successful!", isNew, false, true));
+                    usersRef.document(uid).get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            boolean isAdded;
+                            isAdded = document != null && document.exists();
+                            userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
+                                    "Authorization successful!", true, isAdded, true));
+                        } else {
+                            handleUserLiveDataErrors(task, userLiveData);
+                        }
+                    });
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             "ERROR: User identity error. Please try again later"));
@@ -117,9 +123,9 @@ public class AuthRepository {
         DocumentReference uidRef = usersRef.document(user.getData().getUid());
         uidRef.get().addOnCompleteListener(uidTask -> {
             if (uidTask.isSuccessful()) {
+                user.setAdded(true);
                 DocumentSnapshot document = uidTask.getResult();
                 if (document != null && !document.exists()) {
-                    user.setAdded(true);
                     uidRef.set(user.getData()).addOnCompleteListener(addingTask -> {
                         if (addingTask.isSuccessful()) {
                             newUserLiveData.setValue(user);
@@ -148,12 +154,10 @@ public class AuthRepository {
                 if (firebaseUser != null) {
                     String uid = firebaseUser.getUid();
                     String name = firebaseUser.getDisplayName();
-                    boolean isNew = (authTask.getResult() != null && authTask.getResult().getAdditionalUserInfo() != null)
-                            && authTask.getResult().getAdditionalUserInfo().isNewUser();
                     boolean isVerified = firebaseUser.isEmailVerified();
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Authorization successful!", isNew, false, isVerified));
+                            "Authorization successful!", true, false, isVerified));
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             "ERROR: User identity error. Please try again later"));
@@ -175,10 +179,10 @@ public class AuthRepository {
                 if (document != null && document.exists()) {
                     User user = document.toObject(User.class);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Getting user successful!"));
+                            "Getting user successful!", true, true, true));
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "ERROR: No such user in database"));
+                            "ERROR: No such user in database", true, false, true));
                 }
             } else {
                 handleUserLiveDataErrors(task, userLiveData);

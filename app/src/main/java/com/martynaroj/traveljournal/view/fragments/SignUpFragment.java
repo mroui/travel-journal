@@ -217,7 +217,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, user -> {
             if (user.getStatus() == Status.SUCCESS) {
-                if (user.isNew()) {
+                if (!user.isAdded()) {
                     addNewUser(user);
                 } else {
                     stopProgressBar();

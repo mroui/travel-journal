@@ -116,7 +116,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
                     } else if (!user.isVerified()) {
                         showSnackBar("Error: Account is not verified", Snackbar.LENGTH_SHORT);
                         resendVerificationMail();
-                    } else if (!user.isNew()){
+                    } else {
                         stopProgressBar();
                         showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
                         getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
@@ -175,7 +175,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, user -> {
             if (user.getStatus() == Status.SUCCESS) {
-                if (user.isNew()) {
+                if (!user.isAdded()) {
                     addNewUser(user);
                 } else {
                     stopProgressBar();
