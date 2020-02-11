@@ -9,6 +9,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
+import java.util.Map;
+
 public class UserRepository {
 
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
@@ -29,4 +31,8 @@ public class UserRepository {
         return userData;
     }
 
+    public void updateUser(User user, Map<String, Object> map) {
+        DocumentReference userReference = usersRef.document(user.getUid());
+        userReference.update(map);
+    }
 }
