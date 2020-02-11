@@ -38,7 +38,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         initUserViewModel();
         setListeners();
-        getCurrentUser();
+
+        initUser();
 
 //        List<String> names = new ArrayList<>(Arrays.asList("andfgna", "olaasdgfd", "ansdaasdna", "ola","anggna", "ola","asdfsdfnna", "ola", "dsfgsdfsdfs", "asfddsgdfg"));
 //        binding.profilePreferences.setData(names, item -> {
@@ -48,6 +49,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //        });
 
         return view;
+    }
+
+
+    private void initUser() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+                if (user != null) {
+                    this.user = user;
+                    binding.setUser(user);
+                }
+        });
+        getCurrentUser();
     }
 
 
@@ -72,7 +84,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void initUserViewModel() {
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        if (getActivity() != null)
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
     }
 
 
