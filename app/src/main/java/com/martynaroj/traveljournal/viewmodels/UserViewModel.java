@@ -15,11 +15,12 @@ public class UserViewModel extends AndroidViewModel {
 
     private UserRepository userRepository;
     private MutableLiveData<User> userLiveData;
-    private final MutableLiveData<User> user = new MutableLiveData<>();
+    private final MutableLiveData<User> user;
 
     public UserViewModel(Application application) {
         super(application);
         userRepository = new UserRepository();
+        user = new MutableLiveData<>();
     }
 
     public LiveData<User> getUserLiveData() {
