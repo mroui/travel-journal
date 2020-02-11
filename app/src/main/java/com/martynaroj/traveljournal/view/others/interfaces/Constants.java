@@ -10,6 +10,7 @@ public interface Constants {
 
     int PREFERENCES_VIEW_HEIGHT = 303;
 
+    String PRIVACY = "privacy";
     String EMAIL = "email";
     String LOCATION = "location";
     String PREFERENCES = "preferences";

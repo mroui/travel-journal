@@ -104,7 +104,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:fontFamily="@font/raleway_medium"
                             android:text="@{user.bio}"
-                            android:visibility="@{user.bio == null ? View.GONE : View.VISIBLE}"
+                            android:visibility="@{user.bio == null || user.privacy.bio != 0 ? View.GONE : View.VISIBLE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"/>
 

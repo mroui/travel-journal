@@ -191,6 +191,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/raleway_regular"
                             android:textSize="@dimen/text_small"
+                            android:text="@{user.bio}"
                             android:textCursorDrawable="@null"
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -1041,7 +1042,7 @@
             android:background="@color/transparent"
             android:visibility="invisible">
             <com.victor.loading.rotate.RotateLoading
-                android:id="@+id/profile_progressbar"
+                android:id="@+id/profile_settings_progressbar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 app:loading_width="4dp"
