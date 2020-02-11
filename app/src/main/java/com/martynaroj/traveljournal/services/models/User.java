@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -133,5 +134,26 @@ public class User extends BaseObservable implements Serializable {
     public void setPrivacy(Map<String, Integer> privacy) {
         this.privacy = privacy;
         notifyPropertyChanged(BR.privacy);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+
+            User u = (User) obj;
+            return ((uid.equals(u.getUid()))
+                    && (username.equals(u.getUsername()))
+                    && (email.equals(u.getEmail()))
+                    && (photo.equals(u.getPhoto()))
+                    && (bio.equals(u.getBio()))
+                    && (location.equals(u.getLocation()))
+                    && (preferences.equals(u.getPreferences()))
+                    && (friends.equals(u.getFriends()))
+                    && (privacy.equals(u.getPrivacy())));
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
