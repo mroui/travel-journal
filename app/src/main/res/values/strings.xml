@@ -92,6 +92,8 @@
     <string name="profile_settings_about">ABOUT</string>
     <string name="profile_settings_about_creator_title">Creator</string>
     <string name="profile_settings_about_creator_desc">Martyna Rój</string>
+    <string name="profile_settings_about_credits_title">Credits</string>
+    <string name="profile_settings_about_credits_desc">Show credits and licenses</string>
     <string name="profile_settings_about_version_title">Version</string>
     <string name="profile_settings_about_version_desc">1.0</string>
 
