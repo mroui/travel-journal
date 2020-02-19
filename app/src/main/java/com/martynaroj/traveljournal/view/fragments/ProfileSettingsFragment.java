@@ -2,13 +2,18 @@ package com.martynaroj.traveljournal.view.fragments;
 
 
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
@@ -69,6 +74,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         binding.profileSettingsAccountEmailSaveButton.setOnClickListener(this);
         binding.profileSettingsAccountPasswordSaveButton.setOnClickListener(this);
         binding.profileSettingsPrivacySaveButton.setOnClickListener(this);
+        binding.profileSettingsAboutCreditsSection.setOnClickListener(this);
     }
 
 
@@ -151,13 +157,28 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 return;
             case R.id.profile_settings_privacy_save_button:
                 savePrivacyChanges();
+                return;
+            case R.id.profile_settings_about_credits_section:
+                showCreditsDialog();
+        }
+    }
+
+
+    private void showCreditsDialog() {
+        if (getContext() != null) {
+            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
+                    .setTitle(getResources().getString(R.string.profile_settings_about_credits_title))
+                    .setMessage(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)))
+                    .setPositiveButton("Ok", null)
+                    .show();
+            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
 
     private void savePersonalChanges() {
         Map<String, Object> changes = new HashMap<>();
-        if (!user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString())) {
+        if (binding.profileSettingsPersonalBioInput.getText() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString())) {
             changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
         }
         if (!changes.isEmpty()) {
