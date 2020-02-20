@@ -18,4 +18,6 @@ public interface Constants {
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
     String ONLY_ME = "Only Me";
+
+    int RC_EXTERNAL_STORAGE = 8001;
 }
