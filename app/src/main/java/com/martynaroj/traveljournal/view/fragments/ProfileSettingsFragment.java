@@ -24,12 +24,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -51,6 +55,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private FragmentProfileSettingsBinding binding;
     private UserViewModel userViewModel;
     private User user;
+    private AuthViewModel authViewModel;
 
     private Uri newImageUri;
     private Bitmap compressor;
@@ -89,6 +94,10 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void setListeners() {
+        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
         binding.profileSettingsArrowButton.setOnClickListener(this);
         binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
         binding.profileSettingsPersonalLocationButton.setOnClickListener(this);
@@ -105,6 +114,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
+            authViewModel = new ViewModelProvider(getActivity()).get(AuthViewModel.class);
         }
     }
 
@@ -178,7 +188,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 showSnackBar("clicked: email change", Snackbar.LENGTH_SHORT);
                 return;
             case R.id.profile_settings_account_password_save_button:
-                showSnackBar("clicked: password change", Snackbar.LENGTH_SHORT);
+                changePassword();
                 return;
             case R.id.profile_settings_privacy_save_button:
                 savePrivacyChanges();
@@ -186,6 +196,48 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             case R.id.profile_settings_about_credits_section:
                 showCreditsDialog();
         }
+    }
+
+
+    private void changePassword() {
+        if(validatePasswords()) {
+            startProgressBar();
+            String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordCurrentInput.getText()).toString();
+            String newPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordInput.getText()).toString();
+            authViewModel.changePassword(currentPassword, newPassword);
+            authViewModel.getChangesStatus().observe(this, status -> {
+                if (!status.contains("ERROR")) {
+                    clearInputs();
+                }
+                showSnackBar(status, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            });
+        }
+    }
+
+
+    private void clearInputs() {
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+    }
+
+
+    private boolean validatePasswords() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText currentInput = binding.profileSettingsAccountPasswordCurrentInput;
+        TextInputEditText passInput = binding.profileSettingsAccountPasswordInput;
+        TextInputEditText confirmInput = binding.profileSettingsAccountPasswordConfirmInput;
+        TextInputLayout currentLayout = binding.profileSettingsAccountPasswordCurrentLayout;
+        TextInputLayout passLayout = binding.profileSettingsAccountPasswordLayout;
+        TextInputLayout confirmLayout = binding.profileSettingsAccountPasswordConfirmLayout;
+        int minLength = 8;
+
+        return formHandler.validateInput(currentInput, currentLayout)
+                && formHandler.validateInput(passInput, passLayout)
+                && formHandler.validateInput(confirmInput, confirmLayout)
+                && formHandler.validateLength(passInput, passLayout, minLength)
+                && formHandler.validateInputsEquality(passInput, confirmInput, confirmLayout);
     }
 
 

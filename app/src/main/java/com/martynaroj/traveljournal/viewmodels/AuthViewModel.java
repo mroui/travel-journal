@@ -14,6 +14,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     private AuthRepository authRepository;
     private LiveData<DataWrapper<User>> userLiveData;
+    private LiveData<String> changesStatus;
 
     public AuthViewModel(Application application) {
         super(application);
@@ -62,5 +63,13 @@ public class AuthViewModel extends AndroidViewModel {
 
     public void getUserFromDatabase(String uid) {
         userLiveData = authRepository.getUser(uid);
+    }
+
+    public void changePassword(String currentPassword, String newPassword) {
+        changesStatus = authRepository.changePassword(currentPassword, newPassword);
+    }
+
+    public LiveData<String> getChangesStatus() {
+        return changesStatus;
     }
 }
