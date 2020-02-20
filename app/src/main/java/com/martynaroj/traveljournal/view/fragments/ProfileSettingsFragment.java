@@ -355,8 +355,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void savePersonalChanges() {
         Map<String, Object> changes = new HashMap<>();
-        if (binding.profileSettingsPersonalBioInput.getText() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString())) {
-            changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
+        if (binding.profileSettingsPersonalBioInput.getText() != null) {
+            if ((user.getBio() == null && !binding.profileSettingsPersonalBioInput.getText().toString().equals(""))
+                || (user.getBio() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString()))) {
+                changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
+            }
         }
         if (newImageUri != null) {
             savePhotoToStorage(changes);
