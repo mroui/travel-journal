@@ -1,12 +1,17 @@
 package com.martynaroj.traveljournal.services.models;
 
+import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
 
+import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentReference;
 import com.martynaroj.traveljournal.BR;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
@@ -117,7 +122,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public List<DocumentReference> getFriends() {
+    private List<DocumentReference> getFriends() {
         return friends;
     }
 
@@ -155,5 +160,13 @@ public class User extends BaseObservable implements Serializable {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    @BindingAdapter("app:imageUrl")
+    public static void loadImage(ImageView v, String imgUrl){
+        Glide.with(v.getContext())
+                .load(imgUrl)
+                .placeholder(R.drawable.ic_avatar)
+                .into(v);
     }
 }

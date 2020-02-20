@@ -122,7 +122,7 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_avatar"
+                        app:imageUrl="@{user.photo}"
                         android:contentDescription="@string/back_arrow" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
