@@ -239,6 +239,19 @@ public class AuthRepository {
     }
 
 
+    public LiveData<String> changeUsername(String newUsername) {
+        MutableLiveData<String> status = new MutableLiveData<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(newUsername).build();
+            user.updateProfile(profileUpdates);
+            status.setValue("Username successfully changed!");
+        } else
+            status.setValue("ERROR: User identity error. Please try again later");
+        return status;
+    }
+
+
     private void handleUserLiveDataErrors(Task authTask, MutableLiveData<DataWrapper<User>> userLiveData) {
         if (authTask.getException() != null) {
             try {

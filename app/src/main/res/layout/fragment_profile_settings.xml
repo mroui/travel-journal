@@ -401,7 +401,7 @@
                     android:background="@color/main_blue"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/profile_settings_personal_username_section"
+                    android:id="@+id/profile_settings_account_username_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -414,7 +414,7 @@
                     android:focusable="true">
 
                     <TextView
-                        android:id="@+id/profile_settings_personal_username_title"
+                        android:id="@+id/profile_settings_account_username_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -425,36 +425,37 @@
                         android:textColor="@color/darker_gray"/>
 
                     <TextView
-                        android:id="@+id/profile_settings_personal_username_description"
+                        android:id="@+id/profile_settings_account_username_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_settings_personal_username_title"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_settings_account_username_title"
                         android:fontFamily="@font/raleway_medium"
                         android:textSize="@dimen/text_small"
                         android:text="@string/profile_settings_account_username_desc"
                         android:textColor="@color/gray"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/profile_settings_personal_username_layout"
+                        android:id="@+id/profile_settings_account_username_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/profile_settings_personal_username_description"
+                        app:layout_constraintTop_toBottomOf="@id/profile_settings_account_username_description"
                         style="@style/TextInput"
                         android:layout_marginTop="@dimen/margin_tiny"
                         app:hintEnabled="false"
                         app:errorEnabled="false"
                         app:errorIconDrawable="@null">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/profile_settings_personal_username_input"
+                            android:id="@+id/profile_settings_account_username_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/raleway_regular"
                             android:textSize="@dimen/text_small"
                             android:textCursorDrawable="@null"
                             android:hint="@string/profile_settings_account_username"
+                            android:text="@{user.username}"
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -463,7 +464,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profile_settings_personal_username_layout"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_settings_account_username_layout"
                         android:text="@string/profile_settings_account_email_change"
                         android:textColor="@color/white"
                         android:fontFamily="@font/raleway_bold"
@@ -477,7 +478,7 @@
                     android:layout_height="1dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_settings_personal_username_section"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_settings_account_username_section"
                     android:layout_marginBottom="@dimen/margin_smaller"
                     android:layout_centerVertical="true"
                     android:background="@color/gray"/>

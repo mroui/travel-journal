@@ -100,6 +100,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         new FormHandler().addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
         new FormHandler().addWatcher(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
         new FormHandler().addWatcher(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountUsernameInput, binding.profileSettingsAccountUsernameLayout);
         binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
         binding.profileSettingsArrowButton.setOnClickListener(this);
         binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
@@ -185,7 +186,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 savePersonalChanges();
                 return;
             case R.id.profile_settings_account_username_save_button:
-                showSnackBar("clicked: username change", Snackbar.LENGTH_SHORT);
+                changeUsername();
                 return;
             case R.id.profile_settings_account_email_save_button:
                 changeEmail();
@@ -202,7 +203,39 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private void changeUsername() {
+        if (validateUsername()) {
+            if (!user.getUsername().equals(Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString())) {
+                startProgressBar();
+                String newUsername = Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString();
+                authViewModel.changeUsername(newUsername);
+                authViewModel.getChangesStatus().observe(this, status -> {
+                    if (!status.contains("ERROR")) {
+                        Map<String, Object> changes = new HashMap<>();
+                        changes.put("username", newUsername);
+                        updateUser(changes);
+                    } else
+                        showSnackBar(status, Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                });
+            }
+        }
+    }
+
+
+    private boolean validateUsername() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText input = binding.profileSettingsAccountUsernameInput;
+        TextInputLayout layout = binding.profileSettingsAccountUsernameLayout;
+        int minLength = 4;
+
+        return formHandler.validateInput(input, layout)
+                && formHandler.validateLength(input, layout, minLength);
+    }
+
+
     private void changeEmail() {
+        //TODO: check if user's email is not equal to input
         if(validateChangeEmail()) {
             startProgressBar();
             String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountEmailPasswordCurrentInput.getText()).toString();

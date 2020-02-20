@@ -76,4 +76,8 @@ public class AuthViewModel extends AndroidViewModel {
     public void changeEmail(String currentPassword, String newEmail) {
         changesStatus = authRepository.changeEmail(currentPassword, newEmail);
     }
+
+    public void changeUsername(String newUsername) {
+        changesStatus = authRepository.changeUsername(newUsername);
+    }
 }
