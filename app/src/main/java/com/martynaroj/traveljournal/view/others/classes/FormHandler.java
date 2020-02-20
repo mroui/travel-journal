@@ -47,6 +47,9 @@ public class FormHandler {
             if(input1.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD + InputType.TYPE_CLASS_TEXT) {
                 layout2.setError("Password doesn't match");
                 input2.requestFocus();
+            } else if (input1.getInputType() == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) {
+                layout2.setError("Email doesn't match");
+                input2.requestFocus();
             }
             return false;
         } else
