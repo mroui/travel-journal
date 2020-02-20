@@ -235,21 +235,24 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void changeEmail() {
-        //TODO: check if user's email is not equal to input
         if(validateChangeEmail()) {
-            startProgressBar();
-            String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountEmailPasswordCurrentInput.getText()).toString();
-            String newEmail = Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString();
-            authViewModel.changeEmail(currentPassword, newEmail);
-            authViewModel.getChangesStatus().observe(this, status -> {
-                if (!status.contains("ERROR")) {
-                    Map<String, Object> changes = new HashMap<>();
-                    changes.put("email", newEmail);
-                    updateUser(changes);
-                } else
-                    showSnackBar(status, Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            });
+            if (!user.getEmail().equals(Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString())) {
+                startProgressBar();
+                String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountEmailPasswordCurrentInput.getText()).toString();
+                String newEmail = Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString();
+                authViewModel.changeEmail(currentPassword, newEmail);
+                authViewModel.getChangesStatus().observe(this, status -> {
+                    if (!status.contains("ERROR")) {
+                        Map<String, Object> changes = new HashMap<>();
+                        changes.put("email", newEmail);
+                        updateUser(changes);
+                    } else
+                        showSnackBar(status, Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                });
+            } else {
+                showSnackBar("ERROR: Current email is equal to new", Snackbar.LENGTH_LONG);
+            }
         }
     }
 
