@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mountains">mountains</string>
+    <string name="sea">sea</string>
+    <string name="river">river</string>
+    <string name="lake">lake</string>
+    <string name="forest">forest</string>
+    <string name="country">country</string>
+    <string name="ocean">ocean</string>
+    <string name="desert">desert</string>
+    <string name="beach">beach</string>
+    <string name="nature">nature</string>
+    <string name="city">city</string>
+    <string name="spring">spring</string>
+    <string name="summer">summer</string>
+    <string name="autumn">autumn</string>
+    <string name="fall">fall</string>
+    <string name="winter">winter</string>
+    <string name="trip">trip</string>
+    <string name="travel">travel</string>
+    <string name="journey">journey</string>
+    <string name="europe">europe</string>
+    <string name="asia">asia</string>
+    <string name="australia">australia</string>
+    <string name="africa">africa</string>
+    <string name="northamerica">northamerica</string>
+    <string name="southamerica">southamerica</string>
+    <string name="antarctica">antarctica</string>
+    <string name="longer">longer</string>
+    <string name="shorter">shorter</string>
+    <string name="hot">hot</string>
+    <string name="warm">warm</string>
+    <string name="cold">cold</string>
+    <string name="chill">chill</string>
+    <string name="intensive">intensive</string>
+    <string name="universal">universal</string>
+    <string name="unusual">unusual</string>
+    <string name="weekend">weekend</string>
+    <string name="goodfood">goodfood</string>
+    <string name="attractions">attractions</string>
+    <string name="bus">bus</string>
+    <string name="airplane">airplane</string>
+    <string name="ship">ship</string>
+    <string name="foot">foot</string>
+    <string name="bike">bike</string>
+    <string name="car">car</string>
+    <string name="hitchhiking">hitchhiking</string>
+    <string name="hiking">hiking</string>
+    <string name="monuments">monuments</string>
+    <string name="leisure">leisure</string>
+    <string name="rest">rest</string>
+    <string name="sightseeing">sightseeing</string>
+    <string name="roundtrip">roundtrip</string>
+    <string name="cruise">cruise</string>
+    <string name="voyage">voyage</string>
+    <string name="wander">wander</string>
+    <string name="trekking">trekking</string>
+    <string name="culinary">culinary</string>
+    <string name="culture">culture</string>
+    <string name="holiday">holiday</string>
+    <string name="vacation">vacation</string>
+    <string name="views">views</string>
+    <string name="architecture">architecture</string>
+    <string name="passport">passport</string>
+    <string name="allinclusive">allinclusive</string>
+    <string name="photography">photography</string>
+    <string name="landscape">landscape</string>
+    <string name="exploration">exploration</string>
+    <string name="sunset">sunset</string>
+    <string name="art">art</string>
+    <string name="fun">fun</string>
+    <string name="kids">kids</string>
+    <string name="couple">couple</string>
+    <string name="family">family</string>
+    <string name="airbnb">airbnb</string>
+    <string name="hotel">hotel</string>
+    <string name="hostel">hostel</string>
+    <string name="motel">motel</string>
+    <string name="summerhouse">summerhouse</string>
+    <string name="tent">tent</string>
+    <string name="campsite">campsite</string>
+    <string name="camping">camping</string>
+    <string name="camp">camp</string>
+    <string name="apartments">apartments</string>
+
+
+    <string-array name="preferences">
+        <item>@string/africa</item>
+        <item>@string/airbnb</item>
+        <item>@string/airplane</item>
+        <item>@string/allinclusive</item>
+        <item>@string/antarctica</item>
+        <item>@string/apartments</item>
+        <item>@string/architecture</item>
+        <item>@string/art</item>
+        <item>@string/asia</item>
+        <item>@string/attractions</item>
+        <item>@string/australia</item>
+        <item>@string/autumn</item>
+        <item>@string/beach</item>
+        <item>@string/bike</item>
+        <item>@string/bus</item>
+        <item>@string/camp</item>
+        <item>@string/camping</item>
+        <item>@string/campsite</item>
+        <item>@string/car</item>
+        <item>@string/chill</item>
+        <item>@string/city</item>
+        <item>@string/cold</item>
+        <item>@string/country</item>
+        <item>@string/couple</item>
+        <item>@string/cruise</item>
+        <item>@string/culinary</item>
+        <item>@string/culture</item>
+        <item>@string/desert</item>
+        <item>@string/europe</item>
+        <item>@string/exploration</item>
+        <item>@string/fall</item>
+        <item>@string/family</item>
+        <item>@string/foot</item>
+        <item>@string/forest</item>
+        <item>@string/fun</item>
+        <item>@string/goodfood</item>
+        <item>@string/hiking</item>
+        <item>@string/hitchhiking</item>
+        <item>@string/holiday</item>
+        <item>@string/hostel</item>
+        <item>@string/hot</item>
+        <item>@string/hotel</item>
+        <item>@string/intensive</item>
+        <item>@string/journey</item>
+        <item>@string/kids</item>
+        <item>@string/lake</item>
+        <item>@string/landscape</item>
+        <item>@string/leisure</item>
+        <item>@string/longer</item>
+        <item>@string/mountains</item>
+        <item>@string/monuments</item>
+        <item>@string/motel</item>
+        <item>@string/nature</item>
+        <item>@string/northamerica</item>
+        <item>@string/ocean</item>
+        <item>@string/passport</item>
+        <item>@string/photography</item>
+        <item>@string/rest</item>
+        <item>@string/river</item>
+        <item>@string/roundtrip</item>
+        <item>@string/sea</item>
+        <item>@string/ship</item>
+        <item>@string/shorter</item>
+        <item>@string/sightseeing</item>
+        <item>@string/southamerica</item>
+        <item>@string/spring</item>
+        <item>@string/summer</item>
+        <item>@string/sunset</item>
+        <item>@string/tent</item>
+        <item>@string/travel</item>
+        <item>@string/trekking</item>
+        <item>@string/trip</item>
+        <item>@string/universal</item>
+        <item>@string/unusual</item>
+        <item>@string/wander</item>
+        <item>@string/warm</item>
+        <item>@string/weekend</item>
+        <item>@string/winter</item>
+        <item>@string/vacation</item>
+        <item>@string/views</item>
+        <item>@string/voyage</item>
+    </string-array>
+</resources>
