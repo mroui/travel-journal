@@ -72,4 +72,8 @@ public class AuthViewModel extends AndroidViewModel {
     public LiveData<String> getChangesStatus() {
         return changesStatus;
     }
+
+    public void changeEmail(String currentPassword, String newEmail) {
+        changesStatus = authRepository.changeEmail(currentPassword, newEmail);
+    }
 }

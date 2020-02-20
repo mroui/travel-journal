@@ -97,6 +97,9 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         new FormHandler().addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
         new FormHandler().addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
         new FormHandler().addWatcher(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
+        new FormHandler().addWatcher(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
         binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
         binding.profileSettingsArrowButton.setOnClickListener(this);
         binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
@@ -185,7 +188,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 showSnackBar("clicked: username change", Snackbar.LENGTH_SHORT);
                 return;
             case R.id.profile_settings_account_email_save_button:
-                showSnackBar("clicked: email change", Snackbar.LENGTH_SHORT);
+                changeEmail();
                 return;
             case R.id.profile_settings_account_password_save_button:
                 changePassword();
@@ -199,8 +202,43 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private void changeEmail() {
+        if(validateChangeEmail()) {
+            startProgressBar();
+            String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountEmailPasswordCurrentInput.getText()).toString();
+            String newEmail = Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString();
+            authViewModel.changeEmail(currentPassword, newEmail);
+            authViewModel.getChangesStatus().observe(this, status -> {
+                if (!status.contains("ERROR")) {
+                    Map<String, Object> changes = new HashMap<>();
+                    changes.put("email", newEmail);
+                    updateUser(changes);
+                } else
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            });
+        }
+    }
+
+
+    private boolean validateChangeEmail() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText currentPasswordInput = binding.profileSettingsAccountEmailPasswordCurrentInput;
+        TextInputEditText newEmailInput = binding.profileSettingsAccountEmailInput;
+        TextInputEditText confirmEmailInput = binding.profileSettingsAccountEmailConfirmInput;
+        TextInputLayout currentPasswordLayout = binding.profileSettingsAccountEmailPasswordCurrentLayout;
+        TextInputLayout newEmailLayout = binding.profileSettingsAccountEmailLayout;
+        TextInputLayout confirmEmailLayout = binding.profileSettingsAccountEmailConfirmLayout;
+
+        return formHandler.validateInput(currentPasswordInput, currentPasswordLayout)
+                && formHandler.validateInput(newEmailInput, newEmailLayout)
+                && formHandler.validateInput(confirmEmailInput, confirmEmailLayout)
+                && formHandler.validateInputsEquality(newEmailInput, confirmEmailInput, newEmailLayout);
+    }
+
+
     private void changePassword() {
-        if(validatePasswords()) {
+        if(validateChangePassword()) {
             startProgressBar();
             String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordCurrentInput.getText()).toString();
             String newPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordInput.getText()).toString();
@@ -220,10 +258,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         new FormHandler().clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
         new FormHandler().clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
         new FormHandler().clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
     }
 
 
-    private boolean validatePasswords() {
+    private boolean validateChangePassword() {
         FormHandler formHandler = new FormHandler();
         TextInputEditText currentInput = binding.profileSettingsAccountPasswordCurrentInput;
         TextInputEditText passInput = binding.profileSettingsAccountPasswordInput;
@@ -348,6 +389,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 userViewModel.setUser(user);
                 binding.setUser(user);
                 showSnackBar("Changes saved successfully", Snackbar.LENGTH_LONG);
+                clearInputs();
                 newImageUri = null;
             } else {
                 showSnackBar("ERROR: Failed to update, try again later", Snackbar.LENGTH_LONG);

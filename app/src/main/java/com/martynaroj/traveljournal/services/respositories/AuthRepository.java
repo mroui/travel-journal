@@ -216,6 +216,29 @@ public class AuthRepository {
     }
 
 
+    public LiveData<String> changeEmail(String currentPassword, String newEmail) {
+        MutableLiveData<String> status = new MutableLiveData<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && user.getEmail() != null) {
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            status.setValue("Email successfully changed!");
+                        } else if(task1.getException() != null) {
+                            status.setValue("ERROR: " + task1.getException().getMessage());
+                        }
+                    });
+                } else if(task.getException() != null) {
+                    status.setValue("ERROR: " + task.getException().getMessage());
+                }
+            });
+        }
+        return status;
+    }
+
+
     private void handleUserLiveDataErrors(Task authTask, MutableLiveData<DataWrapper<User>> userLiveData) {
         if (authTask.getException() != null) {
             try {
