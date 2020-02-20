@@ -518,12 +518,36 @@
                         android:textColor="@color/gray"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/profile_settings_account_email_layout"
+                        android:id="@+id/profile_settings_account_email_password_current_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/profile_settings_account_email_description"
+                        style="@style/TextInput"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        app:hintEnabled="false"
+                        app:errorEnabled="false"
+                        app:errorIconDrawable="@null">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/profile_settings_account_email_password_current_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:hint="@string/profile_settings_account_password_current_password"
+                            android:textCursorDrawable="@null"
+                            android:inputType="textPassword"
+                            android:importantForAutofill="no"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/profile_settings_account_email_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/profile_settings_account_email_password_current_layout"
                         style="@style/TextInput"
                         android:layout_marginTop="@dimen/margin_tiny"
                         app:hintEnabled="false"
