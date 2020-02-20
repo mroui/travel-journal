@@ -1,6 +1,12 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -10,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -21,17 +30,31 @@ import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import id.zelory.compressor.Compressor;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProfileSettingsFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentProfileSettingsBinding binding;
     private UserViewModel userViewModel;
     private User user;
+
+    private Uri newImageUri;
+    private Bitmap compressor;
+    private StorageViewModel storageViewModel;
 
     static ProfileSettingsFragment newInstance() {
         return new ProfileSettingsFragment();
@@ -50,7 +73,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
         initPrivacySelectItems();
         setListeners();
-        initUserViewModel();
+        initViewModels();
 
         initUser();
 
@@ -67,7 +90,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void setListeners() {
         binding.profileSettingsArrowButton.setOnClickListener(this);
-        binding.profileSettingsPersonalPicturePhoto.setOnClickListener(this);
+        binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
         binding.profileSettingsPersonalLocationButton.setOnClickListener(this);
         binding.profileSettingsPersonalSaveButton.setOnClickListener(this);
         binding.profileSettingsAccountUsernameSaveButton.setOnClickListener(this);
@@ -78,9 +101,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
-    private void initUserViewModel() {
-        if (getActivity() != null)
+    private void initViewModels() {
+        if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
+        }
     }
 
 
@@ -137,8 +162,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 return;
-            case R.id.profile_settings_personal_picture_photo:
-                showSnackBar("clicked: photo", Snackbar.LENGTH_SHORT);
+            case R.id.profile_settings_personal_picture_section:
+                changeProfilePhoto();
                 return;
             case R.id.profile_settings_personal_location_button:
                 showSnackBar("clicked: find me", Snackbar.LENGTH_SHORT);
@@ -164,6 +189,29 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private void changeProfilePhoto() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.RC_EXTERNAL_STORAGE);
+            } else {
+                selectImage();
+            }
+        } else {
+            selectImage();
+        }
+    }
+
+
+    private void selectImage() {
+        if (getActivity() != null && getContext() != null) {
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(1, 1)
+                    .start(getContext(), this);
+        }
+    }
+
+
     private void showCreditsDialog() {
         if (getContext() != null) {
             final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
@@ -181,8 +229,42 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         if (binding.profileSettingsPersonalBioInput.getText() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString())) {
             changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
         }
-        if (!changes.isEmpty()) {
+        if (newImageUri != null) {
+            savePhotoToStorage(changes);
+        } else if (!changes.isEmpty()) {
             updateUser(changes);
+        }
+    }
+
+
+    private void savePhotoToStorage(Map<String, Object> changes) {
+        startProgressBar();
+        if (newImageUri.getPath() != null && getContext() != null) {
+            File newFile = new File(newImageUri.getPath());
+            try {
+                compressor = new Compressor(getContext())
+                        .setMaxHeight(150)
+                        .setMaxWidth(150)
+                        .setQuality(100)
+                        .compressToBitmap(newFile);
+            } catch (IOException e) {
+                showSnackBar("ERROR: " + e.getMessage(), Snackbar.LENGTH_LONG);
+            }
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            compressor.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] thumb = byteArrayOutputStream.toByteArray();
+
+            storageViewModel.saveToStorage(thumb, user.getUid());
+            storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
+                    if(status.contains("ERROR")) {
+                        showSnackBar(status, Snackbar.LENGTH_LONG);
+                        stopProgressBar();
+                    } else {
+                        changes.put("photo", status);
+                        updateUser(changes);
+                    }
+            });
         }
     }
 
@@ -214,6 +296,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 userViewModel.setUser(user);
                 binding.setUser(user);
                 showSnackBar("Changes saved successfully", Snackbar.LENGTH_LONG);
+                newImageUri = null;
             } else {
                 showSnackBar("ERROR: Failed to update, try again later", Snackbar.LENGTH_LONG);
             }
@@ -234,6 +317,21 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK && result != null) {
+                newImageUri = result.getUri();
+                User.loadImage(binding.profileSettingsPersonalPicturePhoto, newImageUri.toString());
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null) {
+                showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
+            }
+        }
     }
 
 

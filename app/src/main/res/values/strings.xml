@@ -53,8 +53,7 @@
     <string name="profile_settings_settings">Settings</string>
     <string name="profile_settings_personal">PERSONAL</string>
     <string name="profile_settings_personal_picture_title">Profile picture</string>
-    <string name="profile_settings_personal_picture_desc">Click on a photo to change
-        your profile picture</string>
+    <string name="profile_settings_personal_picture_desc">Change your profile picture</string>
     <string name="profile_settings_personal_bio_title">Bio</string>
     <string name="profile_settings_personal_bio_desc">Update short description
         about yourself</string>
