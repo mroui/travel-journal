@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,12 +29,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.hootsuite.nachos.chip.ChipInfo;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
@@ -56,7 +58,7 @@ import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileSettingsFragment extends BaseFragment implements View.OnClickListener {
+public class ProfileSettingsFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentProfileSettingsBinding binding;
     private UserViewModel userViewModel;
@@ -85,6 +87,9 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
         return view;
     }
+
+
+    //INIT DATA-------------------------------------------------------------------------------------
 
 
     private void initContentView() {
@@ -181,8 +186,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_settings_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                if (!areAnyChanges()) {
+                    hideKeyboard();
+                    if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                        getParentFragmentManager().popBackStack();
+                } else showUnsavedChangesDialog();
                 return;
             case R.id.profile_settings_personal_picture_section:
                 changeProfilePhoto();
@@ -211,16 +219,136 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
+    private void showUnsavedChangesDialog() {
+        if (getContext() != null && getActivity() != null) {
+            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
+                    .setTitle(getString(R.string.dialog_button_unsaved_changes_title))
+                    .setMessage(getString(R.string.dialog_button_unsaved_changes_desc))
+                    .setPositiveButton(getString(R.string.dialog_button_yes), (dialogInterface, i) -> {
+                        hideKeyboard();
+                        dialogInterface.cancel();
+                        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                            getParentFragmentManager().popBackStack();
+                    })
+                    .setNegativeButton(getString(R.string.dialog_button_no), null)
+                    .show();
+            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+
+
+    private void showCreditsDialog() {
+        if (getContext() != null) {
+            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
+                    .setTitle(getResources().getString(R.string.profile_settings_about_credits_title))
+                    .setMessage(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)))
+                    .setPositiveButton(getString(R.string.dialog_button_ok), null)
+                    .show();
+            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+
+
+    //CHECKING CHANGES------------------------------------------------------------------------------
+
+
+    private boolean isImageChanged() {
+        return newImageUri != null;
+    }
+
+
+    private boolean isUsernameChanged() {
+        return !user.getUsername().equals(Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString());
+    }
+
+
+    private boolean isBioChanged() {
+        if (binding.profileSettingsPersonalBioInput.getText() != null) {
+            return (user.getBio() == null && !binding.profileSettingsPersonalBioInput.getText().toString().equals(""))
+                    || (user.getBio() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString()));
+        }
+        return false;
+    }
+
+
+    private boolean isPreferenceChanged() {
+        if (binding.profileSettingsPersonalPreferencesInput.getText() != null) {
+            return (user.getPreferences() == null && !binding.profileSettingsPersonalPreferencesInput.getText().toString().equals(""))
+                    || (user.getPreferences() != null && !user.getPreferences().equals(getUniquePreferences()));
+        }
+        return false;
+    }
+
+
+    private boolean isEmailChanged() {
+        if (binding.profileSettingsAccountEmailPasswordCurrentInput.getText() != null
+                && binding.profileSettingsAccountEmailInput.getText() != null
+                && binding.profileSettingsAccountEmailConfirmInput.getText() != null) {
+            return !binding.profileSettingsAccountEmailPasswordCurrentInput.getText().toString().equals("")
+                    || !binding.profileSettingsAccountEmailInput.getText().toString().equals("")
+                    || !binding.profileSettingsAccountEmailConfirmInput.getText().toString().equals("");
+        }
+        return false;
+    }
+
+
+    private boolean isPasswordChanged() {
+        if (binding.profileSettingsAccountPasswordCurrentInput.getText() != null
+                && binding.profileSettingsAccountPasswordInput.getText() != null
+                && binding.profileSettingsAccountPasswordConfirmInput.getText() != null) {
+            return !binding.profileSettingsAccountPasswordCurrentInput.getText().toString().equals("")
+                    || !binding.profileSettingsAccountPasswordInput.getText().toString().equals("")
+                    || !binding.profileSettingsAccountPasswordConfirmInput.getText().toString().equals("");
+        }
+        return false;
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean isPrivacyEmailChanged() {
+        return user.getPrivacy().get(Constants.EMAIL) != binding.profileSettingsPrivacyEmailSelect.getSelectedIndex();
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean isPrivacyLocationChanged() {
+        return user.getPrivacy().get(Constants.LOCATION) != binding.profileSettingsPrivacyLocationSelect.getSelectedIndex();
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private boolean isPrivacyPreferencesChanged() {
+        return user.getPrivacy().get(Constants.PREFERENCES) != binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex();
+    }
+
+
+    private boolean isPrivacyChanged() {
+        return isPrivacyEmailChanged() || isPrivacyLocationChanged() || isPrivacyPreferencesChanged();
+    }
+
+
+    private boolean areAnyChanges() {
+        return (isImageChanged() || isPreferenceChanged() || isBioChanged() || isUsernameChanged()
+                || isEmailChanged() || isPasswordChanged() || isPrivacyChanged());
+    }
+
+
+    //CHANGING DATA---------------------------------------------------------------------------------
+
+
     private void changeUsername() {
         if (validateUsername()) {
-            if (!user.getUsername().equals(Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString())) {
+            if (isUsernameChanged()) {
                 startProgressBar();
                 String newUsername = Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString();
                 authViewModel.changeUsername(newUsername);
                 authViewModel.getChangesStatus().observe(this, status -> {
                     if (!status.contains("ERROR")) {
                         Map<String, Object> changes = new HashMap<>();
-                        changes.put("username", newUsername);
+                        changes.put(Constants.USERNAME, newUsername);
                         updateUser(changes);
                     } else
                         showSnackBar(status, Snackbar.LENGTH_LONG);
@@ -228,17 +356,6 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 });
             }
         }
-    }
-
-
-    private boolean validateUsername() {
-        FormHandler formHandler = new FormHandler();
-        TextInputEditText input = binding.profileSettingsAccountUsernameInput;
-        TextInputLayout layout = binding.profileSettingsAccountUsernameLayout;
-        int minLength = 4;
-
-        return formHandler.validateInput(input, layout)
-                && formHandler.validateLength(input, layout, minLength);
     }
 
 
@@ -252,7 +369,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 authViewModel.getChangesStatus().observe(this, status -> {
                     if (!status.contains("ERROR")) {
                         Map<String, Object> changes = new HashMap<>();
-                        changes.put("email", newEmail);
+                        changes.put(Constants.EMAIL, newEmail);
                         updateUser(changes);
                     } else
                         showSnackBar(status, Snackbar.LENGTH_LONG);
@@ -262,22 +379,6 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 showSnackBar("ERROR: Current email is equal to new", Snackbar.LENGTH_LONG);
             }
         }
-    }
-
-
-    private boolean validateChangeEmail() {
-        FormHandler formHandler = new FormHandler();
-        TextInputEditText currentPasswordInput = binding.profileSettingsAccountEmailPasswordCurrentInput;
-        TextInputEditText newEmailInput = binding.profileSettingsAccountEmailInput;
-        TextInputEditText confirmEmailInput = binding.profileSettingsAccountEmailConfirmInput;
-        TextInputLayout currentPasswordLayout = binding.profileSettingsAccountEmailPasswordCurrentLayout;
-        TextInputLayout newEmailLayout = binding.profileSettingsAccountEmailLayout;
-        TextInputLayout confirmEmailLayout = binding.profileSettingsAccountEmailConfirmLayout;
-
-        return formHandler.validateInput(currentPasswordInput, currentPasswordLayout)
-                && formHandler.validateInput(newEmailInput, newEmailLayout)
-                && formHandler.validateInput(confirmEmailInput, confirmEmailLayout)
-                && formHandler.validateInputsEquality(newEmailInput, confirmEmailInput, newEmailLayout);
     }
 
 
@@ -295,34 +396,6 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 stopProgressBar();
             });
         }
-    }
-
-
-    private void clearInputs() {
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
-    }
-
-
-    private boolean validateChangePassword() {
-        FormHandler formHandler = new FormHandler();
-        TextInputEditText currentInput = binding.profileSettingsAccountPasswordCurrentInput;
-        TextInputEditText passInput = binding.profileSettingsAccountPasswordInput;
-        TextInputEditText confirmInput = binding.profileSettingsAccountPasswordConfirmInput;
-        TextInputLayout currentLayout = binding.profileSettingsAccountPasswordCurrentLayout;
-        TextInputLayout passLayout = binding.profileSettingsAccountPasswordLayout;
-        TextInputLayout confirmLayout = binding.profileSettingsAccountPasswordConfirmLayout;
-        int minLength = 8;
-
-        return formHandler.validateInput(currentInput, currentLayout)
-                && formHandler.validateInput(passInput, passLayout)
-                && formHandler.validateInput(confirmInput, confirmLayout)
-                && formHandler.validateLength(passInput, passLayout, minLength)
-                && formHandler.validateInputsEquality(passInput, confirmInput, confirmLayout);
     }
 
 
@@ -349,40 +422,29 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
-    private void showCreditsDialog() {
-        if (getContext() != null) {
-            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
-                    .setTitle(getResources().getString(R.string.profile_settings_about_credits_title))
-                    .setMessage(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)))
-                    .setPositiveButton("Ok", null)
-                    .show();
-            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
-        }
-    }
-
-
     private void savePersonalChanges() {
         Map<String, Object> changes = new HashMap<>();
-        if (binding.profileSettingsPersonalBioInput.getText() != null) {
-            if ((user.getBio() == null && !binding.profileSettingsPersonalBioInput.getText().toString().equals(""))
-                || (user.getBio() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString()))) {
-                changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
-            }
+
+        if (isBioChanged()) {
+            changes.put(Constants.BIO, Objects.requireNonNull(binding.profileSettingsPersonalBioInput.getText()).toString());
         }
-        if (binding.profileSettingsPersonalPreferencesInput.getText() != null) {
-            List<String> preferences = binding.profileSettingsPersonalPreferencesInput.getChipValues();
-            LinkedHashSet<String> hashSet = new LinkedHashSet<>(preferences);
-            List<String> preferencesNoDuplicates = new ArrayList<>(hashSet);
-            if ((user.getPreferences() == null && !binding.profileSettingsPersonalPreferencesInput.getText().toString().equals(""))
-                    || (user.getPreferences() != null && !user.getPreferences().equals(preferencesNoDuplicates))) {
-                changes.put("preferences", preferencesNoDuplicates);
-            }
+
+        if(isPreferenceChanged()) {
+            changes.put(Constants.PREFERENCES, getUniquePreferences());
         }
-        if (newImageUri != null) {
+
+        if (isImageChanged()) {
             savePhotoToStorage(changes);
         } else if (!changes.isEmpty()) {
             updateUser(changes);
         }
+    }
+
+
+    private List<String> getUniquePreferences() {
+        List<String> preferences = binding.profileSettingsPersonalPreferencesInput.getChipValues();
+        LinkedHashSet<String> hashSet = new LinkedHashSet<>(preferences);
+        return new ArrayList<>(hashSet);
     }
 
 
@@ -406,13 +468,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
             storageViewModel.saveToStorage(thumb, user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
-                    if(status.contains("ERROR")) {
-                        showSnackBar(status, Snackbar.LENGTH_LONG);
-                        stopProgressBar();
-                    } else {
-                        changes.put("photo", status);
-                        updateUser(changes);
-                    }
+                if(status.contains("ERROR")) {
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                } else {
+                    changes.put(Constants.PHOTO, status);
+                    updateUser(changes);
+                }
             });
         }
     }
@@ -420,13 +482,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void savePrivacyChanges() {
         Map<String, Object> changes = new HashMap<>();
-        if (user.getPrivacy().get(Constants.EMAIL) != binding.profileSettingsPrivacyEmailSelect.getSelectedIndex()) {
+        if (isPrivacyEmailChanged()) {
             changes.put(Constants.PRIVACY + "." + Constants.EMAIL, binding.profileSettingsPrivacyEmailSelect.getSelectedIndex());
         }
-        if (user.getPrivacy().get(Constants.LOCATION) != binding.profileSettingsPrivacyLocationSelect.getSelectedIndex()) {
+        if (isPrivacyLocationChanged()) {
             changes.put(Constants.PRIVACY + "." + Constants.LOCATION, binding.profileSettingsPrivacyLocationSelect.getSelectedIndex());
         }
-        if (user.getPrivacy().get(Constants.PREFERENCES) != binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex()) {
+        if (isPrivacyPreferencesChanged()) {
             changes.put(Constants.PRIVACY + "." + Constants.PREFERENCES, binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex());
         }
 
@@ -453,6 +515,57 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             stopProgressBar();
         });
     }
+
+
+    //VALIDATIONS-----------------------------------------------------------------------------------
+
+
+    private boolean validateUsername() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText input = binding.profileSettingsAccountUsernameInput;
+        TextInputLayout layout = binding.profileSettingsAccountUsernameLayout;
+        int minLength = 4;
+
+        return formHandler.validateInput(input, layout)
+                && formHandler.validateLength(input, layout, minLength);
+    }
+
+
+    private boolean validateChangeEmail() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText currentPasswordInput = binding.profileSettingsAccountEmailPasswordCurrentInput;
+        TextInputEditText newEmailInput = binding.profileSettingsAccountEmailInput;
+        TextInputEditText confirmEmailInput = binding.profileSettingsAccountEmailConfirmInput;
+        TextInputLayout currentPasswordLayout = binding.profileSettingsAccountEmailPasswordCurrentLayout;
+        TextInputLayout newEmailLayout = binding.profileSettingsAccountEmailLayout;
+        TextInputLayout confirmEmailLayout = binding.profileSettingsAccountEmailConfirmLayout;
+
+        return formHandler.validateInput(currentPasswordInput, currentPasswordLayout)
+                && formHandler.validateInput(newEmailInput, newEmailLayout)
+                && formHandler.validateInput(confirmEmailInput, confirmEmailLayout)
+                && formHandler.validateInputsEquality(newEmailInput, confirmEmailInput, newEmailLayout);
+    }
+
+
+    private boolean validateChangePassword() {
+        FormHandler formHandler = new FormHandler();
+        TextInputEditText currentInput = binding.profileSettingsAccountPasswordCurrentInput;
+        TextInputEditText passInput = binding.profileSettingsAccountPasswordInput;
+        TextInputEditText confirmInput = binding.profileSettingsAccountPasswordConfirmInput;
+        TextInputLayout currentLayout = binding.profileSettingsAccountPasswordCurrentLayout;
+        TextInputLayout passLayout = binding.profileSettingsAccountPasswordLayout;
+        TextInputLayout confirmLayout = binding.profileSettingsAccountPasswordConfirmLayout;
+        int minLength = 8;
+
+        return formHandler.validateInput(currentInput, currentLayout)
+                && formHandler.validateInput(passInput, passLayout)
+                && formHandler.validateInput(confirmInput, confirmLayout)
+                && formHandler.validateLength(passInput, passLayout, minLength)
+                && formHandler.validateInputsEquality(passInput, confirmInput, confirmLayout);
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void startProgressBar() {
@@ -485,9 +598,40 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private void clearInputs() {
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
+        new FormHandler().clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
+    }
+
+
+    @Override
+    public boolean onBackPressed() {
+        if (areAnyChanges()) {
+            showUnsavedChangesDialog();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private void hideKeyboard() {
+        if (getActivity() != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
     }
+
 }
