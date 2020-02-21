@@ -74,6 +74,7 @@ public class HashtagAdapter extends ArrayAdapter<String> {
         }
 
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             clear();
