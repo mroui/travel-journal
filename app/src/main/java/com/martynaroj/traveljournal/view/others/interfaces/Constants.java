@@ -27,4 +27,5 @@ public interface Constants {
 
     int RC_EXTERNAL_STORAGE = 8001;
 
+    int RC_ACCESS_FINE_LOCATION = 7001;
 }
