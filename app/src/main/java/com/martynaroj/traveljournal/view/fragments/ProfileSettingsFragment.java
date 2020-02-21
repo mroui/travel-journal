@@ -27,9 +27,11 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.hootsuite.nachos.chip.ChipInfo;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -42,7 +44,11 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -71,12 +77,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         binding = FragmentProfileSettingsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-//        List<String> fruits = new ArrayList<>(Arrays.asList("abc", "aaaa", "aaabdedede", "efloa"));
-//        final HashtagAdapter adapter = new HashtagAdapter(getContext(), fruits);
-//        binding.profileSettingsPersonalPreferencesInput.setAdapter(adapter);
-//        binding.profileSettingsPersonalPreferencesInput.setThreshold(1);
-
-        initPrivacySelectItems();
+        initContentView();
         setListeners();
         initViewModels();
 
@@ -86,10 +87,17 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
-    private void initPrivacySelectItems() {
-        binding.profileSettingsPrivacyEmailSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
-        binding.profileSettingsPrivacyLocationSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
-        binding.profileSettingsPrivacyPreferencesSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+    private void initContentView() {
+        if (getContext() != null) {
+            binding.profileSettingsPrivacyEmailSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+            binding.profileSettingsPrivacyLocationSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+            binding.profileSettingsPrivacyPreferencesSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+
+            List<String> preferences = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.preferences)));
+            final HashtagAdapter adapter = new HashtagAdapter(getContext(), preferences);
+            binding.profileSettingsPersonalPreferencesInput.setAdapter(adapter);
+            binding.profileSettingsPersonalPreferencesInput.setThreshold(1);
+        }
     }
 
 
@@ -359,6 +367,15 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             if ((user.getBio() == null && !binding.profileSettingsPersonalBioInput.getText().toString().equals(""))
                 || (user.getBio() != null && !user.getBio().equals(binding.profileSettingsPersonalBioInput.getText().toString()))) {
                 changes.put("bio", binding.profileSettingsPersonalBioInput.getText().toString());
+            }
+        }
+        if (binding.profileSettingsPersonalPreferencesInput.getText() != null) {
+            List<String> preferences = binding.profileSettingsPersonalPreferencesInput.getChipValues();
+            LinkedHashSet<String> hashSet = new LinkedHashSet<>(preferences);
+            List<String> preferencesNoDuplicates = new ArrayList<>(hashSet);
+            if ((user.getPreferences() == null && !binding.profileSettingsPersonalPreferencesInput.getText().toString().equals(""))
+                    || (user.getPreferences() != null && !user.getPreferences().equals(preferencesNoDuplicates))) {
+                changes.put("preferences", preferencesNoDuplicates);
             }
         }
         if (newImageUri != null) {

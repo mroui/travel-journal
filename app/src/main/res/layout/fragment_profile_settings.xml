@@ -344,6 +344,7 @@
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/padding_smaller"
                                 android:textSize="@dimen/text_small"
+                                android:text="@{user.preferences}"
                                 android:fontFamily="@font/raleway_regular"
                                 app:chipBackground="@color/transparent_light"
                                 app:chipTextColor="@color/black"
