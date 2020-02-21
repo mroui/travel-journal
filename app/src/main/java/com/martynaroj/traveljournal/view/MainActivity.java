@@ -23,6 +23,7 @@ import com.martynaroj.traveljournal.view.fragments.BoardFragment;
 import com.martynaroj.traveljournal.view.fragments.HomeFragment;
 import com.martynaroj.traveljournal.view.fragments.LogInFragment;
 import com.martynaroj.traveljournal.view.fragments.ProfileFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.interfaces.NavigationListener;
 import com.martynaroj.traveljournal.view.interfaces.ProgressBarListener;
 import com.martynaroj.traveljournal.view.interfaces.SnackbarListener;
@@ -86,8 +87,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
     @Override
     public void onBackPressed() {
-        if (adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition()).getChildFragmentManager().getBackStackEntryCount() >= 1) {
-            adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition()).getChildFragmentManager().popBackStack();
+        Fragment fragment = adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
+                .getChildFragmentManager().findFragmentById(R.id.fragment_profile);
+        if (fragment instanceof IOnBackPressed && ((IOnBackPressed) fragment).onBackPressed()) {
+            return;
+        }
+
+        if (adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
+                .getChildFragmentManager().getBackStackEntryCount() >= 1) {
+            adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
+                    .getChildFragmentManager().popBackStack();
             return;
         }
         if (backPressedOnce) {
@@ -108,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                     R.anim.enter_right_to_left, R.anim.exit_right_to_left,
                     R.anim.enter_left_to_right, R.anim.exit_left_to_right);
             fragmentTransaction.replace(previous.getView().getId(), next);
-            if (addToBackStack) fragmentTransaction.addToBackStack(next.getTag());
+            if (addToBackStack) fragmentTransaction.addToBackStack(next.getClass().getName());
             fragmentTransaction.commit();
         }
     }
