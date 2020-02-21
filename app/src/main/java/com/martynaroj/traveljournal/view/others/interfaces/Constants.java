@@ -5,7 +5,10 @@ public interface Constants {
     int RC_SAVE_CREDENTIALS = 9002;
 
     String USER = "user";
+
     String USERS = "Users";
+    String ADDRESSES = "Addresses";
+
     String SUCCESS = "SUCCESS";
 
     int PREFERENCES_VIEW_HEIGHT = 303;
@@ -23,4 +26,5 @@ public interface Constants {
     String ONLY_ME = "Only Me";
 
     int RC_EXTERNAL_STORAGE = 8001;
+
 }
