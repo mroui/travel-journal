@@ -162,7 +162,7 @@ public class User extends BaseObservable implements Serializable {
         }
     }
 
-    @BindingAdapter("app:imageUrl")
+    @BindingAdapter("imageUrl")
     public static void loadImage(ImageView v, String imgUrl){
         Glide.with(v.getContext())
                 .load(imgUrl)
