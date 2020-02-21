@@ -267,6 +267,18 @@
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <fragment
+                        android:id="@+id/profile_settings_personal_location_autocomplete"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/profile_settings_personal_location_layout"
+                        app:layout_constraintBottom_toBottomOf="@id/profile_settings_personal_location_layout"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        tools:ignore="FragmentTagUsage" />
+
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/profile_settings_personal_location_button"
                         android:layout_width="wrap_content"
@@ -889,7 +901,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/profile_settings_privacy_location_section"
                     android:layout_marginBottom="@dimen/margin_smaller"
                     android:layout_centerVertical="true"
-                    android:background="@color/gray"/>
+                    android:background="@color/gray"
+                    tools:ignore="TooManyViews" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/profile_settings_privacy_preferences_section"

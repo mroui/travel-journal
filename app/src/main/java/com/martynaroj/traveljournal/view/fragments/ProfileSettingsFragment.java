@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,12 +38,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
+import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -69,6 +78,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private Bitmap compressor;
     private StorageViewModel storageViewModel;
 
+    private Address newLocation;
+    private Address currentLocation;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private AddressViewModel addressViewModel;
+
     static ProfileSettingsFragment newInstance() {
         return new ProfileSettingsFragment();
     }
@@ -80,6 +94,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         View view = binding.getRoot();
 
         initContentView();
+        initGooglePlaces();
         setListeners();
         initViewModels();
 
@@ -106,6 +121,23 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private void initGooglePlaces() {
+        if (getContext() != null) {
+            Places.initialize(getContext(), getString(R.string.google_api_key));
+            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.profile_settings_personal_location_autocomplete);
+            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTextSize(14.0f);
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
+                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
+                        .setVisibility(View.GONE);
+                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+            }
+        }
+    }
+
+
     private void setListeners() {
         new FormHandler().addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
         new FormHandler().addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
@@ -124,6 +156,24 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         binding.profileSettingsAccountPasswordSaveButton.setOnClickListener(this);
         binding.profileSettingsPrivacySaveButton.setOnClickListener(this);
         binding.profileSettingsAboutCreditsSection.setOnClickListener(this);
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @SuppressWarnings("ConstantConditions")
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    newLocation = new Address(place.getName(), place.getAddress(),
+                            place.getLatLng().latitude, place.getLatLng().longitude);
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView().findViewById(R.id.places_autocomplete_clear_button).setOnClickListener(view -> {
+                newLocation = null;
+                autocompleteFragment.setText("");
+            });
+        }
     }
 
 
@@ -132,6 +182,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
             authViewModel = new ViewModelProvider(getActivity()).get(AuthViewModel.class);
+            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
         }
     }
 
@@ -141,9 +192,27 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         if (bundle != null) {
             user = (User) bundle.getSerializable(Constants.USER);
             binding.setUser(user);
+            initLocation();
             initUserData();
         } else {
             getCurrentUser();
+        }
+    }
+
+
+    private void initLocation() {
+        if (user.getLocation() != null && !user.getLocation().equals("")) {
+            startProgressBar();
+            addressViewModel.getAddress(user.getLocation());
+            addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
+                if (address != null) {
+                    currentLocation = address;
+                    currentLocation.setId(user.getLocation());
+                    newLocation = currentLocation;
+                    autocompleteFragment.setText(currentLocation.getName());
+                }
+                stopProgressBar();
+            });
         }
     }
 
@@ -157,6 +226,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
+                    initLocation();
                     initUserData();
                 } else {
                     this.user = new User();
@@ -325,6 +395,15 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     }
 
 
+    private boolean isLocationChanged() {
+        if (autocompleteFragment != null) {
+            return (user.getLocation() == null && newLocation != null)
+                    || (user.getLocation() != null && !currentLocation.equals(newLocation));
+        }
+        return false;
+    }
+
+
     private boolean isPrivacyChanged() {
         return isPrivacyEmailChanged() || isPrivacyLocationChanged() || isPrivacyPreferencesChanged();
     }
@@ -332,7 +411,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private boolean areAnyChanges() {
         return (isImageChanged() || isPreferenceChanged() || isBioChanged() || isUsernameChanged()
-                || isEmailChanged() || isPasswordChanged() || isPrivacyChanged());
+                || isEmailChanged() || isPasswordChanged() || isPrivacyChanged() || isLocationChanged());
     }
 
 
@@ -360,7 +439,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void changeEmail() {
-        if(validateChangeEmail()) {
+        if (validateChangeEmail()) {
             if (!user.getEmail().equals(Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString())) {
                 startProgressBar();
                 String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountEmailPasswordCurrentInput.getText()).toString();
@@ -383,7 +462,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void changePassword() {
-        if(validateChangePassword()) {
+        if (validateChangePassword()) {
             startProgressBar();
             String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordCurrentInput.getText()).toString();
             String newPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordInput.getText()).toString();
@@ -429,8 +508,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             changes.put(Constants.BIO, Objects.requireNonNull(binding.profileSettingsPersonalBioInput.getText()).toString());
         }
 
-        if(isPreferenceChanged()) {
+        if (isPreferenceChanged()) {
             changes.put(Constants.PREFERENCES, getUniquePreferences());
+        }
+
+        if (isLocationChanged()) {
+            addAddress();
         }
 
         if (isImageChanged()) {
@@ -438,6 +521,26 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         } else if (!changes.isEmpty()) {
             updateUser(changes);
         }
+    }
+
+
+    private void addAddress() {
+        startProgressBar();
+        addressViewModel.saveAddress(newLocation, user.getLocation());
+        addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
+            if (!status.contains("ERROR")) {
+                Map<String, Object> changes = new HashMap<>();
+                changes.put(Constants.LOCATION, status);
+                updateUser(changes);
+                if (newLocation == null) newLocation = new Address(status);
+                currentLocation = newLocation;
+                if (currentLocation.getName() != null)
+                    autocompleteFragment.setText(currentLocation.getName());
+            } else {
+                showSnackBar(status, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        });
     }
 
 
@@ -468,7 +571,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
             storageViewModel.saveToStorage(thumb, user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
-                if(status.contains("ERROR")) {
+                if (status.contains("ERROR")) {
                     showSnackBar(status, Snackbar.LENGTH_LONG);
                     stopProgressBar();
                 } else {
@@ -586,7 +689,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK && result != null) {
                 newImageUri = result.getUri();
