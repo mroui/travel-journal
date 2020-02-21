@@ -29,6 +29,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -65,6 +67,7 @@ import java.util.Objects;
 
 import id.zelory.compressor.Compressor;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileSettingsFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
@@ -81,6 +84,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private Address newLocation;
     private Address currentLocation;
     private AutocompleteSupportFragment autocompleteFragment;
+    private FindCurrentPlaceRequest request;
+    private PlacesClient placesClient;
     private AddressViewModel addressViewModel;
 
     static ProfileSettingsFragment newInstance() {
@@ -124,6 +129,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void initGooglePlaces() {
         if (getContext() != null) {
             Places.initialize(getContext(), getString(R.string.google_api_key));
+            placesClient  = Places.createClient(getContext());
             autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.profile_settings_personal_location_autocomplete);
             if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
                 ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
@@ -133,6 +139,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
                         .setVisibility(View.GONE);
                 autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+                request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
             }
         }
     }
@@ -163,6 +170,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 public void onPlaceSelected(@NonNull Place place) {
                     newLocation = new Address(place.getName(), place.getAddress(),
                             place.getLatLng().latitude, place.getLatLng().longitude);
+                    autocompleteFragment.setText(newLocation.getAddress());
                 }
 
                 @Override
@@ -209,7 +217,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                     currentLocation = address;
                     currentLocation.setId(user.getLocation());
                     newLocation = currentLocation;
-                    autocompleteFragment.setText(currentLocation.getName());
+                    autocompleteFragment.setText(currentLocation.getAddress());
                 }
                 stopProgressBar();
             });
@@ -266,7 +274,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 changeProfilePhoto();
                 return;
             case R.id.profile_settings_personal_location_button:
-                showSnackBar("clicked: find me", Snackbar.LENGTH_SHORT);
+                detectLocation();
                 return;
             case R.id.profile_settings_personal_save_button:
                 savePersonalChanges();
@@ -535,7 +543,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 if (newLocation == null) newLocation = new Address(status);
                 currentLocation = newLocation;
                 if (currentLocation.getName() != null)
-                    autocompleteFragment.setText(currentLocation.getName());
+                    autocompleteFragment.setText(currentLocation.getAddress());
             } else {
                 showSnackBar(status, Snackbar.LENGTH_LONG);
                 stopProgressBar();
@@ -669,6 +677,29 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void detectLocation() {
+        if(getContext() != null) {
+            if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                startProgressBar();
+                addressViewModel.detectAddress(placesClient, request);
+                addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
+                    if (response != null) {
+                        Place place = response.getPlaceLikelihoods().get(0).getPlace();
+                        double lat = place.getLatLng() != null ? place.getLatLng().latitude : 0;
+                        double lon = place.getLatLng() != null ? place.getLatLng().longitude : 0;
+                        newLocation = new Address(place.getName(), place.getAddress(), lat, lon);
+                        autocompleteFragment.setText(newLocation.getAddress());
+                        stopProgressBar();
+                    } else
+                        showSnackBar("ERROR: Problem with finding you", Snackbar.LENGTH_LONG);
+                });
+            } else if (getActivity() != null){
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
+            }
+        }
+    }
 
 
     private void startProgressBar() {
