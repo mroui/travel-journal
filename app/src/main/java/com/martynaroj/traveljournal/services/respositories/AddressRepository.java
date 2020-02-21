@@ -2,6 +2,10 @@ package com.martynaroj.traveljournal.services.respositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,7 +23,8 @@ public class AddressRepository {
         MutableLiveData<String> statusData = new MutableLiveData<>();
 
         DocumentReference addressRef = reference == null ? addressesRef.document() : addressesRef.document(reference);
-        if (address == null) address = new Address(addressRef.getId());
+        if (address == null) address = new Address();
+        address.setId(addressRef.getId());
 
         addressRef.set(address).addOnCompleteListener(uidTask -> {
             if (uidTask.isSuccessful()) {
@@ -49,4 +54,17 @@ public class AddressRepository {
         return addressData;
     }
 
+
+    public MutableLiveData<FindCurrentPlaceResponse> detectAddress(PlacesClient placesClient, FindCurrentPlaceRequest request) {
+        MutableLiveData<FindCurrentPlaceResponse> detectedAddress = new MutableLiveData<>();
+        Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+        placeResponse.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                detectedAddress.setValue(task.getResult());
+            } else if(task.getException() != null) {
+                detectedAddress.setValue(null);
+            }
+        });
+        return detectedAddress;
+    }
 }
