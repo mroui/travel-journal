@@ -193,6 +193,7 @@
                             android:textSize="@dimen/text_small"
                             android:text="@{user.bio}"
                             android:textCursorDrawable="@null"
+                            android:maxLength="34"
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -469,6 +470,7 @@
                             android:textCursorDrawable="@null"
                             android:hint="@string/profile_settings_account_username"
                             android:text="@{user.username}"
+                            android:maxLength="18"
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
