@@ -8,7 +8,6 @@ import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentReference;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
@@ -27,7 +26,7 @@ public class User extends BaseObservable implements Serializable {
     private String email;
     private String photo;
     private String bio;
-    private Place location;
+    private String location;
     private List<String> preferences;
     private List<DocumentReference> friends;
     private Map<String, Integer> privacy;
@@ -102,11 +101,11 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public Place getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(Place location) {
+    public void setLocation(String location) {
         this.location = location;
         notifyPropertyChanged(BR.location);
     }
