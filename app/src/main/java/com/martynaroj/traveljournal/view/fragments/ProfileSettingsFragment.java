@@ -406,7 +406,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private boolean isLocationChanged() {
         if (autocompleteFragment != null) {
             return (user.getLocation() == null && newLocation != null)
-                    || (user.getLocation() != null && !currentLocation.equals(newLocation));
+                    || (user.getLocation() != null && currentLocation!= null
+                        && newLocation != null && !currentLocation.equals(newLocation));
         }
         return false;
     }
