@@ -480,8 +480,10 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             authViewModel.getChangesStatus().observe(this, status -> {
                 if (!status.contains("ERROR")) {
                     clearInputs();
+                    showSnackBar(status, Snackbar.LENGTH_SHORT);
+                } else {
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
                 }
-                showSnackBar(status, Snackbar.LENGTH_LONG);
                 stopProgressBar();
             });
         }
@@ -619,7 +621,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 this.user = user;
                 userViewModel.setUser(user);
                 binding.setUser(user);
-                showSnackBar("Changes saved successfully", Snackbar.LENGTH_LONG);
+                showSnackBar("Changes saved successfully", Snackbar.LENGTH_SHORT);
                 clearInputs();
                 newImageUri = null;
             } else {
