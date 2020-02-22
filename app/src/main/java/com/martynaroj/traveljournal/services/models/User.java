@@ -121,6 +121,17 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
+    public int getPreferencesSize() {
+        int count = 0;
+        if (this.preferences != null) {
+            for (String string : this.preferences) {
+                count += string.length();
+            }
+        }
+        return count;
+    }
+
+    @Bindable
     private List<DocumentReference> getFriends() {
         return friends;
     }
