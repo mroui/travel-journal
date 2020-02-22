@@ -1,7 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,13 +45,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         initUser();
 
-//        List<String> names = new ArrayList<>(Arrays.asList("andfgna", "olaasdgfd", "ansdaasdna", "ola","anggna", "ola","asdfsdfnna", "ola", "dsfgsdfsdfs", "asfddsgdfg"));
-//        binding.profilePreferences.setData(names, item -> {
-//            SpannableString spannableString = new SpannableString("#" + item);
-//            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            return spannableString;
-//        });
-
         return view;
     }
 
@@ -57,6 +54,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
+                    initPreferences();
                 }
         });
         getCurrentUser();
@@ -72,6 +70,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
+                    initPreferences();
                 } else {
                     showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
@@ -79,6 +78,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             });
         } else {
             showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
+        }
+    }
+
+
+    private void initPreferences() {
+        if (user.getPreferences() != null) {
+            binding.profilePreferences.setData(user.getPreferences(), item -> {
+                SpannableString spannableString = new SpannableString(item);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return spannableString;
+            });
         }
     }
 
