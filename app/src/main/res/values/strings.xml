@@ -99,6 +99,7 @@
 
     <string name="dialog_button_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_button_unsaved_changes_desc">Your changes have not been saved. Do you want to discard the changes and continue?</string>
+    <string name="dialog_button_my_email_title">You current contact email</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">YES</string>
     <string name="dialog_button_no">NO</string>
