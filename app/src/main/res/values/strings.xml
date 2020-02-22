@@ -100,6 +100,9 @@
     <string name="travels_list_travels">Travels</string>
     <string name="travels_list_my_travels">My Travels</string>
 
+    <string name="friends_list_friends">Friends</string>
+    <string name="friends_list_my_friends">My Friends</string>
+
     <string name="dialog_button_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_button_unsaved_changes_desc">Your changes have not been saved. Do you want to discard the changes and continue?</string>
     <string name="dialog_button_my_email_title">Your current contact email</string>
