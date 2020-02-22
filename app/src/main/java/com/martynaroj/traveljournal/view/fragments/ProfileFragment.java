@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +35,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
@@ -93,12 +97,45 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.setLoggedUser(user);
                     initPreferences();
                     initLocalization();
+                    isNotUpdatedAccount();
                 } else {
                     showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
             });
         } else {
             showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
+        }
+    }
+
+
+    private void isNotUpdatedAccount() {
+        if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
+        && user.getPhoto() == null)
+            openUpdateProfileDialog();
+    }
+
+
+    private void openUpdateProfileDialog() {
+        if (getContext() != null) {
+            TextView title = new TextView(getActivity());
+            title.setText(getString(R.string.dialog_button_update_account_title));
+            title.setPadding(0, 32, 0, 0);
+            title.setGravity(Gravity.CENTER);
+            title.setTextColor(getResources().getColor(R.color.main_blue));
+            title.setTextSize(18);
+
+            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
+                    .setCustomTitle(title)
+                    .setMessage(getString(R.string.dialog_button_update_account_desc))
+                    .setPositiveButton(getString(R.string.dialog_button_now), (dialogInterface, i) -> {
+                        dialogInterface.cancel();
+                        openSettings();
+                    })
+                    .setNegativeButton(getString(R.string.dialog_button_later), null)
+                    .show();
+
+            TextView messageText = dialog.findViewById(android.R.id.message);
+            Objects.requireNonNull(messageText).setGravity(Gravity.CENTER);
         }
     }
 
@@ -113,7 +150,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
                 stopProgressBar();
             });
-        }
+        } else stopProgressBar();
     }
 
 
