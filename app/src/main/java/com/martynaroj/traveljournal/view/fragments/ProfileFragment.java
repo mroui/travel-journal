@@ -170,7 +170,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 openTravels();
                 return;
             case R.id.profile_friends:
-                showSnackBar("clicked: friends", Snackbar.LENGTH_SHORT);
+                getFriendsInfo();
                 return;
             case R.id.profile_see_all_preferences:
                 seeAllPreferences();
@@ -184,8 +184,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
+    private void getFriendsInfo() {
+        getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(), true);
+    }
+
+
     private void getContactInfo() {
-        if (!user.isUserProfile(user)) {
+        if (user.isUserProfile(user)) {
             if (getContext() != null) {
                 new MaterialAlertDialogBuilder(getContext())
                     .setTitle(getResources().getString(R.string.dialog_button_my_email_title))
