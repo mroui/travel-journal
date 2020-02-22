@@ -167,7 +167,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 getContactInfo();
                 return;
             case R.id.profile_travels:
-                showSnackBar("clicked: travels", Snackbar.LENGTH_SHORT);
+                openTravels();
                 return;
             case R.id.profile_friends:
                 showSnackBar("clicked: friends", Snackbar.LENGTH_SHORT);
@@ -199,6 +199,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             intent.putExtra(Intent.EXTRA_EMAIL, new String[] { user.getEmail() });
             startActivity(Intent.createChooser(intent, ""));
         }
+    }
+
+
+    private void openTravels() {
+        getNavigationInteractions().changeFragment(this, TravelsListFragment.newInstance(), true);
     }
 
 
