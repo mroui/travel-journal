@@ -45,6 +45,7 @@
     <string name="profile_bio">Some words about you…</string>
     <string name="profile_location">Location</string>
     <string name="profile_contact">contact</string>
+    <string name="profile_my_email">my email</string>
     <string name="profile_travels">travels</string>
     <string name="profile_friends">friends</string>
     <string name="profile_see_all_pref"><u>+ See all preferences</u></string>
