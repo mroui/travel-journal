@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Geocoder;
@@ -16,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
@@ -36,6 +38,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private FragmentProfileBinding binding;
     private UserViewModel userViewModel;
     private User user;
+
     private AddressViewModel addressViewModel;
     private Geocoder geocoder;
 
@@ -57,6 +60,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         return view;
     }
+
 
     private void initGeocoder() {
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -92,7 +96,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 } else {
                     showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
-                stopProgressBar();
             });
         } else {
             showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
@@ -161,7 +164,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 showSnackBar("clicked: notifications", Snackbar.LENGTH_SHORT);
                 return;
             case R.id.profile_contact:
-                showSnackBar("clicked: contact", Snackbar.LENGTH_SHORT);
+                getContactInfo();
                 return;
             case R.id.profile_travels:
                 showSnackBar("clicked: travels", Snackbar.LENGTH_SHORT);
@@ -177,6 +180,24 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 return;
             case R.id.profile_sign_out_button:
                 signOut();
+        }
+    }
+
+
+    private void getContactInfo() {
+        if (!user.isUserProfile(user)) {
+            if (getContext() != null) {
+                new MaterialAlertDialogBuilder(getContext())
+                    .setTitle(getResources().getString(R.string.dialog_button_my_email_title))
+                    .setMessage(user.getEmail())
+                    .setPositiveButton(getString(R.string.dialog_button_ok), null)
+                    .show();
+            }
+        } else {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("plain/text");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { user.getEmail() });
+            startActivity(Intent.createChooser(intent, ""));
         }
     }
 
