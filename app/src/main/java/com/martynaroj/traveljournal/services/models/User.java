@@ -151,6 +151,47 @@ public class User extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.privacy);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Bindable
+    private int getPrivacyEmail() {
+        if (this.privacy != null && this.privacy.get(Constants.EMAIL) != null)
+            return this.privacy.get(Constants.EMAIL);
+        else return 2;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Bindable
+    private int getPrivacyLocation() {
+        if (this.privacy != null && this.privacy.get(Constants.LOCATION) != null)
+            return this.privacy.get(Constants.LOCATION);
+        else return 2;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Bindable
+    private int getPrivacyPreferences() {
+        if (this.privacy != null && this.privacy.get(Constants.PREFERENCES) != null)
+            return this.privacy.get(Constants.PREFERENCES);
+        else return 2;
+    }
+
+    public boolean isEmailAvailableForUser (User loggedUser) {
+        return (!isUserProfile(loggedUser) && this.getPrivacyEmail() == 0) || isUserProfile(loggedUser);
+    }
+
+    public boolean isLocationAvailableForUser (User loggedUser) {
+        return (!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0) || isUserProfile(loggedUser);
+    }
+
+    public boolean isPreferencesAvailableForUser (User loggedUser) {
+        return (!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser);
+    }
+
+
+    public boolean isUserProfile (User loggedUser) {
+        return this.uid.equals(loggedUser.getUid());
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         try {

@@ -6,9 +6,13 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.martynaroj.traveljournal.R" />
         <variable
             name="user"
             type="com.martynaroj.traveljournal.services.models.User"/>
+        <variable
+            name="loggedUser"
+            type="com.martynaroj.traveljournal.services.models.User" />
     </data>
 
     <FrameLayout
@@ -49,6 +53,7 @@
                     android:contentDescription="@string/profile_notifications"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
+                    android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"
                     android:src="@drawable/ic_notifications"/>
 
                 <TextView
@@ -59,6 +64,7 @@
                     app:layout_constraintTop_toTopOf="@id/profile_notifications"
                     android:padding="@dimen/padding_minimal"
                     android:gravity="center"
+                    android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"
                     android:background="@drawable/notifications_badge"/>
 
                 <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
@@ -106,7 +112,7 @@
                             android:fontFamily="@font/raleway_medium"
                             android:text="@{user.bio}"
                             android:textAlignment="center"
-                            android:visibility="@{user.bio == null || user.privacy.bio != 0 ? View.GONE : View.VISIBLE}"
+                            android:visibility="@{user.bio == null ? View.GONE : View.VISIBLE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"/>
 
@@ -121,7 +127,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@{user.location}"
                             android:textAlignment="center"
-                            android:visibility="@{user.location == null ? View.GONE : View.VISIBLE}"
+                            android:visibility="@{user.isLocationAvailableForUser(loggedUser) ? View.VISIBLE : View.GONE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"
                             android:gravity="center"
@@ -141,7 +147,7 @@
                                 android:padding="@dimen/padding_small"
                                 app:backgroundTint="@color/light_gray"
                                 android:fontFamily="@font/raleway_regular"
-                                android:text="@string/profile_contact"
+                                android:text="@{user.isUserProfile(loggedUser) ? @string/profile_my_email : @string/profile_contact}"
                                 android:textColor="@color/dark_gray"
                                 android:textSize="@dimen/text_smaller"
                                 android:drawableTop="@drawable/ic_email"
@@ -150,7 +156,9 @@
                                 android:insetRight="0dp"
                                 android:insetLeft="0dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
+                                android:alpha="@{user.isEmailAvailableForUser(loggedUser) ? 1.0f : 0.4f}"
                                 app:cornerRadius="0dp"
+                                android:enabled="@{user.isEmailAvailableForUser(loggedUser) ? true : false}"
                                 android:layout_weight="1"/>
 
                             <com.google.android.material.button.MaterialButton
@@ -236,7 +244,7 @@
                     app:tagForeground="?android:attr/selectableItemBackground"
                     app:tagTextSize="@dimen/text_small"
                     app:tagTextColor="@color/dark_gray"
-                    android:visibility="@{user.preferences == null ? View.GONE : View.VISIBLE}"/>
+                    android:visibility="@{user.isPreferencesAvailableForUser(loggedUser) ? View.VISIBLE : View.GONE}"/>
 
                 <TextView
                     android:id="@+id/profile_see_all_preferences"
@@ -251,7 +259,7 @@
                     android:textColor="@color/main_blue"
                     android:layout_gravity="center"
                     android:text="@string/profile_see_all_pref"
-                    android:visibility="@{user.preferences != null &amp;&amp; user.preferencesSize > 55 ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{user.isPreferencesAvailableForUser(loggedUser) &amp;&amp; user.preferencesSize > 55 ? View.VISIBLE : View.GONE}"/>
 
                 <View
                     android:layout_width="wrap_content"
@@ -277,7 +285,8 @@
                     android:text="@string/profile_settings"
                     android:textColor="@color/white"
                     android:fontFamily="@font/raleway_bold"
-                    app:backgroundTint="@color/main_light_blue" />
+                    app:backgroundTint="@color/main_light_blue"
+                    android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/profile_sign_out_button"
@@ -293,7 +302,8 @@
                     android:text="@string/profile_sign_out"
                     android:textColor="@color/white"
                     android:fontFamily="@font/raleway_bold"
-                    app:backgroundTint="@color/main_light_blue" />
+                    app:backgroundTint="@color/main_light_blue"
+                    android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
