@@ -6,13 +6,15 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.martynaroj.traveljournal.R" />
         <variable
             name="user"
             type="com.martynaroj.traveljournal.services.models.User"/>
         <variable
             name="loggedUser"
-            type="com.martynaroj.traveljournal.services.models.User" />
+            type="com.martynaroj.traveljournal.services.models.User"/>
+        <variable
+            name="location"
+            type="String"/>
     </data>
 
     <FrameLayout
@@ -125,7 +127,7 @@
                             app:layout_constraintTop_toBottomOf="@id/profile_bio"
                             android:layout_marginTop="@dimen/margin_small"
                             android:fontFamily="@font/raleway_bold"
-                            android:text="@{user.location}"
+                            android:text="@{location}"
                             android:textAlignment="center"
                             android:visibility="@{user.isLocationAvailableForUser(loggedUser) ? View.VISIBLE : View.GONE}"
                             android:textColor="@color/dark_gray"

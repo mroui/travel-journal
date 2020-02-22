@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -19,16 +20,24 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
+import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentProfileBinding binding;
     private UserViewModel userViewModel;
     private User user;
+    private AddressViewModel addressViewModel;
+    private Geocoder geocoder;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -40,12 +49,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initUserViewModel();
+        initViewModels();
         setListeners();
+        initGeocoder();
 
         initUser();
 
         return view;
+    }
+
+    private void initGeocoder() {
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
     }
 
 
@@ -56,6 +70,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.setUser(user);
                     binding.setLoggedUser(user);
                     initPreferences();
+                    initLocalization();
                 }
         });
         getCurrentUser();
@@ -73,6 +88,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.setUser(user);
                     binding.setLoggedUser(user);
                     initPreferences();
+                    initLocalization();
                 } else {
                     showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
@@ -81,6 +97,30 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         } else {
             showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
         }
+    }
+
+
+    private void initLocalization() {
+        if (user.getLocation() != null && !user.getLocation().equals("")) {
+            startProgressBar();
+            addressViewModel.getAddress(user.getLocation());
+            addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
+                if (address != null) {
+                    getLocationCity(address);
+                }
+                stopProgressBar();
+            });
+        }
+    }
+
+
+    private void getLocationCity(Address address) {
+        try {
+            List<android.location.Address> addresses = geocoder.getFromLocation(address.getLatitude(), address.getLongitude(), 1);
+            if (addresses != null && addresses.size() > 0) {
+                binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
+            }
+        } catch (IOException ignored) {}
     }
 
 
@@ -95,9 +135,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void initUserViewModel() {
-        if (getActivity() != null)
+    private void initViewModels() {
+        if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+        }
     }
 
 
