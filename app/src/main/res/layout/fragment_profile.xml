@@ -90,6 +90,7 @@
                             app:layout_constraintTop_toTopOf="@id/profile_user_details"
                             android:layout_marginTop="@dimen/margin_bigger"
                             android:fontFamily="@font/raleway_bold"
+                            android:textAlignment="center"
                             android:text="@{user.username}"
                             android:textColor="@color/black"
                             android:textSize="@dimen/text_big"/>
@@ -104,6 +105,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:fontFamily="@font/raleway_medium"
                             android:text="@{user.bio}"
+                            android:textAlignment="center"
                             android:visibility="@{user.bio == null || user.privacy.bio != 0 ? View.GONE : View.VISIBLE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"/>
@@ -118,6 +120,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:fontFamily="@font/raleway_bold"
                             android:text="@{user.location}"
+                            android:textAlignment="center"
                             android:visibility="@{user.location == null ? View.GONE : View.VISIBLE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"
@@ -205,7 +208,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="40dp"
                     android:contentDescription="@string/profile_image"
-                    android:src="@drawable/ic_avatar"
+                    app:imageUrl="@{user.photo}"
                     app:civ_border_width="1dp"
                     app:civ_border_color="@color/white"
                     app:civ_shadow="true"
@@ -248,7 +251,7 @@
                     android:textColor="@color/main_blue"
                     android:layout_gravity="center"
                     android:text="@string/profile_see_all_pref"
-                    android:visibility="@{user.preferences == null ? View.GONE : View.VISIBLE}"/>
+                    android:visibility="@{user.preferences != null &amp;&amp; user.preferencesSize > 55 ? View.VISIBLE : View.GONE}"/>
 
                 <View
                     android:layout_width="wrap_content"
