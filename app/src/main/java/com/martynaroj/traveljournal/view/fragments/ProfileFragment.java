@@ -54,6 +54,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
+                    binding.setLoggedUser(user);
                     initPreferences();
                 }
         });
@@ -70,6 +71,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
+                    binding.setLoggedUser(user);
                     initPreferences();
                 } else {
                     showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
