@@ -163,6 +163,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         binding.profileSettingsAccountPasswordSaveButton.setOnClickListener(this);
         binding.profileSettingsPrivacySaveButton.setOnClickListener(this);
         binding.profileSettingsAboutCreditsSection.setOnClickListener(this);
+        binding.profileSettingsHelpContactSection.setOnClickListener(this);
         if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @SuppressWarnings("ConstantConditions")
@@ -293,6 +294,9 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 return;
             case R.id.profile_settings_about_credits_section:
                 showCreditsDialog();
+                return;
+            case R.id.profile_settings_help_contact_section:
+                getContactInfo();
         }
     }
 
@@ -327,6 +331,14 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                     .show();
             ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
         }
+    }
+
+
+    private void getContactInfo() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] { getResources().getString(R.string.contact_email) });
+        startActivity(Intent.createChooser(intent, ""));
     }
 
 

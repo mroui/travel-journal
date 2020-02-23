@@ -96,6 +96,10 @@
     <string name="profile_settings_about_credits_desc">Show credits and licenses</string>
     <string name="profile_settings_about_version_title">Version</string>
     <string name="profile_settings_about_version_desc">1.0</string>
+    <string name="profile_settings_help">HELP</string>
+    <string name="profile_settings_help_contact_title">Contact</string>
+    <string name="profile_settings_help_contact_desc">Feel free to contact with Us</string>
+    <string name="contact_email">martynaxroj@gmaIl.com</string>
 
     <string name="travels_list_travels">Travels</string>
     <string name="travels_list_my_travels">My Travels</string>

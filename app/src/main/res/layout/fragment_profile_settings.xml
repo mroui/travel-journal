@@ -1138,6 +1138,66 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <TextView
+                    android:id="@+id/profile_settings_help_section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_settings_about_version_section"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text="@string/profile_settings_help"
+                    android:textColor="@color/main_blue"/>
+
+                <View
+                    android:id="@+id/profile_settings_help_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_settings_help_section"
+                    android:layout_marginBottom="@dimen/margin_smaller"
+                    android:layout_centerVertical="true"
+                    android:background="@color/main_blue"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/profile_settings_help_contact_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_settings_help_separator"
+                    android:paddingHorizontal="@dimen/padding_smaller"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/profile_settings_help_contact_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_settings_title"
+                        android:text="@string/profile_settings_help_contact_title"
+                        android:textColor="@color/darker_gray"/>
+
+                    <TextView
+                        android:id="@+id/profile_settings_help_contact_desc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_settings_help_contact_title"
+                        android:layout_marginEnd="@dimen/padding_smaller"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/profile_settings_help_contact_desc"
+                        android:textColor="@color/gray"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
