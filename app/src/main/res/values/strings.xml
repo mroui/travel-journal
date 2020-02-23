@@ -7,6 +7,11 @@
 
     <string name="back_arrow">Back</string>
 
+    <string name="home_title">Hey!\nWhat are\nyour plans?</string>
+    <string name="home_camp">camp</string>
+    <string name="gome_explore_item_travel_image">Travel Image</string>
+    <string name="home_explore_title">EXPLORE</string>
+
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
     <string name="login_password">PASSWORD</string>
