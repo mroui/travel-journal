@@ -38,7 +38,7 @@ public class HashtagAdapter extends ArrayAdapter<String> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.hashtag_list_item, parent, false);
         }
         TextView textViewName = convertView.findViewById(R.id.list_item_name);
         String item = getItem(position);
