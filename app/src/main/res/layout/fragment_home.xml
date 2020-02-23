@@ -1,14 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_home"
+    tools:context=".view.fragments.HomeFragment"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.HomeFragment">
+    android:layout_width="match_parent"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_regular"
+            android:paddingEnd="@dimen/margin_regular">
+
+            <TextView
+                android:id="@+id/home_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:layout_marginBottom="@dimen/margin_regular"
+                android:fontFamily="@font/robotoslab_medium"
+                android:text="@string/home_title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_bigger"/>
+
+            <ImageView
+                android:id="@+id/home_image"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/home_title"
+                android:contentDescription="@string/home_camp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_camp"/>
+
+            <TextView
+                android:id="@+id/home_explore_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_title"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:fontFamily="@font/raleway_bold"
+                android:text="@string/home_explore_title"
+                android:textColor="@color/main_red"
+                android:textSize="@dimen/text_medium"/>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/home_explore_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_explore_title"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:foregroundGravity="center"
+                android:overScrollMode="never"
+                android:clipToPadding="false"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/home_progressbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/home" />
+        android:background="@color/transparent"
+        android:visibility="invisible">
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/home_progressbar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:loading_width="4dp"
+            app:loading_color="@color/white"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
 </FrameLayout>
