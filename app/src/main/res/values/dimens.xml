@@ -37,4 +37,6 @@
 
     <dimen name="chip_height">24dp</dimen>
     <dimen name="chip_text_size">14dp</dimen>
+
+    <dimen name="corner_radius_small">8dp</dimen>
 </resources>
