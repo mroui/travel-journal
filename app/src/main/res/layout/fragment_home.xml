@@ -27,8 +27,9 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/margin_regular"
-                android:layout_marginBottom="@dimen/margin_regular"
+                app:layout_constraintBottom_toTopOf="@+id/home_explore_title"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:fontFamily="@font/robotoslab_medium"
                 android:text="@string/home_title"
                 android:textColor="@color/black"
@@ -39,7 +40,10 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/home_title"
                 app:layout_constraintTop_toTopOf="@id/home_title"
+                app:layout_constraintBottom_toBottomOf="@id/home_title"
+                android:layout_marginStart="@dimen/margin_tiny"
                 android:contentDescription="@string/home_camp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
@@ -59,14 +63,104 @@
             <com.asksira.loopingviewpager.LoopingViewPager
                 android:id="@+id/home_explore_viewpager"
                 android:layout_width="match_parent"
+                android:layout_height="212dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/home_explore_see_more"
+                android:layout_marginBottom="@dimen/margin_tiny"
+                app:isInfinite="true"
+                app:autoScroll="true"
+                app:scrollInterval="3000"
+                android:clipToPadding="false"/>
+
+            <TextView
+                android:id="@+id/home_explore_see_more"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/home_explore_title"
-                android:layout_marginTop="@dimen/margin_tiny"
-                android:foregroundGravity="center"
-                android:overScrollMode="never"
-                android:clipToPadding="false"/>
+                app:layout_constraintBottom_toTopOf="@+id/home_search_section"
+                android:layout_marginBottom="@dimen/margin_smaller"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:fontFamily="@font/raleway_bold"
+                android:textAlignment="center"
+                android:text="explore more"
+                android:background="@drawable/ripple_explore_more"
+                android:shadowColor="@color/transparent_light"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="0.01"
+                android:textColor="@color/white"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <RelativeLayout
+                android:id="@+id/home_search_section"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/margin_regular">
+
+                <View
+                    android:id="@+id/home_search_center_view"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/margin_tiny"
+                    android:layout_marginEnd="@dimen/margin_tiny"
+                    android:layout_centerInParent="true"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/home_others_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/home_search_center_view"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ripple_search_map"
+                    android:clickable="true"
+                    android:focusable="true">
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/home_search_center_view"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/home_search_friends_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_small"
+                    android:layout_marginBottom="@dimen/margin_tiny"
+                    android:background="@drawable/ripple_search_friends"
+                    android:clickable="true"
+                    android:focusable="true">
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/home_search_travels_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_small"
+                    android:layout_marginTop="@dimen/margin_tiny"
+                    android:background="@drawable/ripple_search_travels"
+                    android:clickable="true"
+                    android:focusable="true">
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
