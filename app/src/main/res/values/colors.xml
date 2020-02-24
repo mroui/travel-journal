@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <color name="main_red">#F37E53</color>
+    <color name="main_red">#EF9A7B</color>
     <color name="main_yellow">#F5B343</color>
     <color name="main_blue">#50BFEA</color>
     <color name="main_green">#5ED3B6</color>
@@ -16,17 +16,26 @@
     <color name="darker_gray">#4D4D4D</color>
     <color name="black">#000000</color>
 
-    <color name="red_active">#F37E53</color>
+    <color name="red_active">#EF9A7B</color>
     <color name="red_inactive">#F7A080</color>
-    <color name="red_bg_light">#FEF1ED</color>
+    <color name="red_bg_lighter">#FEF1ED</color>
+    <color name="red_bg_light">#F8D3C7</color>
+    <color name="red_bg_dark">#E1B3A5</color>
 
     <color name="yellow_active">#F5B343</color>
     <color name="yellow_inactive">#F8CA7C</color>
-    <color name="yellow_bg_light">#FEF3E2</color>
+    <color name="yellow_bg_lighter">#FEF3E2</color>
+    <color name="yellow_bg_light">#F7E3C5</color>
+    <color name="yellow_bg_dark">#EBCDA2</color>
 
     <color name="blue_active">#50BFEA</color>
     <color name="blue_inactive">#7DD0F0</color>
-    <color name="blue_bg_light">#E4F5FC</color>
+    <color name="blue_bg_lighter">#E4F5FC</color>
+    <color name="blue_bg_light">#C9E9F7</color>
+    <color name="blue_bg_dark">#A9D0E1</color>
+
+    <color name="green_bg_light">#B5EBDE</color>
+    <color name="green_bg_dark">#A4D6CA</color>
 
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/light_gray</color>
 
