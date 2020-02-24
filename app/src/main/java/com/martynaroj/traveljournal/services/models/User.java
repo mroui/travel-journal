@@ -217,7 +217,7 @@ public class User extends BaseObservable implements Serializable {
     public static void loadImage(ImageView v, String imgUrl){
         Glide.with(v.getContext())
                 .load(imgUrl)
-                .placeholder(R.drawable.ic_avatar)
+                .placeholder(R.drawable.default_avatar)
                 .into(v);
     }
 }
