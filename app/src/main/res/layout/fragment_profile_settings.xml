@@ -195,6 +195,22 @@
                             android:textCursorDrawable="@null"
                             android:maxLength="34"
                             android:inputType="text"/>
+
+                        <FrameLayout
+                            android:id="@+id/profile_settings_progressbar_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/transparent"
+                            android:visibility="invisible">
+
+                            <com.victor.loading.rotate.RotateLoading
+                                android:id="@+id/profile_settings_progressbar"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_gravity="center"
+                                app:loading_color="@color/white"
+                                app:loading_width="4dp" />
+                        </FrameLayout>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -878,7 +894,8 @@
                         android:fontFamily="@font/raleway_medium"
                         android:textSize="@dimen/text_small"
                         android:text="@string/profile_settings_privacy_location_desc"
-                        android:textColor="@color/gray"/>
+                        android:textColor="@color/gray"
+                        tools:ignore="TooManyViews" />
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
                         android:id="@+id/profile_settings_privacy_location_select"
@@ -1201,21 +1218,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
-
-        <FrameLayout
-            android:id="@+id/profile_settings_progressbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:visibility="invisible">
-            <com.victor.loading.rotate.RotateLoading
-                android:id="@+id/profile_settings_progressbar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:loading_width="4dp"
-                app:loading_color="@color/white"
-                android:layout_gravity="center"/>
-        </FrameLayout>
 
     </FrameLayout>
 </layout>
