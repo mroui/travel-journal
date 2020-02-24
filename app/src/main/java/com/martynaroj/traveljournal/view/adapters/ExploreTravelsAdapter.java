@@ -4,25 +4,32 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
 
+import com.asksira.loopingviewpager.LoopingPagerAdapter;
 import com.martynaroj.traveljournal.databinding.HomeExploreItemBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
 
 import java.util.List;
 
-public class ExploreTravelsAdapter extends PagerAdapter {
+public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
 
     private HomeExploreItemBinding binding;
     private List<Travel> travels;
-    private Context context;
 
 
-    public ExploreTravelsAdapter(List<Travel> travels, Context context) {
-        this.travels = travels;
-        this.context = context;
+    public ExploreTravelsAdapter(Context context, List<Travel> list, boolean isInfinite) {
+        super(context, list, isInfinite);
+        travels = list;
+    }
+
+
+    @Override
+    protected View inflateView(int viewType, ViewGroup container, int listPosition) {
+        binding = HomeExploreItemBinding.inflate(LayoutInflater.from(context), container, false);
+        return binding.getRoot();
     }
 
 
@@ -37,20 +44,13 @@ public class ExploreTravelsAdapter extends PagerAdapter {
         return view.equals(object);
     }
 
-
-    @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        binding = HomeExploreItemBinding.inflate(layoutInflater, container, false);
-        View view = binding.getRoot();
-
+    protected void bindView(View convertView, int position, int viewType) {
         binding.homeExploreItemImage.setImageResource(travels.get(position).getImage());
         binding.homeExploreItemTitle.setText(travels.get(position).getTitle());
         binding.homeExploreItemDesc.setText(travels.get(position).getDesc());
-        container.addView(view, 0);
 
-        return view;
+        convertView.setOnClickListener(v -> Toast.makeText(context, travels.get(position).getTitle(), Toast.LENGTH_SHORT).show());
     }
 
 

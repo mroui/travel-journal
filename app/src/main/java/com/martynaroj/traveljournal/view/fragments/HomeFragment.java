@@ -39,13 +39,29 @@ public class HomeFragment extends BaseFragment {
 
     private void initExploreTravelsAdapter() {
         List<Travel> travels = new ArrayList<>();
-        travels.add(new Travel(R.drawable.ic_avatar, "title", "desc"));
-        travels.add(new Travel(R.drawable.ic_avatar, "title", "desc"));
-        travels.add(new Travel(R.drawable.ic_avatar, "title", "desc"));
+        travels.add(new Travel(R.drawable.default_avatar, "title1", "desc"));
+        travels.add(new Travel(R.drawable.default_avatar, "title2", "desc"));
+        travels.add(new Travel(R.drawable.default_avatar, "title3", "desc"));
+        travels.add(new Travel(R.drawable.default_avatar, "title4", "desc"));
+        travels.add(new Travel(R.drawable.default_avatar, "title5", "desc"));
 
-        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(travels, getContext());
+        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
         binding.homeExploreViewpager.setAdapter(adapter);
-        binding.homeExploreViewpager.setPadding(50, 0, 50, 0);
+        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.homeExploreViewpager.resumeAutoScroll();
+    }
+
+
+    @Override
+    public void onPause() {
+        binding.homeExploreViewpager.pauseAutoScroll();
+        super.onPause();
     }
 
 
