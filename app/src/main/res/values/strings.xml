@@ -10,7 +10,11 @@
     <string name="home_title">Hey!\nWhat are\nyour plans?</string>
     <string name="home_camp">camp</string>
     <string name="gome_explore_item_travel_image">Travel Image</string>
-    <string name="home_explore_title">EXPLORE</string>
+    <string name="home_explore_title">EXPLORE THE WORLD</string>
+    <string name="home_explore_more">EXPLORE MORE</string>
+    <string name="home_explore_map">EXPLORE MAP\nAND\nPLAN TO VISIT</string>
+    <string name="home_search_friends">SEARCH\nFRIENDS</string>
+    <string name="home_search_travels">SEARCH\nTRAVELS</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
