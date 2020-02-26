@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
@@ -17,7 +18,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentHomeBinding binding;
 
@@ -31,9 +32,15 @@ public class HomeFragment extends BaseFragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        setListeners();
         initExploreTravelsAdapter();
 
         return view;
+    }
+
+
+    private void setListeners() {
+        binding.homeSearchFriendsButton.setOnClickListener(this);
     }
 
 
@@ -48,6 +55,20 @@ public class HomeFragment extends BaseFragment {
         ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
         binding.homeExploreViewpager.setAdapter(adapter);
         binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.home_search_friends_button:
+                changeFragment(SearchFriendsFragment.newInstance());
+        }
+    }
+
+
+    private void changeFragment(Fragment next) {
+        getNavigationInteractions().changeFragment(this, next, true);
     }
 
 
