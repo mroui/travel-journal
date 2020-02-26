@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_search_friends"
+    tools:context=".view.fragments.SearchFriendsFragment"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_regular"
+            android:paddingEnd="@dimen/margin_regular">
+
+            <ImageView
+                android:id="@+id/search_friends_arrow_button"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:contentDescription="@string/back_arrow"
+                android:background="?android:attr/selectableItemBackground"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_back"/>
+
+            <TextView
+                android:id="@+id/search_friends_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/search_friends_arrow_button"
+                app:layout_constraintTop_toBottomOf="@+id/search_friends_arrow_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/robotoslab_medium"
+                android:text="@string/search_friends_title"
+                android:textSize="@dimen/text_bigger"
+                android:textColor="@color/black"/>
+
+            <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_friends_title"
+                android:layout_marginTop="@dimen/margin_regular"
+                style="@style/ms9_DefaultShadowStyle"
+                app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
+                app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_friends_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_tiny"
+                    android:background="@color/white"
+                    app:queryBackground="@color/white"
+                    app:queryHint="@string/search"
+                    app:iconifiedByDefault="false"/>
+
+            </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/search_friends_progressbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:visibility="invisible">
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/search_friends_progressbar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:loading_width="4dp"
+            app:loading_color="@color/white"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+</FrameLayout>

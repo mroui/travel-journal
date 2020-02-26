@@ -4,8 +4,8 @@
     <string name="home">Home</string>
     <string name="board">Board</string>
     <string name="profile">Profile</string>
-
     <string name="back_arrow">Back</string>
+    <string name="search">Search</string>
 
     <string name="home_title">Hey!\nWhat are\nyour plans?</string>
     <string name="home_camp">camp</string>
@@ -15,6 +15,8 @@
     <string name="home_explore_map">EXPLORE MAP\nAND\nPLAN TO VISIT</string>
     <string name="home_search_friends">SEARCH\nFRIENDS</string>
     <string name="home_search_travels">SEARCH\nTRAVELS</string>
+
+    <string name="search_friends_title">Search Friends</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
