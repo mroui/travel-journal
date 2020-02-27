@@ -11,20 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.UserItemBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 
-public class UserAdapter extends FirestoreRecyclerAdapter<User, UserAdapter.UserViewHolder> {
+public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserViewHolder> {
 
     private OnItemClickListener listener;
     private Context context;
 
-    public UserAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context) {
+    public UserAdapter(@NonNull FirestorePagingOptions<User> options, Context context) {
         super(options);
         this.context = context;
     }
@@ -52,31 +52,29 @@ public class UserAdapter extends FirestoreRecyclerAdapter<User, UserAdapter.User
         return new UserViewHolder(view);
     }
 
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.listener = onItemClickListener;
     }
 
-    public class UserViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView username, email;
-        public ImageView image;
+    public interface OnItemClickListener {
+        void onItemClick(DocumentSnapshot snapshot, int position);
+    }
+
+
+    class UserViewHolder extends RecyclerView.ViewHolder {
+
+        TextView username, email;
+        ImageView image;
 
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.user_item_username);
             image = itemView.findViewById(R.id.user_item_image);
             email = itemView.findViewById(R.id.user_item_email);
-            itemView.findViewById(R.id.user_item).setOnClickListener(view -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onItemClick(getSnapshots().getSnapshot(position), position);
-                }
-            });
+            itemView.findViewById(R.id.user_item).setOnClickListener(v -> listener.onItemClick(getItem(getAdapterPosition()), getAdapterPosition()));
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
 }
