@@ -153,7 +153,7 @@ public class User extends BaseObservable implements Serializable {
 
     @SuppressWarnings("ConstantConditions")
     @Bindable
-    private int getPrivacyEmail() {
+    public int getPrivacyEmail() {
         if (this.privacy != null && this.privacy.get(Constants.EMAIL) != null)
             return this.privacy.get(Constants.EMAIL);
         else return 2;
