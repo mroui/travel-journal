@@ -8,7 +8,6 @@ import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.DocumentReference;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
@@ -28,7 +27,7 @@ public class User extends BaseObservable implements Serializable {
     private String bio;
     private String location;
     private List<String> preferences;
-    private List<DocumentReference> friends;
+    private List<String> friends;
     private Map<String, Integer> privacy;
     //private List<Travel> travels;
 
@@ -131,11 +130,11 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    private List<DocumentReference> getFriends() {
+    private List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<DocumentReference> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
         notifyPropertyChanged(BR.friends);
     }
@@ -188,6 +187,10 @@ public class User extends BaseObservable implements Serializable {
 
     public boolean isUserProfile (User loggedUser) {
         return loggedUser != null && this.uid.equals(loggedUser.getUid());
+    }
+
+    public boolean hasFriend(User loggedUser) {
+        return loggedUser != null && this.friends != null && this.friends.contains(loggedUser.uid);
     }
 
     @Override
