@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         fragmentsList.add(0, HomeFragment.newInstance());
         fragmentsList.add(1, BoardFragment.newInstance());
         if (user != null)
-            fragmentsList.add(2, ProfileFragment.newInstance());
+            fragmentsList.add(2, ProfileFragment.newInstance(user));
         else
             fragmentsList.add(2, LogInFragment.newInstance());
 

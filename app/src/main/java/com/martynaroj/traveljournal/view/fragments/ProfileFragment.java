@@ -42,12 +42,24 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private FragmentProfileBinding binding;
     private UserViewModel userViewModel;
     private User user;
+    private User loggedUser;
 
     private AddressViewModel addressViewModel;
     private Geocoder geocoder;
 
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+    public static ProfileFragment newInstance(User user) {
+        return new ProfileFragment(user);
+    }
+
+
+    public ProfileFragment() {
+        super();
+    }
+
+
+    private ProfileFragment(User user) {
+        super();
+        this.user = user;
     }
 
 
@@ -61,8 +73,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         initGeocoder();
 
         initUser();
+        observeUserChanges();
+        getLoggedUser();
 
         return view;
+    }
+
+    private void initUser() {
+        if (user != null) {
+            binding.setUser(user);
+            initPreferences();
+            initLocalization();
+        } else if (getParentFragmentManager().getBackStackEntryCount() > 0) {
+                getParentFragmentManager().popBackStack();
+        }
     }
 
 
@@ -71,44 +95,47 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void initUser() {
+    private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-                if (user != null) {
-                    this.user = user;
-                    binding.setUser(user);
-                    binding.setLoggedUser(user);
-                    initPreferences();
-                    initLocalization();
-                }
+            if (user != null) {
+                this.user = user;
+                binding.setUser(user);
+                initPreferences();
+                initLocalization();
+            }
         });
-        getCurrentUser();
     }
 
 
-    private void getCurrentUser() {
+    private void getLoggedUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             startProgressBar();
-            userViewModel.getDataSnapshotLiveData(firebaseAuth.getCurrentUser().getUid());
+            userViewModel.getUserData(firebaseAuth.getCurrentUser().getUid());
             userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
-                    this.user = user;
-                    binding.setUser(user);
                     binding.setLoggedUser(user);
-                    initPreferences();
-                    initLocalization();
-                    isNotUpdatedAccount();
+                    this.loggedUser = user;
+                    checkProfile();
                 } else {
-                    showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
+                    showSnackBar("ERROR: No such logged User in a database, try again later", Snackbar.LENGTH_LONG);
                 }
+                stopProgressBar();
             });
         } else {
-            showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
+            showSnackBar("ERROR: You are not logged in", Snackbar.LENGTH_LONG);
         }
     }
 
 
-    private void isNotUpdatedAccount() {
+    private void checkProfile() {
+        if (user != null && user.getUid().equals(loggedUser.getUid())) {
+            openDialogIfNotUpdatedAccount();
+        }
+    }
+
+
+    private void openDialogIfNotUpdatedAccount() {
         if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
         && user.getPhoto() == null)
             openUpdateProfileDialog();
@@ -141,16 +168,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void initLocalization() {
-        if (user.getLocation() != null && !user.getLocation().equals("")) {
-            startProgressBar();
-            addressViewModel.getAddress(user.getLocation());
-            addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
-                if (address != null) {
-                    getLocationCity(address);
-                }
-                stopProgressBar();
-            });
-        } else stopProgressBar();
+        if (user != null) {
+            if (user.getLocation() != null && !user.getLocation().equals("")) {
+                startProgressBar();
+                addressViewModel.getAddress(user.getLocation());
+                addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
+                    if (address != null) {
+                        getLocationCity(address);
+                    }
+                    stopProgressBar();
+                });
+            } else stopProgressBar();
+        }
     }
 
 
@@ -165,7 +194,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void initPreferences() {
-        if (user.getPreferences() != null) {
+        if (user != null && user.getPreferences() != null) {
             binding.profilePreferences.setData(user.getPreferences(), item -> {
                 SpannableString spannableString = new SpannableString(item);
                 spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -222,30 +251,32 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void getFriendsInfo() {
-        getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(), true);
+        getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(), true);
     }
 
 
     private void getContactInfo() {
-        if (user.isUserProfile(user)) {
-            if (getContext() != null) {
-                new MaterialAlertDialogBuilder(getContext())
-                    .setTitle(getResources().getString(R.string.dialog_button_my_email_title))
-                    .setMessage(user.getEmail())
-                    .setPositiveButton(getString(R.string.dialog_button_ok), null)
-                    .show();
+        if (user != null) {
+            if (loggedUser != null && user.isUserProfile(loggedUser)) {
+                if (getContext() != null) {
+                    new MaterialAlertDialogBuilder(getContext())
+                            .setTitle(getResources().getString(R.string.dialog_button_my_email_title))
+                            .setMessage(user.getEmail())
+                            .setPositiveButton(getString(R.string.dialog_button_ok), null)
+                            .show();
+                }
+            } else {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{user.getEmail()});
+                startActivity(Intent.createChooser(intent, ""));
             }
-        } else {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("plain/text");
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { user.getEmail() });
-            startActivity(Intent.createChooser(intent, ""));
         }
     }
 
 
     private void openTravels() {
-        getNavigationInteractions().changeFragment(this, TravelsListFragment.newInstance(), true);
+        getNavigationInteractions().changeFragment(getParentFragment(), TravelsListFragment.newInstance(), true);
     }
 
 
