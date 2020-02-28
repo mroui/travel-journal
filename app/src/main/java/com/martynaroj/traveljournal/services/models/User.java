@@ -189,7 +189,7 @@ public class User extends BaseObservable implements Serializable {
 
 
     public boolean isUserProfile (User loggedUser) {
-        return this.uid.equals(loggedUser.getUid());
+        return loggedUser != null && this.uid.equals(loggedUser.getUid());
     }
 
     @Override
@@ -202,11 +202,11 @@ public class User extends BaseObservable implements Serializable {
             return ((uid.equals(u.getUid()))
                     && (username.equals(u.getUsername()))
                     && (email.equals(u.getEmail()))
-                    && (photo.equals(u.getPhoto()))
-                    && (bio.equals(u.getBio()))
-                    && (location.equals(u.getLocation()))
-                    && (preferences.equals(u.getPreferences()))
-                    && (friends.equals(u.getFriends()))
+                    && (photo.equals(u.getPhoto()) || (photo == null && u.getPhoto() == null))
+                    && (bio.equals(u.getBio()) || (bio == null && u.getBio() == null))
+                    && (location.equals(u.getLocation()) || (location == null && u.getLocation() == null))
+                    && ((preferences != null && preferences.equals(u.getPreferences())) || (preferences == null && u.getPreferences() == null))
+                    && (friends != null && (friends.equals(u.getFriends())) || (friends == null && u.getFriends() == null))
                     && (privacy.equals(u.getPrivacy())));
         } catch (Exception ex) {
             return false;
