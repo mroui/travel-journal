@@ -24,7 +24,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.SearchViewListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
-public class SearchFriendsFragment extends BaseFragment implements View.OnClickListener {
+public class SearchFriendsFragment extends BaseFragment {
 
     private FragmentSearchFriendsBinding binding;
     private CollectionReference usersRef;
@@ -56,7 +56,10 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
 
 
     private void setListeners() {
-        binding.searchFriendsArrowButton.setOnClickListener(this);
+        binding.searchFriendsArrowButton.setOnClickListener(view -> {
+            if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                getParentFragmentManager().popBackStack();
+        });
         binding.searchFriendsSearchView.setOnQueryTextListener(new SearchViewListener() {
             @Override
             public boolean onQueryTextChange(String s) {
@@ -117,16 +120,6 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
         binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
         setAdapterOnItemClickListener();
         setAdapterObserver();
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.search_friends_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-        }
     }
 
 
