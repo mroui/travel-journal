@@ -15,6 +15,7 @@ public interface Constants {
     String USERS = "Users";
     String ADDRESSES = "Addresses";
 
+    String UID = "uid";
     String PHOTO = "photo";
     String BIO = "bio";
     String LOCATION = "location";
@@ -26,5 +27,4 @@ public interface Constants {
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
     String ONLY_ME = "Only Me";
-
 }

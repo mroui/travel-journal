@@ -13,6 +13,7 @@
     <string name="messages_password_changed">Password successfully changed!</string>
     <string name="messages_email_changed">Email successfully changed!</string>
     <string name="messages_username_changed">Username successfully changed!</string>
+    <string name="messages_its_you">Hey, you are already your friend!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
