@@ -120,7 +120,6 @@ public class User extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.preferences);
     }
 
-    @Bindable
     public int getPreferencesSize() {
         int count = 0;
         if (this.preferences != null) {
