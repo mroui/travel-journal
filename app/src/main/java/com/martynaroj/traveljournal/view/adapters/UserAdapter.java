@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.UserItemBinding;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 
 public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserViewHolder> {
@@ -57,12 +57,7 @@ public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserVi
         this.listener = onItemClickListener;
     }
 
-
-    public interface OnItemClickListener {
-        void onItemClick(DocumentSnapshot snapshot, int position);
-    }
-
-
+    
     class UserViewHolder extends RecyclerView.ViewHolder {
 
         TextView username, email;
