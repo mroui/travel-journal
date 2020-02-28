@@ -13,6 +13,9 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,6 +33,7 @@ public class SearchFriendsFragment extends BaseFragment {
     private CollectionReference usersRef;
     private PagedList.Config usersPagingConfig;
     private UserAdapter adapter;
+    private FirebaseUser loggedUser;
 
     public static SearchFriendsFragment newInstance() {
         return new SearchFriendsFragment();
@@ -50,6 +54,7 @@ public class SearchFriendsFragment extends BaseFragment {
 
 
     private void initData() {
+        loggedUser = FirebaseAuth.getInstance().getCurrentUser();
         usersRef = FirebaseFirestore.getInstance().collection(Constants.USERS);
         usersPagingConfig = new PagedList.Config.Builder().setInitialLoadSizeHint(10).setPageSize(3).build();
     }
@@ -79,8 +84,12 @@ public class SearchFriendsFragment extends BaseFragment {
         adapter.setOnItemClickListener((snapshot, position) -> {
             User user = snapshot.toObject(User.class);
             if (user != null) {
-                hideKeyboard();
-                changeFragment(ProfileFragment.newInstance(user));
+                if (loggedUser != null && user.getUid().equals(loggedUser.getUid())) {
+                    showSnackBar(getResources().getString(R.string.messages_its_you), Snackbar.LENGTH_SHORT);
+                } else {
+                    hideKeyboard();
+                    changeFragment(ProfileFragment.newInstance(user));
+                }
             }
         });
     }
@@ -135,6 +144,11 @@ public class SearchFriendsFragment extends BaseFragment {
         binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
         setAdapterOnItemClickListener();
         setAdapterObserver();
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 
