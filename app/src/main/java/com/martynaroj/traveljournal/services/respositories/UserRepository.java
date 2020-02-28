@@ -16,7 +16,7 @@ public class UserRepository {
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = rootRef.collection(Constants.USERS);
 
-    public MutableLiveData<User> getDataSnapshotLiveData(String uid) {
+    public MutableLiveData<User> getUserData(String uid) {
         MutableLiveData<User> userData = new MutableLiveData<>();
         DocumentReference userReference = usersRef.document(uid);
         userReference.get().addOnCompleteListener(task -> {

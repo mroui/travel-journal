@@ -25,6 +25,7 @@ import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.Objects;
 
@@ -32,6 +33,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private FragmentSignUpBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private GoogleClient googleClient;
 
     static SignUpFragment newInstance() {
@@ -44,7 +46,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initAuthViewModel();
+        initViewModels();
         setListeners();
         initGoogleClient();
 
@@ -58,8 +60,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    private void initAuthViewModel() {
+    private void initViewModels() {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
 
@@ -206,30 +209,36 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
         authViewModel.signInWithGoogle(googleAuthCredential);
-        authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.getStatus() == Status.SUCCESS) {
-                if (!user.isAdded()) {
-                    addNewUser(user);
+        authViewModel.getUserLiveData().observe(this, userData -> {
+            if (userData.getStatus() == Status.SUCCESS) {
+                if (!userData.isAdded()) {
+                    addNewUser(userData);
                 } else {
-                    stopProgressBar();
-                    showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
-                    getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+                    getUserData(userData);
                 }
             } else {
                 stopProgressBar();
-                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
             }
         });
     }
 
 
-    private void addNewUser(DataWrapper<User> user) {
-        authViewModel.addUser(user);
+    private void getUserData(DataWrapper<User> userData) {
+        userViewModel.getUserData(userData.getData().getUid());
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            stopProgressBar();
+            showSnackBar(userData.getMessage(), Snackbar.LENGTH_SHORT);
+            getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance(user));
+        });
+    }
+
+
+    private void addNewUser(DataWrapper<User> userData) {
+        authViewModel.addUser(userData);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
             if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
-                stopProgressBar();
-                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
-                getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+                getUserData(userData);
             } else {
                 stopProgressBar();
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);

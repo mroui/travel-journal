@@ -230,7 +230,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             startProgressBar();
-            userViewModel.getDataSnapshotLiveData(firebaseAuth.getCurrentUser().getUid());
+            userViewModel.getUserData(firebaseAuth.getCurrentUser().getUid());
             userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
                     this.user = user;

@@ -30,6 +30,7 @@ import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.Objects;
 
@@ -37,6 +38,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
     private FragmentLogInBinding binding;
     private AuthViewModel authViewModel;
+    private UserViewModel userViewModel;
     private GoogleClient googleClient;
     private CredentialsClient credentialsClient;
 
@@ -50,7 +52,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         binding = FragmentLogInBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initAuthViewModel();
+        initViewModels();
         setListeners();
         initGoogleClient();
         initCredentialsClient();
@@ -75,8 +77,9 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void initAuthViewModel() {
+    private void initViewModels() {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
 
@@ -129,24 +132,32 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             saveCredentials(credential);
 
             authViewModel.logInWithEmail(email, password);
-            authViewModel.getUserLiveData().observe(this, user -> {
-                if (user.getStatus() == Status.SUCCESS) {
-                    if (user.isVerified() && !user.isAdded()) {
-                        addNewUser(user);
-                    } else if (!user.isVerified()) {
+            authViewModel.getUserLiveData().observe(this, userData -> {
+                if (userData.getStatus() == Status.SUCCESS) {
+                    if (userData.isVerified() && !userData.isAdded()) {
+                        addNewUser(userData);
+                    } else if (!userData.isVerified()) {
                         showSnackBar("Error: Account is not verified", Snackbar.LENGTH_SHORT);
                         resendVerificationMail();
                     } else {
-                        stopProgressBar();
-                        showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
-                        getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+                        getUserData(userData);
                     }
                 } else {
                     stopProgressBar();
-                    showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                    showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
                 }
             });
         }
+    }
+
+
+    private void getUserData(DataWrapper<User> userData) {
+        userViewModel.getUserData(userData.getData().getUid());
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            stopProgressBar();
+            showSnackBar(userData.getMessage(), Snackbar.LENGTH_SHORT);
+            getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance(user));
+        });
     }
 
 
@@ -211,18 +222,16 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
         authViewModel.signInWithGoogle(googleAuthCredential);
-        authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.getStatus() == Status.SUCCESS) {
-                if (!user.isAdded()) {
-                    addNewUser(user);
+        authViewModel.getUserLiveData().observe(this, userData -> {
+            if (userData.getStatus() == Status.SUCCESS) {
+                if (!userData.isAdded()) {
+                    addNewUser(userData);
                 } else {
-                    stopProgressBar();
-                    showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
-                    getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+                    getUserData(userData);
                 }
             } else {
                 stopProgressBar();
-                showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
             }
         });
     }
@@ -232,9 +241,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         authViewModel.addUser(user);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
             if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
-                stopProgressBar();
-                showSnackBar(newUser.getMessage(), Snackbar.LENGTH_SHORT);
-                getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance());
+                getUserData(newUser);
             } else {
                 stopProgressBar();
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);

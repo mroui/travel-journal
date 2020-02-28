@@ -27,13 +27,13 @@ public class UserViewModel extends AndroidViewModel {
         return userLiveData;
     }
 
-    public void getDataSnapshotLiveData(String uid) {
-        userLiveData = userRepository.getDataSnapshotLiveData(uid);
+    public void getUserData(String uid) {
+        userLiveData = userRepository.getUserData(uid);
     }
 
     public void updateUser(User user, Map<String, Object> map) {
         userRepository.updateUser(user, map);
-        userLiveData = userRepository.getDataSnapshotLiveData(user.getUid());
+        userLiveData = userRepository.getUserData(user.getUid());
     }
 
     public void setUser(User user) {
