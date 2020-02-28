@@ -187,7 +187,6 @@ public class User extends BaseObservable implements Serializable {
         return (!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser);
     }
 
-
     public boolean isUserProfile (User loggedUser) {
         return loggedUser != null && this.uid.equals(loggedUser.getUid());
     }
@@ -204,9 +203,12 @@ public class User extends BaseObservable implements Serializable {
                     && (email.equals(u.getEmail()))
                     && (photo.equals(u.getPhoto()) || (photo == null && u.getPhoto() == null))
                     && (bio.equals(u.getBio()) || (bio == null && u.getBio() == null))
-                    && (location.equals(u.getLocation()) || (location == null && u.getLocation() == null))
-                    && ((preferences != null && preferences.equals(u.getPreferences())) || (preferences == null && u.getPreferences() == null))
-                    && (friends != null && (friends.equals(u.getFriends())) || (friends == null && u.getFriends() == null))
+                    && (location.equals(u.getLocation())
+                        || (location == null && u.getLocation() == null))
+                    && ((preferences != null && preferences.equals(u.getPreferences()))
+                        || (preferences == null && u.getPreferences() == null))
+                    && (friends != null && (friends.equals(u.getFriends()))
+                        || (friends == null && u.getFriends() == null))
                     && (privacy.equals(u.getPrivacy())));
         } catch (Exception ex) {
             return false;

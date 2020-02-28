@@ -49,7 +49,6 @@ public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
         binding.homeExploreItemImage.setImageResource(travels.get(position).getImage());
         binding.homeExploreItemTitle.setText(travels.get(position).getTitle());
         binding.homeExploreItemDesc.setText(travels.get(position).getDesc());
-
         convertView.setOnClickListener(v -> Toast.makeText(context, travels.get(position).getTitle(), Toast.LENGTH_SHORT).show());
     }
 

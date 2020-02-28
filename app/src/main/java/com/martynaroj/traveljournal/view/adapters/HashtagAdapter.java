@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.HashtagListItemBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +37,13 @@ public class HashtagAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.hashtag_list_item, parent, false);
+            convertView = HashtagListItemBinding.inflate(LayoutInflater.from(getContext()), parent, false).getRoot();
         }
-        TextView textViewName = convertView.findViewById(R.id.list_item_name);
         String item = getItem(position);
         if (item != null) {
-            textViewName.setText(item);
+            ((TextView) convertView.findViewById(R.id.list_item_name)).setText(item);
         }
-
         return convertView;
     }
 
@@ -55,12 +53,10 @@ public class HashtagAdapter extends ArrayAdapter<String> {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             List<String> suggestions = new ArrayList<>();
-
             if (constraint == null || constraint.length() == 0) {
                 suggestions.addAll(hashtags);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-
                 for (String item : hashtags) {
                     if (item.toLowerCase().contains(filterPattern)) {
                         suggestions.add(item);
@@ -69,7 +65,6 @@ public class HashtagAdapter extends ArrayAdapter<String> {
             }
             results.values = suggestions;
             results.count = suggestions.size();
-
             return results;
         }
 

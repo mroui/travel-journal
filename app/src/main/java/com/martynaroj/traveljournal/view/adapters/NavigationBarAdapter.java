@@ -48,4 +48,5 @@ public class NavigationBarAdapter extends FragmentStatePagerAdapter {
     public void changeItem(int position, Fragment fragment) {
         fragmentsList.set(position, fragment);
     }
+
 }
