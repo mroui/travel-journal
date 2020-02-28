@@ -249,7 +249,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void getFriendsInfo() {
-        getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(), true);
+        if (loggedUser != null && user != null) {
+            if (user.getUid().equals(loggedUser.getUid())) {
+                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(), true);
+            } else if (user.hasFriend(loggedUser)) {
+                getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(), true);
+            } else {
+                sendFriendsRequest();
+            }
+        }
+    }
+
+
+    private void sendFriendsRequest() {
+        //TODO
     }
 
 
