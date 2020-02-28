@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,9 +79,24 @@ public class SearchFriendsFragment extends BaseFragment {
         adapter.setOnItemClickListener((snapshot, position) -> {
             User user = snapshot.toObject(User.class);
             if (user != null) {
-                Toast.makeText(getContext(), "Clicked:" + user.getUid(), Toast.LENGTH_SHORT).show();
+                hideKeyboard();
+                changeFragment(ProfileFragment.newInstance(user));
             }
         });
+    }
+
+
+    @SuppressWarnings("ConstantConditions")
+    private void hideKeyboard() {
+        if (getActivity() != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
+    }
+
+
+    private void changeFragment(Fragment next) {
+        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
