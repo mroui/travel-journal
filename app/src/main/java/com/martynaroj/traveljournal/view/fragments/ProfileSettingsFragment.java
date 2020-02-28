@@ -74,8 +74,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private FragmentProfileSettingsBinding binding;
     private UserViewModel userViewModel;
-    private User user;
     private AuthViewModel authViewModel;
+    private User user;
 
     private Uri newImageUri;
     private Bitmap compressor;
@@ -146,13 +146,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void setListeners() {
-        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
-        new FormHandler().addWatcher(binding.profileSettingsAccountUsernameInput, binding.profileSettingsAccountUsernameLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountUsernameInput, binding.profileSettingsAccountUsernameLayout);
         binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
         binding.profileSettingsArrowButton.setOnClickListener(this);
         binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
@@ -239,12 +239,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                     initUserData();
                 } else {
                     this.user = new User();
-                    showSnackBar("ERROR: No such User in a database, try again later", Snackbar.LENGTH_LONG);
+                    showSnackBar(getResources().getString(R.string.messages_error_no_user_database), Snackbar.LENGTH_LONG);
                 }
                 stopProgressBar();
             });
         } else {
-            showSnackBar("ERROR: Current user is not available, try again later", Snackbar.LENGTH_LONG);
+            showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
         }
     }
 
@@ -447,7 +447,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 String newUsername = Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString();
                 authViewModel.changeUsername(newUsername);
                 authViewModel.getChangesStatus().observe(this, status -> {
-                    if (!status.contains("ERROR")) {
+                    if (!status.contains(Constants.ERROR)) {
                         Map<String, Object> changes = new HashMap<>();
                         changes.put(Constants.USERNAME, newUsername);
                         updateUser(changes);
@@ -468,7 +468,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 String newEmail = Objects.requireNonNull(binding.profileSettingsAccountEmailInput.getText()).toString();
                 authViewModel.changeEmail(currentPassword, newEmail);
                 authViewModel.getChangesStatus().observe(this, status -> {
-                    if (!status.contains("ERROR")) {
+                    if (!status.contains(Constants.ERROR)) {
                         Map<String, Object> changes = new HashMap<>();
                         changes.put(Constants.EMAIL, newEmail);
                         updateUser(changes);
@@ -477,7 +477,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                     stopProgressBar();
                 });
             } else {
-                showSnackBar("ERROR: Current email is equal to new", Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_current_email_equal), Snackbar.LENGTH_LONG);
             }
         }
     }
@@ -490,7 +490,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             String newPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordInput.getText()).toString();
             authViewModel.changePassword(currentPassword, newPassword);
             authViewModel.getChangesStatus().observe(this, status -> {
-                if (!status.contains("ERROR")) {
+                if (!status.contains(Constants.ERROR)) {
                     clearInputs();
                     showSnackBar(status, Snackbar.LENGTH_SHORT);
                 } else {
@@ -552,7 +552,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         startProgressBar();
         addressViewModel.saveAddress(newLocation, user.getLocation());
         addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
-            if (!status.contains("ERROR")) {
+            if (!status.contains(Constants.ERROR)) {
                 Map<String, Object> changes = new HashMap<>();
                 changes.put(Constants.LOCATION, status);
                 updateUser(changes);
@@ -586,7 +586,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         .setQuality(100)
                         .compressToBitmap(newFile);
             } catch (IOException e) {
-                showSnackBar("ERROR: " + e.getMessage(), Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error) + e.getMessage(), Snackbar.LENGTH_LONG);
             }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -595,7 +595,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
             storageViewModel.saveToStorage(thumb, user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
-                if (status.contains("ERROR")) {
+                if (status.contains(Constants.ERROR)) {
                     showSnackBar(status, Snackbar.LENGTH_LONG);
                     stopProgressBar();
                 } else {
@@ -633,11 +633,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 this.user = user;
                 userViewModel.setUser(user);
                 binding.setUser(user);
-                showSnackBar("Changes saved successfully", Snackbar.LENGTH_SHORT);
+                showSnackBar(getResources().getString(R.string.messages_changes_saved), Snackbar.LENGTH_SHORT);
                 clearInputs();
                 newImageUri = null;
             } else {
-                showSnackBar("ERROR: Failed to update, try again later", Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_failed_update), Snackbar.LENGTH_LONG);
             }
             stopProgressBar();
         });
@@ -648,7 +648,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private boolean validateUsername() {
-        FormHandler formHandler = new FormHandler();
+        FormHandler formHandler = new FormHandler(getContext());
         TextInputEditText input = binding.profileSettingsAccountUsernameInput;
         TextInputLayout layout = binding.profileSettingsAccountUsernameLayout;
         int minLength = 4;
@@ -659,7 +659,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private boolean validateChangeEmail() {
-        FormHandler formHandler = new FormHandler();
+        FormHandler formHandler = new FormHandler(getContext());
         TextInputEditText currentPasswordInput = binding.profileSettingsAccountEmailPasswordCurrentInput;
         TextInputEditText newEmailInput = binding.profileSettingsAccountEmailInput;
         TextInputEditText confirmEmailInput = binding.profileSettingsAccountEmailConfirmInput;
@@ -675,7 +675,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private boolean validateChangePassword() {
-        FormHandler formHandler = new FormHandler();
+        FormHandler formHandler = new FormHandler(getContext());
         TextInputEditText currentInput = binding.profileSettingsAccountPasswordCurrentInput;
         TextInputEditText passInput = binding.profileSettingsAccountPasswordInput;
         TextInputEditText confirmInput = binding.profileSettingsAccountPasswordConfirmInput;
@@ -709,7 +709,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         autocompleteFragment.setText(newLocation.getAddress());
                         stopProgressBar();
                     } else
-                        showSnackBar("ERROR: Problem with finding you", Snackbar.LENGTH_LONG);
+                        showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
                 });
             } else if (getActivity() != null){
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
@@ -749,12 +749,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void clearInputs() {
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
-        new FormHandler().clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
     }
 
 

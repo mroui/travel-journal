@@ -67,10 +67,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void setListeners() {
-        new FormHandler().addWatcher(binding.signupUsernameInput, binding.signupUsernameLayout);
-        new FormHandler().addWatcher(binding.signupEmailInput, binding.signupEmailLayout);
-        new FormHandler().addWatcher(binding.signupPasswordInput, binding.signupPasswordLayout);
-        new FormHandler().addWatcher(binding.signupRepeatPasswordInput, binding.signupRepeatPasswordLayout);
+        new FormHandler(getContext()).addWatcher(binding.signupUsernameInput, binding.signupUsernameLayout);
+        new FormHandler(getContext()).addWatcher(binding.signupEmailInput, binding.signupEmailLayout);
+        new FormHandler(getContext()).addWatcher(binding.signupPasswordInput, binding.signupPasswordLayout);
+        new FormHandler(getContext()).addWatcher(binding.signupRepeatPasswordInput, binding.signupRepeatPasswordLayout);
         binding.signupArrowButton.setOnClickListener(this);
         binding.signupSignUpButton.setOnClickListener(this);
         binding.signupGoogleButton.setOnClickListener(this);
@@ -80,12 +80,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private boolean validateEmail() {
-        return new FormHandler().validateInput(binding.signupEmailInput, binding.signupEmailLayout);
+        return new FormHandler(getContext()).validateInput(binding.signupEmailInput, binding.signupEmailLayout);
     }
 
 
     private boolean validateUsername() {
-        FormHandler formHandler = new FormHandler();
+        FormHandler formHandler = new FormHandler(getContext());
         TextInputEditText input = binding.signupUsernameInput;
         TextInputLayout layout = binding.signupUsernameLayout;
         int minLength = 4;
@@ -96,7 +96,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private boolean validatePasswords() {
-        FormHandler formHandler = new FormHandler();
+        FormHandler formHandler = new FormHandler(getContext());
         TextInputEditText passInput = binding.signupPasswordInput;
         TextInputEditText repeatInput = binding.signupRepeatPasswordInput;
         TextInputLayout passLayout = binding.signupPasswordLayout;

@@ -47,7 +47,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     private void setListeners() {
-        new FormHandler().addWatcher(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
+        new FormHandler(getContext()).addWatcher(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
         binding.forgotPasswordArrowButton.setOnClickListener(this);
         binding.forgotPasswordBackButton.setOnClickListener(this);
         binding.forgotPasswordSendButton.setOnClickListener(this);
@@ -85,7 +85,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     private boolean validateEmail() {
-        return new FormHandler().validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
+        return new FormHandler(getContext()).validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
     }
 
 
@@ -98,7 +98,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
             authViewModel.getUserForgotPasswordLiveData().observe(this, user -> {
                 stopProgressBar();
                 if (user.getStatus() == Status.SUCCESS) {
-                    showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
+                    showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
                     getParentFragmentManager().popBackStack();
                 } else {
                     showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);

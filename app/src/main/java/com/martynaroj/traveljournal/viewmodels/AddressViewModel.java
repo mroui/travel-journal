@@ -21,7 +21,7 @@ public class AddressViewModel extends AndroidViewModel {
 
     public AddressViewModel(Application application) {
         super(application);
-        addressRepository = new AddressRepository();
+        addressRepository = new AddressRepository(application.getApplicationContext());
     }
 
     public LiveData<String> getStatus() {

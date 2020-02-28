@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.respositories;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.DataWrapper;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.enums.Status;
@@ -24,9 +27,11 @@ public class AuthRepository {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = rootRef.collection(Constants.USERS);
+    private Context context;
 
-    public AuthRepository() {
+    public AuthRepository(Context context) {
         this.firebaseAuth = FirebaseAuth.getInstance();
+        this.context = context;
     }
 
 
@@ -36,13 +41,14 @@ public class AuthRepository {
             if (authTask.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                            .Builder().setDisplayName(username).build();
                     firebaseUser.updateProfile(profileUpdates);
                     User user = new User(firebaseUser.getUid(), username, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.LOADING, null));
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "ERROR: User identity error. Please try again later"));
+                            context.getResources().getString(R.string.messages_error_user_identity)));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -59,14 +65,14 @@ public class AuthRepository {
             firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
-                            "Verification email has been sent. Check your email to verify account"));
+                            context.getResources().getString(R.string.messages_verification_sent)));
                 } else {
                     handleUserLiveDataErrors(task, userLiveData);
                 }
             });
         } else {
             userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                    "ERROR: User identity error. Please try again later"));
+                    context.getResources().getString(R.string.messages_error_user_identity)));
         }
         return userLiveData;
     }
@@ -77,7 +83,7 @@ public class AuthRepository {
         firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
-                        "Password reset email has been sent. Check your email to reset your password"));
+                        context.getResources().getString(R.string.messages_reset_password_sent)));
             } else {
                 handleUserLiveDataErrors(task, userLiveData);
             }
@@ -102,14 +108,14 @@ public class AuthRepository {
                             boolean isAdded;
                             isAdded = document != null && document.exists();
                             userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                                    "Authorization successful!", true, isAdded, true));
+                                    context.getResources().getString(R.string.messages_auth_success), true, isAdded, true));
                         } else {
                             handleUserLiveDataErrors(task, userLiveData);
                         }
                     });
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "ERROR: User identity error. Please try again later"));
+                            context.getResources().getString(R.string.messages_error_user_identity)));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -132,7 +138,8 @@ public class AuthRepository {
                             newUserLiveData.setValue(user);
                         } else if (addingTask.getException() != null){
                             newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                                    "Error: " + addingTask.getException().getMessage()));
+                                    context.getResources().getString(R.string.messages_error)
+                                            + addingTask.getException().getMessage()));
                         }
                     });
                 } else {
@@ -140,7 +147,7 @@ public class AuthRepository {
                 }
             } else if (uidTask.getException() != null) {
                 newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "Error: " + uidTask.getException().getMessage()));
+                        context.getResources().getString(R.string.messages_error) + uidTask.getException().getMessage()));
             }
         });
         return newUserLiveData;
@@ -158,10 +165,10 @@ public class AuthRepository {
                     boolean isVerified = firebaseUser.isEmailVerified();
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Authorization successful!", true, false, isVerified));
+                            context.getResources().getString(R.string.messages_auth_success), true, false, isVerified));
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "ERROR: User identity error. Please try again later"));
+                            context.getResources().getString(R.string.messages_error_user_identity)));
                 }
             } else {
                 handleUserLiveDataErrors(authTask, userLiveData);
@@ -180,10 +187,10 @@ public class AuthRepository {
                 if (document != null && document.exists()) {
                     User user = document.toObject(User.class);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
-                            "Getting user successful!", true, true, true));
+                            context.getResources().getString(R.string.messages_auth_success), true, true, true));
                 } else {
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            "ERROR: No such user in database", true, false, true));
+                            context.getResources().getString(R.string.messages_error_no_user_database), true, false, true));
                 }
             } else {
                 handleUserLiveDataErrors(task, userLiveData);
@@ -202,13 +209,13 @@ public class AuthRepository {
                 if (task.isSuccessful()) {
                     user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            status.setValue("Password successfully changed!");
+                            status.setValue(context.getResources().getString(R.string.messages_password_changed));
                         } else if(task1.getException() != null) {
-                            status.setValue("ERROR: " + task1.getException().getMessage());
+                            status.setValue(context.getResources().getString(R.string.messages_error) + task1.getException().getMessage());
                         }
                     });
                 } else if(task.getException() != null) {
-                    status.setValue("ERROR: " + task.getException().getMessage());
+                    status.setValue(context.getResources().getString(R.string.messages_error) + task.getException().getMessage());
                 }
             });
         }
@@ -225,13 +232,13 @@ public class AuthRepository {
                 if (task.isSuccessful()) {
                     user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            status.setValue("Email successfully changed!");
+                            status.setValue(context.getResources().getString(R.string.messages_email_changed));
                         } else if(task1.getException() != null) {
-                            status.setValue("ERROR: " + task1.getException().getMessage());
+                            status.setValue(context.getResources().getString(R.string.messages_error) + task1.getException().getMessage());
                         }
                     });
                 } else if(task.getException() != null) {
-                    status.setValue("ERROR: " + task.getException().getMessage());
+                    status.setValue(context.getResources().getString(R.string.messages_error) + task.getException().getMessage());
                 }
             });
         }
@@ -243,11 +250,12 @@ public class AuthRepository {
         MutableLiveData<String> status = new MutableLiveData<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(newUsername).build();
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest
+                    .Builder().setDisplayName(newUsername).build();
             user.updateProfile(profileUpdates);
-            status.setValue("Username successfully changed!");
+            status.setValue(context.getResources().getString(R.string.messages_username_changed));
         } else
-            status.setValue("ERROR: User identity error. Please try again later");
+            status.setValue(context.getResources().getString(R.string.messages_error_user_identity));
         return status;
     }
 
@@ -258,14 +266,14 @@ public class AuthRepository {
                 throw authTask.getException();
             } catch (FirebaseNetworkException e) {
                 userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "Error: Please check your network connection"));
+                        context.getResources().getString(R.string.messages_error_network_connection)));
             } catch (Exception e) {
                 userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                        "Error: " + e.getMessage()));
+                        context.getResources().getString(R.string.messages_error) + e.getMessage()));
             }
         } else {
             userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                    "Error: Unhandled authorization error"));
+                    context.getResources().getString(R.string.messages_auth_failed)));
         }
     }
 

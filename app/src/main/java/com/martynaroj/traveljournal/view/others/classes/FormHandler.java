@@ -1,16 +1,20 @@
 package com.martynaroj.traveljournal.view.others.classes;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.martynaroj.traveljournal.R;
 
 public class FormHandler {
 
+    private Context context;
 
-    public FormHandler() {
+    public FormHandler(Context context) {
+        this.context = context;
     }
 
 
@@ -29,11 +33,11 @@ public class FormHandler {
         String value = input.getText() == null ? "" : input.getText().toString();
         layout.setErrorEnabled(true);
         if (value.isEmpty()) {
-            layout.setError("Field can't be empty");
+            layout.setError(context.getResources().getString(R.string.messages_field_no_empty));
             input.requestFocus();
             return false;
         } else if (input.getInputType() == (InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) && !isValidEmail(value)) {
-            layout.setError("Invalid email");
+            layout.setError(context.getResources().getString(R.string.messages_invalid_email));
             input.requestFocus();
             return false;
         } else
@@ -45,10 +49,10 @@ public class FormHandler {
     public boolean validateInputsEquality(TextInputEditText input1, TextInputEditText input2, TextInputLayout layout2) {
         if (!isEqual(input1, input2)) {
             if(input1.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD + InputType.TYPE_CLASS_TEXT) {
-                layout2.setError("Password doesn't match");
+                layout2.setError(context.getResources().getString(R.string.messages_password_not_match));
                 input2.requestFocus();
             } else if (input1.getInputType() == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) {
-                layout2.setError("Email doesn't match");
+                layout2.setError(context.getResources().getString(R.string.messages_email_not_match));
                 input2.requestFocus();
             }
             return false;

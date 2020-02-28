@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="messages_click_back_to_exit">Please click BACK again to exit</string>
+    <string name="messages_field_no_empty">Field can\'t be empty</string>
+    <string name="messages_invalid_email">Invalid email</string>
+    <string name="messages_password_not_match">Password doesn\'t match</string>
+    <string name="messages_email_not_match">Email doesn\'t match</string>
+    <string name="messages_verification_sent">Verification email has been sent. Check your email to verify account</string>
+    <string name="messages_changes_saved">Changes saved successfully</string>
+    <string name="messages_signing_out_success">You have been signed out successfully</string>
+    <string name="messages_reset_password_sent">Password reset email has been sent. Check your email to reset your password</string>
+    <string name="messages_auth_success">Authorization successful!</string>
+    <string name="messages_password_changed">Password successfully changed!</string>
+    <string name="messages_email_changed">Email successfully changed!</string>
+    <string name="messages_username_changed">Username successfully changed!</string>
+
+    <string name="messages_error">ERROR: </string>
+    <string name="messages_error_no_verified">ERROR: Account is not verified</string>
+    <string name="messages_error_no_user_database">ERROR: No such User in a database, try again later</string>
+    <string name="messages_error_current_user_not_available">ERROR: Current user is not available, try again later</string>
+    <string name="messages_error_current_email_equal">ERROR: Current email is equal to new</string>
+    <string name="messages_error_failed_update">ERROR: Failed to update, try again later</string>
+    <string name="messages_error_localize">ERROR: Problem with locating user</string>
+    <string name="messages_error_user_identity">ERROR: User identity error. Please try again later</string>
+    <string name="messages_error_network_connection">ERROR: Please check your network connection</string>
+    <string name="messages_auth_failed">ERROR: Unhandled authorization error</string>
+</resources>

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -87,9 +86,11 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
     @Override
     public void onBackPressed() {
-        Fragment fragment = adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
-                .getChildFragmentManager().findFragmentById(R.id.fragment_profile);
-        if (fragment instanceof IOnBackPressed && ((IOnBackPressed) fragment).onBackPressed()) {
+        FragmentManager fragmentManager = adapter.getItem(binding.bottomNavigationView
+                .getCurrentActiveItemPosition()).getChildFragmentManager();
+
+        Fragment profileFragment = fragmentManager.findFragmentById(R.id.fragment_profile);
+        if (profileFragment instanceof IOnBackPressed && !((IOnBackPressed) profileFragment).onBackPressed()) {
             return;
         }
 
@@ -99,12 +100,14 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                     .getChildFragmentManager().popBackStack();
             return;
         }
+
         if (backPressedOnce) {
             super.onBackPressed();
             return;
         }
+
         this.backPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        showSnackBar(binding.getRoot(), this, getResources().getString(R.string.messages_click_back_to_exit), Snackbar.LENGTH_SHORT);
         new Handler().postDelayed(() -> backPressedOnce = false, 2000);
     }
 

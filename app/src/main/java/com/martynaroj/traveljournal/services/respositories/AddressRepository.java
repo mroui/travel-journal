@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.respositories;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
@@ -10,6 +12,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
@@ -17,6 +20,12 @@ public class AddressRepository {
 
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private CollectionReference addressesRef = rootRef.collection(Constants.ADDRESSES);
+    private Context context;
+
+
+    public AddressRepository(Context context) {
+        this.context = context;
+    }
 
 
     public MutableLiveData<String> saveAddress(Address address, String reference) {
@@ -30,7 +39,8 @@ public class AddressRepository {
             if (uidTask.isSuccessful()) {
                 statusData.setValue(addressRef.getId());
             } else if (uidTask.getException() != null) {
-                statusData.setValue("ERROR: " + uidTask.getException().getMessage());
+                statusData.setValue(context.getResources().getString(R.string.messages_error)
+                        + uidTask.getException().getMessage());
             }
         });
         return statusData;

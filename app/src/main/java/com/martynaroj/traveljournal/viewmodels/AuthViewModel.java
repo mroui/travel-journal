@@ -18,7 +18,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     public AuthViewModel(Application application) {
         super(application);
-        authRepository = new AuthRepository();
+        authRepository = new AuthRepository(application.getApplicationContext());
     }
 
     public void signInWithGoogle(AuthCredential googleAuthCredential) {

@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.respositories;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -7,10 +9,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.DataWrapper;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.view.others.enums.Status;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 public class SplashRepository {
 
@@ -18,6 +21,11 @@ public class SplashRepository {
     private DataWrapper<User> user = new DataWrapper<>(new User(), Status.LOADING, null);
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = rootRef.collection(Constants.USERS);
+    private Context context;
+
+    public SplashRepository(Context context) {
+        this.context = context;
+    }
 
 
     public MutableLiveData<DataWrapper<User>> checkUserIsAuth() {
@@ -41,12 +49,15 @@ public class SplashRepository {
                 DocumentSnapshot document = userTask.getResult();
                 if (document != null && document.exists()) {
                     User user = document.toObject(User.class);
-                    userMutableLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS, "Authorization successful!"));
+                    userMutableLiveData.setValue(new DataWrapper<>(user,
+                            Status.SUCCESS, context.getResources().getString(R.string.messages_auth_success)));
                 } else {
-                    userMutableLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "ERROR: Current user doesn't exist"));
+                    userMutableLiveData.setValue(new DataWrapper<>(null,
+                            Status.ERROR, context.getResources().getString(R.string.messages_error_no_user_database)));
                 }
             } else if(userTask.getException() != null) {
-                userMutableLiveData.setValue(new DataWrapper<>(null, Status.ERROR, "ERROR: " + userTask.getException().getMessage()));
+                userMutableLiveData.setValue(new DataWrapper<>(null,
+                        Status.ERROR, context.getResources().getString(R.string.messages_error) + userTask.getException().getMessage()));
             }
         });
         return userMutableLiveData;

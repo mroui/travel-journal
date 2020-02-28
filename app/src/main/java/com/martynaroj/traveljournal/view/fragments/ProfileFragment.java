@@ -69,8 +69,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         View view = binding.getRoot();
 
         initViewModels();
-        setListeners();
         initGeocoder();
+        setListeners();
 
         initUser();
         observeUserChanges();
@@ -85,7 +85,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             initPreferences();
             initLocalization();
         } else if (getParentFragmentManager().getBackStackEntryCount() > 0) {
-                getParentFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         }
     }
 
@@ -118,12 +118,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     this.loggedUser = user;
                     checkProfile();
                 } else {
-                    showSnackBar("ERROR: No such logged User in a database, try again later", Snackbar.LENGTH_LONG);
+                    showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
                 }
                 stopProgressBar();
             });
-        } else {
-            showSnackBar("ERROR: You are not logged in", Snackbar.LENGTH_LONG);
         }
     }
 
@@ -308,7 +306,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void signOut() {
         startProgressBar();
         FirebaseAuth.getInstance().signOut();
-        showSnackBar("You have been signed out successfully", Snackbar.LENGTH_SHORT);
+        showSnackBar(getResources().getString(R.string.messages_signing_out_success), Snackbar.LENGTH_SHORT);
         stopProgressBar();
         getNavigationInteractions().changeNavigationBarItem(2, LogInFragment.newInstance());
     }

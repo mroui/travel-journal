@@ -15,7 +15,7 @@ public class StorageViewModel extends AndroidViewModel {
 
     public StorageViewModel(Application application) {
         super(application);
-        storageRepository = new StorageRepository();
+        storageRepository = new StorageRepository(application.getApplicationContext());
     }
 
     public LiveData<String> getStorageStatus() {

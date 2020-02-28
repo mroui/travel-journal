@@ -84,8 +84,8 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void setListeners() {
-        new FormHandler().addWatcher(binding.loginEmailInput, binding.loginEmailLayout);
-        new FormHandler().addWatcher(binding.loginPasswordInput, binding.loginPasswordLayout);
+        new FormHandler(getContext()).addWatcher(binding.loginEmailInput, binding.loginEmailLayout);
+        new FormHandler(getContext()).addWatcher(binding.loginPasswordInput, binding.loginPasswordLayout);
         binding.loginForgotPasswordButton.setOnClickListener(this);
         binding.loginLogInButton.setOnClickListener(this);
         binding.loginGoogleButton.setOnClickListener(this);
@@ -94,12 +94,12 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private boolean validateEmail() {
-        return new FormHandler().validateInput(binding.loginEmailInput, binding.loginEmailLayout);
+        return new FormHandler(getContext()).validateInput(binding.loginEmailInput, binding.loginEmailLayout);
     }
 
 
     private boolean validatePassword() {
-        return new FormHandler().validateInput(binding.loginPasswordInput, binding.loginPasswordLayout);
+        return new FormHandler(getContext()).validateInput(binding.loginPasswordInput, binding.loginPasswordLayout);
     }
 
 
@@ -137,7 +137,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
                     if (userData.isVerified() && !userData.isAdded()) {
                         addNewUser(userData);
                     } else if (!userData.isVerified()) {
-                        showSnackBar("Error: Account is not verified", Snackbar.LENGTH_SHORT);
+                        showSnackBar(getResources().getString(R.string.messages_error_no_verified), Snackbar.LENGTH_LONG);
                         resendVerificationMail();
                     } else {
                         getUserData(userData);
@@ -185,7 +185,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             stopProgressBar();
             if (verificationUser.getStatus() == Status.SUCCESS) {
                 stopProgressBar();
-                showSnackBar("Verification email has been sent. Check your email to verify account",
+                showSnackBar(getResources().getString(R.string.messages_verification_sent),
                         Snackbar.LENGTH_LONG);
             } else {
                 showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
@@ -257,8 +257,8 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void clearInputs() {
-        new FormHandler().clearInput(binding.loginEmailInput, binding.loginEmailLayout);
-        new FormHandler().clearInput(binding.loginPasswordInput, binding.loginPasswordLayout);
+        new FormHandler(getContext()).clearInput(binding.loginEmailInput, binding.loginEmailLayout);
+        new FormHandler(getContext()).clearInput(binding.loginPasswordInput, binding.loginPasswordLayout);
     }
 
 
