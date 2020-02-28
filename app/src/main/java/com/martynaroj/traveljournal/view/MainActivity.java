@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                 .getCurrentActiveItemPosition()).getChildFragmentManager();
 
         Fragment profileFragment = fragmentManager.findFragmentById(R.id.fragment_profile);
-        if (profileFragment instanceof IOnBackPressed && !((IOnBackPressed) profileFragment).onBackPressed()) {
+        if (profileFragment instanceof IOnBackPressed && ((IOnBackPressed) profileFragment).onBackPressed()) {
             return;
         }
 
