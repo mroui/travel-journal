@@ -1,13 +1,16 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,6 +28,7 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
 
     private FragmentSearchFriendsBinding binding;
     private CollectionReference usersRef;
+    private PagedList.Config usersPagingConfig;
     private UserAdapter adapter;
 
     public static SearchFriendsFragment newInstance() {
@@ -37,7 +41,7 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
         binding = FragmentSearchFriendsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initUsersReference();
+        initData();
         setListeners();
         focusOnSearchView();
 
@@ -45,8 +49,9 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private void initUsersReference() {
+    private void initData() {
         usersRef = FirebaseFirestore.getInstance().collection(Constants.USERS);
+        usersPagingConfig = new PagedList.Config.Builder().setInitialLoadSizeHint(10).setPageSize(3).build();
     }
 
 
@@ -67,33 +72,51 @@ public class SearchFriendsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private void focusOnSearchView() {
-        binding.searchFriendsSearchView.requestFocus();
-    }
-
-
-    private void searchUser(String username) {
-        Query query = usersRef.orderBy(Constants.USERNAME).startAt(username).endAt(username + "\uf8ff");
-        PagedList.Config config = new PagedList.Config.Builder().setInitialLoadSizeHint(10).setPageSize(3).build();
-        FirestorePagingOptions<User> options = new FirestorePagingOptions.Builder<User>()
-                .setLifecycleOwner(getViewLifecycleOwner())
-                .setQuery(query, config, User.class)
-                .build();
-        adapter = new UserAdapter(options, getContext());
-        binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
+    private void setAdapterOnItemClickListener() {
         adapter.setOnItemClickListener((snapshot, position) -> {
             User user = snapshot.toObject(User.class);
             if (user != null) {
                 Toast.makeText(getContext(), "Clicked:" + user.getUid(), Toast.LENGTH_SHORT).show();
             }
         });
-        //TODO: query async refactor: mvvm, refresh on swipe + messages when no results / start to search
-//        if (adapter.getItemCount() == 0) {
-//            binding.searchFriendsMessage.setVisibility(View.VISIBLE);
-//            //binding.searchFriendsMessage.setText(getResources().getString(R.string.search_friends_no_results));
-//        } else {
-//            binding.searchFriendsMessage.setVisibility(View.GONE);
-//        }
+    }
+
+
+    private void setAdapterObserver() {
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                int totalNumberOfItems = adapter.getItemCount();
+                if(totalNumberOfItems == 0) {
+                    binding.searchFriendsMessage.setVisibility(View.VISIBLE);
+                    binding.searchFriendsMessage.setText(getResources().getString(R.string.search_friends_no_results));
+                } else {
+                    binding.searchFriendsMessage.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+
+    private void focusOnSearchView() {
+        if (getContext() != null) {
+            binding.searchFriendsSearchView.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
+
+    private void searchUser(String username) {
+        Query query = usersRef.orderBy(Constants.USERNAME).startAt(username).endAt(username + "\uf8ff");
+        FirestorePagingOptions<User> options = new FirestorePagingOptions.Builder<User>()
+                .setLifecycleOwner(getViewLifecycleOwner())
+                .setQuery(query, usersPagingConfig, User.class)
+                .build();
+        adapter = new UserAdapter(options, getContext());
+        binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
+        setAdapterOnItemClickListener();
+        setAdapterObserver();
     }
 
 

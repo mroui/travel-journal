@@ -73,10 +73,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_friends_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_friends_search_view_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="@dimen/margin_regular"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
@@ -88,8 +89,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_friends_search_view_layout"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/gray"
+                android:textSize="@dimen/text_medium"
+                android:textColor="@color/light_gray"
                 android:textAlignment="center"
                 android:fontFamily="@font/raleway_medium"/>
 
