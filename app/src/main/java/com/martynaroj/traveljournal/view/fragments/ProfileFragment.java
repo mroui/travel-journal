@@ -28,14 +28,21 @@ import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.enums.Notification;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.NotificationViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
@@ -46,6 +53,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private AddressViewModel addressViewModel;
     private Geocoder geocoder;
+
+    private NotificationViewModel notificationViewModel;
 
     public static ProfileFragment newInstance(User user) {
         return new ProfileFragment(user);
@@ -206,6 +215,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         }
     }
 
@@ -255,14 +265,76 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             } else if (user.hasFriend(loggedUser)) {
                 getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(), true);
             } else {
-                sendFriendsRequest();
+                checkRequestExists();
             }
         }
     }
 
 
+    private void checkRequestExists() {
+        if (user.getNotifications() != null && !user.getNotifications().isEmpty()) {
+            AtomicBoolean exists = new AtomicBoolean(false);
+            AtomicInteger counter = new AtomicInteger(0);
+            for (String id : user.getNotifications()) {
+                notificationViewModel.getNotificationData(id);
+                notificationViewModel.getNotification().observe(getViewLifecycleOwner(), notification -> {
+                    if (notification != null && notification.getIdFrom().equals(loggedUser.getUid())) {
+                        exists.set(true);
+                    }
+                    counter.getAndIncrement();
+                    if (exists.get()) {
+                        showSnackBar(getResources().getString(R.string.messages_error_friend_notification_exists), Snackbar.LENGTH_LONG);
+                        disableFriendButton();
+                    } else if (counter.get() == user.getNotifications().size()) {
+                        sendFriendsRequest();
+                    }
+                });
+            }
+        } else {
+            sendFriendsRequest();
+        }
+    }
+
+
+    private void disableFriendButton() {
+        binding.profileFriends.setEnabled(false);
+        binding.profileFriends.setAlpha(0.4f);
+    }
+
+
     private void sendFriendsRequest() {
-        //TODO
+        startProgressBar();
+        notificationViewModel.sendNotification(loggedUser, user, Notification.FRIEND.ordinal());
+        notificationViewModel.getNotificationResponse().observe(getViewLifecycleOwner(), status -> {
+            if (status != null) {
+                if (!status.contains(Constants.ERROR)) {
+                    HashMap<String, Object> changes = new HashMap<>();
+                    List<String> notifications = user.getNotifications() == null ? new ArrayList<>() : user.getNotifications();
+                    notifications.add(status);
+                    changes.put(Constants.NOTIFICATIONS.toLowerCase(), notifications);
+                    disableFriendButton();
+                    updateUser(changes);
+                } else {
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
+            }
+        });
+    }
+
+
+    private void updateUser(Map<String, Object> changes) {
+        userViewModel.updateUser(user, changes);
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                this.user = user;
+                binding.setUser(user);
+                showSnackBar(getResources().getString(R.string.messages_notification_sent), Snackbar.LENGTH_SHORT);
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_add_notification), Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
+        });
     }
 
 
