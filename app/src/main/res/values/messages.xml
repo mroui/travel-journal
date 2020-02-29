@@ -14,6 +14,7 @@
     <string name="messages_email_changed">Email successfully changed!</string>
     <string name="messages_username_changed">Username successfully changed!</string>
     <string name="messages_its_you">Hey, you are already your friend!</string>
+    <string name="messages_notification_sent">Request successfully sent!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
@@ -25,4 +26,6 @@
     <string name="messages_error_user_identity">ERROR: User identity error. Please try again later</string>
     <string name="messages_error_network_connection">ERROR: Please check your network connection</string>
     <string name="messages_auth_failed">ERROR: Unhandled authorization error</string>
+    <string name="messages_error_failed_add_notification">ERROR: Sending notification failed. Please try again later</string>
+    <string name="messages_error_friend_notification_exists">ERROR: Your request is already waiting for a response</string>
 </resources>
