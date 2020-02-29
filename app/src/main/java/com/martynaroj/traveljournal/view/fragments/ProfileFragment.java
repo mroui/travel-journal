@@ -235,7 +235,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.profile_notifications:
-                showSnackBar("clicked: notifications", Snackbar.LENGTH_SHORT);
+                getNotifications();
                 return;
             case R.id.profile_contact:
                 getContactInfo();
@@ -255,6 +255,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case R.id.profile_sign_out_button:
                 signOut();
         }
+    }
+
+
+    private void getNotifications() {
+        //TODO
     }
 
 

@@ -66,7 +66,7 @@
                     app:layout_constraintTop_toTopOf="@id/profile_notifications"
                     android:padding="@dimen/padding_minimal"
                     android:gravity="center"
-                    android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{user.isUserProfile(loggedUser) &amp;&amp; !user.notifications.empty ? View.VISIBLE : View.GONE}"
                     android:background="@drawable/notifications_badge"/>
 
                 <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
