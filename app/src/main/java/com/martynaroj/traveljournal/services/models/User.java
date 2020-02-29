@@ -28,6 +28,7 @@ public class User extends BaseObservable implements Serializable {
     private String location;
     private List<String> preferences;
     private List<String> friends;
+    private List<String> notifications;
     private Map<String, Integer> privacy;
     //private List<Travel> travels;
 
@@ -140,6 +141,16 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
+    public List<String> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<String> notifications) {
+        this.notifications = notifications;
+        notifyPropertyChanged(BR.notifications);
+    }
+
+    @Bindable
     public Map<String, Integer> getPrivacy() {
         return privacy;
     }
@@ -224,4 +235,5 @@ public class User extends BaseObservable implements Serializable {
                 .placeholder(R.drawable.default_avatar)
                 .into(v);
     }
+
 }
