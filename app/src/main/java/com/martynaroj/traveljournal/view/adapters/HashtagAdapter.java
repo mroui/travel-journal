@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.databinding.HashtagListItemBinding;
+import com.martynaroj.traveljournal.databinding.ItemHashtagBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class HashtagAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = HashtagListItemBinding.inflate(LayoutInflater.from(getContext()), parent, false).getRoot();
+            convertView = ItemHashtagBinding.inflate(LayoutInflater.from(getContext()), parent, false).getRoot();
         }
         String item = getItem(position);
         if (item != null) {

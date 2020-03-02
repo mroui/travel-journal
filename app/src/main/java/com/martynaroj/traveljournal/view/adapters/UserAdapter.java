@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.databinding.UserItemBinding;
+import com.martynaroj.traveljournal.databinding.ItemUserBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
@@ -48,7 +48,7 @@ public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserVi
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = UserItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false).getRoot();
+        View view = ItemUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false).getRoot();
         return new UserViewHolder(view);
     }
 

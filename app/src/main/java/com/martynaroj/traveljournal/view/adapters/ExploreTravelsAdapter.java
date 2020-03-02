@@ -9,14 +9,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.asksira.loopingviewpager.LoopingPagerAdapter;
-import com.martynaroj.traveljournal.databinding.HomeExploreItemBinding;
+import com.martynaroj.traveljournal.databinding.ItemTravelBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
 
 import java.util.List;
 
 public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
 
-    private HomeExploreItemBinding binding;
+    private ItemTravelBinding binding;
     private List<Travel> travels;
 
 
@@ -28,7 +28,7 @@ public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
 
     @Override
     protected View inflateView(int viewType, ViewGroup container, int listPosition) {
-        binding = HomeExploreItemBinding.inflate(LayoutInflater.from(context), container, false);
+        binding = ItemTravelBinding.inflate(LayoutInflater.from(context), container, false);
         return binding.getRoot();
     }
 
