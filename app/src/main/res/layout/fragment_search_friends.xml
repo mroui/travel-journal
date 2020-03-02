@@ -90,7 +90,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/search_friends_search_view_layout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:textSize="@dimen/text_medium"
-                android:textColor="@color/light_gray"
+                android:textColor="@color/gray"
                 android:textAlignment="center"
                 android:fontFamily="@font/raleway_medium"/>
 
