@@ -62,6 +62,7 @@ public class SearchFriendsFragment extends BaseFragment {
 
     private void setListeners() {
         binding.searchFriendsArrowButton.setOnClickListener(view -> {
+            hideKeyboard();
             if (getParentFragmentManager().getBackStackEntryCount() > 0)
                 getParentFragmentManager().popBackStack();
         });
@@ -92,15 +93,6 @@ public class SearchFriendsFragment extends BaseFragment {
                 }
             }
         });
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    private void hideKeyboard() {
-        if (getActivity() != null) {
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
-        }
     }
 
 

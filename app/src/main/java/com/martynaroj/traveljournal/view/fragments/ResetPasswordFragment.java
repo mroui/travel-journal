@@ -59,6 +59,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.forgot_password_arrow_button:
             case R.id.forgot_password_back_button:
+                hideKeyboard();
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 return;

@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.base;
 
 import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,14 @@ public class BaseFragment extends Fragment {
 
     protected SnackbarListener getSnackBarInteractions() {
         return snackbarListener;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    protected void hideKeyboard() {
+        if (getActivity() != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
     }
 
     @Override
