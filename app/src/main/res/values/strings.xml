@@ -114,6 +114,11 @@
     <string name="profile_settings_help_contact_desc">Feel free to contact with Us</string>
     <string name="contact_email">martynaxroj@gmaIl.com</string>
 
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_no_results">No notifications found.</string>
+    <string name="notifications_accept">Accept</string>
+    <string name="notifications_discard">Discard</string>
+
     <string name="travels_list_travels">Travels</string>
     <string name="travels_list_my_travels">My Travels</string>
 
@@ -122,7 +127,7 @@
 
     <string name="dialog_button_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_button_unsaved_changes_desc">Your changes have not been saved. Do you want to discard the changes and continue?</string>
-    <string name="dialog_button_my_email_title">Your current contact email</string>
+    <string name="dialog_button_my_email_title">Your contact email</string>
     <string name="dialog_button_update_account_title">Welcome on Board, Traveller!</string>
     <string name="dialog_button_update_account_desc">Now you can start your own adventure!\n
         &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s account is still unfilled… &#x1f61e;\nWhen do you want to update it?</string>

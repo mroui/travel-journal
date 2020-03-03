@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/dialog_notifications_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/raleway_bold"
+            android:text="@string/notifications_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialog_notifications_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/padding_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_title"/>
+
+        <TextView
+            android:id="@+id/dialog_notifications_no_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:paddingVertical="@dimen/padding_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_title"
+            app:layout_constraintBottom_toTopOf="@+id/dialog_notifications_ok_button"
+            android:fontFamily="@font/raleway_regular"
+            android:textAlignment="center"
+            android:text="@string/notifications_no_results"
+            android:textSize="@dimen/text_regular"
+            android:textColor="@color/gray"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_notifications_ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_recycler_view"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:text="@string/dialog_button_ok"
+            android:fontFamily="@font/raleway_bold"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
