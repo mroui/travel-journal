@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -8,19 +9,17 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
@@ -40,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -137,12 +135,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void checkProfile() {
         if (user != null && user.getUid().equals(loggedUser.getUid())) {
-            openDialogIfNotUpdatedAccount();
+            checkNewAccount();
         }
     }
 
 
-    private void openDialogIfNotUpdatedAccount() {
+    private void checkNewAccount() {
         if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
         && user.getPhoto() == null)
             openUpdateProfileDialog();
@@ -151,25 +149,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void openUpdateProfileDialog() {
         if (getContext() != null) {
-            TextView title = new TextView(getActivity());
-            title.setText(getString(R.string.dialog_button_update_account_title));
-            title.setPadding(0, 32, 0, 0);
-            title.setGravity(Gravity.CENTER);
-            title.setTextColor(getResources().getColor(R.color.main_blue));
-            title.setTextSize(18);
-
-            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
-                    .setCustomTitle(title)
-                    .setMessage(getString(R.string.dialog_button_update_account_desc))
-                    .setPositiveButton(getString(R.string.dialog_button_now), (dialogInterface, i) -> {
-                        dialogInterface.cancel();
-                        openSettings();
-                    })
-                    .setNegativeButton(getString(R.string.dialog_button_later), null)
-                    .show();
-
-            TextView messageText = dialog.findViewById(android.R.id.message);
-            Objects.requireNonNull(messageText).setGravity(Gravity.CENTER);
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.dialog_update_profile);
+            dialog.findViewById(R.id.dialog_update_profile_later_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.findViewById(R.id.dialog_update_profile_now_button).setOnClickListener(v -> {
+                openSettings();
+                dialog.dismiss();
+            });
+            dialog.show();
         }
     }
 
@@ -347,11 +336,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (user != null) {
             if (loggedUser != null && user.isUserProfile(loggedUser)) {
                 if (getContext() != null) {
-                    new MaterialAlertDialogBuilder(getContext())
-                            .setTitle(getResources().getString(R.string.dialog_button_my_email_title))
-                            .setMessage(user.getEmail())
-                            .setPositiveButton(getString(R.string.dialog_button_ok), null)
-                            .show();
+                    Dialog dialog = new Dialog(getContext());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(true);
+                    dialog.setContentView(R.layout.dialog_contact);
+                    dialog.findViewById(R.id.dialog_contact_ok_button).setOnClickListener(v -> dialog.dismiss());
+                    TextView email = dialog.findViewById(R.id.dialog_contact_desc);
+                    email.setText(user.getEmail());
+                    dialog.show();
                 }
             } else {
                 Intent intent = new Intent(Intent.ACTION_SEND);
@@ -364,7 +356,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void openTravels() {
-        getNavigationInteractions().changeFragment(getParentFragment(), TravelsListFragment.newInstance(), true);
+        getNavigationInteractions().changeFragment(this, TravelsListFragment.newInstance(), true);
     }
 
 

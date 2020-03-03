@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,17 +11,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -33,7 +33,6 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -306,30 +305,32 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void showUnsavedChangesDialog() {
         if (getContext() != null && getActivity() != null) {
-            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
-                    .setTitle(getString(R.string.dialog_button_unsaved_changes_title))
-                    .setMessage(getString(R.string.dialog_button_unsaved_changes_desc))
-                    .setPositiveButton(getString(R.string.dialog_button_yes), (dialogInterface, i) -> {
-                        hideKeyboard();
-                        dialogInterface.cancel();
-                        if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                            getParentFragmentManager().popBackStack();
-                    })
-                    .setNegativeButton(getString(R.string.dialog_button_no), null)
-                    .show();
-            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_unsaved_changes);
+            dialog.findViewById(R.id.dialog_unsaved_changes_no_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.findViewById(R.id.dialog_unsaved_changes_yes_button).setOnClickListener(v -> {
+                hideKeyboard();
+                dialog.dismiss();
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+            });
+            dialog.show();
         }
     }
 
 
     private void showCreditsDialog() {
         if (getContext() != null) {
-            final AlertDialog dialog = new MaterialAlertDialogBuilder(getContext())
-                    .setTitle(getResources().getString(R.string.profile_settings_about_credits_title))
-                    .setMessage(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)))
-                    .setPositiveButton(getString(R.string.dialog_button_ok), null)
-                    .show();
-            ((TextView) Objects.requireNonNull(dialog.findViewById(android.R.id.message))).setMovementMethod(LinkMovementMethod.getInstance());
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_credits);
+            TextView message = dialog.findViewById(R.id.dialog_credits_desc);
+            message.setText(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)));
+            dialog.findViewById(R.id.dialog_credits_ok_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
         }
     }
 
