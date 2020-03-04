@@ -118,6 +118,9 @@
     <string name="notifications_no_results">No notifications found.</string>
     <string name="notifications_accept">Accept</string>
     <string name="notifications_discard">Discard</string>
+    <string name="notifications_remove">REMOVE</string>
+    <string name="notifications_friends_request_message">sent friends request</string>
+    <string name="notifications_new_trip_request_message">start a new trip</string>
 
     <string name="travels_list_travels">Travels</string>
     <string name="travels_list_my_travels">My Travels</string>
