@@ -17,14 +17,21 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dialog_notifications_recycler_view"
+        <ScrollView
+            android:id="@+id/dialog_notifications_recycler_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/padding_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_title">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/dialog_notifications_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/padding_medium"/>
+
+        </ScrollView>
 
         <TextView
             android:id="@+id/dialog_notifications_no_results"
@@ -47,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_recycler_view"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_notifications_recycler_scroll"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
             android:text="@string/dialog_button_ok"
             android:fontFamily="@font/raleway_bold"/>

@@ -58,6 +58,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private NotificationViewModel notificationViewModel;
     private Dialog notificationsDialog;
     private RecyclerView notificationsRecyclerView;
+    private NotificationAdapter notificationAdapter;
 
     public static ProfileFragment newInstance(User user) {
         return new ProfileFragment(user);
@@ -315,9 +316,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void setNotificationsAdapter(List<Notification> notifications) {
-        NotificationAdapter adapter = new NotificationAdapter(getContext(), notifications);
-        notificationsRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener((object, position, view) -> {
+        notificationAdapter = new NotificationAdapter(getContext(), notifications);
+        notificationsRecyclerView.setAdapter(notificationAdapter);
+        notificationAdapter.setOnItemClickListener((object, position, view) -> {
             Notification notification = (Notification) object;
             if (notification != null) {
                 switch (view.getId()) {
@@ -339,14 +340,40 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void addToFriends(Notification notification) {
-        //TODO: add to friends userFrom & userTo
+        Map<String, Object> changesLoggedUser = new HashMap<>();
+        List<String> loggedUserFriends = user.getFriends() != null
+                ? new ArrayList<>(user.getFriends()) : new ArrayList<>();
+        loggedUserFriends.add(notification.getIdFrom());
+        changesLoggedUser.put(Constants.DB_FRIENDS, loggedUserFriends);
+        String successMessage = getResources().getString(R.string.messages_friends_success) + " " + notification.getUserFrom().getUsername() + "!";
+        updateUser(changesLoggedUser, successMessage, getResources().getString(R.string.messages_error_failed_add_friends));
+
+        Map<String, Object> changesFriendUser = new HashMap<>();
+        List<String> friendUserFriends = notification.getUserFrom().getFriends() != null
+                ? new ArrayList<>(notification.getUserFrom().getFriends()) : new ArrayList<>();
+        friendUserFriends.add(notification.getIdTo());
+        changesFriendUser.put(Constants.DB_FRIENDS, friendUserFriends);
+        userViewModel.updateUser(notification.getUserFrom(), changesFriendUser);
     }
 
 
     private void removeNotification(Notification notification, int position) {
-        //TODO: remove from user's notifications list & from notifications collection
-        //notificationViewModel.removeNotification();
-        //userViewModel.updateUser();
+        Map<String, Object> changes = new HashMap<>();
+        changes.put(Constants.NOTIFICATIONS.toLowerCase(), getFilteredList(user.getNotifications(), notification.getId()));
+        updateUser(changes, null, getResources().getString(R.string.messages_error_failed_remove_notification));
+        notificationAdapter.remove(position);
+        notificationViewModel.removeNotification(notification.getId());
+        if (notificationAdapter.getItemCount() == 0)
+            notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.VISIBLE);
+    }
+
+
+    private List<String> getFilteredList(List<String> list, String statement) {
+        List<String> filtered = new ArrayList<>();
+        for (String obj : list)
+            if (!obj.equals(statement))
+                filtered.add(obj);
+        return filtered;
     }
 
 
@@ -411,7 +438,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     notifications.add(status);
                     changes.put(Constants.NOTIFICATIONS.toLowerCase(), notifications);
                     disableFriendButton();
-                    updateUser(changes);
+                    updateUser(changes,
+                            getResources().getString(R.string.messages_notification_sent),
+                            getResources().getString(R.string.messages_error_failed_add_notification));
                 } else {
                     showSnackBar(status, Snackbar.LENGTH_LONG);
                     stopProgressBar();
@@ -421,16 +450,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void updateUser(Map<String, Object> changes) {
+    private void updateUser(Map<String, Object> changes, String messageSuccess, String messageError) {
         userViewModel.updateUser(user, changes);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;
                 binding.setUser(user);
-                showSnackBar(getResources().getString(R.string.messages_notification_sent), Snackbar.LENGTH_SHORT);
-            } else {
-                showSnackBar(getResources().getString(R.string.messages_error_failed_add_notification), Snackbar.LENGTH_LONG);
-            }
+                if (messageSuccess != null)
+                    showSnackBar(messageSuccess, Snackbar.LENGTH_SHORT);
+            } else if (messageError != null)
+                showSnackBar(messageError, Snackbar.LENGTH_LONG);
             stopProgressBar();
         });
     }
