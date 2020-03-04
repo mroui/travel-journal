@@ -86,4 +86,16 @@ public class NotificationRepository {
         return notificationsListData;
     }
 
+    public MutableLiveData<String> removeNotification(String id) {
+        MutableLiveData<String> notificationResponse = new MutableLiveData<>();
+        notificationsRef.document(id).delete().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                notificationResponse.setValue(context.getResources().getString(R.string.messages_remove_notification_success));
+            } else {
+                notificationResponse.setValue(context.getResources().getString(R.string.messages_error_failed_remove_notification));
+            }
+        });
+        return notificationResponse;
+    }
+
 }

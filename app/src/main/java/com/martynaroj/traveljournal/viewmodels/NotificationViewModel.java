@@ -48,4 +48,8 @@ public class NotificationViewModel extends AndroidViewModel {
         return notificationsListLiveData;
     }
 
+    public void removeNotification(String id) {
+        notificationResponse = notificationRepository.removeNotification(id);
+    }
+
 }
