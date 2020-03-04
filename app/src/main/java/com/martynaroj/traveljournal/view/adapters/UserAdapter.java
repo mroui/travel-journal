@@ -42,8 +42,10 @@ public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserVi
                 .load(model.getPhoto())
                 .placeholder(R.drawable.default_avatar)
                 .into(holder.binding.userItemImage);
-        holder.binding.userItem.setOnClickListener(view ->
-                listener.onItemClick(Objects.requireNonNull(getItem(position)).toObject(User.class), position));
+        holder.binding.userItem.setOnClickListener(view -> listener.onItemClick(
+                        Objects.requireNonNull(getItem(position)).toObject(User.class),
+                        position,
+                        holder.binding.userItem));
     }
 
 

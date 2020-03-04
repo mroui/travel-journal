@@ -82,7 +82,7 @@ public class SearchFriendsFragment extends BaseFragment {
 
 
     private void setAdapterOnItemClickListener() {
-        adapter.setOnItemClickListener((object, position) -> {
+        adapter.setOnItemClickListener((object, position, view) -> {
             User user = (User) object;
             if (user != null) {
                 if (loggedUser != null && user.getUid().equals(loggedUser.getUid())) {

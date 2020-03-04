@@ -54,7 +54,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.binding.notificationItemUserUsername.setText(notification.getUserFrom().getUsername());
         holder.binding.notificationItemTimestamp.setText(getTimePast(notification.getTimestamp().toDate()));
 
-        holder.binding.notificationItem.setOnClickListener(view -> listener.onItemClick(getItem(position), position));
+        holder.binding.notificationItem.setOnClickListener(view -> listener.onItemClick(
+                getItem(position),
+                position,
+                holder.binding.notificationItem));
+        holder.binding.notificationItemAcceptButton.setOnClickListener(view -> listener.onItemClick(
+                getItem(position),
+                position,
+                holder.binding.notificationItemAcceptButton));
+        holder.binding.notificationItemDiscardButton.setOnClickListener(view -> listener.onItemClick(
+                getItem(position),
+                position,
+                holder.binding.notificationItemDiscardButton));
 
         if (notification.getType() == com.martynaroj.traveljournal.view.others.enums.Notification.FRIEND.ordinal()) {
             holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_friends_request_message));
