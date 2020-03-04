@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -13,17 +15,17 @@ import com.martynaroj.traveljournal.services.models.Notification;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NotificationRepository {
 
-    private FirebaseFirestore rootRef;
     private CollectionReference notificationsRef;
-    private CollectionReference usersRef;
     private Context context;
 
     private NotificationRepository() {
-        rootRef = FirebaseFirestore.getInstance();
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         notificationsRef = rootRef.collection(Constants.NOTIFICATIONS);
-        usersRef = rootRef.collection(Constants.USERS);
     }
 
 
@@ -63,6 +65,25 @@ public class NotificationRepository {
             }
         });
         return notificationData;
+    }
+
+
+    public MutableLiveData<List<Notification>> getNotifications(List<String> notificationsIds) {
+        MutableLiveData<List<Notification>> notificationsListData = new MutableLiveData<>();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for (String id : notificationsIds)
+            tasks.add(notificationsRef.document(id).get());
+        Task<List<DocumentSnapshot>> finalTask = Tasks.whenAllSuccess(tasks);
+        finalTask.addOnCompleteListener(task -> {
+            if(task.isSuccessful() && task.getResult() != null) {
+                List<Notification> notifications = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                    notifications.add(documentSnapshot.toObject(Notification.class));
+                }
+                notificationsListData.setValue(notifications);
+            }
+        });
+        return notificationsListData;
     }
 
 }
