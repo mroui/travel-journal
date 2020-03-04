@@ -236,7 +236,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 getContactInfo();
                 return;
             case R.id.profile_travels:
-                openTravels();
+                changeFragment(TravelsListFragment.newInstance());
                 return;
             case R.id.profile_friends:
                 getFriendsInfo();
@@ -377,11 +377,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void changeFragment(ProfileFragment next) {
-        getNavigationInteractions().changeFragment(this, next, true);
-    }
-
-
     private void getFriendsInfo() {
         if (loggedUser != null && user != null) {
             if (user.getUid().equals(loggedUser.getUid())) {
@@ -488,8 +483,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void openTravels() {
-        getNavigationInteractions().changeFragment(this, TravelsListFragment.newInstance(), true);
+    private void changeFragment(BaseFragment next) {
+        if (user.isUserProfile(loggedUser))
+            getNavigationInteractions().changeFragment(this, next, true);
+        else
+            getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
