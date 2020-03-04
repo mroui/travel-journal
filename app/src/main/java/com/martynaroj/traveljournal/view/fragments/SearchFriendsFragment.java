@@ -82,8 +82,8 @@ public class SearchFriendsFragment extends BaseFragment {
 
 
     private void setAdapterOnItemClickListener() {
-        adapter.setOnItemClickListener((snapshot, position) -> {
-            User user = snapshot.toObject(User.class);
+        adapter.setOnItemClickListener((object, position) -> {
+            User user = (User) object;
             if (user != null) {
                 if (loggedUser != null && user.getUid().equals(loggedUser.getUid())) {
                     showSnackBar(getResources().getString(R.string.messages_its_you), Snackbar.LENGTH_SHORT);
