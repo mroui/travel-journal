@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -81,5 +82,21 @@ public class Notification  extends BaseObservable implements Serializable {
 
     public void setUserFrom(User user) {
         this.userFrom = user;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            Notification n = (Notification) obj;
+            return id.equals(n.id)
+                    && idFrom.equals(n.idFrom)
+                    && idTo.equals(n.idTo)
+                    && type.equals(n.type)
+                    && timestamp.equals(n.timestamp);
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
