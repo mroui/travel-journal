@@ -155,6 +155,10 @@ public class User extends BaseObservable implements Serializable {
         return privacy;
     }
 
+    public boolean hasNotifications() {
+        return notifications != null && !notifications.isEmpty();
+    }
+
     public void setPrivacy(Map<String, Integer> privacy) {
         this.privacy = privacy;
         notifyPropertyChanged(BR.privacy);
@@ -189,11 +193,13 @@ public class User extends BaseObservable implements Serializable {
     }
 
     public boolean isLocationAvailableForUser (User loggedUser) {
-        return (!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0) || isUserProfile(loggedUser);
+        return ((!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0) || isUserProfile(loggedUser))
+                && this.location != null;
     }
 
     public boolean isPreferencesAvailableForUser (User loggedUser) {
-        return (!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser);
+        return ((!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser))
+                && this.preferences != null;
     }
 
     public boolean isUserProfile (User loggedUser) {
