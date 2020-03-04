@@ -4,6 +4,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.martynaroj.traveljournal.BR;
 
@@ -17,6 +18,8 @@ public class Notification  extends BaseObservable implements Serializable {
     private Integer type;
     @ServerTimestamp
     private Timestamp timestamp;
+    @Exclude
+    private User userFrom;
 
     public Notification() {
     }
@@ -72,4 +75,11 @@ public class Notification  extends BaseObservable implements Serializable {
         return timestamp;
     }
 
+    public User getUserFrom() {
+        return userFrom;
+    }
+
+    public void setUserFrom(User user) {
+        this.userFrom = user;
+    }
 }
