@@ -57,6 +57,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private NotificationViewModel notificationViewModel;
     private Dialog notificationsDialog;
+    private RecyclerView notificationsRecyclerView;
 
     public static ProfileFragment newInstance(User user) {
         return new ProfileFragment(user);
@@ -252,7 +253,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void getNotifications() {
-        //TODO on click on item buttons, removing from notifications (friend request, trip info) & adding as friend
         if (getContext() != null) {
             if (user.getNotifications()!=null && !user.getNotifications().isEmpty()) {
                 startProgressBar();
@@ -297,7 +297,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             if (!notifications.isEmpty()) {
                 notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.INVISIBLE);
-                setRecyclerViewAdapter(notifications);
+                setNotificationsRecyclerView(notifications);
             } else {
                 notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view).setVisibility(View.INVISIBLE);
             }
@@ -307,18 +307,46 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void setRecyclerViewAdapter(List<Notification> notifications) {
-        RecyclerView recyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
+    private void setNotificationsRecyclerView(List<Notification> notifications) {
+        notificationsRecyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
+        notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        setNotificationsAdapter(notifications);
+    }
+
+
+    private void setNotificationsAdapter(List<Notification> notifications) {
         NotificationAdapter adapter = new NotificationAdapter(getContext(), notifications);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        adapter.setOnItemClickListener((object, position) -> {
+        notificationsRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener((object, position, view) -> {
             Notification notification = (Notification) object;
             if (notification != null) {
-                notificationsDialog.dismiss();
-                changeFragment(ProfileFragment.newInstance(notification.getUserFrom()));
+                switch (view.getId()) {
+                    case R.id.notification_item:
+                        notificationsDialog.dismiss();
+                        changeFragment(ProfileFragment.newInstance(notification.getUserFrom()));
+                        break;
+                    case R.id.notification_item_accept_button:
+                        removeNotification(notification, position);
+                        addToFriends(notification);
+                        break;
+                    case R.id.notification_item_discard_button:
+                        removeNotification(notification, position);
+                        break;
+                }
             }
         });
+    }
+
+
+    private void addToFriends(Notification notification) {
+        //TODO: add to friends userFrom & userTo
+    }
+
+
+    private void removeNotification(Notification notification, int position) {
+        //TODO: remove from user's notifications list & from notifications collection
+        //notificationViewModel.removeNotification();
+        //userViewModel.updateUser();
     }
 
 
