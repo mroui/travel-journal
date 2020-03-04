@@ -19,15 +19,18 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Notification;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.NotificationAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
-import com.martynaroj.traveljournal.view.others.enums.Notification;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.NotificationViewModel;
@@ -53,6 +56,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private Geocoder geocoder;
 
     private NotificationViewModel notificationViewModel;
+    private Dialog notificationsDialog;
 
     public static ProfileFragment newInstance(User user) {
         return new ProfileFragment(user);
@@ -248,7 +252,78 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void getNotifications() {
-        //TODO
+        //TODO on click on item buttons, removing from notifications (friend request, trip info) & adding as friend
+        if (getContext() != null) {
+            if (user.getNotifications()!=null && !user.getNotifications().isEmpty()) {
+                startProgressBar();
+                notificationViewModel.getNotificationsListData(user.getNotifications());
+                notificationViewModel.getNotificationsList().observe(getViewLifecycleOwner(), list -> {
+                    if (list != null) {
+                        getNotificationsUsersFrom(list);
+                    }
+                });
+            } else {
+                showNotificationsDialog(new ArrayList<>());
+            }
+        }
+    }
+
+
+    private void getNotificationsUsersFrom(List<Notification> notifications) {
+        List<String> usersIds = new ArrayList<>();
+        for (Notification notification : notifications) {
+            usersIds.add(notification.getIdFrom());
+        }
+        userViewModel.getUsersListData(usersIds);
+        userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+            if (users != null) {
+                for (int i=0; i<notifications.size(); i++) {
+                    notifications.get(i).setUserFrom(users.get(i));
+                }
+                showNotificationsDialog(notifications);
+                stopProgressBar();
+            }
+        });
+    }
+
+
+    private void showNotificationsDialog(List<Notification> notifications) {
+        if (getContext() != null) {
+            notificationsDialog = new Dialog(getContext());
+            notificationsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationsDialog.setCancelable(true);
+            notificationsDialog.setContentView(R.layout.dialog_notifications);
+            notificationsDialog.findViewById(R.id.dialog_notifications_ok_button).setOnClickListener(v -> notificationsDialog.dismiss());
+
+            if (!notifications.isEmpty()) {
+                notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.INVISIBLE);
+                setRecyclerViewAdapter(notifications);
+            } else {
+                notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view).setVisibility(View.INVISIBLE);
+            }
+
+            notificationsDialog.show();
+        }
+    }
+
+
+    private void setRecyclerViewAdapter(List<Notification> notifications) {
+        RecyclerView recyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
+        NotificationAdapter adapter = new NotificationAdapter(getContext(), notifications);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        adapter.setOnItemClickListener((object, position) -> {
+            Notification notification = (Notification) object;
+            if (notification != null) {
+                notificationsDialog.dismiss();
+                changeFragment(ProfileFragment.newInstance(notification.getUserFrom()));
+            }
+        });
+    }
+
+
+    private void changeFragment(ProfileFragment next) {
+        getNavigationInteractions().changeFragment(this, next, true);
     }
 
 
@@ -298,7 +373,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void sendFriendsRequest() {
         startProgressBar();
-        notificationViewModel.sendNotification(loggedUser, user, Notification.FRIEND.ordinal());
+        notificationViewModel.sendNotification(loggedUser, user,
+                com.martynaroj.traveljournal.view.others.enums.Notification.FRIEND.ordinal());
         notificationViewModel.getNotificationResponse().observe(getViewLifecycleOwner(), status -> {
             if (status != null) {
                 if (!status.contains(Constants.ERROR)) {
