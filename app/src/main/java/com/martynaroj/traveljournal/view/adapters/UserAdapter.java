@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +16,8 @@ import com.martynaroj.traveljournal.databinding.ItemUserBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
+
+import java.util.Objects;
 
 public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserViewHolder> {
 
@@ -32,24 +32,26 @@ public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserVi
 
     @Override
     protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
-        holder.username.setText(model.getUsername());
+        holder.binding.userItemUsername.setText(model.getUsername());
         if (model.getPrivacyEmail() == Privacy.PUBLIC.ordinal()) {
-            holder.email.setText(model.getEmail());
+            holder.binding.userItemEmail.setText(model.getEmail());
         } else {
-            holder.email.setVisibility(View.GONE);
+            holder.binding.userItemEmail.setVisibility(View.GONE);
         }
         Glide.with(context)
                 .load(model.getPhoto())
                 .placeholder(R.drawable.default_avatar)
-                .into(holder.image);
+                .into(holder.binding.userItemImage);
+        holder.binding.userItem.setOnClickListener(view ->
+                listener.onItemClick(Objects.requireNonNull(getItem(position)).toObject(User.class), position));
     }
 
 
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = ItemUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false).getRoot();
-        return new UserViewHolder(view);
+        ItemUserBinding binding = ItemUserBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new UserViewHolder(binding);
     }
 
 
@@ -57,18 +59,12 @@ public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserVi
         this.listener = onItemClickListener;
     }
 
-    
-    class UserViewHolder extends RecyclerView.ViewHolder {
 
-        TextView username, email;
-        ImageView image;
-
-        UserViewHolder(@NonNull View itemView) {
-            super(itemView);
-            username = itemView.findViewById(R.id.user_item_username);
-            image = itemView.findViewById(R.id.user_item_image);
-            email = itemView.findViewById(R.id.user_item_email);
-            itemView.findViewById(R.id.user_item).setOnClickListener(v -> listener.onItemClick(getItem(getAdapterPosition()), getAdapterPosition()));
+    static class UserViewHolder extends RecyclerView.ViewHolder {
+        private ItemUserBinding binding;
+        UserViewHolder(ItemUserBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
