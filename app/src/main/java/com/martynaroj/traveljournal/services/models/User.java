@@ -131,7 +131,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    private List<String> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
