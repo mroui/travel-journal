@@ -2,6 +2,8 @@ package com.martynaroj.traveljournal.services.respositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -9,6 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class UserRepository {
@@ -34,5 +38,24 @@ public class UserRepository {
     public void updateUser(User user, Map<String, Object> map) {
         DocumentReference userReference = usersRef.document(user.getUid());
         userReference.update(map);
+    }
+
+
+    public MutableLiveData<List<User>> getUsers(List<String> usersIds) {
+        MutableLiveData<List<User>> usersData = new MutableLiveData<>();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for (String id : usersIds)
+            tasks.add(usersRef.document(id).get());
+        Task<List<DocumentSnapshot>> finalTask = Tasks.whenAllSuccess(tasks);
+        finalTask.addOnCompleteListener(task -> {
+            if(task.isSuccessful() && task.getResult() != null) {
+                List<User> users = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                    users.add(documentSnapshot.toObject(User.class));
+                }
+                usersData.setValue(users);
+            }
+        });
+        return usersData;
     }
 }

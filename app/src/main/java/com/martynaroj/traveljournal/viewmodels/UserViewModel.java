@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.respositories.UserRepository;
 
+import java.util.List;
 import java.util.Map;
 
 public class UserViewModel extends AndroidViewModel {
@@ -16,6 +17,7 @@ public class UserViewModel extends AndroidViewModel {
     private UserRepository userRepository;
     private MutableLiveData<User> userLiveData;
     private final MutableLiveData<User> user;
+    private LiveData<List<User>> usersListLiveData;
 
     public UserViewModel(Application application) {
         super(application);
@@ -42,6 +44,14 @@ public class UserViewModel extends AndroidViewModel {
 
     public LiveData<User> getUser() {
         return user;
+    }
+
+    public void getUsersListData(List<String> usersIds) {
+        usersListLiveData = userRepository.getUsers(usersIds);
+    }
+
+    public LiveData<List<User>> getUsersList() {
+        return usersListLiveData;
     }
 
 }
