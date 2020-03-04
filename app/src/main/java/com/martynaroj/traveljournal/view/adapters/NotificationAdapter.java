@@ -82,6 +82,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
 
+    public void remove (int position) {
+        notifications.remove(position);
+        notifyDataSetChanged();
+    }
+
+
     private String getTimePast(Date date) {
         Calendar currentDate = Calendar.getInstance();
         Calendar notificationDate = Calendar.getInstance();
