@@ -17,14 +17,17 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 
+import java.util.List;
 import java.util.Objects;
 
-public class UserAdapter extends FirestorePagingAdapter<User, UserAdapter.UserViewHolder> {
+public class UserFirestorePagingAdapter extends FirestorePagingAdapter<User, UserFirestorePagingAdapter.UserViewHolder> {
 
     private OnItemClickListener listener;
     private Context context;
 
-    public UserAdapter(FirestorePagingOptions<User> options, Context context) {
+    private List<User> users;
+
+    public UserFirestorePagingAdapter(FirestorePagingOptions<User> options, Context context) {
         super(options);
         this.context = context;
     }

@@ -22,7 +22,7 @@ import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentSearchFriendsBinding;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.view.adapters.UserAdapter;
+import com.martynaroj.traveljournal.view.adapters.UserFirestorePagingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.SearchViewListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -32,7 +32,7 @@ public class SearchFriendsFragment extends BaseFragment {
     private FragmentSearchFriendsBinding binding;
     private CollectionReference usersRef;
     private PagedList.Config usersPagingConfig;
-    private UserAdapter adapter;
+    private UserFirestorePagingAdapter adapter;
     private FirebaseUser loggedUser;
 
     public static SearchFriendsFragment newInstance() {
@@ -132,7 +132,7 @@ public class SearchFriendsFragment extends BaseFragment {
                 .setLifecycleOwner(getViewLifecycleOwner())
                 .setQuery(query, usersPagingConfig, User.class)
                 .build();
-        adapter = new UserAdapter(options, getContext());
+        adapter = new UserFirestorePagingAdapter(options, getContext());
         binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
         setAdapterOnItemClickListener();
         setAdapterObserver();
