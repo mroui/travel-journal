@@ -1,13 +1,18 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
@@ -15,11 +20,14 @@ import com.martynaroj.traveljournal.databinding.FragmentFriendsListBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.UserAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class FriendsListFragment extends BaseFragment implements View.OnClickListener {
+public class FriendsListFragment extends BaseFragment {
 
     private FragmentFriendsListBinding binding;
     private UserViewModel userViewModel;
@@ -69,7 +77,10 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void setListeners() {
-        binding.friendsListArrowButton.setOnClickListener(this);
+        binding.friendsListArrowButton.setOnClickListener(view -> {
+            if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                getParentFragmentManager().popBackStack();
+        });
     }
 
 
@@ -90,11 +101,25 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
             userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
                     this.loggedUser = user;
+                    initTitle();
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
                 }
                 stopProgressBar();
             });
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void initTitle() {
+        if (user != null && loggedUser != null) {
+            if (user.isUserProfile(loggedUser)) {
+                binding.friendsListTitle.setText("My " + getResources().getString(R.string.friends_list_title));
+            } else {
+                binding.friendsListTitle.setText(user.getUsername() + "\'s\n" +
+                        getResources().getString(R.string.friends_list_title));
+            }
         }
     }
 
@@ -112,6 +137,7 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
             });
         } else {
             binding.friendsListRecyclerView.setVisibility(View.INVISIBLE);
+            binding.friendsListMessage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -138,8 +164,65 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void showDeleteDialog(User user, int position) {
-        //TODO: show dialog -> removing friends + cancel
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_remove_friends_title));
+            message.setText(getResources().getString(R.string.dialog_remove_friends_desc) + " " + user.getUsername() + "?");
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
+            buttonPositive.setOnClickListener(v -> {
+                dialog.dismiss();
+                removeFriend(user, position);
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+
+    private void removeFriend(User friend, int position) {
+        startProgressBar();
+
+        Map<String, Object> changesFriendUser = new HashMap<>();
+        friend.getFriends().remove(loggedUser.getUid());
+        changesFriendUser.put(Constants.DB_FRIENDS, friend.getFriends());
+        userViewModel.updateUser(friend, changesFriendUser);
+
+        Map<String, Object> changesLoggedUser = new HashMap<>();
+        loggedUser.getFriends().remove(friend.getUid());
+        changesLoggedUser.put(Constants.DB_FRIENDS, loggedUser.getFriends());
+
+        userViewModel.updateUser(loggedUser, changesLoggedUser);
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                this.user = user;
+                this.loggedUser = user;
+                userViewModel.setUser(user);
+                adapter.remove(position);
+                if (adapter.getItemCount() == 0) {
+                    binding.friendsListRecyclerView.setVisibility(View.INVISIBLE);
+                    binding.friendsListMessage.setVisibility(View.VISIBLE);
+                }
+                showSnackBar(getResources().getString(R.string.messages_remove_friend_success),
+                        Snackbar.LENGTH_SHORT);
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_remove_friend),
+                        Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
+        });
     }
 
 
@@ -148,16 +231,6 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
             getNavigationInteractions().changeFragment(this, next, true);
         else
             getNavigationInteractions().changeFragment(getParentFragment(), next, true);
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.friends_list_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-        }
     }
 
 
