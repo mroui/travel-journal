@@ -13,7 +13,8 @@
     <string name="messages_password_changed">Password successfully changed!</string>
     <string name="messages_email_changed">Email successfully changed!</string>
     <string name="messages_username_changed">Username successfully changed!</string>
-    <string name="messages_its_you">Hey, you are already your friend!</string>
+    <string name="messages_its_you">Hey, it\'s You!</string>
+    <string name="messages_its_you_friend">Hey, You are already your friend!</string>
     <string name="messages_notification_sent">Request successfully sent!</string>
     <string name="messages_remove_notification_success">Removing notification success!</string>
     <string name="messages_friends_success">You\'re now friends with </string>

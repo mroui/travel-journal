@@ -86,7 +86,7 @@ public class SearchFriendsFragment extends BaseFragment {
             User user = (User) object;
             if (user != null) {
                 if (loggedUser != null && user.getUid().equals(loggedUser.getUid())) {
-                    showSnackBar(getResources().getString(R.string.messages_its_you), Snackbar.LENGTH_SHORT);
+                    showSnackBar(getResources().getString(R.string.messages_its_you_friend), Snackbar.LENGTH_SHORT);
                 } else {
                     hideKeyboard();
                     changeFragment(ProfileFragment.newInstance(user));
