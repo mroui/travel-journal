@@ -127,7 +127,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         if (getContext() != null) {
             Places.initialize(getContext(), getString(R.string.google_api_key));
             placesClient  = Places.createClient(getContext());
-            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.profile_settings_personal_location_autocomplete);
+            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.profile_settings_personal_location_autocomplete);
             if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
                 ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
                         .setTextSize(14.0f);
@@ -135,50 +136,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
                 autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
                         .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
-                request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,
+                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
+                request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME,
+                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
             }
-        }
-    }
-
-
-    private void setListeners() {
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
-        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountUsernameInput, binding.profileSettingsAccountUsernameLayout);
-        binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
-        binding.profileSettingsArrowButton.setOnClickListener(this);
-        binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
-        binding.profileSettingsPersonalLocationButton.setOnClickListener(this);
-        binding.profileSettingsPersonalSaveButton.setOnClickListener(this);
-        binding.profileSettingsAccountUsernameSaveButton.setOnClickListener(this);
-        binding.profileSettingsAccountEmailSaveButton.setOnClickListener(this);
-        binding.profileSettingsAccountPasswordSaveButton.setOnClickListener(this);
-        binding.profileSettingsPrivacySaveButton.setOnClickListener(this);
-        binding.profileSettingsAboutCreditsSection.setOnClickListener(this);
-        binding.profileSettingsHelpContactSection.setOnClickListener(this);
-        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @SuppressWarnings("ConstantConditions")
-                @Override
-                public void onPlaceSelected(@NonNull Place place) {
-                    newLocation = new Address(place.getName(), place.getAddress(),
-                            place.getLatLng().latitude, place.getLatLng().longitude);
-                    autocompleteFragment.setText(newLocation.getAddress());
-                }
-
-                @Override
-                public void onError(@NonNull Status status) {
-                }
-            });
-            autocompleteFragment.getView().findViewById(R.id.places_autocomplete_clear_button).setOnClickListener(view -> {
-                newLocation = null;
-                autocompleteFragment.setText("");
-            });
         }
     }
 
@@ -255,6 +217,57 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
         index = Objects.requireNonNull(user.getPrivacy().get(Constants.PREFERENCES));
         binding.profileSettingsPrivacyPreferencesSelect.setSelectedIndex(index);
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordCurrentInput,
+                binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordInput,
+                binding.profileSettingsAccountPasswordLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountPasswordConfirmInput,
+                binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailPasswordCurrentInput,
+                binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailInput,
+                binding.profileSettingsAccountEmailLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountEmailConfirmInput,
+                binding.profileSettingsAccountEmailConfirmLayout);
+        new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountUsernameInput,
+                binding.profileSettingsAccountUsernameLayout);
+        binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
+        binding.profileSettingsArrowButton.setOnClickListener(this);
+        binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
+        binding.profileSettingsPersonalLocationButton.setOnClickListener(this);
+        binding.profileSettingsPersonalSaveButton.setOnClickListener(this);
+        binding.profileSettingsAccountUsernameSaveButton.setOnClickListener(this);
+        binding.profileSettingsAccountEmailSaveButton.setOnClickListener(this);
+        binding.profileSettingsAccountPasswordSaveButton.setOnClickListener(this);
+        binding.profileSettingsPrivacySaveButton.setOnClickListener(this);
+        binding.profileSettingsAboutCreditsSection.setOnClickListener(this);
+        binding.profileSettingsHelpContactSection.setOnClickListener(this);
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @SuppressWarnings("ConstantConditions")
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    newLocation = new Address(place.getName(), place.getAddress(),
+                            place.getLatLng().latitude, place.getLatLng().longitude);
+                    autocompleteFragment.setText(newLocation.getAddress());
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView().findViewById(R.id.places_autocomplete_clear_button).setOnClickListener(view -> {
+                newLocation = null;
+                autocompleteFragment.setText("");
+            });
+        }
     }
 
 
@@ -711,19 +724,22 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
                 });
             } else if (getActivity() != null){
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
             }
         }
     }
 
 
     private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.profileSettingsProgressbarLayout, binding.profileSettingsProgressbar);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.profileSettingsProgressbarLayout, binding.profileSettingsProgressbar);
     }
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.profileSettingsProgressbarLayout, binding.profileSettingsProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.profileSettingsProgressbarLayout, binding.profileSettingsProgressbar);
     }
 
 
@@ -748,12 +764,18 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void clearInputs() {
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordCurrentInput, binding.profileSettingsAccountPasswordCurrentLayout);
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordInput, binding.profileSettingsAccountPasswordLayout);
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordConfirmInput, binding.profileSettingsAccountPasswordConfirmLayout);
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput, binding.profileSettingsAccountEmailPasswordCurrentLayout);
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailInput, binding.profileSettingsAccountEmailLayout);
-        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailConfirmInput, binding.profileSettingsAccountEmailConfirmLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordCurrentInput,
+                binding.profileSettingsAccountPasswordCurrentLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordInput,
+                binding.profileSettingsAccountPasswordLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountPasswordConfirmInput,
+                binding.profileSettingsAccountPasswordConfirmLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailPasswordCurrentInput,
+                binding.profileSettingsAccountEmailPasswordCurrentLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailInput,
+                binding.profileSettingsAccountEmailLayout);
+        new FormHandler(getContext()).clearInput(binding.profileSettingsAccountEmailConfirmInput,
+                binding.profileSettingsAccountEmailConfirmLayout);
     }
 
 
