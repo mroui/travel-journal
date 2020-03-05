@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
@@ -333,10 +336,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_contact);
-            dialog.findViewById(R.id.dialog_contact_ok_button).setOnClickListener(v -> dialog.dismiss());
-            TextView email = dialog.findViewById(R.id.dialog_contact_desc);
-            email.setText(user.getEmail());
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_my_email_title));
+            message.setText(user.getEmail());
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_ok));
+            buttonPositive.setOnClickListener(v -> dialog.dismiss());
+            buttonNegative.setVisibility(View.GONE);
+
             dialog.show();
         }
     }

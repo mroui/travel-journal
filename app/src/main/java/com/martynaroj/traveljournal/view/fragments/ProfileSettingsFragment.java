@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -319,14 +321,25 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_unsaved_changes);
-            dialog.findViewById(R.id.dialog_unsaved_changes_no_button).setOnClickListener(v -> dialog.dismiss());
-            dialog.findViewById(R.id.dialog_unsaved_changes_yes_button).setOnClickListener(v -> {
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_unsaved_changes_title));
+            message.setText(getResources().getString(R.string.dialog_unsaved_changes_desc));
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            buttonPositive.setOnClickListener(v -> {
                 hideKeyboard();
                 dialog.dismiss();
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
             });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
             dialog.show();
         }
     }
@@ -337,10 +350,20 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_credits);
-            TextView message = dialog.findViewById(R.id.dialog_credits_desc);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_credits_title));
             message.setText(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)));
-            dialog.findViewById(R.id.dialog_credits_ok_button).setOnClickListener(v -> dialog.dismiss());
+            message.setMovementMethod(LinkMovementMethod.getInstance());
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_ok));
+            buttonPositive.setOnClickListener(v -> dialog.dismiss());
+            buttonNegative.setVisibility(View.GONE);
+
             dialog.show();
         }
     }

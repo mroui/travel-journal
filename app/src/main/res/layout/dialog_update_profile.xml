@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/raleway_bold"
-        android:text="@string/dialog_button_update_account_title"
+        android:text="@string/dialog_update_account_title"
         android:textColor="@color/black"
         android:textAlignment="center"
         android:textSize="@dimen/text_medium"/>
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_update_profile_title"
         android:fontFamily="@font/raleway_regular"
         android:textAlignment="center"
-        android:text="@string/dialog_button_update_account_desc"
+        android:text="@string/dialog_update_account_desc"
         android:textSize="@dimen/text_regular"
         android:textColor="@color/dark_gray"/>
 

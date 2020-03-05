@@ -125,17 +125,25 @@
     <string name="travels_list_title">Travels</string>
 
     <string name="friends_list_title">Friends</string>
+    <string name="friends_list_remove">REMOVE</string>
 
-    <string name="dialog_button_unsaved_changes_title">Unsaved changes</string>
-    <string name="dialog_button_unsaved_changes_desc">Your changes have not been saved. Do you want to discard the changes and continue?</string>
-    <string name="dialog_button_my_email_title">Your contact email</string>
-    <string name="dialog_button_update_account_title">Welcome on Board, Traveller!</string>
-    <string name="dialog_button_update_account_desc">Now you can start your own adventure!\n
-        &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s account is still unfilled… &#x1f61e;\nWhen do you want to update it?</string>
+    <string name="dialog_unsaved_changes_title">Unsaved changes</string>
+    <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
+        discard the changes and continue?</string>
+    <string name="dialog_my_email_title">Your contact email</string>
+    <string name="dialog_update_account_title">Welcome on Board, Traveller!</string>
+    <string name="dialog_update_account_desc">Now you can start your own adventure!\n
+        &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s
+        account is still unfilled… &#x1f61e;\nWhen do you want to update it?</string>
+    <string name="dialog_remove_friends_title">Remove from friends</string>
+
     <string name="dialog_button_now">NOW</string>
     <string name="dialog_button_later">LATER</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">YES</string>
     <string name="dialog_button_no">NO</string>
+    <string name="dialog_button_remove">REMOVE</string>
+    <string name="dialog_button_cancel">CANCEL</string>
+    <string name="dialog_credits_title">Credits</string>
 
 </resources>
