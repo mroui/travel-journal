@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -87,10 +86,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
         initUser();
         observeUserChanges();
-        getLoggedUser();
+        initLoggedUser();
 
         return view;
     }
+
+
+    //INIT DATA-------------------------------------------------------------------------------------
+
 
     private void initUser() {
         if (user != null) {
@@ -108,19 +111,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                this.user = user;
-                binding.setUser(user);
-                initPreferences();
-                initLocalization();
-            }
-        });
-    }
-
-
-    private void getLoggedUser() {
+    private void initLoggedUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             startProgressBar();
@@ -135,36 +126,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
                 stopProgressBar();
             });
-        }
-    }
-
-
-    private void checkProfile() {
-        if (user != null && user.getUid().equals(loggedUser.getUid())) {
-            checkNewAccount();
-        }
-    }
-
-
-    private void checkNewAccount() {
-        if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
-        && user.getPhoto() == null)
-            openUpdateProfileDialog();
-    }
-
-
-    private void openUpdateProfileDialog() {
-        if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_update_profile);
-            dialog.findViewById(R.id.dialog_update_profile_later_button).setOnClickListener(v -> dialog.dismiss());
-            dialog.findViewById(R.id.dialog_update_profile_now_button).setOnClickListener(v -> {
-                openSettings();
-                dialog.dismiss();
-            });
-            dialog.show();
         }
     }
 
@@ -185,21 +146,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void getLocationCity(Address address) {
-        try {
-            List<android.location.Address> addresses = geocoder.getFromLocation(address.getLatitude(), address.getLongitude(), 1);
-            if (addresses != null && addresses.size() > 0) {
-                binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
-            }
-        } catch (IOException ignored) {}
-    }
-
-
     private void initPreferences() {
         if (user != null && user.getPreferences() != null) {
             binding.profilePreferences.setData(user.getPreferences(), item -> {
                 SpannableString spannableString = new SpannableString(item);
-                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")),
+                        0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 return spannableString;
             });
         }
@@ -213,6 +165,184 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         }
     }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                this.user = user;
+                binding.setUser(user);
+                initPreferences();
+                initLocalization();
+            }
+        });
+    }
+
+
+    private void setNotificationsList(List<Notification> notifications) {
+        notificationsRecyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
+        notificationAdapter = new NotificationAdapter(getContext(), notifications);
+        notificationsRecyclerView.setAdapter(notificationAdapter);
+        notificationAdapter.setOnItemClickListener((object, position, view) -> {
+            Notification notification = (Notification) object;
+            if (notification != null) {
+                switch (view.getId()) {
+                    case R.id.notification_item:
+                        notificationsDialog.dismiss();
+                        changeFragment(ProfileFragment.newInstance(notification.getUserFrom()));
+                        break;
+                    case R.id.notification_item_accept_button:
+                        removeNotification(notification, position);
+                        addToFriends(notification);
+                        break;
+                    case R.id.notification_item_discard_button:
+                        removeNotification(notification, position);
+                        break;
+                }
+            }
+        });
+    }
+
+
+    //CHECKING/GETTING DATA-------------------------------------------------------------------------
+
+
+    private void checkProfile() {
+        if (user != null && user.getUid().equals(loggedUser.getUid())) {
+            checkNewAccount();
+        }
+    }
+
+
+    private void checkNewAccount() {
+        if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
+        && user.getPhoto() == null)
+            openUpdateProfileDialog();
+    }
+
+
+    private void getLocationCity(Address address) {
+        try {
+            List<android.location.Address> addresses = geocoder
+                    .getFromLocation(address.getLatitude(), address.getLongitude(), 1);
+            if (addresses != null && addresses.size() > 0) {
+                binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
+            }
+        } catch (IOException ignored) {}
+    }
+
+
+    private void getNotifications() {
+        if (getContext() != null) {
+            if (user.getNotifications()!=null && !user.getNotifications().isEmpty()) {
+                startProgressBar();
+                notificationViewModel.getNotificationsListData(user.getNotifications());
+                notificationViewModel.getNotificationsList().observe(getViewLifecycleOwner(), list -> {
+                    if (list != null) {
+                        getNotificationsUsersFrom(list);
+                    }
+                });
+            } else {
+                showNotificationsDialog(new ArrayList<>());
+            }
+        }
+    }
+
+
+    private void getNotificationsUsersFrom(List<Notification> notifications) {
+        List<String> usersIds = new ArrayList<>();
+        for (Notification notification : notifications) {
+            usersIds.add(notification.getIdFrom());
+        }
+        userViewModel.getUsersListData(usersIds);
+        userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+            if (users != null) {
+                for (int i=0; i<notifications.size(); i++) {
+                    notifications.get(i).setUserFrom(users.get(i));
+                }
+                showNotificationsDialog(notifications);
+                stopProgressBar();
+            }
+        });
+    }
+
+
+    private List<String> getFilteredList(List<String> list, String statement) {
+        List<String> filtered = new ArrayList<>();
+        for (String obj : list)
+            if (!obj.equals(statement))
+                filtered.add(obj);
+        return filtered;
+    }
+
+
+    private void getFriendsInfo() {
+        if (loggedUser != null && user != null) {
+            if (user.getUid().equals(loggedUser.getUid())) {
+                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(loggedUser), true);
+            } else if (user.hasFriend(loggedUser)) {
+                getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(user), true);
+            } else {
+                checkRequestExists();
+            }
+        }
+    }
+
+
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
+    private void openUpdateProfileDialog() {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.dialog_update_profile);
+            dialog.findViewById(R.id.dialog_update_profile_later_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.findViewById(R.id.dialog_update_profile_now_button).setOnClickListener(v -> {
+                openSettings();
+                dialog.dismiss();
+            });
+            dialog.show();
+        }
+    }
+
+
+    private void showNotificationsDialog(List<Notification> notifications) {
+        if (getContext() != null) {
+            notificationsDialog = new Dialog(getContext());
+            notificationsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationsDialog.setCancelable(true);
+            notificationsDialog.setContentView(R.layout.dialog_notifications);
+            notificationsDialog.findViewById(R.id.dialog_notifications_ok_button).setOnClickListener(v -> notificationsDialog.dismiss());
+
+            if (!notifications.isEmpty()) {
+                notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.INVISIBLE);
+                setNotificationsList(notifications);
+            } else {
+                notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view).setVisibility(View.INVISIBLE);
+            }
+
+            notificationsDialog.show();
+        }
+    }
+
+
+    private void showContactDialog() {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_contact);
+            dialog.findViewById(R.id.dialog_contact_ok_button).setOnClickListener(v -> dialog.dismiss());
+            TextView email = dialog.findViewById(R.id.dialog_contact_desc);
+            email.setText(user.getEmail());
+            dialog.show();
+        }
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
@@ -253,90 +383,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void getNotifications() {
-        if (getContext() != null) {
-            if (user.getNotifications()!=null && !user.getNotifications().isEmpty()) {
-                startProgressBar();
-                notificationViewModel.getNotificationsListData(user.getNotifications());
-                notificationViewModel.getNotificationsList().observe(getViewLifecycleOwner(), list -> {
-                    if (list != null) {
-                        getNotificationsUsersFrom(list);
-                    }
-                });
-            } else {
-                showNotificationsDialog(new ArrayList<>());
-            }
-        }
-    }
-
-
-    private void getNotificationsUsersFrom(List<Notification> notifications) {
-        List<String> usersIds = new ArrayList<>();
-        for (Notification notification : notifications) {
-            usersIds.add(notification.getIdFrom());
-        }
-        userViewModel.getUsersListData(usersIds);
-        userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
-            if (users != null) {
-                for (int i=0; i<notifications.size(); i++) {
-                    notifications.get(i).setUserFrom(users.get(i));
-                }
-                showNotificationsDialog(notifications);
-                stopProgressBar();
-            }
-        });
-    }
-
-
-    private void showNotificationsDialog(List<Notification> notifications) {
-        if (getContext() != null) {
-            notificationsDialog = new Dialog(getContext());
-            notificationsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            notificationsDialog.setCancelable(true);
-            notificationsDialog.setContentView(R.layout.dialog_notifications);
-            notificationsDialog.findViewById(R.id.dialog_notifications_ok_button).setOnClickListener(v -> notificationsDialog.dismiss());
-
-            if (!notifications.isEmpty()) {
-                notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.INVISIBLE);
-                setNotificationsRecyclerView(notifications);
-            } else {
-                notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view).setVisibility(View.INVISIBLE);
-            }
-
-            notificationsDialog.show();
-        }
-    }
-
-
-    private void setNotificationsRecyclerView(List<Notification> notifications) {
-        notificationsRecyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
-        notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        setNotificationsAdapter(notifications);
-    }
-
-
-    private void setNotificationsAdapter(List<Notification> notifications) {
-        notificationAdapter = new NotificationAdapter(getContext(), notifications);
-        notificationsRecyclerView.setAdapter(notificationAdapter);
-        notificationAdapter.setOnItemClickListener((object, position, view) -> {
-            Notification notification = (Notification) object;
-            if (notification != null) {
-                switch (view.getId()) {
-                    case R.id.notification_item:
-                        notificationsDialog.dismiss();
-                        changeFragment(ProfileFragment.newInstance(notification.getUserFrom()));
-                        break;
-                    case R.id.notification_item_accept_button:
-                        removeNotification(notification, position);
-                        addToFriends(notification);
-                        break;
-                    case R.id.notification_item_discard_button:
-                        removeNotification(notification, position);
-                        break;
-                }
-            }
-        });
-    }
+    //MAIN METHODS----------------------------------------------------------------------------------
 
 
     private void addToFriends(Notification notification) {
@@ -368,28 +415,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private List<String> getFilteredList(List<String> list, String statement) {
-        List<String> filtered = new ArrayList<>();
-        for (String obj : list)
-            if (!obj.equals(statement))
-                filtered.add(obj);
-        return filtered;
-    }
-
-
-    private void getFriendsInfo() {
-        if (loggedUser != null && user != null) {
-            if (user.getUid().equals(loggedUser.getUid())) {
-                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(), true);
-            } else if (user.hasFriend(loggedUser)) {
-                getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(), true);
-            } else {
-                checkRequestExists();
-            }
-        }
-    }
-
-
     private void checkRequestExists() {
         if (user.getNotifications() != null && !user.getNotifications().isEmpty()) {
             AtomicBoolean exists = new AtomicBoolean(false);
@@ -403,7 +428,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     counter.getAndIncrement();
                     if (exists.get()) {
                         showSnackBar(getResources().getString(R.string.messages_error_friend_notification_exists), Snackbar.LENGTH_LONG);
-                        disableFriendButton();
+                        disableView(binding.profileFriends);
                     } else if (counter.get() == user.getNotifications().size()) {
                         sendFriendsRequest();
                     }
@@ -412,12 +437,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         } else {
             sendFriendsRequest();
         }
-    }
-
-
-    private void disableFriendButton() {
-        binding.profileFriends.setEnabled(false);
-        binding.profileFriends.setAlpha(0.4f);
     }
 
 
@@ -432,7 +451,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     List<String> notifications = user.getNotifications() == null ? new ArrayList<>() : user.getNotifications();
                     notifications.add(status);
                     changes.put(Constants.NOTIFICATIONS.toLowerCase(), notifications);
-                    disableFriendButton();
+                    disableView(binding.profileFriends);
                     updateUser(changes,
                             getResources().getString(R.string.messages_notification_sent),
                             getResources().getString(R.string.messages_error_failed_add_notification));
@@ -463,16 +482,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void getContactInfo() {
         if (user != null) {
             if (loggedUser != null && user.isUserProfile(loggedUser)) {
-                if (getContext() != null) {
-                    Dialog dialog = new Dialog(getContext());
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(true);
-                    dialog.setContentView(R.layout.dialog_contact);
-                    dialog.findViewById(R.id.dialog_contact_ok_button).setOnClickListener(v -> dialog.dismiss());
-                    TextView email = dialog.findViewById(R.id.dialog_contact_desc);
-                    email.setText(user.getEmail());
-                    dialog.show();
-                }
+                    showContactDialog();
             } else {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("plain/text");
@@ -480,14 +490,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 startActivity(Intent.createChooser(intent, ""));
             }
         }
-    }
-
-
-    private void changeFragment(BaseFragment next) {
-        if (user.isUserProfile(loggedUser))
-            getNavigationInteractions().changeFragment(this, next, true);
-        else
-            getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
@@ -522,6 +524,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         showSnackBar(getResources().getString(R.string.messages_signing_out_success), Snackbar.LENGTH_SHORT);
         stopProgressBar();
         getNavigationInteractions().changeNavigationBarItem(2, LogInFragment.newInstance());
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void changeFragment(BaseFragment next) {
+        if (user.isUserProfile(loggedUser))
+            getNavigationInteractions().changeFragment(this, next, true);
+        else
+            getNavigationInteractions().changeFragment(getParentFragment(), next, true);
+    }
+
+
+    private void disableView(View view) {
+        view.setEnabled(false);
+        view.setAlpha(0.4f);
     }
 
 
