@@ -29,7 +29,8 @@
                     android:id="@+id/dialog_notifications_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/padding_medium"/>
+                    android:paddingVertical="@dimen/padding_medium"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </ScrollView>
 
