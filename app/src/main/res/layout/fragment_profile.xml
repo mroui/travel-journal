@@ -129,7 +129,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@{location}"
                             android:textAlignment="center"
-                            android:visibility="@{user.isLocationAvailableForUser(loggedUser) ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{user.isLocationAvailableForUser(loggedUser) &amp;&amp; location != null ? View.VISIBLE : View.GONE}"
                             android:textColor="@color/dark_gray"
                             android:textSize="@dimen/text_regular"
                             android:gravity="center"

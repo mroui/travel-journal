@@ -138,6 +138,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
                     if (address != null) {
                         getLocationCity(address);
+                    } else {
+                        binding.setLocation(null);
                     }
                     stopProgressBar();
                 });
@@ -227,7 +229,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     .getFromLocation(address.getLatitude(), address.getLongitude(), 1);
             if (addresses != null && addresses.size() > 0) {
                 binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
-            }
+            } else
+                binding.setLocation(null);
         } catch (IOException ignored) {}
     }
 
