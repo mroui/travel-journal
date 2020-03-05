@@ -6,10 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +57,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private NotificationViewModel notificationViewModel;
     private Dialog notificationsDialog;
-    private RecyclerView notificationsRecyclerView;
     private NotificationAdapter notificationAdapter;
 
     public static ProfileFragment newInstance(User user) {
@@ -172,7 +169,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
+            if (user != null && user.isUserProfile(this.user)) {
                 this.user = user;
                 binding.setUser(user);
                 initPreferences();
@@ -183,7 +180,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void setNotificationsList(List<Notification> notifications) {
-        notificationsRecyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
+        RecyclerView notificationsRecyclerView = notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view);
         notificationAdapter = new NotificationAdapter(getContext(), notifications);
         notificationsRecyclerView.setAdapter(notificationAdapter);
         notificationAdapter.setOnItemClickListener((object, position, view) -> {
@@ -281,8 +278,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void getFriendsInfo() {
         if (loggedUser != null && user != null) {
-            if (user.getUid().equals(loggedUser.getUid())) {
-                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(loggedUser), true);
+            if (user.isUserProfile(loggedUser)) {
+                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(user), true);
             } else if (user.hasFriend(loggedUser)) {
                 getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(user), true);
             } else {
@@ -482,6 +479,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (user != null) {
                 this.user = user;
                 binding.setUser(user);
+                if (user.isUserProfile(loggedUser)) {
+                    this.loggedUser = user;
+                    binding.setLoggedUser(user);
+                }
                 if (messageSuccess != null)
                     showSnackBar(messageSuccess, Snackbar.LENGTH_SHORT);
             } else if (messageError != null)
