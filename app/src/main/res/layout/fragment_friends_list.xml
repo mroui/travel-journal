@@ -35,14 +35,14 @@
                 android:src="@drawable/ic_arrow_back"/>
 
             <TextView
-                android:id="@+id/travels_list_title"
+                android:id="@+id/friends_list_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/friends_list_arrow_button"
                 app:layout_constraintTop_toBottomOf="@+id/friends_list_arrow_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:fontFamily="@font/robotoslab_medium"
-                android:text="@string/friends_list_friends"
+                android:text="@string/friends_list_title"
                 android:textSize="@dimen/text_bigger"
                 android:textColor="@color/black"/>
 

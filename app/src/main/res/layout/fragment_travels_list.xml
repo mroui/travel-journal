@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/travels_list_arrow_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:fontFamily="@font/robotoslab_medium"
-                android:text="@string/travels_list_travels"
+                android:text="@string/travels_list_title"
                 android:textSize="@dimen/text_bigger"
                 android:textColor="@color/black"/>
 
