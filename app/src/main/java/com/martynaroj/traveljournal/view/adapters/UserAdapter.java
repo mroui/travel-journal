@@ -80,6 +80,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
     public void remove (int position) {
         users.remove(position);
         notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
 
