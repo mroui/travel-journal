@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Travel Journal</string>
 
     <string name="home">Home</string>
@@ -126,6 +126,7 @@
 
     <string name="friends_list_title">Friends</string>
     <string name="friends_list_remove">REMOVE</string>
+    <string name="friends_list_no_results">No friends found.</string>
 
     <string name="dialog_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
@@ -137,6 +138,7 @@
         &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s
         account is still unfilled… &#x1f61e;\nWhen do you want to update it?</string>
     <string name="dialog_remove_friends_title">Remove from friends</string>
+    <string name="dialog_remove_friends_desc">Are you sure you want to remove</string>
 
     <string name="dialog_button_now">NOW</string>
     <string name="dialog_button_later">LATER</string>
@@ -144,6 +146,6 @@
     <string name="dialog_button_yes">YES</string>
     <string name="dialog_button_no">NO</string>
     <string name="dialog_button_remove">REMOVE</string>
-    <string name="dialog_button_cancel">CANCEL</string>
+    <string name="dialog_button_cancel" tools:ignore="ButtonCase">CANCEL</string>
 
 </resources>

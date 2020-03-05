@@ -18,6 +18,7 @@
     <string name="messages_notification_sent">Request successfully sent!</string>
     <string name="messages_remove_notification_success">Removing notification success!</string>
     <string name="messages_friends_success">You\'re now friends with </string>
+    <string name="messages_remove_friend_success">Removing from friends success!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
@@ -33,4 +34,5 @@
     <string name="messages_error_friend_notification_exists">ERROR: Your request is already waiting for a response</string>
     <string name="messages_error_failed_remove_notification">ERROR: Removing notification failed, try again later</string>
     <string name="messages_error_failed_add_friends">"ERROR: Accepting friends request, try again later"</string>
+    <string name="messages_error_failed_remove_friend">"ERROR: Removing from friends failed, try again later"</string>
 </resources>
