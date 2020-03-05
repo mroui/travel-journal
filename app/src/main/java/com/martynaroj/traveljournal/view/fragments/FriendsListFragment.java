@@ -25,6 +25,7 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
     private UserViewModel userViewModel;
     private User user;
     private User loggedUser;
+    private UserAdapter adapter;
 
 
     static FriendsListFragment newInstance(User user) {
@@ -116,7 +117,7 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void initFriendsList(List<User> friends) {
-        UserAdapter adapter = new UserAdapter(getContext(), friends);
+        adapter = new UserAdapter(getContext(), friends, user.isUserProfile(loggedUser));
         binding.friendsListRecyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((object, position, view) -> {
             User userItem = (User) object;
@@ -128,9 +129,17 @@ public class FriendsListFragment extends BaseFragment implements View.OnClickLis
                         else
                             changeFragment(ProfileFragment.newInstance(userItem));
                         break;
+                    case R.id.user_item_delete_button:
+                        showDeleteDialog(userItem, position);
+                        break;
                 }
             }
         });
+    }
+
+
+    private void showDeleteDialog(User user, int position) {
+        //TODO: show dialog -> removing friends + cancel
     }
 
 

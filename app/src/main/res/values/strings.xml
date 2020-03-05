@@ -131,6 +131,7 @@
     <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
         discard the changes and continue?</string>
     <string name="dialog_my_email_title">Your contact email</string>
+    <string name="dialog_credits_title">Credits</string>
     <string name="dialog_update_account_title">Welcome on Board, Traveller!</string>
     <string name="dialog_update_account_desc">Now you can start your own adventure!\n
         &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s
@@ -144,6 +145,5 @@
     <string name="dialog_button_no">NO</string>
     <string name="dialog_button_remove">REMOVE</string>
     <string name="dialog_button_cancel">CANCEL</string>
-    <string name="dialog_credits_title">Credits</string>
 
 </resources>

@@ -49,6 +49,7 @@ public class UserFirestorePagingAdapter extends FirestorePagingAdapter<User, Use
                         Objects.requireNonNull(getItem(position)).toObject(User.class),
                         position,
                         holder.binding.userItem));
+        holder.binding.userItemDeleteButton.setVisibility(View.GONE);
     }
 
 

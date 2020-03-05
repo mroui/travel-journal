@@ -23,11 +23,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
     private Context context;
     private List<User> users;
     private OnItemClickListener listener;
+    private boolean isUserProfile;
 
 
-    public UserAdapter(Context context, List<User> users) {
+    public UserAdapter(Context context, List<User> users, boolean isUserProfile) {
         this.context = context;
         this.users = users;
+        this.isUserProfile = isUserProfile;
     }
 
 
@@ -61,6 +63,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
                 Objects.requireNonNull(getItem(position)),
                 position,
                 holder.binding.userItem));
+        holder.binding.userItemDeleteButton.setOnClickListener(view -> listener.onItemClick(
+                Objects.requireNonNull(getItem(position)),
+                position,
+                holder.binding.userItemDeleteButton));
+        if (!isUserProfile)
+            holder.binding.userItemDeleteButton.setVisibility(View.GONE);
     }
 
 
