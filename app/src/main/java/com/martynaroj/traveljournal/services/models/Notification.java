@@ -76,6 +76,7 @@ public class Notification  extends BaseObservable implements Serializable {
         return timestamp;
     }
 
+    @Exclude
     public User getUserFrom() {
         return userFrom;
     }
