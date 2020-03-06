@@ -94,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
             return;
         }
 
+        Fragment exploreMapFragment = fragmentManager.findFragmentById(R.id.fragment_home);
+        if (exploreMapFragment instanceof IOnBackPressed && ((IOnBackPressed) exploreMapFragment).onBackPressed()) {
+            return;
+        }
+
         if (adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
                 .getChildFragmentManager().getBackStackEntryCount() >= 1) {
             adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())

@@ -21,12 +21,13 @@ import com.martynaroj.traveljournal.databinding.FragmentExploreMapBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.Objects;
 
-public class ExploreMapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback {
+public class ExploreMapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback, IOnBackPressed {
 
     private FragmentExploreMapBinding binding;
     private UserViewModel userViewModel;
@@ -35,6 +36,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private LatLng currentPlace;
     private MarkerOptions currentMarker;
     private GoogleMap map;
+    private Snackbar tutorialSnackbar;
 
 
     public static ExploreMapFragment newInstance() {
@@ -105,7 +107,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
                 }
                 stopProgressBar();
             });
-        }
+        } else
+            stopProgressBar();
     }
 
 
@@ -121,6 +124,17 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         setMapListener();
+        showTutorialSnackbar();
+    }
+
+
+    private void showTutorialSnackbar() {
+        tutorialSnackbar = Snackbar.make(binding.getRoot(),
+                getResources().getString(R.string.messages_explore_map_tutorial),
+                Snackbar.LENGTH_INDEFINITE);
+        tutorialSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
+                view -> tutorialSnackbar.dismiss());
+        tutorialSnackbar.show();
     }
 
 
@@ -140,12 +154,22 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             case R.id.explore_map_arrow_button:
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
+                tutorialSnackbar.dismiss();
                 break;
             case R.id.explore_map_add_place_button:
                 break;
             case R.id.explore_map_remove_place_button:
                 break;
         }
+    }
+
+
+    @Override
+    public boolean onBackPressed() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+        tutorialSnackbar.dismiss();
+        return true;
     }
 
 

@@ -20,6 +20,7 @@
     <string name="messages_friends_success">You\'re now friends with </string>
     <string name="messages_remove_friend_success">Removing from friends success!</string>
     <string name="messages_not_logged_user">You are not logged in, please log in and try again.</string>
+    <string name="messages_explore_map_tutorial">Tap on the map to mark desired place and add it to the ones you want to visit.</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
