@@ -180,6 +180,13 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
 
     private void stopProgressBar() {
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
+        disableButtons();
+    }
+
+
+    private void disableButtons() {
+        binding.exploreMapRemovePlaceButton.setEnabled(false);
+        binding.exploreMapAddPlaceButton.setEnabled(false);
     }
 
 
