@@ -128,6 +128,8 @@
     <string name="friends_list_remove">REMOVE</string>
     <string name="friends_list_no_results">No friends found.</string>
 
+    <string name="explore_map_title">Explore map</string>
+
     <string name="dialog_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
         discard the changes and continue?</string>
