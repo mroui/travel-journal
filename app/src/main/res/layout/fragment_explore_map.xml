@@ -66,8 +66,10 @@
                     android:id="@+id/explore_map_add_place_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-                    android:text="add"
+                    android:layout_margin="0dp"
+                    android:padding="@dimen/padding_small"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:text="@string/explore_map_add"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>
 
@@ -75,8 +77,10 @@
                     android:id="@+id/explore_map_remove_place_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-                    android:text="remove"
+                    android:layout_margin="0dp"
+                    android:padding="@dimen/padding_small"
+                    android:text="@string/explore_map_remove"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>
 
