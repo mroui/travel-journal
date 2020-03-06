@@ -44,6 +44,21 @@
                     android:background="@color/main_light_blue"/>
 
                 <ImageView
+                    android:id="@+id/profile_arrow_button"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="@dimen/margin_regular"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:contentDescription="@string/back_arrow"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:visibility="@{!user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"
+                    android:src="@drawable/ic_arrow_back"/>
+
+                <ImageView
                     android:id="@+id/profile_notifications"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="wrap_content"

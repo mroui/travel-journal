@@ -365,12 +365,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding.profileFriends.setOnClickListener(this);
         binding.profileSeeAllPreferences.setOnClickListener(this);
         binding.profileSettingsButton.setOnClickListener(this);
+        binding.profileArrowButton.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.profile_arrow_button:
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+                break;
             case R.id.profile_notifications:
                 getNotifications();
                 return;
