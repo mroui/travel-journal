@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,9 @@
         android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
         android:theme="@style/NoActionBar"
         tools:ignore="AllowBackup">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key"/>
         <activity android:name=".view.SplashActivity"
             android:theme="@style/SplashScreen"
             tools:ignore="InnerclassSeparator">
