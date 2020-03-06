@@ -18,8 +18,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_regular"
-            android:paddingEnd="@dimen/margin_regular">
+            android:paddingStart="@dimen/padding_regular"
+            android:paddingEnd="@dimen/padding_regular">
 
             <TextView
                 android:id="@+id/home_title"

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
@@ -41,6 +43,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void setListeners() {
         binding.homeSearchFriendsButton.setOnClickListener(this);
+        binding.homeExploreMapButton.setOnClickListener(this);
     }
 
 
@@ -62,13 +65,30 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.home_search_friends_button:
-                changeFragment(SearchFriendsFragment.newInstance());
+                if (isLoggedUser())
+                    changeFragment(SearchFriendsFragment.newInstance());
+                else
+                    showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
+                break;
+            case R.id.home_explore_map_button:
+                changeFragment(ExploreMapFragment.newInstance());
+                break;
         }
+    }
+
+
+    private boolean isLoggedUser() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
 
     private void changeFragment(Fragment next) {
         getNavigationInteractions().changeFragment(this, next, true);
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 
