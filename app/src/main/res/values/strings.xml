@@ -131,6 +131,8 @@
     <string name="explore_map_title">Explore map</string>
     <string name="explore_map_remove">remove</string>
     <string name="explore_map_add">add</string>
+    <string name="add_place_title">Add place</string>
+    <string name="add_place_desc">Make a short note about place</string>
 
     <string name="dialog_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
@@ -151,5 +153,6 @@
     <string name="dialog_button_no">NO</string>
     <string name="dialog_button_remove">REMOVE</string>
     <string name="dialog_button_cancel" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="dialog_button_add">ADD</string>
 
 </resources>
