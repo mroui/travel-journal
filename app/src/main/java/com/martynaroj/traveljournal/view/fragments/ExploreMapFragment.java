@@ -1,9 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,20 +14,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentExploreMapBinding;
 import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Marker;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class ExploreMapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback, IOnBackPressed {
 
@@ -53,6 +64,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
         setListeners();
         initLoggedUser();
         initGoogleMap();
+        disableButtons();
 
         return view;
     }
@@ -104,6 +116,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
                 if (address != null) {
                     setAddressOnMap(address);
+                    addMarkers();
                 }
                 stopProgressBar();
             });
@@ -124,7 +137,22 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         setMapListener();
+        addMarkers();
         showTutorialSnackbar();
+    }
+
+
+    private void addMarkers() {
+        if(user != null && user.getMarkers() != null && !user.getMarkers().isEmpty() && map != null) {
+            for (Marker marker : user.getMarkers()) {
+                MarkerOptions options = new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360)))
+                        .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
+                        .snippet(marker.getDescription())
+                        .title(marker.getDescription());
+                map.addMarker(options);
+            }
+        }
     }
 
 
@@ -141,6 +169,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private void setMapListener() {
         map.setOnMapClickListener(p -> {
             map.clear();
+            addMarkers();
             currentPlace = new LatLng(p.latitude, p.longitude);
             currentMarker = new MarkerOptions().position(currentPlace);
             map.addMarker(currentMarker);
@@ -155,13 +184,65 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             case R.id.explore_map_arrow_button:
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
-                tutorialSnackbar.dismiss();
-                break;
             case R.id.explore_map_add_place_button:
-                break;
+                showAddPlaceDialog();
             case R.id.explore_map_remove_place_button:
-                break;
+            default:
+                dismissTutorialSnackbar();
         }
+    }
+
+
+    private void showAddPlaceDialog() {
+        if (getContext() != null) {
+            if (user != null) {
+                Dialog dialog = new Dialog(getContext());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.dialog_add_place);
+                dialog.findViewById(R.id.dialog_add_place_cancel_button).setOnClickListener(v -> dialog.dismiss());
+                dialog.findViewById(R.id.dialog_add_place_add_button).setOnClickListener(v -> {
+                    String description = Objects.requireNonNull(((TextInputEditText) dialog
+                            .findViewById(R.id.dialog_add_place_input)).getText()).toString();
+                    dialog.dismiss();
+                    addPlace(description);
+                });
+                dialog.show();
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
+            }
+        }
+    }
+
+
+    private void addPlace(String description) {
+        Map<String, Object> changes = new HashMap<>();
+        List<Marker> newMarkersList = user.getMarkers() != null
+                ? new ArrayList<>(user.getMarkers()) : new ArrayList<>();
+        newMarkersList.add(new Marker(description, currentPlace.latitude, currentPlace.longitude));
+        changes.put(Constants.DB_MARKERS, newMarkersList);
+        updateUser(changes);
+    }
+
+
+    private void updateUser(Map<String, Object> changes) {
+        startProgressBar();
+        userViewModel.updateUser(user, changes);
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                this.user = user;
+                showSnackBar(getResources().getString(R.string.messages_changes_saved), Snackbar.LENGTH_SHORT);
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_update), Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
+        });
+    }
+
+
+    private void dismissTutorialSnackbar() {
+        if (tutorialSnackbar.isShown())
+            tutorialSnackbar.dismiss();
     }
 
 
@@ -169,7 +250,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     public boolean onBackPressed() {
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
-        tutorialSnackbar.dismiss();
+        dismissTutorialSnackbar();
         return true;
     }
 
