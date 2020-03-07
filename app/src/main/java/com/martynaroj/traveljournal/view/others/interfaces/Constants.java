@@ -25,6 +25,7 @@ public interface Constants {
     String PREFERENCES = "preferences";
     String PRIVACY = "privacy";
     String DB_FRIENDS = "friends";
+    String DB_MARKERS = "markers";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
