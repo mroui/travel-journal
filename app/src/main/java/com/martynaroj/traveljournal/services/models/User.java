@@ -46,9 +46,9 @@ public class User extends BaseObservable implements Serializable {
     }
 
     private void defineDefaultPrivacy() {
-        privacy.put(Constants.EMAIL, Privacy.PUBLIC.ordinal());
-        privacy.put(Constants.LOCATION, Privacy.PUBLIC.ordinal());
-        privacy.put(Constants.PREFERENCES, Privacy.PUBLIC.ordinal());
+        privacy.put(Constants.DB_EMAIL, Privacy.PUBLIC.ordinal());
+        privacy.put(Constants.DB_LOCATION, Privacy.PUBLIC.ordinal());
+        privacy.put(Constants.DB_PREFERENCES, Privacy.PUBLIC.ordinal());
     }
 
     @Bindable
@@ -178,24 +178,24 @@ public class User extends BaseObservable implements Serializable {
     @SuppressWarnings("ConstantConditions")
     @Bindable
     public int getPrivacyEmail() {
-        if (this.privacy != null && this.privacy.get(Constants.EMAIL) != null)
-            return this.privacy.get(Constants.EMAIL);
+        if (this.privacy != null && this.privacy.get(Constants.DB_EMAIL) != null)
+            return this.privacy.get(Constants.DB_EMAIL);
         else return 2;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Bindable
     private int getPrivacyLocation() {
-        if (this.privacy != null && this.privacy.get(Constants.LOCATION) != null)
-            return this.privacy.get(Constants.LOCATION);
+        if (this.privacy != null && this.privacy.get(Constants.DB_LOCATION) != null)
+            return this.privacy.get(Constants.DB_LOCATION);
         else return 2;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Bindable
     private int getPrivacyPreferences() {
-        if (this.privacy != null && this.privacy.get(Constants.PREFERENCES) != null)
-            return this.privacy.get(Constants.PREFERENCES);
+        if (this.privacy != null && this.privacy.get(Constants.DB_PREFERENCES) != null)
+            return this.privacy.get(Constants.DB_PREFERENCES);
         else return 2;
     }
 

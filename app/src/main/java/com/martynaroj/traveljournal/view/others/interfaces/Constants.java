@@ -16,14 +16,14 @@ public interface Constants {
     String ADDRESSES = "Addresses";
     String NOTIFICATIONS = "Notifications";
 
-    String UID = "uid";
-    String PHOTO = "photo";
-    String BIO = "bio";
-    String LOCATION = "location";
-    String USERNAME = "username";
-    String EMAIL = "email";
-    String PREFERENCES = "preferences";
-    String PRIVACY = "privacy";
+    String DB_UID = "uid";
+    String DB_PHOTO = "photo";
+    String DB_BIO = "bio";
+    String DB_LOCATION = "location";
+    String DB_USERNAME = "username";
+    String DB_EMAIL = "email";
+    String DB_PREFERENCES = "preferences";
+    String DB_PRIVACY = "privacy";
     String DB_FRIENDS = "friends";
     String DB_MARKERS = "markers";
 

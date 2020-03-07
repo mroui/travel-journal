@@ -211,13 +211,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void initUserData() {
-        int index = Objects.requireNonNull(user.getPrivacy().get(Constants.EMAIL));
+        int index = Objects.requireNonNull(user.getPrivacy().get(Constants.DB_EMAIL));
         binding.profileSettingsPrivacyEmailSelect.setSelectedIndex(index);
 
-        index = Objects.requireNonNull(user.getPrivacy().get(Constants.LOCATION));
+        index = Objects.requireNonNull(user.getPrivacy().get(Constants.DB_LOCATION));
         binding.profileSettingsPrivacyLocationSelect.setSelectedIndex(index);
 
-        index = Objects.requireNonNull(user.getPrivacy().get(Constants.PREFERENCES));
+        index = Objects.requireNonNull(user.getPrivacy().get(Constants.DB_PREFERENCES));
         binding.profileSettingsPrivacyPreferencesSelect.setSelectedIndex(index);
     }
 
@@ -434,19 +434,19 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     @SuppressWarnings("ConstantConditions")
     private boolean isPrivacyEmailChanged() {
-        return user.getPrivacy().get(Constants.EMAIL) != binding.profileSettingsPrivacyEmailSelect.getSelectedIndex();
+        return user.getPrivacy().get(Constants.DB_EMAIL) != binding.profileSettingsPrivacyEmailSelect.getSelectedIndex();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     private boolean isPrivacyLocationChanged() {
-        return user.getPrivacy().get(Constants.LOCATION) != binding.profileSettingsPrivacyLocationSelect.getSelectedIndex();
+        return user.getPrivacy().get(Constants.DB_LOCATION) != binding.profileSettingsPrivacyLocationSelect.getSelectedIndex();
     }
 
 
     @SuppressWarnings("ConstantConditions")
     private boolean isPrivacyPreferencesChanged() {
-        return user.getPrivacy().get(Constants.PREFERENCES) != binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex();
+        return user.getPrivacy().get(Constants.DB_PREFERENCES) != binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex();
     }
 
 
@@ -484,7 +484,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 authViewModel.getChangesStatus().observe(this, status -> {
                     if (!status.contains(Constants.ERROR)) {
                         Map<String, Object> changes = new HashMap<>();
-                        changes.put(Constants.USERNAME, newUsername);
+                        changes.put(Constants.DB_USERNAME, newUsername);
                         updateUser(changes);
                     } else
                         showSnackBar(status, Snackbar.LENGTH_LONG);
@@ -505,7 +505,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 authViewModel.getChangesStatus().observe(this, status -> {
                     if (!status.contains(Constants.ERROR)) {
                         Map<String, Object> changes = new HashMap<>();
-                        changes.put(Constants.EMAIL, newEmail);
+                        changes.put(Constants.DB_EMAIL, newEmail);
                         updateUser(changes);
                     } else
                         showSnackBar(status, Snackbar.LENGTH_LONG);
@@ -564,11 +564,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         Map<String, Object> changes = new HashMap<>();
 
         if (isBioChanged()) {
-            changes.put(Constants.BIO, Objects.requireNonNull(binding.profileSettingsPersonalBioInput.getText()).toString());
+            changes.put(Constants.DB_BIO, Objects.requireNonNull(binding.profileSettingsPersonalBioInput.getText()).toString());
         }
 
         if (isPreferenceChanged()) {
-            changes.put(Constants.PREFERENCES, getUniquePreferences());
+            changes.put(Constants.DB_PREFERENCES, getUniquePreferences());
         }
 
         if (isLocationChanged()) {
@@ -589,7 +589,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
             if (!status.contains(Constants.ERROR)) {
                 Map<String, Object> changes = new HashMap<>();
-                changes.put(Constants.LOCATION, status);
+                changes.put(Constants.DB_LOCATION, status);
                 updateUser(changes);
                 if (newLocation == null) newLocation = new Address(status);
                 currentLocation = newLocation;
@@ -634,7 +634,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                     showSnackBar(status, Snackbar.LENGTH_LONG);
                     stopProgressBar();
                 } else {
-                    changes.put(Constants.PHOTO, status);
+                    changes.put(Constants.DB_PHOTO, status);
                     updateUser(changes);
                 }
             });
@@ -645,13 +645,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void savePrivacyChanges() {
         Map<String, Object> changes = new HashMap<>();
         if (isPrivacyEmailChanged()) {
-            changes.put(Constants.PRIVACY + "." + Constants.EMAIL, binding.profileSettingsPrivacyEmailSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_EMAIL, binding.profileSettingsPrivacyEmailSelect.getSelectedIndex());
         }
         if (isPrivacyLocationChanged()) {
-            changes.put(Constants.PRIVACY + "." + Constants.LOCATION, binding.profileSettingsPrivacyLocationSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_LOCATION, binding.profileSettingsPrivacyLocationSelect.getSelectedIndex());
         }
         if (isPrivacyPreferencesChanged()) {
-            changes.put(Constants.PRIVACY + "." + Constants.PREFERENCES, binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_PREFERENCES, binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex());
         }
 
         if (!changes.isEmpty()) {

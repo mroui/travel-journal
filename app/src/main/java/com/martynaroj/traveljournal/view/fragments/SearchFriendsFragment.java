@@ -127,7 +127,7 @@ public class SearchFriendsFragment extends BaseFragment {
 
 
     private void searchUser(String username) {
-        Query query = usersRef.orderBy(Constants.USERNAME).startAt(username).endAt(username + "\uf8ff");
+        Query query = usersRef.orderBy(Constants.DB_USERNAME).startAt(username).endAt(username + "\uf8ff");
         FirestorePagingOptions<User> options = new FirestorePagingOptions.Builder<User>()
                 .setLifecycleOwner(getViewLifecycleOwner())
                 .setQuery(query, usersPagingConfig, User.class)
