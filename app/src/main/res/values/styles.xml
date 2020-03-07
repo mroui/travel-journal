@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name = "colorPrimaryDark">@color/black</item>
@@ -20,6 +20,10 @@
 
     <style name="SplashScreen" parent="NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+    <style name="ExploreMapButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/button_explore_map_text_color</item>
     </style>
 
 </resources>

@@ -144,6 +144,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             currentPlace = new LatLng(p.latitude, p.longitude);
             currentMarker = new MarkerOptions().position(currentPlace);
             map.addMarker(currentMarker);
+            binding.exploreMapAddPlaceButton.setEnabled(true);
         });
     }
 
@@ -185,8 +186,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
 
 
     private void disableButtons() {
-        binding.exploreMapRemovePlaceButton.setEnabled(false);
         binding.exploreMapAddPlaceButton.setEnabled(false);
+        binding.exploreMapRemovePlaceButton.setEnabled(false);
     }
 
 

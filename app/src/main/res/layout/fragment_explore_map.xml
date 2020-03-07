@@ -68,7 +68,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/ExploreMapButton"
+                    app:rippleColor="@color/yellow_bg_lighter"
                     android:text="@string/explore_map_add"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>
@@ -79,8 +80,9 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
+                    style="@style/ExploreMapButton"
+                    app:rippleColor="@color/yellow_bg_lighter"
                     android:text="@string/explore_map_remove"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>
 
