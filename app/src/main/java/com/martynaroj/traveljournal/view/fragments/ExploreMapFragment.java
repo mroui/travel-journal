@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 
 public class ExploreMapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback, IOnBackPressed {
 
@@ -45,7 +44,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private AddressViewModel addressViewModel;
     private User user;
     private LatLng currentPlace;
-    private MarkerOptions currentMarker;
+    private MarkerOptions currentMarkerOptions;
+    private com.google.android.gms.maps.model.Marker currentMarker;
     private GoogleMap map;
     private Snackbar tutorialSnackbar;
 
@@ -70,18 +70,14 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
         }
-    }
-
-
-    private void setListeners() {
-        binding.exploreMapArrowButton.setOnClickListener(this);
-        binding.exploreMapAddPlaceButton.setOnClickListener(this);
-        binding.exploreMapRemovePlaceButton.setOnClickListener(this);
     }
 
 
@@ -94,6 +90,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
                 if (user != null) {
                     this.user = user;
                     initLocation();
+                    addMarkersOnMap();
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
                     stopProgressBar();
@@ -116,12 +113,72 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
                 if (address != null) {
                     setAddressOnMap(address);
-                    addMarkers();
                 }
                 stopProgressBar();
             });
         } else
             stopProgressBar();
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.exploreMapArrowButton.setOnClickListener(this);
+        binding.exploreMapAddPlaceButton.setOnClickListener(this);
+        binding.exploreMapRemovePlaceButton.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.explore_map_arrow_button:
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+            case R.id.explore_map_add_place_button:
+                showAddMarkerDialog();
+            case R.id.explore_map_remove_place_button:
+            default:
+                dismissTutorialSnackbar();
+        }
+    }
+
+
+    private void setMapListener() {
+        map.setOnMapClickListener(p -> {
+            map.clear();
+            addMarkersOnMap();
+            currentPlace = new LatLng(p.latitude, p.longitude);
+            currentMarkerOptions = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                    .position(currentPlace);
+            currentMarker = map.addMarker(currentMarkerOptions);
+            binding.exploreMapAddPlaceButton.setEnabled(true);
+            binding.exploreMapRemovePlaceButton.setEnabled(false);
+        });
+        map.setOnMarkerClickListener(marker -> {
+            if (!marker.equals(currentMarker)) {
+                if (currentMarker != null)
+                    currentMarker.remove();
+                marker.showInfoWindow();
+                binding.exploreMapAddPlaceButton.setEnabled(false);
+                binding.exploreMapRemovePlaceButton.setEnabled(true);
+                return true;
+            } else return false;
+        });
+    }
+
+
+    //MAP-------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        setMapListener();
+        showTutorialSnackbar();
     }
 
 
@@ -133,22 +190,11 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        setMapListener();
-        addMarkers();
-        showTutorialSnackbar();
-    }
-
-
-    private void addMarkers() {
+    private void addMarkersOnMap() {
         if(user != null && user.getMarkers() != null && !user.getMarkers().isEmpty() && map != null) {
             for (Marker marker : user.getMarkers()) {
                 MarkerOptions options = new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.defaultMarker(new Random().nextInt(360)))
                         .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
-                        .snippet(marker.getDescription())
                         .title(marker.getDescription());
                 map.addMarker(options);
             }
@@ -156,44 +202,17 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    private void showTutorialSnackbar() {
-        tutorialSnackbar = Snackbar.make(binding.getRoot(),
-                getResources().getString(R.string.messages_explore_map_tutorial),
-                Snackbar.LENGTH_INDEFINITE);
-        tutorialSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
-                view -> tutorialSnackbar.dismiss());
-        tutorialSnackbar.show();
+    private void refreshMap() {
+        currentMarker = null;
+        map.clear();
+        addMarkersOnMap();
     }
 
 
-    private void setMapListener() {
-        map.setOnMapClickListener(p -> {
-            map.clear();
-            addMarkers();
-            currentPlace = new LatLng(p.latitude, p.longitude);
-            currentMarker = new MarkerOptions().position(currentPlace);
-            map.addMarker(currentMarker);
-            binding.exploreMapAddPlaceButton.setEnabled(true);
-        });
-    }
+    //DIALOGS---------------------------------------------------------------------------------------
 
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.explore_map_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-            case R.id.explore_map_add_place_button:
-                showAddPlaceDialog();
-            case R.id.explore_map_remove_place_button:
-            default:
-                dismissTutorialSnackbar();
-        }
-    }
-
-
-    private void showAddPlaceDialog() {
+    private void showAddMarkerDialog() {
         if (getContext() != null) {
             if (user != null) {
                 Dialog dialog = new Dialog(getContext());
@@ -205,7 +224,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
                     String description = Objects.requireNonNull(((TextInputEditText) dialog
                             .findViewById(R.id.dialog_add_place_input)).getText()).toString();
                     dialog.dismiss();
-                    addPlace(description);
+                    addMarker(description);
                 });
                 dialog.show();
             } else {
@@ -215,23 +234,28 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    private void addPlace(String description) {
-        Map<String, Object> changes = new HashMap<>();
+    //DATABASE--------------------------------------------------------------------------------------
+
+
+    private void addMarker(String description) {
         List<Marker> newMarkersList = user.getMarkers() != null
                 ? new ArrayList<>(user.getMarkers()) : new ArrayList<>();
         newMarkersList.add(new Marker(description, currentPlace.latitude, currentPlace.longitude));
-        changes.put(Constants.DB_MARKERS, newMarkersList);
-        updateUser(changes);
+        updateUser(new HashMap<String, Object>(){{put(Constants.DB_MARKERS, newMarkersList);}}, true);
     }
 
 
-    private void updateUser(Map<String, Object> changes) {
+    private void updateUser(Map<String, Object> changes, boolean adding) {
         startProgressBar();
         userViewModel.updateUser(user, changes);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;
-                showSnackBar(getResources().getString(R.string.messages_changes_saved), Snackbar.LENGTH_SHORT);
+                String message = adding
+                        ? getResources().getString(R.string.messages_add_marker_success)
+                        : getResources().getString(R.string.messages_remove_marker_success);
+                showSnackBar(message, Snackbar.LENGTH_SHORT);
+                refreshMap();
             } else {
                 showSnackBar(getResources().getString(R.string.messages_error_failed_update), Snackbar.LENGTH_LONG);
             }
@@ -240,9 +264,12 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    private void dismissTutorialSnackbar() {
-        if (tutorialSnackbar.isShown())
-            tutorialSnackbar.dismiss();
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void disableButtons() {
+        binding.exploreMapAddPlaceButton.setEnabled(false);
+        binding.exploreMapRemovePlaceButton.setEnabled(false);
     }
 
 
@@ -266,9 +293,19 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
-    private void disableButtons() {
-        binding.exploreMapAddPlaceButton.setEnabled(false);
-        binding.exploreMapRemovePlaceButton.setEnabled(false);
+    private void showTutorialSnackbar() {
+        tutorialSnackbar = Snackbar.make(binding.getRoot(),
+                getResources().getString(R.string.messages_explore_map_tutorial),
+                Snackbar.LENGTH_INDEFINITE);
+        tutorialSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
+                view -> tutorialSnackbar.dismiss());
+        tutorialSnackbar.show();
+    }
+
+
+    private void dismissTutorialSnackbar() {
+        if (tutorialSnackbar.isShown())
+            tutorialSnackbar.dismiss();
     }
 
 
