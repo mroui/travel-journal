@@ -30,6 +30,7 @@ import com.martynaroj.traveljournal.databinding.FragmentExploreMapBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Marker;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -187,6 +188,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setInfoWindowAdapter(new MarkerInfoAdapter(getContext()));
         setMapListener();
         showTutorialSnackbar();
     }
