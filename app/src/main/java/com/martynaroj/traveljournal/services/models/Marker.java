@@ -59,9 +59,7 @@ public class Marker extends BaseObservable implements Serializable {
                 return false;
 
             Marker m = (Marker) obj;
-            return (description != null && (description.equals(m.description)) || (description == null && m.description == null))
-                    && (latitude == m.latitude)
-                    && (longitude == m.longitude);
+            return (latitude == m.latitude) && (longitude == m.longitude);
         } catch (Exception ex) {
             return false;
         }
