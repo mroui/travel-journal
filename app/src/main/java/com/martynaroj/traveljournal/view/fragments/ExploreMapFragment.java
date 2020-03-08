@@ -172,10 +172,17 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             if (!marker.equals(currentMarker)) {
                 if (currentMarker != null)
                     currentMarker.remove();
-                clickedMarker = marker;
-                marker.showInfoWindow();
-                binding.exploreMapAddPlaceButton.setEnabled(false);
-                binding.exploreMapRemovePlaceButton.setEnabled(true);
+                if(clickedMarker != null && clickedMarker.equals(marker)) {
+                    marker.hideInfoWindow();
+                    clickedMarker = null;
+                    binding.exploreMapAddPlaceButton.setEnabled(false);
+                    binding.exploreMapRemovePlaceButton.setEnabled(false);
+                } else {
+                    marker.showInfoWindow();
+                    clickedMarker = marker;
+                    binding.exploreMapAddPlaceButton.setEnabled(false);
+                    binding.exploreMapRemovePlaceButton.setEnabled(true);
+                }
                 return true;
             } else return false;
         });
