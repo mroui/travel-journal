@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -49,5 +50,20 @@ public class Marker extends BaseObservable implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
         notifyPropertyChanged(BR.longitude);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+
+            Marker m = (Marker) obj;
+            return (description != null && (description.equals(m.description)) || (description == null && m.description == null))
+                    && (latitude == m.latitude)
+                    && (longitude == m.longitude);
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
