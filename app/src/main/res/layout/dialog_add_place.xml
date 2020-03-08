@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/raleway_bold"
-        android:text="@string/add_place_title"
+        android:text="@string/dialog_add_marker_title"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"/>
 
@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_add_place_title"
         android:fontFamily="@font/raleway_regular"
-        android:text="@string/add_place_desc"
+        android:text="@string/dialog_add_marker_desc"
         android:textAlignment="textStart"
         android:textSize="@dimen/text_regular"
         android:textColor="@color/gray"/>
