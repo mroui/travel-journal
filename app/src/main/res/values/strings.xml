@@ -131,7 +131,7 @@
     <string name="explore_map_title">Explore map</string>
     <string name="explore_map_remove">remove</string>
     <string name="explore_map_add">add</string>
-    <string name="add_place_title">Add place</string>
+    <string name="add_place_title">Add marker</string>
     <string name="add_place_desc">Make a short note about place</string>
 
     <string name="dialog_unsaved_changes_title">Unsaved changes</string>
