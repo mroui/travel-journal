@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,6 +24,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -38,12 +47,14 @@ import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class ExploreMapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback, IOnBackPressed {
+public class ExploreMapFragment extends BaseFragment implements View.OnClickListener,
+        OnMapReadyCallback, IOnBackPressed {
 
     private FragmentExploreMapBinding binding;
     private UserViewModel userViewModel;
@@ -55,6 +66,9 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private com.google.android.gms.maps.model.Marker clickedMarker;
     private GoogleMap map;
     private Snackbar tutorialSnackbar;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private FindCurrentPlaceRequest request;
+    private PlacesClient placesClient;
 
 
     public static ExploreMapFragment newInstance() {
@@ -68,9 +82,11 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
         View view = binding.getRoot();
 
         initViewModels();
-        setListeners();
         initLoggedUser();
         initGoogleMap();
+        initGooglePlaces();
+
+        setListeners();
         disableButtons();
 
         return view;
@@ -108,7 +124,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
 
 
     private void initGoogleMap() {
-        ((SupportMapFragment) Objects.requireNonNull(getChildFragmentManager().findFragmentById(R.id.explore_map_google_map)))
+        ((SupportMapFragment) Objects.requireNonNull(getChildFragmentManager()
+                .findFragmentById(R.id.explore_map_google_map)))
                 .getMapAsync(this);
     }
 
@@ -128,6 +145,28 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
+    private void initGooglePlaces() {
+        if (getContext() != null) {
+            Places.initialize(getContext(), getString(R.string.google_api_key));
+            placesClient  = Places.createClient(getContext());
+            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.explore_map_search_view);
+            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTextSize(14.0f);
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
+                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
+                        .setVisibility(View.GONE);
+                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,
+                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
+                request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME,
+                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
+            }
+        }
+    }
+
+
     //LISTENERS-------------------------------------------------------------------------------------
 
 
@@ -135,6 +174,26 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
         binding.exploreMapArrowButton.setOnClickListener(this);
         binding.exploreMapAddPlaceButton.setOnClickListener(this);
         binding.exploreMapRemovePlaceButton.setOnClickListener(this);
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    LatLng latLng = place.getLatLng();
+                    if (latLng != null) {
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+                        if (!user.getMarkers().contains(new Marker("", latLng.latitude, latLng.longitude)))
+                            addTemporaryMarkerOnMap(latLng);
+                    }
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView()
+                    .findViewById(R.id.places_autocomplete_clear_button)
+                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+        }
     }
 
 
@@ -157,19 +216,13 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
 
 
     private void setMapListener() {
-        map.setOnMapClickListener(p -> {
-            map.clear();
-            addMarkersOnMap();
-            currentPlace = new LatLng(p.latitude, p.longitude);
-            currentMarkerOptions = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                    .position(currentPlace);
-            currentMarker = map.addMarker(currentMarkerOptions);
-            binding.exploreMapAddPlaceButton.setEnabled(true);
-            binding.exploreMapRemovePlaceButton.setEnabled(false);
+        map.setOnMapClickListener(latLng -> {
+            addTemporaryMarkerOnMap(latLng);
+            autocompleteFragment.setText("");
         });
         map.setOnMarkerClickListener(marker -> {
             if (!marker.equals(currentMarker)) {
+                autocompleteFragment.setText("");
                 if (currentMarker != null)
                     currentMarker.remove();
                 if(clickedMarker != null && clickedMarker.equals(marker)) {
@@ -221,6 +274,18 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
+    private void addTemporaryMarkerOnMap(LatLng place) {
+        refreshMap();
+        currentPlace = new LatLng(place.latitude, place.longitude);
+        currentMarkerOptions = new MarkerOptions()
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                .position(currentPlace);
+        currentMarker = map.addMarker(currentMarkerOptions);
+        binding.exploreMapAddPlaceButton.setEnabled(true);
+        binding.exploreMapRemovePlaceButton.setEnabled(false);
+    }
+
+
     private void refreshMap() {
         currentMarker = null;
         map.clear();
@@ -268,7 +333,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             title.setText(getResources().getString(R.string.dialog_remove_marker_title));
             message.setText(getResources().getString(R.string.dialog_remove_marker_desc));
             buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
-            buttonPositive.setRippleColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
+            buttonPositive.setRippleColor(ColorStateList
+                    .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
             TextViewCompat.setTextAppearance(buttonPositive, R.style.ExploreMapButton);
             buttonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -276,7 +342,8 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
                     removeMarker();
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
-            buttonNegative.setRippleColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
+            buttonNegative.setRippleColor(ColorStateList
+                    .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
             TextViewCompat.setTextAppearance(buttonNegative, R.style.ExploreMapButton);
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
