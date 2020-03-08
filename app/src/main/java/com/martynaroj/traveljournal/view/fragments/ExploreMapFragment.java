@@ -1,13 +1,17 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +51,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private LatLng currentPlace;
     private MarkerOptions currentMarkerOptions;
     private com.google.android.gms.maps.model.Marker currentMarker;
+    private com.google.android.gms.maps.model.Marker clickedMarker;
     private GoogleMap map;
     private Snackbar tutorialSnackbar;
 
@@ -133,15 +139,18 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+        dismissTutorialSnackbar();
         switch (view.getId()) {
             case R.id.explore_map_arrow_button:
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
+                break;
             case R.id.explore_map_add_place_button:
                 showAddMarkerDialog();
+                break;
             case R.id.explore_map_remove_place_button:
-            default:
-                dismissTutorialSnackbar();
+                showRemoveMarkerDialog();
+                break;
         }
     }
 
@@ -162,6 +171,7 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
             if (!marker.equals(currentMarker)) {
                 if (currentMarker != null)
                     currentMarker.remove();
+                clickedMarker = marker;
                 marker.showInfoWindow();
                 binding.exploreMapAddPlaceButton.setEnabled(false);
                 binding.exploreMapRemovePlaceButton.setEnabled(true);
@@ -234,6 +244,38 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     }
 
 
+    private void showRemoveMarkerDialog() {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_remove_marker_title));
+            message.setText(getResources().getString(R.string.dialog_remove_marker_desc));
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
+            buttonPositive.setRippleColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
+            TextViewCompat.setTextAppearance(buttonPositive, R.style.ExploreMapButton);
+            buttonPositive.setOnClickListener(v -> {
+                dialog.dismiss();
+                if (clickedMarker != null)
+                    removeMarker();
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
+            buttonNegative.setRippleColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
+            TextViewCompat.setTextAppearance(buttonNegative, R.style.ExploreMapButton);
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+
     //DATABASE--------------------------------------------------------------------------------------
 
 
@@ -242,6 +284,18 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
                 ? new ArrayList<>(user.getMarkers()) : new ArrayList<>();
         newMarkersList.add(new Marker(description, currentPlace.latitude, currentPlace.longitude));
         updateUser(new HashMap<String, Object>(){{put(Constants.DB_MARKERS, newMarkersList);}}, true);
+    }
+
+
+    private void removeMarker() {
+        List<Marker> filtered = new ArrayList<>();
+        for (Marker obj : user.getMarkers())
+            if (!obj.equals(new Marker(
+                    clickedMarker.getTitle(),
+                    clickedMarker.getPosition().latitude,
+                    clickedMarker.getPosition().longitude)))
+                filtered.add(obj);
+        updateUser(new HashMap<String, Object>(){{put(Constants.DB_MARKERS, filtered);}}, false);
     }
 
 
