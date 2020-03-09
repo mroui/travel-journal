@@ -147,6 +147,7 @@
     <string name="dialog_add_marker_desc">Make a short note about place</string>
     <string name="dialog_remove_marker_title">Remove marker</string>
     <string name="dialog_remove_marker_desc">Are you sure you want to remove this marker?</string>
+    <string name="dialog_choose_marker_color">Choose a marker color</string>
 
     <string name="dialog_button_now">NOW</string>
     <string name="dialog_button_later">LATER</string>

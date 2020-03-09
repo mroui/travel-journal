@@ -30,4 +30,9 @@ public interface Constants {
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
     String ONLY_ME = "Only Me";
+
+    String [] MARKER_COLORS = {
+                "#007fff", "#0000ff", "#00ffff", "#00ff00", "#ff00ff",
+            "#ffa500", "#ff0000", "#ff007f", "#ee82ee", "#ffff00"
+    };
 }
