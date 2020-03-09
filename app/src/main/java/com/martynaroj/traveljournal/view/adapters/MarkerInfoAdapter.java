@@ -28,7 +28,7 @@ public class MarkerInfoAdapter implements GoogleMap.InfoWindowAdapter {
         binding.markerDescription.setText(marker.getTitle());
 
         View view;
-        if (!marker.getTitle().isEmpty())
+        if (marker.getTitle() != null && !marker.getTitle().isEmpty())
             view = binding.getRoot();
         else view = null;
 
