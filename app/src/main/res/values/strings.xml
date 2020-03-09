@@ -15,9 +15,12 @@
     <string name="home_explore_map">EXPLORE MAP\nAND\nPLAN TO VISIT</string>
     <string name="home_search_friends">SEARCH\nFRIENDS</string>
     <string name="home_search_travels">SEARCH\nTRAVELS</string>
-    <string name="search_friends_no_results">Oops, no results found.</string>
 
     <string name="search_friends_title">Search Friends</string>
+    <string name="search_friends_no_results">Oops, no results found.</string>
+
+    <string name="board_title">Welcome on board!</string>
+    <string name="board_desc">Start a new Journey</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
@@ -157,5 +160,6 @@
     <string name="dialog_button_remove">REMOVE</string>
     <string name="dialog_button_cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="dialog_button_add">ADD</string>
+    <string name="board_airplane">AIRPLANE</string>
 
 </resources>

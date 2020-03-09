@@ -35,4 +35,10 @@ public interface Constants {
                 "#007fff", "#0000ff", "#00ffff", "#00ff00", "#ff00ff",
             "#ffa500", "#ff0000", "#ff007f", "#ee82ee", "#ffff00"
     };
+
+    String MAP = "MAP";
+    String WEATHER = "WEATHER";
+    String CURRENCY = "CURRENCY";
+    String TRANSLATOR = "TRANSLATE";
+
 }
