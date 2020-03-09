@@ -10,14 +10,21 @@ import java.io.Serializable;
 public class Marker extends BaseObservable implements Serializable {
 
     private String description;
+    private float color;
     private double latitude;
     private double longitude;
 
     public Marker() {
     }
 
-    public Marker(String description, double latitude, double longitude) {
+    public Marker(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Marker(String description, float color, double latitude, double longitude) {
         this.description = description;
+        this.color = color;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -30,6 +37,16 @@ public class Marker extends BaseObservable implements Serializable {
     public void setDescription(String description) {
         this.description = description;
         notifyPropertyChanged(BR.description);
+    }
+
+    @Bindable
+    public float getColor() {
+        return color;
+    }
+
+    public void setColor(float color) {
+        this.color = color;
+        notifyPropertyChanged(BR.color);
     }
 
     @Bindable
