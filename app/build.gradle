@@ -62,6 +62,7 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation 'com.asksira.android:loopingviewpager:1.2.0'
     implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
+    implementation 'com.nightonke:boommenu:2.1.1'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
