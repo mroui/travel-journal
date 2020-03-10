@@ -23,6 +23,8 @@
     <string name="board_desc">Start a new Journey</string>
     <string name="board_airplane">AIRPLANE</string>
 
+    <string name="map_title">Map</string>
+
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
     <string name="login_password">PASSWORD</string>
