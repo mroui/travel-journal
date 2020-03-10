@@ -131,7 +131,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void initLocation() {
-        if(user.getLocation() != null && !user.getLocation().isEmpty()) {
+        if (user.getLocation() != null && !user.getLocation().isEmpty()) {
             startProgressBar();
             addressViewModel.getAddress(user.getLocation());
             addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
@@ -222,7 +222,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                 autocompleteFragment.setText("");
                 if (currentMarker != null)
                     currentMarker.remove();
-                if(clickedMarker != null && clickedMarker.equals(marker)) {
+                if (clickedMarker != null && clickedMarker.equals(marker)) {
                     marker.hideInfoWindow();
                     clickedMarker = null;
                     binding.exploreMapAddPlaceButton.setEnabled(false);
@@ -233,8 +233,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     binding.exploreMapAddPlaceButton.setEnabled(false);
                     binding.exploreMapRemovePlaceButton.setEnabled(true);
                 }
-                return true;
-            } else return false;
+            }
+            return false;
         });
     }
 
@@ -245,6 +245,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.getUiSettings().setZoomControlsEnabled(true);
         map.setInfoWindowAdapter(new MarkerInfoAdapter(getContext()));
         setMapListener();
     }
@@ -259,7 +260,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void addMarkersOnMap() {
-        if(user != null && user.getMarkers() != null && !user.getMarkers().isEmpty() && map != null) {
+        if (user != null && user.getMarkers() != null && !user.getMarkers().isEmpty() && map != null) {
             for (Marker marker : user.getMarkers()) {
                 MarkerOptions options = new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(marker.getColor()))
@@ -362,8 +363,10 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                         public void setOnFastChooseColorListener(int position, int color) {
                             showAddMarkerDialog(color);
                         }
+
                         @Override
-                        public void onCancel() {}
+                        public void onCancel() {
+                        }
                     })
                     .show();
         }
@@ -377,7 +380,9 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         List<Marker> newMarkersList = user.getMarkers() != null
                 ? new ArrayList<>(user.getMarkers()) : new ArrayList<>();
         newMarkersList.add(new Marker(description, color, currentPlace.latitude, currentPlace.longitude));
-        updateUser(new HashMap<String, Object>(){{put(Constants.DB_MARKERS, newMarkersList);}}, true);
+        updateUser(new HashMap<String, Object>() {{
+            put(Constants.DB_MARKERS, newMarkersList);
+        }}, true);
     }
 
 
@@ -388,7 +393,9 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     clickedMarker.getPosition().latitude,
                     clickedMarker.getPosition().longitude)))
                 filtered.add(obj);
-        updateUser(new HashMap<String, Object>(){{put(Constants.DB_MARKERS, filtered);}}, false);
+        updateUser(new HashMap<String, Object>() {{
+            put(Constants.DB_MARKERS, filtered);
+        }}, false);
     }
 
 
