@@ -40,5 +40,6 @@ public interface Constants {
     String WEATHER = "WEATHER";
     String CURRENCY = "CURRENCY";
     String TRANSLATOR = "TRANSLATE";
+    String ALARM = "ALARM";
 
 }
