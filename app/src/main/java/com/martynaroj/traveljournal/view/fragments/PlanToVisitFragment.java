@@ -87,6 +87,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         disableButtons();
 
+        showTutorialSnackbar();
+
         return view;
     }
 
@@ -245,7 +247,6 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         map = googleMap;
         map.setInfoWindowAdapter(new MarkerInfoAdapter(getContext()));
         setMapListener();
-        showTutorialSnackbar();
     }
 
 
