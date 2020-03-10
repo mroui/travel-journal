@@ -71,7 +71,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
                 break;
             case R.id.home_explore_map_button:
-                changeFragment(ExploreMapFragment.newInstance());
+                changeFragment(PlanToVisitFragment.newInstance());
                 break;
         }
     }

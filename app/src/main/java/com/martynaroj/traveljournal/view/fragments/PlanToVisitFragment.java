@@ -34,7 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.databinding.FragmentExploreMapBinding;
+import com.martynaroj.traveljournal.databinding.FragmentPlanToVisitBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Marker;
 import com.martynaroj.traveljournal.services.models.User;
@@ -54,10 +54,10 @@ import java.util.Objects;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
-public class ExploreMapFragment extends BaseFragment implements View.OnClickListener,
+public class PlanToVisitFragment extends BaseFragment implements View.OnClickListener,
         OnMapReadyCallback, IOnBackPressed {
 
-    private FragmentExploreMapBinding binding;
+    private FragmentPlanToVisitBinding binding;
     private UserViewModel userViewModel;
     private AddressViewModel addressViewModel;
     private User user;
@@ -69,14 +69,14 @@ public class ExploreMapFragment extends BaseFragment implements View.OnClickList
     private AutocompleteSupportFragment autocompleteFragment;
 
 
-    public static ExploreMapFragment newInstance() {
-        return new ExploreMapFragment();
+    public static PlanToVisitFragment newInstance() {
+        return new PlanToVisitFragment();
     }
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentExploreMapBinding.inflate(inflater, container, false);
+        binding = FragmentPlanToVisitBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
         initViewModels();
