@@ -65,6 +65,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
                     this.user = user;
+                    binding.setUser(user);
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
                 }
@@ -88,10 +89,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null && user.isUserProfile(this.user)) {
-                this.user = user;
-                //binding.setUser(user);
-            }
+            this.user = user;
+            binding.setUser(user);
         });
     }
 

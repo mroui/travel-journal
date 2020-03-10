@@ -1,105 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_board"
-    tools:context=".view.fragments.BoardFragment"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:fillViewport="true"
-        tools:ignore="UselessParent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_regular"
-            android:paddingEnd="@dimen/padding_regular">
-
-            <TextView
-                android:id="@+id/board_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/board_new_journey_container"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:fontFamily="@font/robotoslab_medium"
-                android:text="@string/board_title"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_bigger"/>
-
-            <LinearLayout
-                android:id="@+id/board_new_journey_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/board_new_journey_image"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_small"
-                    android:contentDescription="@string/board_airplane"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/airplane"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/board_new_journey_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
-                    android:text="@string/board_desc"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/raleway_bold"
-                    app:backgroundTint="@color/yellow_active" />
-
-            </LinearLayout>
-
-            <com.nightonke.boommenu.BoomMenuButton
-                android:id="@+id/board_floating_menu_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="@dimen/margin_regular"
-                app:bmb_normalColor="@color/light_gray"
-                app:bmb_buttonEnum="textInsideCircle"
-                app:bmb_piecePlaceEnum="piecePlace_dot_4_2"
-                app:bmb_buttonPlaceEnum="buttonPlace_sc_4_2"
-                app:bmb_inFragment="true"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="user"
+            type="com.martynaroj.traveljournal.services.models.User"/>
+    </data>
 
     <FrameLayout
-        android:id="@+id/board_progressbar_layout"
-        android:layout_width="match_parent"
+        android:id="@+id/fragment_board"
+        tools:context=".view.fragments.BoardFragment"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:visibility="invisible">
-        <com.victor.loading.rotate.RotateLoading
-            android:id="@+id/board_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
-            app:loading_color="@color/white"
-            android:layout_gravity="center"/>
+        android:layout_width="match_parent"
+        android:background="@color/white">
+
+        <ScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            tools:ignore="UselessParent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding_regular"
+                android:paddingEnd="@dimen/padding_regular">
+
+                <TextView
+                    android:id="@+id/board_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/board_content_container"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:fontFamily="@font/robotoslab_medium"
+                    android:text="@string/board_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_bigger"/>
+
+                <LinearLayout
+                    android:id="@+id/board_content_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/board_new_journey_image"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:contentDescription="@string/board_airplane"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/airplane"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/board_new_journey_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding_small"
+                            android:text="@string/board_desc"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/raleway_bold"
+                            app:backgroundTint="@color/yellow_active" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.nightonke.boommenu.BoomMenuButton
+                    android:id="@+id/board_floating_menu_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/margin_regular"
+                    app:bmb_normalColor="@color/light_gray"
+                    app:bmb_buttonEnum="textInsideCircle"
+                    app:bmb_piecePlaceEnum="piecePlace_dot_5_4"
+                    app:bmb_buttonPlaceEnum="buttonPlace_sc_5_4"
+                    app:bmb_inFragment="true"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/board_progressbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:visibility="invisible">
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/board_progressbar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:loading_width="4dp"
+                app:loading_color="@color/white"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
     </FrameLayout>
 
-</FrameLayout>
+</layout>

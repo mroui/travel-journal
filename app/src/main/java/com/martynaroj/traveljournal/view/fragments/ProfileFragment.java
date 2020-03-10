@@ -120,6 +120,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     binding.setLoggedUser(user);
                     this.loggedUser = user;
+                    userViewModel.setUser(user);
                     checkProfile();
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
@@ -541,6 +542,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void signOut() {
         startProgressBar();
+        userViewModel.setUser(null);
         FirebaseAuth.getInstance().signOut();
         showSnackBar(getResources().getString(R.string.messages_signing_out_success), Snackbar.LENGTH_SHORT);
         stopProgressBar();
