@@ -59,6 +59,43 @@
                 app:uiZoomControls="true"
                 tools:ignore="FragmentTagUsage"/>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/map_search_view_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/map_google_map"
+                style="@style/TextInput"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                android:layout_marginTop="@dimen/margin_bigger"
+                app:hintEnabled="false"
+                app:errorEnabled="false"
+                app:errorIconDrawable="@null">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/map_search_view_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_regular"
+                    android:textSize="@dimen/text_small"
+                    android:textCursorDrawable="@null"
+                    android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <fragment
+                android:id="@+id/map_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="@+id/map_search_view_layout"
+                app:layout_constraintEnd_toEndOf="@+id/map_search_view_layout"
+                app:layout_constraintTop_toTopOf="@+id/map_search_view_layout"
+                app:layout_constraintBottom_toBottomOf="@+id/map_search_view_layout"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:layout_marginEnd="@dimen/margin_regular"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                tools:ignore="FragmentTagUsage"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
