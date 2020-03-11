@@ -227,6 +227,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     clickedMarker = null;
                     binding.exploreMapAddPlaceButton.setEnabled(false);
                     binding.exploreMapRemovePlaceButton.setEnabled(false);
+                    return true;
                 } else {
                     marker.showInfoWindow();
                     clickedMarker = marker;
@@ -280,6 +281,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                 .alpha(0.3f)
                 .position(currentPlace);
         currentMarker = map.addMarker(currentMarkerOptions);
+        map.animateCamera(CameraUpdateFactory.newLatLng(currentMarkerOptions.getPosition()), 250, null);
         binding.exploreMapAddPlaceButton.setEnabled(true);
         binding.exploreMapRemovePlaceButton.setEnabled(false);
     }
