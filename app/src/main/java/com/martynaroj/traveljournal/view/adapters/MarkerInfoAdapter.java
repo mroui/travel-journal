@@ -25,7 +25,11 @@ public class MarkerInfoAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         WindowMarkerInfoBinding binding = WindowMarkerInfoBinding.inflate(LayoutInflater.from(context));
 
-        binding.markerDescription.setText(marker.getTitle());
+        binding.markerTitle.setText(marker.getTitle());
+
+        if (marker.getSnippet() != null && !marker.getSnippet().isEmpty())
+            binding.markerDescription.setText(marker.getSnippet());
+        else binding.markerDescription.setVisibility(View.GONE);
 
         View view;
         if (marker.getTitle() != null && !marker.getTitle().isEmpty())

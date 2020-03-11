@@ -6,11 +6,19 @@
     android:padding="@dimen/padding_tiny">
 
     <TextView
-        android:id="@+id/marker_description"
+        android:id="@+id/marker_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/raleway_medium"
         android:textSize="@dimen/text_smaller"
         android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/marker_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_medium"
+        android:textSize="@dimen/text_smaller"
+        android:textColor="@color/dark_gray"/>
 
 </LinearLayout>
