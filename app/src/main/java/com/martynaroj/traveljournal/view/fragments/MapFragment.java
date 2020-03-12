@@ -29,14 +29,18 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentMapBinding;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -45,6 +49,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     private FragmentMapBinding binding;
     private AddressViewModel addressViewModel;
+    private UserViewModel userViewModel;
 
     private GoogleMap map;
     private FindCurrentPlaceRequest request;
@@ -55,6 +60,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     private Place deviceLocation;
     private Marker temporaryMarker;
     private Marker clickedMarker;
+
+    private boolean areSavedPlacesShown;
+
+    private List<MarkerOptions> savedPlacesMarkersOptions;
+    private List<Marker> savedPlacesMarkers;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -67,6 +77,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         View view = binding.getRoot();
 
         initViewModels();
+        initLoggedUser();
         initGoogleMap();
         initGooglePlaces();
         initMarkerInfoAdapter();
@@ -76,9 +87,46 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initViewModels() {
         if (getActivity() != null) {
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+        }
+    }
+
+    private void initLoggedUser() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null) {
+            startProgressBar();
+            userViewModel.getUserData(firebaseAuth.getCurrentUser().getUid());
+            userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+                if (user != null) {
+                    if (user.getMarkers() != null && !user.getMarkers().isEmpty()) {
+                        initSavedPlacesMarkers(user.getMarkers());
+                    } else {
+                        binding.mapSavedPlacesButton.setEnabled(false);
+                    }
+                } else {
+                    showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
+            });
+        }
+    }
+
+    private void initSavedPlacesMarkers(List<com.martynaroj.traveljournal.services.models.Marker> markers) {
+        savedPlacesMarkersOptions = new ArrayList<>();
+        savedPlacesMarkers = new ArrayList<>();
+
+        for (com.martynaroj.traveljournal.services.models.Marker marker : markers) {
+            MarkerOptions options = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.defaultMarker(marker.getColor()))
+                    .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
+                    .title(marker.getDescription());
+            savedPlacesMarkersOptions.add(options);
         }
     }
 
@@ -120,12 +168,90 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
 
     private void initLocation() {
-        if (getContext() != null && ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (getContext() != null && ContextCompat.checkSelfPermission(getContext(),
+                ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             detectLocation();
         } else if (getActivity() != null) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
         }
     }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setMapListener() {
+        map.setOnMapClickListener(latLng -> {
+            addMarkerOnMap(latLng);
+            autocompleteFragment.setText("");
+            if (areSavedPlacesShown) showSavedPlaces();
+        });
+        map.setOnMarkerClickListener(marker -> {
+            if (clickedMarker != null && clickedMarker.equals(marker)) {
+                marker.hideInfoWindow();
+                clickedMarker = null;
+                return true;
+            } else {
+                marker.showInfoWindow();
+                clickedMarker = marker;
+            }
+            return false;
+        });
+    }
+
+
+    private void setListeners() {
+        binding.mapArrowButton.setOnClickListener(this);
+        binding.mapSavedPlacesButton.setOnClickListener(this);
+        binding.mapNearbyPlacesButton.setOnClickListener(this);
+        setAutoCompleteListeners();
+    }
+
+
+    private void setAutoCompleteListeners() {
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    LatLng latLng = place.getLatLng();
+                    if (latLng != null) {
+                        addMarkerOnMap(latLng);
+                        updateMarkerData(place);
+                        zoomMap(latLng);
+                        if (areSavedPlacesShown) showSavedPlaces();
+                        temporaryMarker = null;
+                    }
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView()
+                    .findViewById(R.id.places_autocomplete_clear_button)
+                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+        }
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.map_arrow_button:
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+                break;
+            case R.id.map_saved_places_button:
+                checkSavedPlaces();
+                break;
+            case R.id.map_nearby_places_button:
+                //TODO
+                break;
+        }
+    }
+
+
+    //MAP-------------------------------------------------------------------------------------------
 
 
     @Override
@@ -145,6 +271,25 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                 .position(latLng);
         temporaryMarker = map.addMarker(currentMarkerOptions);
         map.animateCamera(CameraUpdateFactory.newLatLng(currentMarkerOptions.getPosition()), 250, null);
+    }
+
+
+    private void updateMarkerData(Place place) {
+        temporaryMarker.setTitle(place.getName());
+        StringBuilder snippet = new StringBuilder();
+        if (place.getAddress() != null)
+            snippet.append(place.getAddress()).append("\n");
+        if (place.getOpeningHours() != null)
+            for (String day : place.getOpeningHours().getWeekdayText()) {
+                snippet.append("\t\t").append(day).append("\n");
+            }
+        if (place.getPhoneNumber() != null)
+            snippet.append("Phone number: ").append(place.getPhoneNumber()).append("\n");
+        if (place.getRating() != null)
+            snippet.append("Rating: ").append(place.getRating()).append("\n");
+        temporaryMarker.setSnippet(snippet.toString());
+        temporaryMarker.showInfoWindow();
+        clickedMarker = temporaryMarker;
     }
 
 
@@ -170,78 +315,38 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void setMapListener() {
-        map.setOnMapClickListener(latLng -> {
-            addMarkerOnMap(latLng);
-            autocompleteFragment.setText("");
-        });
-        map.setOnMarkerClickListener(marker -> {
-            if (clickedMarker != null && clickedMarker.equals(marker)) {
-                marker.hideInfoWindow();
-                clickedMarker = null;
-                return true;
-            } else {
-                marker.showInfoWindow();
-                clickedMarker = marker;
-            }
-            return false;
-        });
+    private void checkSavedPlaces() {
+        if (areSavedPlacesShown) {
+            hideSavedPlaces();
+            binding.mapSavedPlacesButton.setText(getResources().getString(R.string.map_show_saved_places));
+        } else {
+            showSavedPlaces();
+            binding.mapSavedPlacesButton.setText(getResources().getString(R.string.map_hide_saved_places));
+        }
+        areSavedPlacesShown = !areSavedPlacesShown;
     }
 
 
-    private void setListeners() {
-        binding.mapArrowButton.setOnClickListener(this);
-        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(@NonNull Place place) {
-                    LatLng latLng = place.getLatLng();
-                    if (latLng != null) {
-                        addMarkerOnMap(latLng);
-                        updateMarkerData(place);
-                        zoomMap(latLng);
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull Status status) {
-                }
-            });
-            autocompleteFragment.getView()
-                    .findViewById(R.id.places_autocomplete_clear_button)
-                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+    private void hideSavedPlaces() {
+        if (savedPlacesMarkers != null && !savedPlacesMarkers.isEmpty()) {
+            for (Marker marker : savedPlacesMarkers) {
+                marker.remove();
+            }
         }
     }
 
 
-    private void updateMarkerData(Place place) {
-        temporaryMarker.setTitle(place.getName());
-        StringBuilder snippet = new StringBuilder();
-        if (place.getAddress() != null)
-            snippet.append(place.getAddress()).append("\n");
-        if (place.getOpeningHours() != null)
-            for (String day : place.getOpeningHours().getWeekdayText()) {
-                snippet.append("\t\t").append(day).append("\n");
+    private void showSavedPlaces() {
+        if (savedPlacesMarkersOptions != null && !savedPlacesMarkersOptions.isEmpty()) {
+            for (MarkerOptions options : savedPlacesMarkersOptions) {
+                Marker marker = map.addMarker(options);
+                savedPlacesMarkers.add(marker);
             }
-        if (place.getPhoneNumber() != null)
-            snippet.append("Phone number: ").append(place.getPhoneNumber()).append("\n");
-        if (place.getRating() != null)
-            snippet.append("Rating: ").append(place.getRating()).append("\n");
-        temporaryMarker.setSnippet(snippet.toString());
-        temporaryMarker.showInfoWindow();
-        clickedMarker = temporaryMarker;
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.map_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-                break;
         }
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void startProgressBar() {

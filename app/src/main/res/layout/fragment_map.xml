@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/map_arrow_button"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/map_buttons"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/margin_regular"
@@ -95,6 +95,42 @@
                 android:layout_marginEnd="@dimen/margin_regular"
                 android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 tools:ignore="FragmentTagUsage"/>
+
+
+            <LinearLayout
+                android:id="@+id/map_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/map_saved_places_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:padding="@dimen/padding_small"
+                    style="@style/ExploreMapButton"
+                    app:rippleColor="@color/yellow_bg_lighter"
+                    android:text="@string/map_show_saved_places"
+                    android:fontFamily="@font/raleway_bold"
+                    android:layout_weight="1"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/map_nearby_places_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="0dp"
+                    android:padding="@dimen/padding_small"
+                    style="@style/ExploreMapButton"
+                    app:rippleColor="@color/yellow_bg_lighter"
+                    android:text="@string/map_nearby_places"
+                    android:fontFamily="@font/raleway_bold"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

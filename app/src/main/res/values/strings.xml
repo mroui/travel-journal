@@ -24,6 +24,9 @@
     <string name="board_airplane">AIRPLANE</string>
 
     <string name="map_title">Map</string>
+    <string name="map_show_saved_places">Show saved places</string>
+    <string name="map_nearby_places">Nearby places</string>
+    <string name="map_hide_saved_places">Hide saved places</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
