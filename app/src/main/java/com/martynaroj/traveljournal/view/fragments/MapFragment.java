@@ -111,8 +111,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                     }
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                    stopProgressBar();
                 }
+                stopProgressBar();
             });
         }
     }
