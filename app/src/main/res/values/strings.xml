@@ -157,6 +157,8 @@
     <string name="dialog_remove_marker_title">Remove marker</string>
     <string name="dialog_remove_marker_desc">Are you sure you want to remove this marker?</string>
     <string name="dialog_choose_marker_color">Choose a marker color</string>
+    <string name="dialog_nearby_places_title">Select types of places</string>
+    <string name="dialog_nearby_places_desc">Choose what type of places you are looking for</string>
 
     <string name="dialog_button_now">NOW</string>
     <string name="dialog_button_later">LATER</string>
@@ -166,5 +168,6 @@
     <string name="dialog_button_remove">REMOVE</string>
     <string name="dialog_button_cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="dialog_button_add">ADD</string>
+    <string name="dialog_button_search">SEARCH</string>
 
 </resources>
