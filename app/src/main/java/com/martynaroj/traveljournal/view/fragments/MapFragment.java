@@ -1,12 +1,17 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -245,7 +250,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                 checkSavedPlaces();
                 break;
             case R.id.map_nearby_places_button:
-                //TODO
+                showNearbyPlacesDialog();
                 break;
         }
     }
@@ -346,6 +351,42 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
+    private void searchNearbyPlaces(List<String> checkedTypes) {
+        //TODO
+    }
+
+
+    //DIALOG----------------------------------------------------------------------------------------
+
+
+    private void showNearbyPlacesDialog() {
+        if (getContext() != null) {
+            List<String> types = Arrays.asList(getResources().getStringArray(R.array.places));
+            List<String> checkedTypes = new ArrayList<>();
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_list_item_multiple_choice, types);
+
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_nearby_places);
+            dialog.findViewById(R.id.dialog_nearby_places_cancel_button).setOnClickListener(v -> dialog.dismiss());
+
+            ListView list = dialog.findViewById(R.id.dialog_nearby_places_list);
+            list.setAdapter(adapter);
+            dialog.findViewById(R.id.dialog_nearby_places_search_button).setOnClickListener(v -> {
+                dialog.dismiss();
+                SparseBooleanArray itemsChecked = list.getCheckedItemPositions();
+                for (int i = 0; i < itemsChecked.size(); i++)
+                    if (itemsChecked.get(itemsChecked.keyAt(i)))
+                        checkedTypes.add(list.getItemAtPosition(itemsChecked.keyAt(i)).toString());
+                searchNearbyPlaces(checkedTypes);
+            });
+            dialog.show();
+        }
+    }
+
+
     //OTHERS----------------------------------------------------------------------------------------
 
 
@@ -371,6 +412,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (requestCode == Constants.RC_ACCESS_FINE_LOCATION && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             detectLocation();
+        } else {
+            binding.mapNearbyPlacesButton.setEnabled(false);
         }
     }
 
