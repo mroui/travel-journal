@@ -1,89 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="airport">Airport</string>
-    <string name="amusement_park">Amusement park</string>
-    <string name="aquarium">Aquarium</string>
-    <string name="art_gallery">Art gallery</string>
-    <string name="atm">ATM</string>
-    <string name="bakery">Bakery</string>
-    <string name="bank">Bank</string>
-    <string name="bar">Bar</string>
-    <string name="bus_station">Bus station</string>
-    <string name="cafe">Cafe</string>
-    <string name="campground">Campground</string>
-    <string name="car_rental">Car rental</string>
-    <string name="convenience_store">Convenience store</string>
-    <string name="clothing_store">Clothing store</string>
-    <string name="drugstore">Drugstore</string>
-    <string name="food">Food</string>
-    <string name="gas_station">Gas station</string>
-    <string name="gym">Gym</string>
-    <string name="hospital">Hospital</string>
-    <string name="jewelry_store">Jewelry store</string>
-    <string name="laundry">Laundry</string>
-    <string name="library">Library</string>
-    <string name="light_rail_station">Light rail station</string>
-    <string name="meal_delivery">Meal delivery</string>
-    <string name="meal_takeaway">Meal takeaway</string>
-    <string name="museum">Museum</string>
-    <string name="park">Park</string>
-    <string name="parking">Parking</string>
-    <string name="police">Police</string>
-    <string name="post_office">Post office</string>
-    <string name="restaurant">Restaurant</string>
-    <string name="route">Route</string>
-    <string name="shopping_mall">Shopping mall</string>
-    <string name="spa">Spa</string>
-    <string name="subway_station">Subway station</string>
-    <string name="supermarket">Supermarket</string>
-    <string name="taxi_stand">Taxi stand</string>
-    <string name="tourist_attraction">Tourist attraction</string>
-    <string name="town_square">Town square</string>
-    <string name="train_station">Train station</string>
-    <string name="travel_agency">Travel agency</string>
-    <string name="zoo">Zoo</string>
-
     <string-array name="places">
-        <item>@string/airport</item>
-        <item>@string/amusement_park</item>
-        <item>@string/aquarium</item>
-        <item>@string/art_gallery</item>
-        <item>@string/atm</item>
-        <item>@string/bakery</item>
-        <item>@string/bank</item>
-        <item>@string/bar</item>
-        <item>@string/cafe</item>
-        <item>@string/campground</item>
-        <item>@string/car_rental</item>
-        <item>@string/convenience_store</item>
-        <item>@string/clothing_store</item>
-        <item>@string/drugstore</item>
-        <item>@string/food</item>
-        <item>@string/gas_station</item>
-        <item>@string/gym</item>
-        <item>@string/hospital</item>
-        <item>@string/jewelry_store</item>
-        <item>@string/laundry</item>
-        <item>@string/library</item>
-        <item>@string/light_rail_station</item>
-        <item>@string/meal_delivery</item>
-        <item>@string/meal_takeaway</item>
-        <item>@string/museum</item>
-        <item>@string/park</item>
-        <item>@string/parking</item>
-        <item>@string/police</item>
-        <item>@string/post_office</item>
-        <item>@string/restaurant</item>
-        <item>@string/route</item>
-        <item>@string/shopping_mall</item>
-        <item>@string/spa</item>
-        <item>@string/subway_station</item>
-        <item>@string/supermarket</item>
-        <item>@string/taxi_stand</item>
-        <item>@string/tourist_attraction</item>
-        <item>@string/town_square</item>
-        <item>@string/train_station</item>
-        <item>@string/travel_agency</item>
-        <item>@string/zoo</item>
+        <item name="all">All</item>
+        <item name="airport">Airport</item>
+        <item name="amusement_park">Amusement park</item>
+        <item name="aquarium">Aquarium</item>
+        <item name="art_gallery">Art gallery</item>
+        <item name="atm">ATM</item>
+        <item name="bakery">Bakery</item>
+        <item name="bank">Bank</item>
+        <item name="bar">Bar</item>
+        <item name="bus_station">Bus station</item>
+        <item name="cafe">Cafe</item>
+        <item name="campground">Campground</item>
+        <item name="car_rental">Car rental</item>
+        <item name="convenience_store">Convenience store</item>
+        <item name="clothing_store">Clothing store</item>
+        <item name="drugstore">Drugstore</item>
+        <item name="food">Food</item>
+        <item name="gas_station">Gas station</item>
+        <item name="gym">Gym</item>
+        <item name="hospital">Hospital</item>
+        <item name="jewelry_store">Jewelry store</item>
+        <item name="laundry">Laundry</item>
+        <item name="library">Library</item>
+        <item name="light_rail_station">Light rail station</item>
+        <item name="meal_delivery">Meal delivery</item>
+        <item name="meal_takeaway">Meal takeaway</item>
+        <item name="museum">Museum</item>
+        <item name="park">Park</item>
+        <item name="parking">Parking</item>
+        <item name="police">Police</item>
+        <item name="post_office">Post office</item>
+        <item name="restaurant">Restaurant</item>
+        <item name="route">Route</item>
+        <item name="shopping_mall">Shopping mall</item>
+        <item name="spa">Spa</item>
+        <item name="subway_station">Subway station</item>
+        <item name="supermarket">Supermarket</item>
+        <item name="taxi_stand">Taxi stand</item>
+        <item name="tourist_attraction">Tourist attraction</item>
+        <item name="town_square">Town square</item>
+        <item name="train_station">Train station</item>
+        <item name="travel_agency">Travel agency</item>
+        <item name="zoo">Zoo</item>
     </string-array>
 </resources>
