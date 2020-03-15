@@ -42,4 +42,5 @@ public interface Constants {
     String TRANSLATOR = "TRANSLATE";
     String ALARM = "ALARM";
 
+    int NEARBY_PLACES_RADIUS = 500;
 }
