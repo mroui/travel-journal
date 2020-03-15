@@ -33,32 +33,45 @@
     <ListView
         android:id="@+id/dialog_nearby_places_list"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="350dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_desc"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_tiny"
-        android:choiceMode="multipleChoice">
-    </ListView>
+        android:choiceMode="singleChoice"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialog_nearby_places_clear_button"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
+        android:layout_marginTop="@dimen/margin_tiny"
+        style="@style/ExploreMapButton"
+        app:rippleColor="@color/yellow_bg_lighter"
+        android:text="@string/dialog_button_clear"
+        android:fontFamily="@font/raleway_bold"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_nearby_places_search_button"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
+        android:layout_marginTop="@dimen/margin_tiny"
         style="@style/ExploreMapButton"
         app:rippleColor="@color/yellow_bg_lighter"
-        android:text="@string/dialog_button_search"
+        android:text="@string/dialog_button_ok"
         android:fontFamily="@font/raleway_bold"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_nearby_places_cancel_button"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintEnd_toStartOf="@+id/dialog_nearby_places_search_button"
+        app:layout_constraintStart_toEndOf="@+id/dialog_nearby_places_clear_button"
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
+        android:layout_marginTop="@dimen/margin_tiny"
         style="@style/ExploreMapButton"
         app:rippleColor="@color/yellow_bg_lighter"
         android:text="@string/dialog_button_cancel"
