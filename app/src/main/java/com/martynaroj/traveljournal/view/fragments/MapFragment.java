@@ -387,8 +387,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (temporaryMarker != null) {
             temporaryMarker = addMarkerOnMap(new LatLng(temporaryMarker.getPosition().latitude,
                     temporaryMarker.getPosition().longitude), true);
-            updateMarkerPlaceData(temporaryMarker, searchedPlace.getName(), searchedPlace.getAddress(),
-                    searchedPlace.getOpeningHours(), searchedPlace.getPhoneNumber(), searchedPlace.getRating());
+            if (searchedPlace != null) {
+                updateMarkerPlaceData(temporaryMarker, searchedPlace.getName(), searchedPlace.getAddress(),
+                        searchedPlace.getOpeningHours(), searchedPlace.getPhoneNumber(), searchedPlace.getRating());
+            }
         }
         if (areSavedPlacesShown) {
             showSavedPlaces();
