@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -37,6 +36,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentMapBinding;
+import com.martynaroj.traveljournal.services.models.PlacesAPI.Place;
+import com.martynaroj.traveljournal.services.models.PlacesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.retrofit.Rest;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -47,6 +49,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -62,12 +68,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     private AutocompleteSupportFragment autocompleteFragment;
     private MarkerInfoAdapter markerInfoAdapter;
 
-    private Place deviceLocation;
+    private com.google.android.libraries.places.api.model.Place deviceLocation;
     private Marker temporaryMarker;
     private Marker clickedMarker;
 
-    private boolean areSavedPlacesShown;
+    private com.google.android.libraries.places.api.model.Place searchedPlace;
 
+    private boolean areNearbyPlacesShown;
+    private List<Place> nearbyPlaces = new ArrayList<>();
+
+    private boolean areSavedPlacesShown;
     private List<MarkerOptions> savedPlacesMarkersOptions;
     private List<Marker> savedPlacesMarkers;
 
@@ -147,8 +157,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (getContext() != null) {
             Places.initialize(getContext(), getString(R.string.google_api_key));
             placesClient = Places.createClient(getContext());
-            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                    Place.Field.ADDRESS, Place.Field.LAT_LNG));
+            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME,
+                    com.google.android.libraries.places.api.model.Place.Field.ADDRESS, com.google.android.libraries.places.api.model.Place.Field.LAT_LNG));
 
             autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
                     .findFragmentById(R.id.map_search_view);
@@ -159,9 +169,9 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                         .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
                 autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
                         .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                        Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.OPENING_HOURS,
-                        Place.Field.PHONE_NUMBER, Place.Field.RATING));
+                autocompleteFragment.setPlaceFields(Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME,
+                        com.google.android.libraries.places.api.model.Place.Field.ADDRESS, com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.OPENING_HOURS,
+                        com.google.android.libraries.places.api.model.Place.Field.PHONE_NUMBER, com.google.android.libraries.places.api.model.Place.Field.RATING));
             }
         }
     }
@@ -187,9 +197,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     private void setMapListener() {
         map.setOnMapClickListener(latLng -> {
-            addMarkerOnMap(latLng);
+            temporaryMarker = null;
+            searchedPlace = null;
             autocompleteFragment.setText("");
-            if (areSavedPlacesShown) showSavedPlaces();
+            clearMap();
+            temporaryMarker = addMarkerOnMap(latLng, true);
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng), 250, null);
         });
         map.setOnMarkerClickListener(marker -> {
             if (clickedMarker != null && clickedMarker.equals(marker)) {
@@ -217,14 +230,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
-                public void onPlaceSelected(@NonNull Place place) {
+                public void onPlaceSelected(@NonNull com.google.android.libraries.places.api.model.Place place) {
                     LatLng latLng = place.getLatLng();
                     if (latLng != null) {
-                        addMarkerOnMap(latLng);
-                        updateMarkerData(place);
-                        zoomMap(latLng);
-                        if (areSavedPlacesShown) showSavedPlaces();
                         temporaryMarker = null;
+                        clearMap();
+                        temporaryMarker = addMarkerOnMap(latLng, true);
+                        searchedPlace = place;
+                        updateMarkerPlaceData(temporaryMarker, place.getName(), place.getAddress(), place.getOpeningHours(),
+                                place.getPhoneNumber(), place.getRating());
+                        zoomMap(latLng, 8.0f);
                     }
                 }
 
@@ -268,33 +283,48 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void addMarkerOnMap(LatLng latLng) {
-        map.clear();
+    private Marker addMarkerOnMap(LatLng latLng, boolean temporary) {
         MarkerOptions currentMarkerOptions = new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker())
-                .alpha(0.3f)
                 .position(latLng);
-        temporaryMarker = map.addMarker(currentMarkerOptions);
-        map.animateCamera(CameraUpdateFactory.newLatLng(currentMarkerOptions.getPosition()), 250, null);
+        if (temporary)
+            currentMarkerOptions.alpha(0.3f);
+        return map.addMarker(currentMarkerOptions);
     }
 
 
-    private void updateMarkerData(Place place) {
-        temporaryMarker.setTitle(place.getName());
+    private void addMarkersOnMap(List<Place> places) {
+        for (Place place : places) {
+            LatLng latLng = new LatLng(place.getGeometry().getLocation().getLat(),
+                    place.getGeometry().getLocation().getLng());
+            Marker marker = addMarkerOnMap(latLng, false);
+            updateMarkerPlaceData(marker, place.getName(), place.getVicinity(), null,
+                    null, place.getRating());
+            zoomMap(latLng, 15.0f);
+        }
+    }
+
+
+    private void updateMarkerPlaceData(Marker marker, String name, String address, OpeningHours openingHours,
+                                       String phone, Double rating) {
+        marker.setTitle(name);
         StringBuilder snippet = new StringBuilder();
-        if (place.getAddress() != null)
-            snippet.append(place.getAddress()).append("\n");
-        if (place.getOpeningHours() != null)
-            for (String day : place.getOpeningHours().getWeekdayText()) {
+        if (address != null)
+            snippet.append(address).append("\n");
+        if (openingHours != null)
+            for (String day : openingHours.getWeekdayText()) {
                 snippet.append("\t\t").append(day).append("\n");
             }
-        if (place.getPhoneNumber() != null)
-            snippet.append("Phone number: ").append(place.getPhoneNumber()).append("\n");
-        if (place.getRating() != null)
-            snippet.append("Rating: ").append(place.getRating()).append("\n");
-        temporaryMarker.setSnippet(snippet.toString());
-        temporaryMarker.showInfoWindow();
-        clickedMarker = temporaryMarker;
+        if (phone != null)
+            snippet.append("Phone number: ").append(phone).append("\n");
+        if (rating != null)
+            snippet.append("Rating: ").append(rating).append("\n");
+        marker.setSnippet(snippet.toString());
+
+        if (marker.equals(temporaryMarker)) {
+            marker.showInfoWindow();
+            clickedMarker = marker;
+        }
     }
 
 
@@ -306,7 +336,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             if (response != null) {
                 deviceLocation = response.getPlaceLikelihoods().get(0).getPlace();
                 if (deviceLocation.getLatLng() != null) {
-                    zoomMap(deviceLocation.getLatLng());
+                    zoomMap(deviceLocation.getLatLng(), 10.0f);
                 }
                 stopProgressBar();
             } else
@@ -315,8 +345,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void zoomMap(LatLng latLng) {
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
+    private void zoomMap(LatLng latLng, float value) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, value));
     }
 
 
@@ -326,6 +356,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             binding.mapSavedPlacesButton.setText(getResources().getString(R.string.map_show_saved_places));
         } else {
             showSavedPlaces();
+            map.animateCamera(CameraUpdateFactory.zoomTo(2), 500, null);
             binding.mapSavedPlacesButton.setText(getResources().getString(R.string.map_hide_saved_places));
         }
         areSavedPlacesShown = !areSavedPlacesShown;
@@ -351,8 +382,49 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void searchNearbyPlaces(List<String> checkedTypes) {
-        //TODO
+    private void clearMap() {
+        map.clear();
+        if (temporaryMarker != null) {
+            temporaryMarker = addMarkerOnMap(new LatLng(temporaryMarker.getPosition().latitude,
+                    temporaryMarker.getPosition().longitude), true);
+            updateMarkerPlaceData(temporaryMarker, searchedPlace.getName(), searchedPlace.getAddress(),
+                    searchedPlace.getOpeningHours(), searchedPlace.getPhoneNumber(), searchedPlace.getRating());
+        }
+        if (areSavedPlacesShown) {
+            showSavedPlaces();
+        }
+        if (areNearbyPlacesShown) {
+            addMarkersOnMap(nearbyPlaces);
+        }
+    }
+
+
+    private void searchNearbyPlaces(String type) {
+        //TODO: refactor mvvm, retrofit, rxjava
+        if (deviceLocation.getLatLng() != null) {
+            Rest.getRest().getNearbyPlaces(
+                    deviceLocation.getLatLng().latitude + "," + deviceLocation.getLatLng().longitude,
+                    500,
+                    type,
+                    getString(R.string.google_api_key)
+            ).enqueue(new Callback<PlacesResult>() {
+                @Override
+                public void onResponse(@NonNull Call<PlacesResult> call, @NonNull Response<PlacesResult> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        nearbyPlaces = response.body().getPlaces();
+                        if (!nearbyPlaces.isEmpty()) {
+                            addMarkersOnMap(nearbyPlaces);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<PlacesResult> call, @NonNull Throwable t) {
+                }
+            });
+        } else {
+            showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+        }
     }
 
 
@@ -362,25 +434,29 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     private void showNearbyPlacesDialog() {
         if (getContext() != null) {
             List<String> types = Arrays.asList(getResources().getStringArray(R.array.places));
-            List<String> checkedTypes = new ArrayList<>();
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                    android.R.layout.simple_list_item_multiple_choice, types);
+                    android.R.layout.simple_list_item_single_choice, types);
 
             Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.dialog_nearby_places);
-            dialog.findViewById(R.id.dialog_nearby_places_cancel_button).setOnClickListener(v -> dialog.dismiss());
 
             ListView list = dialog.findViewById(R.id.dialog_nearby_places_list);
             list.setAdapter(adapter);
-            dialog.findViewById(R.id.dialog_nearby_places_search_button).setOnClickListener(v -> {
+            list.setItemChecked(0, true);
+
+            dialog.findViewById(R.id.dialog_nearby_places_cancel_button).setOnClickListener(v -> dialog.dismiss());
+            dialog.findViewById(R.id.dialog_nearby_places_clear_button).setOnClickListener(v -> {
                 dialog.dismiss();
-                SparseBooleanArray itemsChecked = list.getCheckedItemPositions();
-                for (int i = 0; i < itemsChecked.size(); i++)
-                    if (itemsChecked.get(itemsChecked.keyAt(i)))
-                        checkedTypes.add(list.getItemAtPosition(itemsChecked.keyAt(i)).toString());
-                searchNearbyPlaces(checkedTypes);
+                areNearbyPlacesShown = false;
+                clearMap();
+            });
+            dialog.findViewById(R.id.dialog_nearby_places_search_button).setOnClickListener(v -> {
+                dialog.findViewById(R.id.dialog_nearby_places_clear_button).callOnClick();
+                String type = adapter.getItem(list.getCheckedItemPosition());
+                if (type != null) searchNearbyPlaces(getPlaceTypeKey(type));
+                areNearbyPlacesShown = true;
             });
             dialog.show();
         }
@@ -388,6 +464,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private String getPlaceTypeKey(String type) {
+        return type.toLowerCase().replaceAll("\\s", "_");
+    }
 
 
     private void startProgressBar() {
