@@ -37,22 +37,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentMapBinding;
 import com.martynaroj.traveljournal.services.models.PlacesAPI.Place;
-import com.martynaroj.traveljournal.services.models.PlacesAPI.PlacesResult;
-import com.martynaroj.traveljournal.services.retrofit.Rest;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.PlaceViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -61,6 +56,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     private FragmentMapBinding binding;
     private AddressViewModel addressViewModel;
     private UserViewModel userViewModel;
+    private PlaceViewModel placeViewModel;
 
     private GoogleMap map;
     private FindCurrentPlaceRequest request;
@@ -109,8 +105,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (getActivity() != null) {
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            placeViewModel = new ViewModelProvider(getActivity()).get(PlaceViewModel.class);
         }
     }
+
 
     private void initLoggedUser() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -131,6 +129,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             });
         }
     }
+
 
     private void initSavedPlacesMarkers(List<com.martynaroj.traveljournal.services.models.Marker> markers) {
         savedPlacesMarkersOptions = new ArrayList<>();
@@ -195,29 +194,6 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     //LISTENERS-------------------------------------------------------------------------------------
 
 
-    private void setMapListener() {
-        map.setOnMapClickListener(latLng -> {
-            temporaryMarker = null;
-            searchedPlace = null;
-            autocompleteFragment.setText("");
-            clearMap();
-            temporaryMarker = addMarkerOnMap(latLng, true);
-            map.animateCamera(CameraUpdateFactory.newLatLng(latLng), 250, null);
-        });
-        map.setOnMarkerClickListener(marker -> {
-            if (clickedMarker != null && clickedMarker.equals(marker)) {
-                marker.hideInfoWindow();
-                clickedMarker = null;
-                return true;
-            } else {
-                marker.showInfoWindow();
-                clickedMarker = marker;
-            }
-            return false;
-        });
-    }
-
-
     private void setListeners() {
         binding.mapArrowButton.setOnClickListener(this);
         binding.mapSavedPlacesButton.setOnClickListener(this);
@@ -251,6 +227,29 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                     .findViewById(R.id.places_autocomplete_clear_button)
                     .setOnClickListener(view -> autocompleteFragment.setText(""));
         }
+    }
+
+
+    private void setMapListener() {
+        map.setOnMapClickListener(latLng -> {
+            temporaryMarker = null;
+            searchedPlace = null;
+            autocompleteFragment.setText("");
+            clearMap();
+            temporaryMarker = addMarkerOnMap(latLng, true);
+            map.animateCamera(CameraUpdateFactory.newLatLng(latLng), 250, null);
+        });
+        map.setOnMarkerClickListener(marker -> {
+            if (clickedMarker != null && clickedMarker.equals(marker)) {
+                marker.hideInfoWindow();
+                clickedMarker = null;
+                return true;
+            } else {
+                marker.showInfoWindow();
+                clickedMarker = marker;
+            }
+            return false;
+        });
     }
 
 
@@ -305,8 +304,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void updateMarkerPlaceData(Marker marker, String name, String address, OpeningHours openingHours,
-                                       String phone, Double rating) {
+    private void updateMarkerPlaceData(Marker marker, String name, String address,
+                                       OpeningHours openingHours, String phone, Double rating) {
         marker.setTitle(name);
         StringBuilder snippet = new StringBuilder();
         if (address != null)
@@ -402,29 +401,19 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
 
     private void searchNearbyPlaces(String type) {
-        //TODO: refactor mvvm, retrofit, rxjava
         if (deviceLocation.getLatLng() != null) {
-            Rest.getRest().getNearbyPlaces(
-                    deviceLocation.getLatLng().latitude + "," + deviceLocation.getLatLng().longitude,
-                    500,
-                    type,
-                    getString(R.string.google_api_key)
-            ).enqueue(new Callback<PlacesResult>() {
-                @Override
-                public void onResponse(@NonNull Call<PlacesResult> call, @NonNull Response<PlacesResult> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        nearbyPlaces = response.body().getPlaces();
-                        if (!nearbyPlaces.isEmpty()) {
-                            addMarkersOnMap(nearbyPlaces);
-                        } else {
-                            showSnackBar(getResources().getString(R.string.messages_no_places_results), Snackbar.LENGTH_LONG);
-                        }
-                        zoomMap(deviceLocation.getLatLng(), 15.0f);
+            placeViewModel.getPlaces(deviceLocation.getLatLng(), type);
+            placeViewModel.getPlacesResultData().observe(getViewLifecycleOwner(), placesResult -> {
+                if (placesResult != null) {
+                    if (placesResult.getPlaces() != null && !placesResult.getPlaces().isEmpty()) {
+                        nearbyPlaces = placesResult.getPlaces();
+                        addMarkersOnMap(nearbyPlaces);
+                    } else {
+                        showSnackBar(getResources().getString(R.string.messages_no_places_results), Snackbar.LENGTH_LONG);
                     }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<PlacesResult> call, @NonNull Throwable t) {
+                    zoomMap(deviceLocation.getLatLng(), 15.0f);
+                } else {
+                    showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
                 }
             });
         } else {
