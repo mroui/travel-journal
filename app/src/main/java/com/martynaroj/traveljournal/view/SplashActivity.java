@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.services.retrofit.Rest;
 import com.martynaroj.traveljournal.viewmodels.SplashViewModel;
 
 import static com.martynaroj.traveljournal.view.others.interfaces.Constants.USER;
@@ -21,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initSplashViewModel();
         checkCurrentUserAuth();
+        Rest.init();
     }
 
 
