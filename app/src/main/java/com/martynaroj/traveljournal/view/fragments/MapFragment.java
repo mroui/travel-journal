@@ -416,7 +416,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                         nearbyPlaces = response.body().getPlaces();
                         if (!nearbyPlaces.isEmpty()) {
                             addMarkersOnMap(nearbyPlaces);
+                        } else {
+                            showSnackBar(getResources().getString(R.string.messages_no_places_results), Snackbar.LENGTH_LONG);
                         }
+                        zoomMap(deviceLocation.getLatLng(), 15.0f);
                     }
                 }
 
