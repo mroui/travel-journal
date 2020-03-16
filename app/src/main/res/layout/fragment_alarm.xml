@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_alarm"
     tools:context=".view.fragments.AlarmFragment"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -17,8 +17,50 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_regular"
-            android:paddingEnd="@dimen/padding_regular">
+            android:padding="@dimen/padding_regular">
+
+            <ImageView
+                android:id="@+id/alarm_arrow_button"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="?android:attr/selectableItemBackground"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back_arrow" />
+
+            <TextView
+                android:id="@+id/alarm_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/alarm_arrow_button"
+                app:layout_constraintTop_toBottomOf="@+id/alarm_arrow_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/robotoslab_medium"
+                android:text="@string/alarm_title"
+                android:textSize="@dimen/text_bigger"
+                android:textColor="@color/black"/>
+
+<!--            <Button-->
+<!--                android:id="@+id/button"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="click"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--            <Button-->
+<!--                android:id="@+id/button2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="click"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/button"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
