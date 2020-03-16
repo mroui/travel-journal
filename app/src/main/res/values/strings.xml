@@ -28,6 +28,11 @@
     <string name="map_nearby_places">Nearby places</string>
     <string name="map_hide_saved_places">Hide saved places</string>
 
+    <string name="alarm_title">Alarm</string>
+    <string name="alarm_channel_info">Alarm channel</string>
+    <string name="dialog_alarm_perms_title">Additional Permissions</string>
+    <string name="dialog_alarm_perms_desc">To fully use the alarm function, enable additional rights in the settings.</string>
+
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
     <string name="login_password">PASSWORD</string>
@@ -170,5 +175,7 @@
     <string name="dialog_button_add">ADD</string>
     <string name="dialog_button_search">SEARCH</string>
     <string name="dialog_button_clear">CLEAR</string>
+    <string name="dialog_button_settings">SETTINGS</string>
+    <string name="dialog_button_no_thanks">NO THANKS</string>
 
 </resources>

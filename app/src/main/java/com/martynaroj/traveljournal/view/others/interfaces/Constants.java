@@ -5,6 +5,7 @@ public interface Constants {
     int RC_SAVE_CREDENTIALS = 9002;
     int RC_EXTERNAL_STORAGE = 8001;
     int RC_ACCESS_FINE_LOCATION = 7001;
+    int RC_BROADCAST = 6001;
     int PREFERENCES_VIEW_HEIGHT = 303;
 
     String SUCCESS = "SUCCESS";
@@ -43,4 +44,12 @@ public interface Constants {
     String ALARM = "ALARM";
 
     int NEARBY_PLACES_RADIUS = 500;
+
+    String CHANNEL_ID = "ALARM_CHANNEL";
+    CharSequence CHANNEL_NAME = "ALARM_CHANNEL";
+    String ALARM_DIALOG = "ALARM_DIALOG";
+    String TITLE = "TITLE";
+    String DESC = "DESC";
+    String PREFERENCES = "PREFERENCES";
+
 }
