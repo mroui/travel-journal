@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:fontFamily="@font/raleway_regular"
-            android:lines="3"
+            android:maxLines="3"
             android:maxLength="50"
             android:textSize="@dimen/text_small"
             android:textCursorDrawable="@null"
