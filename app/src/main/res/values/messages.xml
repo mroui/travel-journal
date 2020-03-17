@@ -41,5 +41,5 @@
     <string name="messages_error_failed_remove_notification">ERROR: Removing notification failed, try again later</string>
     <string name="messages_error_failed_add_friends">"ERROR: Accepting friends request, try again later"</string>
     <string name="messages_error_failed_remove_friend">"ERROR: Removing from friends failed, try again later"</string>
-    <string name="messages_error_time_over">Error! This time is over!</string>
+    <string name="messages_error_time_passed">Error! Time has passed!</string>
 </resources>

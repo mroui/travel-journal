@@ -90,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_time_picker"
         android:fontFamily="@font/raleway_bold"
-        android:text="@string/messages_error_time_over"
+        android:text="@string/messages_error_time_passed"
         android:textColor="@color/error"
         android:visibility="gone"/>
 
