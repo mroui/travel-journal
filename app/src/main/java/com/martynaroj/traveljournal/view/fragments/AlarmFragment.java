@@ -56,26 +56,16 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         initBroadcastIntent();
         checkBroadcast();
         createNotificationChannel();
-        setListeners();
+
         checkPermissionsDialog();
+
+        setListeners();
 
         return view;
     }
 
 
-    private void initTimer(long alarmTime) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Calendar now = Calendar.getInstance();
-                if (alarmTime < now.getTimeInMillis()) {
-                    binding.setIsBroadcastWorking(false);
-                    timer.cancel();
-                }
-            }
-        }, 0, 1);
-    }
+    //INIT DATA-------------------------------------------------------------------------------------
 
 
     private void initBroadcastIntent() {
@@ -89,41 +79,6 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         binding.setIsBroadcastWorking(isBroadcastWorking);
         if (isBroadcastWorking) {
             getAlarmSet();
-        }
-    }
-
-
-    private void getAlarmSet() {
-        if (getContext() != null) {
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-
-            String alarmNote = prefs.getString(Constants.ALARM_NOTE, "");
-            Calendar alarmDate = Calendar.getInstance();
-            alarmDate.setTimeInMillis(prefs.getLong(Constants.ALARM_TIME, 0));
-
-            initTimer(alarmDate.getTimeInMillis());
-        }
-    }
-
-
-    private void cancelAlarm() {
-        if (getContext() != null) {
-            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    getContext(),
-                    Constants.RC_BROADCAST,
-                    broadcastIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            );
-            if (alarmManager != null) alarmManager.cancel(pendingIntent);
-        }
-    }
-
-
-    private void saveAlarmTimeRemaining(long time) {
-        if (getContext() != null) {
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            prefs.edit().putLong(Constants.ALARM_TIME, time).apply();
         }
     }
 
@@ -142,6 +97,21 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    private void initTimer(long alarmTime) {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Calendar now = Calendar.getInstance();
+                if (alarmTime < now.getTimeInMillis()) {
+                    binding.setIsBroadcastWorking(false);
+                    timer.cancel();
+                }
+            }
+        }, 0, 1);
+    }
+
+
     private void checkPermissionsDialog() {
         if (getContext() != null) {
             SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
@@ -153,57 +123,44 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void setListeners() {
-        binding.alarmArrowButton.setOnClickListener(this);
-        binding.alarmSetButton.setOnClickListener(this);
-    }
+    //SHARED PREFS----------------------------------------------------------------------------------
 
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.alarm_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-                break;
-            case R.id.alarm_set_button:
-                showSetAlarmDialog();
-                break;
-        }
-    }
-
-
-    private void showSetAlarmDialog() {
+    private void getAlarmSet() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_alarm);
+            //todo: alarm note & date on layout when waiting for alarm & cancel button
+            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
 
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_alarm_buttom_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_alarm_button_negative);
-            TimePicker timePicker = dialog.findViewById(R.id.dialog_alarm_time_picker);
-            DatePicker datePicker = dialog.findViewById(R.id.dialog_alarm_date_picker);
-            TextView errorMessage = dialog.findViewById(R.id.dialog_alarm_error);
+            String alarmNote = prefs.getString(Constants.ALARM_NOTE, "");
+            Calendar alarmDate = Calendar.getInstance();
+            alarmDate.setTimeInMillis(prefs.getLong(Constants.ALARM_TIME, 0));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                datePicker.setOnDateChangedListener(
-                        (datePicker1, i, i1, i2) -> errorMessage.setVisibility(View.GONE)
-                );
-                timePicker.setOnTimeChangedListener(
-                        (timePicker1, i, i1) -> errorMessage.setVisibility(View.GONE)
-                );
-            }
-            datePicker.setMinDate(new Date().getTime());
-            buttonPositive.setOnClickListener(v -> setNewAlarm(dialog, datePicker, timePicker));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
-            dialog.show();
+            initTimer(alarmDate.getTimeInMillis());
         }
     }
 
 
-    private void setNewAlarm(Dialog dialog, DatePicker datePicker, TimePicker timePicker) {
+    private void saveAlarmSet(long time) {
+        if (getContext() != null) {
+            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            prefs.edit().putLong(Constants.ALARM_TIME, time).apply();
+        }
+    }
+
+
+    private void saveShownAlarmDialog() {
+        if (getContext() != null) {
+            SharedPreferences.Editor editor = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE).edit();
+            editor.putBoolean(Constants.ALARM_DIALOG, true);
+            editor.apply();
+        }
+    }
+
+
+    //ALARM-----------------------------------------------------------------------------------------
+
+
+    private void setAlarm(Dialog dialog, DatePicker datePicker, TimePicker timePicker) {
         int dMin, dHour;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             dMin = timePicker.getMinute();
@@ -228,7 +185,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         if (timeDifference <= 0) {
             (dialog.findViewById(R.id.dialog_alarm_error)).setVisibility(View.VISIBLE);
         } else {
-            saveAlarmTimeRemaining(dateEnd.getTimeInMillis());
+            saveAlarmSet(dateEnd.getTimeInMillis());
             setNotificationBroadcast(note, timeDifference);
             dialog.dismiss();
         }
@@ -250,6 +207,76 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                 alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
             showSnackBar(getResources().getString(R.string.messages_alarm_set_success), Snackbar.LENGTH_SHORT);
             checkBroadcast();
+        }
+    }
+
+
+    private void cancelAlarm() {
+        if (getContext() != null) {
+            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    getContext(),
+                    Constants.RC_BROADCAST,
+                    broadcastIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
+            if (alarmManager != null) alarmManager.cancel(pendingIntent);
+        }
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.alarmArrowButton.setOnClickListener(this);
+        binding.alarmSetButton.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.alarm_arrow_button:
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+                break;
+            case R.id.alarm_set_button:
+                showSetAlarmDialog();
+                break;
+        }
+    }
+
+
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
+    private void showSetAlarmDialog() {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_alarm);
+
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_alarm_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_alarm_button_negative);
+            TimePicker timePicker = dialog.findViewById(R.id.dialog_alarm_time_picker);
+            DatePicker datePicker = dialog.findViewById(R.id.dialog_alarm_date_picker);
+            TextView errorMessage = dialog.findViewById(R.id.dialog_alarm_error);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                datePicker.setOnDateChangedListener(
+                        (datePicker1, i, i1, i2) -> errorMessage.setVisibility(View.GONE)
+                );
+                timePicker.setOnTimeChangedListener(
+                        (timePicker1, i, i1) -> errorMessage.setVisibility(View.GONE)
+                );
+            }
+            datePicker.setMinDate(new Date().getTime());
+            buttonPositive.setOnClickListener(v -> setAlarm(dialog, datePicker, timePicker));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
         }
     }
 
@@ -294,6 +321,9 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //OTHERS----------------------------------------------------------------------------------------
+
+
     private void openSettings() {
         if (getContext() != null) {
             Intent intent = new Intent();
@@ -302,15 +332,6 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
             intent.putExtra("app_uid", getContext().getApplicationInfo().uid);
             intent.putExtra("android.provider.extra.APP_PACKAGE", getContext().getPackageName());
             startActivity(intent);
-        }
-    }
-
-
-    private void saveShownAlarmDialog() {
-        if (getContext() != null) {
-            SharedPreferences.Editor editor = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE).edit();
-            editor.putBoolean(Constants.ALARM_DIALOG, true);
-            editor.apply();
         }
     }
 
