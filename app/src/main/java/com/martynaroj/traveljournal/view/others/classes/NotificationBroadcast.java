@@ -16,8 +16,8 @@ public class NotificationBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_alarm_white)
-                .setContentTitle(intent.getStringExtra(Constants.TITLE))
-                .setContentText(intent.getStringExtra(Constants.DESC))
+                .setContentTitle(context.getResources().getString(R.string.alarm_title))
+                .setContentText(intent.getStringExtra(Constants.ALARM_DESC))
                 .setAutoCancel(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
