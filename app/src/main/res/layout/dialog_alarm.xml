@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_small">
+
+    <TextView
+        android:id="@+id/dialog_alarm_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/raleway_bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        android:text="@string/dialog_alarm_title"/>
+
+    <TextView
+        android:id="@+id/dialog_alarm_date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_title"
+        android:layout_marginTop="@dimen/margin_small"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_alarm_date"
+        android:textColor="@color/main_yellow"/>
+
+    <View
+        android:id="@+id/dialog_alarm_date_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_date_title"
+        android:layout_centerVertical="true"
+        android:background="@color/main_yellow"/>
+
+    <DatePicker
+        android:id="@+id/dialog_alarm_date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_date_separator"
+        android:theme="@style/Picker"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        tools:ignore="UnusedAttribute"/>
+
+    <TextView
+        android:id="@+id/dialog_alarm_time_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_date_picker"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_alarm_time"
+        android:textColor="@color/main_yellow"/>
+
+    <View
+        android:id="@+id/dialog_alarm_time_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_time_title"
+        android:layout_centerVertical="true"
+        android:background="@color/main_yellow"/>
+
+    <TimePicker
+        android:id="@+id/dialog_alarm_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_time_separator"
+        android:theme="@style/Picker"
+        android:timePickerMode="spinner"
+        tools:ignore="UnusedAttribute"/>
+
+    <TextView
+        android:id="@+id/dialog_alarm_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_time_picker"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/messages_error_time_over"
+        android:textColor="@color/error"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/dialog_alarm_note_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_error"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_alarm_note"
+        android:textColor="@color/main_yellow"/>
+
+    <View
+        android:id="@+id/dialog_alarm_note_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_note_title"
+        android:layout_centerVertical="true"
+        android:background="@color/main_yellow"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_alarm_note_input_layout"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_note_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_tiny"
+        style="@style/TextInput"
+        app:boxStrokeColor="@color/yellow_bg_light"
+        app:hintEnabled="false"
+        app:errorEnabled="false"
+        app:errorIconDrawable="@null">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dialog_alarm_note_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:fontFamily="@font/raleway_regular"
+            android:lines="3"
+            android:maxLength="50"
+            android:textSize="@dimen/text_small"
+            android:textCursorDrawable="@null"
+            android:inputType="textMultiLine"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialog_alarm_buttom_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_note_input_layout"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_button_ok"
+        android:textColor="@color/main_yellow"
+        app:rippleColor="@color/yellow_bg_lighter"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialog_alarm_button_negative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_alarm_buttom_positive"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_note_input_layout"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_button_cancel"
+        android:textColor="@color/main_yellow"
+        app:rippleColor="@color/yellow_bg_lighter"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
