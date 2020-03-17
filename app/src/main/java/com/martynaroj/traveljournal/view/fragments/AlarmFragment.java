@@ -272,7 +272,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                         (timePicker1, i, i1) -> errorMessage.setVisibility(View.GONE)
                 );
             }
-            datePicker.setMinDate(new Date().getTime());
+            datePicker.setMinDate(new Date().getTime() - 100);
             buttonPositive.setOnClickListener(v -> setAlarm(dialog, datePicker, timePicker));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
