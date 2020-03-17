@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.NotificationChannel;
@@ -31,6 +32,7 @@ import com.martynaroj.traveljournal.view.others.classes.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -42,6 +44,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private FragmentAlarmBinding binding;
     private Intent broadcastIntent;
+    private Timer timer;
+    private boolean isAlarmCanceled;
 
     public static AlarmFragment newInstance() {
         return new AlarmFragment();
@@ -98,12 +102,12 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void initTimer(long alarmTime) {
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Calendar now = Calendar.getInstance();
-                if (alarmTime < now.getTimeInMillis()) {
+                if (alarmTime < now.getTimeInMillis() || isAlarmCanceled) {
                     binding.setIsBroadcastWorking(false);
                     timer.cancel();
                 }
@@ -114,8 +118,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void checkPermissionsDialog() {
         if (getContext() != null) {
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            if (!prefs.getBoolean(Constants.ALARM_DIALOG, false)
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            if (!preferences.getBoolean(Constants.ALARM_DIALOG, false)
                     && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 showPermissionsDialog();
             }
@@ -128,31 +132,37 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void getAlarmSet() {
         if (getContext() != null) {
-            //todo: alarm note & date on layout when waiting for alarm & cancel button
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
 
-            String alarmNote = prefs.getString(Constants.ALARM_NOTE, "");
+            String alarmNote = preferences.getString(Constants.ALARM_NOTE, "");
             Calendar alarmDate = Calendar.getInstance();
-            alarmDate.setTimeInMillis(prefs.getLong(Constants.ALARM_TIME, 0));
+            alarmDate.setTimeInMillis(preferences.getLong(Constants.ALARM_TIME, 0));
 
+            setAlarmData(alarmDate, alarmNote);
             initTimer(alarmDate.getTimeInMillis());
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private void setAlarmData(Calendar alarmDate, String alarmNote) {
+        binding.alarmAlarmSetDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(alarmDate.getTime()));
+        binding.alarmAlarmSetTime.setText(new SimpleDateFormat("hh:mm a").format(alarmDate.getTime()));
+        binding.alarmAlarmSetNote.setText(alarmNote);
+    }
 
-    private void saveAlarmSet(long time) {
+
+    private void saveAlarmSet(long time, String note) {
         if (getContext() != null) {
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            prefs.edit().putLong(Constants.ALARM_TIME, time).apply();
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            preferences.edit().putLong(Constants.ALARM_TIME, time).putString(Constants.ALARM_NOTE, note).apply();
         }
     }
 
 
     private void saveShownAlarmDialog() {
         if (getContext() != null) {
-            SharedPreferences.Editor editor = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE).edit();
-            editor.putBoolean(Constants.ALARM_DIALOG, true);
-            editor.apply();
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            preferences.edit().putBoolean(Constants.ALARM_DIALOG, true).apply();
         }
     }
 
@@ -185,7 +195,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         if (timeDifference <= 0) {
             (dialog.findViewById(R.id.dialog_alarm_error)).setVisibility(View.VISIBLE);
         } else {
-            saveAlarmSet(dateEnd.getTimeInMillis());
+            isAlarmCanceled = false;
+            saveAlarmSet(dateEnd.getTimeInMillis(), note);
             setNotificationBroadcast(note, timeDifference);
             dialog.dismiss();
         }
@@ -221,6 +232,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                     PendingIntent.FLAG_UPDATE_CURRENT
             );
             if (alarmManager != null) alarmManager.cancel(pendingIntent);
+            isAlarmCanceled = true;
         }
     }
 
@@ -231,6 +243,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
     private void setListeners() {
         binding.alarmArrowButton.setOnClickListener(this);
         binding.alarmSetButton.setOnClickListener(this);
+        binding.alarmAlarmSetCancelButton.setOnClickListener(this);
     }
 
 
@@ -243,6 +256,9 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.alarm_set_button:
                 showSetAlarmDialog();
+                break;
+            case R.id.alarm_alarm_set_cancel_button:
+                cancelAlarm();
                 break;
         }
     }

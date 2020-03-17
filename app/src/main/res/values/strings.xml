@@ -38,6 +38,7 @@
     <string name="dialog_alarm_note">NOTE</string>
     <string name="alarm_no_alarms">No alarms set</string>
     <string name="alarm_set_new_alarm">Set new alarm</string>
+    <string name="dialog_alarm_cancel_alarm">Cancel Alarm</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>
