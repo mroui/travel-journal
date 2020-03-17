@@ -32,6 +32,12 @@
     <string name="alarm_channel_info">Alarm channel</string>
     <string name="dialog_alarm_perms_title">Additional Permissions</string>
     <string name="dialog_alarm_perms_desc">To fully use the alarm function, enable additional rights in the settings.</string>
+    <string name="dialog_alarm_title">Set alarm</string>
+    <string name="dialog_alarm_date">DATE</string>
+    <string name="dialog_alarm_time">TIME</string>
+    <string name="dialog_alarm_note">NOTE</string>
+    <string name="alarm_no_alarms">No alarms set</string>
+    <string name="alarm_set_new_alarm">Set new alarm</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>

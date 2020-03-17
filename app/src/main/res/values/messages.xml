@@ -24,6 +24,7 @@
     <string name="messages_add_marker_success">Marker successfully added!</string>
     <string name="messages_remove_marker_success">Marker successfully removed!</string>
     <string name="messages_no_places_results">No such places found in your area.</string>
+    <string name="messages_alarm_set_success">Alarm successfully set!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
@@ -40,4 +41,5 @@
     <string name="messages_error_failed_remove_notification">ERROR: Removing notification failed, try again later</string>
     <string name="messages_error_failed_add_friends">"ERROR: Accepting friends request, try again later"</string>
     <string name="messages_error_failed_remove_friend">"ERROR: Removing from friends failed, try again later"</string>
+    <string name="messages_error_time_over">Error! This time is over!</string>
 </resources>

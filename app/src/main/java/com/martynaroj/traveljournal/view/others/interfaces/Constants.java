@@ -47,9 +47,11 @@ public interface Constants {
 
     String CHANNEL_ID = "ALARM_CHANNEL";
     CharSequence CHANNEL_NAME = "ALARM_CHANNEL";
+
     String ALARM_DIALOG = "ALARM_DIALOG";
-    String TITLE = "TITLE";
-    String DESC = "DESC";
+    String ALARM_TIME = "ALARM_TIME";
+    String ALARM_NOTE = "ALARM_NOTE";
     String PREFERENCES = "PREFERENCES";
+    String ALARM_DESC = "ALARM_DESC";
 
 }
