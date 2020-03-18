@@ -66,8 +66,9 @@ captures/
 .externalNativeBuild
 .cxx/
 
-# Google Services (e.g. APIs or Firebase)
+# Services (e.g. APIs or Firebase)
 google-services.json
+services.xml
 
 # Freeline
 freeline.py
