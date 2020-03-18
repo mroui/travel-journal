@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.services.models.PlacesAPI;
+package com.martynaroj.traveljournal.services.models.placesAPI;
 
 import com.google.gson.annotations.SerializedName;
 

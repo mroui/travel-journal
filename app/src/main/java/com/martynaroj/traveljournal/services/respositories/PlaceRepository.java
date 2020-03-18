@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.services.models.PlacesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.models.placesAPI.PlacesResult;
 import com.martynaroj.traveljournal.services.retrofit.Rest;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 

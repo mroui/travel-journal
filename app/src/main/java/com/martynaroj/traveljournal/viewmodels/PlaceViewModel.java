@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.martynaroj.traveljournal.services.models.PlacesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.models.placesAPI.PlacesResult;
 import com.martynaroj.traveljournal.services.respositories.PlaceRepository;
 
 public class PlaceViewModel extends AndroidViewModel {
