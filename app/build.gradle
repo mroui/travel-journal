@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.asksira.android:loopingviewpager:1.2.0'
     implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
     implementation 'com.nightonke:boommenu:2.1.1'
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.5'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
