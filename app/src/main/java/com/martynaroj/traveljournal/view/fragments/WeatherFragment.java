@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
@@ -21,6 +22,7 @@ import com.martynaroj.traveljournal.databinding.FragmentWeatherBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
 
 import java.util.Arrays;
 
@@ -31,6 +33,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     private FragmentWeatherBinding binding;
 
     private AddressViewModel addressViewModel;
+    private WeatherViewModel weatherViewModel;
 
     private FindCurrentPlaceRequest request;
     private PlacesClient placesClient;
@@ -62,6 +65,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     private void initViewModels() {
         if (getActivity() != null) {
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            weatherViewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         }
     }
 
@@ -115,10 +119,25 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
         addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
                 deviceLocation = response.getPlaceLikelihoods().get(0).getPlace();
-                //todo
-                stopProgressBar();
-            } else
+                getCurrentWeather(deviceLocation.getLatLng());
+            } else {
                 showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        });
+    }
+
+
+    private void getCurrentWeather(LatLng latLng) {
+        startProgressBar();
+        weatherViewModel.getWeather(latLng);
+        weatherViewModel.getWeatherResultData().observe(getViewLifecycleOwner(), weatherResult -> {
+            if (weatherResult != null) {
+                binding.setWeatherResult(weatherResult);
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
         });
     }
 
@@ -150,7 +169,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             detectLocation();
         } else {
-            //todo
+            getCurrentWeather(new LatLng(51.507359, -0.136439));
         }
     }
 

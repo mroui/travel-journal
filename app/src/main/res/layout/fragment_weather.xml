@@ -1,104 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_weather"
-    tools:context=".view.fragments.WeatherFragment"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="weatherResult"
+            type="com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult"/>
+        <variable
+            name="celsius"
+            type="Boolean"/>
+    </data>
+
+        <FrameLayout
+        android:id="@+id/fragment_weather"
+        tools:context=".view.fragments.WeatherFragment"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:fillViewport="true"
-        tools:ignore="UselessParent">
+        android:background="@color/white">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_regular">
+            android:fillViewport="true"
+            tools:ignore="UselessParent">
 
-            <ImageView
-                android:id="@+id/weather_arrow_button"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:background="?android:attr/selectableItemBackground"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/back_arrow" />
-
-            <TextView
-                android:id="@+id/weather_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/weather_arrow_button"
-                app:layout_constraintTop_toBottomOf="@+id/weather_arrow_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:fontFamily="@font/robotoslab_medium"
-                android:text="@string/weather_title"
-                android:textSize="@dimen/text_bigger"
-                android:textColor="@color/black"/>
-
-            <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
-                android:id="@+id/weather_search_bar_container"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weather_arrow_button"
-                android:layout_marginTop="@dimen/margin_regular"
-                style="@style/ms9_DefaultShadowStyle"
-                app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
-                app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+                android:padding="@dimen/padding_regular">
 
-            <com.mancj.materialsearchbar.MaterialSearchBar
-                android:id="@+id/weather_search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_tiny"
-                android:background="@color/light_gray"
-                app:mt_hint="City name"
-                app:mt_maxSuggestionsCount="10"/>
+                <ImageView
+                    android:id="@+id/weather_arrow_button"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/back_arrow" />
 
-            </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+                <TextView
+                    android:id="@+id/weather_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/weather_arrow_button"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_arrow_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:fontFamily="@font/robotoslab_medium"
+                    android:text="@string/weather_title"
+                    android:textSize="@dimen/text_bigger"
+                    android:textColor="@color/black"/>
 
-            <LinearLayout
-                android:id="@+id/weather_current_weather_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/weather_search_bar_container"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="@dimen/margin_small"
-                android:orientation="vertical">
+                <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
+                    android:id="@+id/weather_search_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_arrow_button"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    style="@style/ms9_DefaultShadowStyle"
+                    app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
+                    app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
 
-                
+                <com.mancj.materialsearchbar.MaterialSearchBar
+                    android:id="@+id/weather_search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_tiny"
+                    android:background="@color/light_gray"
+                    app:mt_hint="City name"
+                    app:mt_maxSuggestionsCount="10"/>
 
-            </LinearLayout>
+                </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:id="@+id/weather_current_weather_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_search_bar_container"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-    </ScrollView>
+                    <TextView
+                        android:id="@+id/weather_current_weather_city_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_bigger"
+                        android:text="@{weatherResult.name}"
+                        android:textColor="@color/black"/>
 
-    <FrameLayout
-        android:id="@+id/weather_progressbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:visibility="invisible">
-        <com.victor.loading.rotate.RotateLoading
-            android:id="@+id/weather_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
-            app:loading_color="@color/white"
-            android:layout_gravity="center"/>
+                    <TextView
+                        android:id="@+id/weather_current_weather_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_regular"
+                        android:text="@string/weater_current_weather_today"
+                        android:textColor="@color/black"/>
+
+                    <ImageView
+                        android:id="@+id/weather_current_weather_image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
+                        android:contentDescription="@string/weather_current_weather_icon"
+                        app:iconUrl="@{weatherResult.weather.get(0).icon}"/>
+
+                    <TextView
+                        android:id="@+id/weather_current_weather_temperature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_bigger"
+                        android:text="@{weatherResult.main.getTempDegrees(celsius)}"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/weather_current_weather_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_bigger"
+                        android:text="@{weatherResult.weather.get(0).description}"
+                        android:textColor="@color/black"/>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/weather_progressbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:visibility="invisible">
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/weather_progressbar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:loading_width="4dp"
+                app:loading_color="@color/white"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
     </FrameLayout>
 
-</FrameLayout>
+</layout>
