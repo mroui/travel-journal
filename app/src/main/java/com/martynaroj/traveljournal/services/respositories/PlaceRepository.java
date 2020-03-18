@@ -25,7 +25,7 @@ public class PlaceRepository {
 
     public MutableLiveData<PlacesResult> getPlacesResult(LatLng latLng, String type) {
         MutableLiveData<PlacesResult> placesResultData = new MutableLiveData<>();
-        Rest.getRest().getNearbyPlaces(
+        Rest.getPlacesService().getNearbyPlaces(
                 latLng.latitude + "," + latLng.longitude,
                 Constants.NEARBY_PLACES_RADIUS,
                 type,

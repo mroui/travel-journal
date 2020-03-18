@@ -10,27 +10,36 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Rest {
 
-    private static RestInterface serviceRest;
+    private static RestInterface placesService, weatherService;
 
     private Rest() {
     }
 
-
-    public static RestInterface getRest() {
-        return serviceRest;
+    public static RestInterface getPlacesService() {
+        return placesService;
     }
 
+    public static RestInterface getWeatherService() {
+        return weatherService;
+    }
 
-    public static void init() {
+    private static Retrofit init(String url) {
         Gson gson = new GsonBuilder().create();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit
+        return new Retrofit
                 .Builder()
-                .baseUrl("https://maps.googleapis.com/maps/api/")
+                .baseUrl(url)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        serviceRest = retrofit.create(RestInterface.class);
+    }
+
+    public static void initPlaces() {
+        placesService = init("https://maps.googleapis.com/maps/api/").create(RestInterface.class);
+    }
+
+    public static void initWeather() {
+        weatherService = init("https://api.openweathermap.org/data/2.5/").create(RestInterface.class);
     }
 
 }

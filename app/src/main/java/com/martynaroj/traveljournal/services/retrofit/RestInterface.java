@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.services.retrofit;
 
-import com.martynaroj.traveljournal.services.models.PlacesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.models.placesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,6 +15,13 @@ public interface RestInterface {
             @Query("radius") int radius,
             @Query("type") String type,
             @Query("key") String key
+    );
+
+    @GET("weather")
+    Call<WeatherResult> getWeatherByLatLon(
+            @Query("lat") String lat,
+            @Query("lon") String lon,
+            @Query("appid") String appid
     );
 
 }

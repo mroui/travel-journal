@@ -22,7 +22,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initSplashViewModel();
         checkCurrentUserAuth();
-        Rest.init();
+        initServices();
+    }
+
+
+    private void initServices() {
+        Rest.initPlaces();
+        Rest.initWeather();
     }
 
 
