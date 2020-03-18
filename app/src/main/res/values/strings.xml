@@ -28,6 +28,8 @@
     <string name="map_nearby_places">Nearby places</string>
     <string name="map_hide_saved_places">Hide saved places</string>
 
+    <string name="weather_title">Weather</string>
+
     <string name="alarm_title">Alarm</string>
     <string name="alarm_channel_info">Alarm channel</string>
     <string name="dialog_alarm_perms_title">Additional Permissions</string>
