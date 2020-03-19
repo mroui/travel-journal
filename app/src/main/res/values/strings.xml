@@ -33,6 +33,8 @@
     <string name="weather_current_weather_icon">WEATHER</string>
     <string name="weather_celsius_degrees">°C</string>
     <string name="weather_fahrenheit_degrees">°F</string>
+    <string name="weather_city_name">City name</string>
+    <string name="weather_search_city">Search city</string>
 
     <string name="alarm_title">Alarm</string>
     <string name="alarm_channel_info">Alarm channel</string>

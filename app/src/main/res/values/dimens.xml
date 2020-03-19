@@ -23,6 +23,7 @@
     <dimen name="text_medium">20sp</dimen>
     <dimen name="text_big">24sp</dimen>
     <dimen name="text_bigger">36sp</dimen>
+    <dimen name="text_large">48sp</dimen>
 
     <dimen name="text_settings_title">18sp</dimen>
 

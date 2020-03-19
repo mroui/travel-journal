@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.view.others.interfaces;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public interface Constants {
     int RC_SIGN_IN = 9001;
     int RC_SAVE_CREDENTIALS = 9002;
@@ -54,4 +56,5 @@ public interface Constants {
     String PREFERENCES = "PREFERENCES";
     String ALARM_DESC = "ALARM_DESC";
 
+    LatLng LAT_LNG_LONDON = new LatLng(51.507359, -0.136439);
 }
