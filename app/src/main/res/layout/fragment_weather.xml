@@ -75,7 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_tiny"
                     android:background="@color/light_gray"
-                    app:mt_hint="City name"
+                    app:mt_hint="@string/weather_city_name"
+                    app:mt_placeholder="@string/weather_search_city"
                     app:mt_maxSuggestionsCount="10"/>
 
                 </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
@@ -110,49 +111,163 @@
                         android:id="@+id/weather_current_weather_city_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
+                        android:fontFamily="@font/raleway_bold"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_bigger"
-                        android:text="@{weatherResult.name}"
+                        android:textSize="@dimen/text_medium"
+                        android:text="@{weatherResult.fullName.toUpperCase()}"
                         android:textColor="@color/black"/>
 
                     <TextView
                         android:id="@+id/weather_current_weather_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:fontFamily="@font/raleway_bold"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_regular"
+                        android:textSize="@dimen/text_small"
                         android:text="@string/weather_current_weather_today"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/gray"
+                        android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
 
-                    <ImageView
-                        android:id="@+id/weather_current_weather_image"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/weather_current_weather_icon"
-                        app:iconUrl="@{weatherResult.weather.get(0).icon}"/>
-
-                    <TextView
-                        android:id="@+id/weather_current_weather_temperature"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/text_bigger"
-                        android:text="@{weatherResult.main.getTempDegrees(tempUnits)}"
-                        android:textColor="@color/black"/>
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
-                    <TextView
-                        android:id="@+id/weather_current_weather_desc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/roboto_light"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/text_bigger"
-                        android:text="@{weatherResult.weather.get(0).main}"
-                        android:textColor="@color/black"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center"
+                            android:layout_weight="2">
+
+                            <ImageView
+                                android:id="@+id/weather_current_weather_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:scaleType="fitCenter"
+                                android:contentDescription="@string/weather_current_weather_icon"
+                                app:iconUrl="@{weatherResult.weather.get(0).icon}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_temperature"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_light"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/text_large"
+                                android:text="@{weatherResult.main.getTempDegrees(weatherResult.main.temp, tempUnits)}"
+                                android:textColor="@color/black"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/raleway_bold"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/text_smaller"
+                                android:text="@{weatherResult.weather.get(0).description.toUpperCase()}"
+                                android:textColor="@color/gray"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_min_max_temperature"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.main.getMinMaxTemp(tempUnits)}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_temperature"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_pressure"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.main.pressureString}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_pressure"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_humidity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.main.humidityString}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_water_drop"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_wind_speed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.wind.speedString}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_wind"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_sunrise"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.getTimeString(weatherResult.sys.sunrise)}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_sunrise"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                            <TextView
+                                android:id="@+id/weather_current_weather_sunset"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/roboto_light"
+                                android:textSize="@dimen/text_small"
+                                android:text="@{weatherResult.getTimeString(weatherResult.sys.sunset)}"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:drawableStart="@drawable/ic_sunset"
+                                android:drawablePadding="@dimen/padding_tiny"
+                                android:visibility="@{weatherResult != null ? View.VISIBLE : View.INVISIBLE}"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
