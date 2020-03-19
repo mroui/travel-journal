@@ -10,7 +10,7 @@
             name="weatherResult"
             type="com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult"/>
         <variable
-            name="celsius"
+            name="tempUnits"
             type="Boolean"/>
     </data>
 
@@ -80,6 +80,20 @@
 
                 </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
 
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/weather_switch_temp_units"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_search_bar_container"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:thumb="@drawable/switch_thumb"
+                    app:trackTint="@color/light_gray"
+                    app:showText="true"
+                    android:textOn="@string/weather_celsius_degrees"
+                    android:textOff="@string/weather_fahrenheit_degrees"
+                    app:switchTextAppearance="@style/SwitchText"/>
+
                 <LinearLayout
                     android:id="@+id/weather_current_weather_container"
                     android:layout_width="match_parent"
@@ -109,7 +123,7 @@
                         android:fontFamily="@font/roboto_light"
                         android:textAlignment="center"
                         android:textSize="@dimen/text_regular"
-                        android:text="@string/weater_current_weather_today"
+                        android:text="@string/weather_current_weather_today"
                         android:textColor="@color/black"/>
 
                     <ImageView
@@ -127,7 +141,7 @@
                         android:fontFamily="@font/roboto_light"
                         android:textAlignment="center"
                         android:textSize="@dimen/text_bigger"
-                        android:text="@{weatherResult.main.getTempDegrees(celsius)}"
+                        android:text="@{weatherResult.main.getTempDegrees(tempUnits)}"
                         android:textColor="@color/black"/>
 
                     <TextView
@@ -137,7 +151,7 @@
                         android:fontFamily="@font/roboto_light"
                         android:textAlignment="center"
                         android:textSize="@dimen/text_bigger"
-                        android:text="@{weatherResult.weather.get(0).description}"
+                        android:text="@{weatherResult.weather.get(0).main}"
                         android:textColor="@color/black"/>
 
                 </LinearLayout>

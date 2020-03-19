@@ -90,10 +90,10 @@ public class Main extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.humidity);
     }
 
-    public String getTempDegrees(boolean celsius) {
-        return celsius
+    public String getTempDegrees(boolean tempUnits) {
+        return tempUnits
                 ? new DecimalFormat("#0").format(this.temp - 273.15D) + "°C"
-                : new DecimalFormat("#0").format(this.temp) + "°K";
+                : new DecimalFormat("#0").format((this.temp * 9D/5D) - 459.67D) + "°F";
     }
 
 }

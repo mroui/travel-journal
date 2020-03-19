@@ -29,8 +29,10 @@
     <string name="map_hide_saved_places">Hide saved places</string>
 
     <string name="weather_title">Weather</string>
-    <string name="weater_current_weather_today">TODAY</string>
+    <string name="weather_current_weather_today">TODAY</string>
     <string name="weather_current_weather_icon">WEATHER</string>
+    <string name="weather_celsius_degrees">°C</string>
+    <string name="weather_fahrenheit_degrees">°F</string>
 
     <string name="alarm_title">Alarm</string>
     <string name="alarm_channel_info">Alarm channel</string>

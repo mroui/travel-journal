@@ -96,6 +96,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
     private void setListeners() {
         binding.weatherArrowButton.setOnClickListener(this);
+        binding.weatherSwitchTempUnits.setOnClickListener(this);
     }
 
 
@@ -106,7 +107,15 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 break;
+            case R.id.weather_switch_temp_units:
+                changeTempUnits();
+                break;
         }
+    }
+
+
+    private void changeTempUnits() {
+        binding.setTempUnits(binding.weatherSwitchTempUnits.isChecked());
     }
 
 
