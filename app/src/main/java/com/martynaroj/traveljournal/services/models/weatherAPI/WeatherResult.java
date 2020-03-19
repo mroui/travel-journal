@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WeatherResult extends BaseObservable implements Serializable {
 
@@ -32,6 +33,9 @@ public class WeatherResult extends BaseObservable implements Serializable {
 
     @SerializedName("name")
     private String name;
+
+    @SerializedName("timezone")
+    private Integer timezone;
 
 
     @Bindable
@@ -94,6 +98,14 @@ public class WeatherResult extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.name);
     }
 
+    public Integer getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(Integer timezone) {
+        this.timezone = timezone;
+    }
+
     @Bindable
     public String getFullName() {
         return this.name + ", " + this.sys.country;
@@ -101,7 +113,8 @@ public class WeatherResult extends BaseObservable implements Serializable {
 
     @SuppressLint("SimpleDateFormat")
     public String getTimeString(Integer time) {
-        return new SimpleDateFormat("hh:mm aa").format(new Date(time * 1000L));
+        Date date = new Date((time + (timezone - TimeZone.getDefault().getOffset(time))) * 1000L);
+        return new SimpleDateFormat("hh:mm aa").format(date);
     }
 
 }
