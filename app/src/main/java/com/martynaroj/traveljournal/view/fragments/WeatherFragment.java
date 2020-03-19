@@ -189,6 +189,13 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
             }
             stopProgressBar();
         });
+        weatherViewModel.getWeatherForecast(latLng);
+        weatherViewModel.getWeatherForecastResultData().observe(getViewLifecycleOwner(), weatherForecastResult -> {
+            if (weatherForecastResult != null) {
+                binding.setForecastResult(weatherForecastResult);
+            }
+            stopProgressBar();
+        });
     }
 
 
