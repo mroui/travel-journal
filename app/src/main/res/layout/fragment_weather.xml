@@ -57,36 +57,45 @@
                     android:textSize="@dimen/text_bigger"
                     android:textColor="@color/black"/>
 
-                <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
-                    android:id="@+id/weather_search_bar_container"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/weather_search_view_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/weather_arrow_button"
+                    style="@style/TextInput"
                     android:layout_marginTop="@dimen/margin_regular"
-                    style="@style/ms9_DefaultShadowStyle"
-                    app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
-                    app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+                    app:hintEnabled="false"
+                    app:errorEnabled="false"
+                    app:errorIconDrawable="@null">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/map_search_view_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:inputType="text"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.mancj.materialsearchbar.MaterialSearchBar
-                    android:id="@+id/weather_search_bar"
+                <fragment
+                    android:id="@+id/weather_search_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_tiny"
-                    android:background="@color/light_gray"
-                    app:mt_hint="@string/weather_city_name"
-                    app:mt_placeholder="@string/weather_search_city"
-                    app:mt_maxSuggestionsCount="10"/>
-
-                </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="@+id/weather_search_view_layout"
+                    app:layout_constraintEnd_toEndOf="@+id/weather_search_view_layout"
+                    app:layout_constraintTop_toTopOf="@+id/weather_search_view_layout"
+                    app:layout_constraintBottom_toBottomOf="@+id/weather_search_view_layout"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    tools:ignore="FragmentTagUsage"/>
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/weather_switch_temp_units"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/weather_search_bar_container"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_search_view_layout"
                     android:layout_marginTop="@dimen/margin_small"
                     android:thumb="@drawable/switch_thumb"
                     app:trackTint="@color/light_gray"
@@ -101,7 +110,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/weather_search_bar_container"
+                    app:layout_constraintTop_toBottomOf="@+id/weather_search_view_layout"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginTop="@dimen/margin_small"
                     android:orientation="vertical"

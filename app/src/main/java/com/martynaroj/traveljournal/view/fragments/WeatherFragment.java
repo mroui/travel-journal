@@ -6,16 +6,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentWeatherBinding;
@@ -38,6 +43,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     private FindCurrentPlaceRequest request;
     private PlacesClient placesClient;
     private Place deviceLocation;
+    private AutocompleteSupportFragment autocompleteFragment;
 
     public static WeatherFragment newInstance() {
         return new WeatherFragment();
@@ -76,6 +82,20 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
             placesClient = Places.createClient(getContext());
             request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID,
                     Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
+
+            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.weather_search_view);
+            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTextSize(14.0f);
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
+                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
+                        .setHint(getResources().getString(R.string.weather_search_city));
+                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
+                        .setVisibility(View.GONE);
+                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG));
+            }
         }
     }
 
@@ -97,6 +117,26 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     private void setListeners() {
         binding.weatherArrowButton.setOnClickListener(this);
         binding.weatherSwitchTempUnits.setOnClickListener(this);
+        setAutoCompleteListeners();
+    }
+
+
+    private void setAutoCompleteListeners() {
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    getCurrentWeather(place.getLatLng());
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView()
+                    .findViewById(R.id.places_autocomplete_clear_button)
+                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+        }
     }
 
 
