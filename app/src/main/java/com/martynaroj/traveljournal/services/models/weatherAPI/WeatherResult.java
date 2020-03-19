@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.models.weatherAPI;
 
+import android.annotation.SuppressLint;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -7,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class WeatherResult extends BaseObservable implements Serializable {
@@ -88,6 +92,16 @@ public class WeatherResult extends BaseObservable implements Serializable {
     public void setName(String name) {
         this.name = name;
         notifyPropertyChanged(BR.name);
+    }
+
+    @Bindable
+    public String getFullName() {
+        return this.name + ", " + this.sys.country;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public String getTimeString(Integer time) {
+        return new SimpleDateFormat("hh:mm aa").format(new Date(time * 1000L));
     }
 
 }

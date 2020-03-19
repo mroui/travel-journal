@@ -8,7 +8,7 @@ import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
 
-class Sys extends BaseObservable implements Serializable {
+public class Sys extends BaseObservable implements Serializable {
 
     @SerializedName("type")
     public Integer type;
@@ -88,4 +88,5 @@ class Sys extends BaseObservable implements Serializable {
         this.sunset = sunset;
         notifyPropertyChanged(BR.sunset);
     }
+
 }

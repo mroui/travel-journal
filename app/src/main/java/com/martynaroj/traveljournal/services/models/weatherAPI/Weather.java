@@ -70,8 +70,7 @@ public class Weather extends BaseObservable implements Serializable {
     @BindingAdapter("iconUrl")
     public static void loadIcon(ImageView v, String imgUrl) {
         Glide.with(v.getContext())
-                .load("http://openweathermap.org/img/w/" + imgUrl + ".png")
-                //.placeholder(R.drawable.default_avatar)
+                .load("https://openweathermap.org/img/wn/" + imgUrl + "@2x.png")
                 .into(v);
     }
 }

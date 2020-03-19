@@ -90,10 +90,34 @@ public class Main extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.humidity);
     }
 
-    public String getTempDegrees(boolean tempUnits) {
+    private String getTempInUnit(Double temp, boolean tempUnits) {
         return tempUnits
-                ? new DecimalFormat("#0").format(this.temp - 273.15D) + "°C"
-                : new DecimalFormat("#0").format((this.temp * 9D/5D) - 459.67D) + "°F";
+                ? new DecimalFormat("#0").format(temp - 273.15D)
+                : new DecimalFormat("#0").format((temp * 9D/5D) - 459.67D);
+    }
+
+    private String getProperDegrees(boolean units) {
+        return units ? "°C" : "°F";
+    }
+
+    public String getTempDegrees(Double temp, boolean tempUnits) {
+        return getTempInUnit(temp, tempUnits) + getProperDegrees(tempUnits);
+    }
+
+    public String getMinMaxTemp(boolean tempUnits) {
+        return getTempInUnit(this.tempMin, tempUnits)
+                + " - "
+                + getTempInUnit(this.tempMax, tempUnits)
+                + " "
+                + getProperDegrees(tempUnits);
+    }
+
+    public String getPressureString() {
+        return this.pressure + " hPa";
+    }
+
+    public String getHumidityString() {
+        return this.humidity + " %";
     }
 
 }

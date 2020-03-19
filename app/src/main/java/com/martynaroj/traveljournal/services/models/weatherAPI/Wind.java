@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class Wind extends BaseObservable implements Serializable {
 
@@ -35,6 +36,14 @@ public class Wind extends BaseObservable implements Serializable {
     public void setDeg(Double deg) {
         this.deg = deg;
         notifyPropertyChanged(BR.deg);
+    }
+
+    private Double convertMSToKmH(Double variable) {
+        return variable * 3.6D;
+    }
+
+    public String getSpeedString() {
+        return new DecimalFormat("#0.0").format(convertMSToKmH(this.speed)) + " km/h";
     }
 
 }
