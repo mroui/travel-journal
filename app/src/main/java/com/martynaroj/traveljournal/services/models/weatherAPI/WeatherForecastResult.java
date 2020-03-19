@@ -14,11 +14,11 @@ import java.util.List;
 public class WeatherForecastResult extends BaseObservable implements Serializable {
 
     @SerializedName("list")
-    public java.util.List<WeatherList> list = null;
+    private java.util.List<WeatherList> list = null;
 
 
     @Bindable
-    public List<WeatherList> getList() {
+    private List<WeatherList> getList() {
         return list;
     }
 
@@ -35,7 +35,7 @@ public class WeatherForecastResult extends BaseObservable implements Serializabl
         futureDate.add(Calendar.DATE, days);
 
         for(WeatherList weather : this.list) {
-            date.setTime(new Date(weather.dt*1000L));
+            date.setTime(new Date(weather.getDt()*1000L));
             if (date.get(Calendar.DAY_OF_MONTH) == futureDate.get(Calendar.DAY_OF_MONTH)
             && date.get(Calendar.HOUR_OF_DAY) >= 12 && date.get(Calendar.HOUR_OF_DAY) <= 15) {
                 result = weather;

@@ -18,7 +18,7 @@ public class Weather extends BaseObservable implements Serializable {
     private String description;
 
     @SerializedName("icon")
-    public String icon;
+    private String icon;
 
 
     @Bindable

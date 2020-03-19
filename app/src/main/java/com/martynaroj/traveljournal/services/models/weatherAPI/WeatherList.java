@@ -16,13 +16,13 @@ import java.util.List;
 public class WeatherList extends BaseObservable implements Serializable {
 
     @SerializedName("dt")
-    Integer dt;
+    private Integer dt;
 
     @SerializedName("main")
-    public Main main;
+    private Main main;
 
     @SerializedName("weather")
-    public java.util.List<Weather> weather = null;
+    private java.util.List<Weather> weather = null;
 
     @SerializedName("sys")
     private Sys sys;
