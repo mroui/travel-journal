@@ -14,38 +14,12 @@ import java.io.Serializable;
 
 public class Weather extends BaseObservable implements Serializable {
 
-    @SerializedName("id")
-    public Integer id;
-
-    @SerializedName("main")
-    public String main;
-
     @SerializedName("description")
-    public String description;
+    private String description;
 
     @SerializedName("icon")
     public String icon;
 
-
-    @Bindable
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-        notifyPropertyChanged(BR.id);
-    }
-
-    @Bindable
-    public String getMain() {
-        return main;
-    }
-
-    public void setMain(String main) {
-        this.main = main;
-        notifyPropertyChanged(BR.main);
-    }
 
     @Bindable
     public String getDescription() {

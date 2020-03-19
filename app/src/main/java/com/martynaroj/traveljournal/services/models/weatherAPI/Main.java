@@ -14,9 +14,6 @@ public class Main extends BaseObservable implements Serializable {
     @SerializedName("temp")
     private Double temp;
 
-    @SerializedName("feels_like")
-    private Double feelsLike;
-
     @SerializedName("temp_min")
     private Double tempMin;
 
@@ -38,16 +35,6 @@ public class Main extends BaseObservable implements Serializable {
     public void setTemp(Double temp) {
         this.temp = temp;
         notifyPropertyChanged(BR.temp);
-    }
-
-    @Bindable
-    public Double getFeelsLike() {
-        return feelsLike;
-    }
-
-    public void setFeelsLike(Double feelsLike) {
-        this.feelsLike = feelsLike;
-        notifyPropertyChanged(BR.feelsLike);
     }
 
     @Bindable

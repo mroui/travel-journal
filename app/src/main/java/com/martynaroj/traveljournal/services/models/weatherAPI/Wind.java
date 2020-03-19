@@ -14,9 +14,6 @@ public class Wind extends BaseObservable implements Serializable {
     @SerializedName("speed")
     private Double speed;
 
-    @SerializedName("deg")
-    private Double deg;
-
 
     @Bindable
     public Double getSpeed() {
@@ -26,16 +23,6 @@ public class Wind extends BaseObservable implements Serializable {
     public void setSpeed(Double speed) {
         this.speed = speed;
         notifyPropertyChanged(BR.speed);
-    }
-
-    @Bindable
-    public Double getDeg() {
-        return deg;
-    }
-
-    public void setDeg(Double deg) {
-        this.deg = deg;
-        notifyPropertyChanged(BR.deg);
     }
 
     private Double convertMSToKmH(Double variable) {

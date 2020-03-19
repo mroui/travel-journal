@@ -19,9 +19,6 @@ public class WeatherResult extends BaseObservable implements Serializable {
     @SerializedName("weather")
     private List<Weather> weather = null;
 
-    @SerializedName("base")
-    private String base;
-
     @SerializedName("main")
     private Main main;
 
@@ -46,16 +43,6 @@ public class WeatherResult extends BaseObservable implements Serializable {
     public void setWeather(List<Weather> weather) {
         this.weather = weather;
         notifyPropertyChanged(BR.weather);
-    }
-
-    @Bindable
-    public String getBase() {
-        return base;
-    }
-
-    public void setBase(String base) {
-        this.base = base;
-        notifyPropertyChanged(BR.base);
     }
 
     @Bindable
