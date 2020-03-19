@@ -91,6 +91,10 @@ public class Main extends BaseObservable implements Serializable {
         return getTempInUnit(temp, tempUnits) + getProperDegrees(tempUnits);
     }
 
+    public String getGeneralTempDegrees(boolean tempUnits) {
+        return getTempInUnit(this.temp, tempUnits) + getProperDegrees(tempUnits);
+    }
+
     public String getMinMaxTemp(boolean tempUnits) {
         return getTempInUnit(this.tempMin, tempUnits)
                 + " - "
