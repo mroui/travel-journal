@@ -154,11 +154,6 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void changeTempUnits() {
-        binding.setTempUnits(binding.weatherSwitchTempUnits.isChecked());
-    }
-
-
     //LOCATION & WEATHER----------------------------------------------------------------------------
 
 
@@ -196,6 +191,11 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
             }
             stopProgressBar();
         });
+    }
+
+
+    private void changeTempUnits() {
+        binding.setTempUnits(binding.weatherSwitchTempUnits.isChecked());
     }
 
 
