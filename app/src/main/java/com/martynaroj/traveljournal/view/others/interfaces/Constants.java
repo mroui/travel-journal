@@ -60,5 +60,6 @@ public interface Constants {
 
     String LANGUAGE_EN = "en";
     String UTF_8 = "UTF-8";
+    String DETECT_LANGUAGE = "Detect language";
 
 }

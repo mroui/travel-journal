@@ -42,4 +42,6 @@
     <string name="messages_error_failed_add_friends">"ERROR: Accepting friends request, try again later"</string>
     <string name="messages_error_failed_remove_friend">"ERROR: Removing from friends failed, try again later"</string>
     <string name="messages_error_time_passed">Error! Time has passed!</string>
+    <string name="messages_error_languages">ERROR: Failed to load languages, please try again later</string>
+
 </resources>

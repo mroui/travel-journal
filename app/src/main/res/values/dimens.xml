@@ -28,6 +28,7 @@
     <dimen name="text_settings_title">18sp</dimen>
 
     <dimen name="icon_size">36dp</dimen>
+    <dimen name="small_icon_size">12dp</dimen>
     <dimen name="badge_size">15dp</dimen>
 
     <dimen name="line_spacing_small">8dp</dimen>
