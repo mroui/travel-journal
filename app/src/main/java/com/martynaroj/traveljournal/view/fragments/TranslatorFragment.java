@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class TranslatorFragment extends BaseFragment implements View.OnClickListener {
 
@@ -32,6 +33,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     private List<String> languagesFromTo;
     private Map<String, String> languageNames;
     private Map<String, List<String>> possibilities;
+
+    private ArrayAdapter<String> adapterFrom, adapterTo;
 
     public static TranslatorFragment newInstance() {
         return new TranslatorFragment();
@@ -66,6 +69,7 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
         languageNames = new HashMap<>();
         possibilities = new HashMap<>();
         getTranslatorLangs();
+        enableSwapButton(false);
     }
 
 
@@ -97,12 +101,12 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
                 if (key.equals("en")) english_default_index = names.indexOf(languageNames.get(key));
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
-            binding.translatorLanguageFromSpinner.setAdapter(adapter);
+            adapterFrom = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
+            binding.translatorLanguageFromSpinner.setAdapter(adapterFrom);
             binding.translatorLanguageFromSpinner.setSelectedIndex(0);
-            adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names.subList(1, names.size()));
-            binding.translatorLanguageToSpinner.setAdapter(adapter);
-            binding.translatorLanguageToSpinner.setSelectedIndex(english_default_index);
+            adapterTo = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names.subList(1, names.size()));
+            binding.translatorLanguageToSpinner.setAdapter(adapterTo);
+            binding.translatorLanguageToSpinner.setSelectedIndex(english_default_index+1);
         }
     }
 
@@ -111,6 +115,13 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
     private void setListeners() {
         binding.translatorArrowButton.setOnClickListener(this);
+        binding.translatorLanguageFromSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            if (adapterFrom != null && Objects.equals(adapterFrom.getItem(position), Constants.DETECT_LANGUAGE)) {
+                enableSwapButton(false);
+            } else {
+                enableSwapButton(true);
+            }
+        });
     }
 
 
@@ -120,6 +131,9 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             case R.id.translator_arrow_button:
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
+                break;
+            case R.id.translator_language_swap_icon:
+                swapLanguages();
                 break;
         }
     }
@@ -173,6 +187,27 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void enableSwapButton(boolean enable) {
+        if (enable) {
+            binding.translatorLanguageSwapIcon.setOnClickListener(this);
+            binding.translatorLanguageSwapIcon.setClickable(true);
+            binding.translatorLanguageSwapIcon.setImageResource(R.drawable.ic_swap);
+        } else {
+            binding.translatorLanguageSwapIcon.setOnClickListener(null);
+            binding.translatorLanguageSwapIcon.setClickable(false);
+            binding.translatorLanguageSwapIcon.setImageResource(R.drawable.ic_swap_gray);
+        }
+    }
+
+
+    private void swapLanguages() {
+        int indexTo = binding.translatorLanguageToSpinner.getSelectedIndex();
+        int indexFrom = binding.translatorLanguageFromSpinner.getSelectedIndex();
+        binding.translatorLanguageToSpinner.setSelectedIndex(indexFrom-1);
+        binding.translatorLanguageFromSpinner.setSelectedIndex(indexTo+1);
+    }
 
 
     private void encodeURL(String text) {
