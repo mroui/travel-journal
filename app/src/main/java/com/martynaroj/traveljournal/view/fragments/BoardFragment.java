@@ -122,7 +122,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                                     changeFragment(CurrencyFragment.newInstance());
                                     break;
                                 case 3:
-                                    changeFragment(TranslateFragment.newInstance());
+                                    changeFragment(TranslatorFragment.newInstance());
                                     break;
                                 case 4:
                                     changeFragment(AlarmFragment.newInstance());
