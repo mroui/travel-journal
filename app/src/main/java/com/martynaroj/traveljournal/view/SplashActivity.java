@@ -29,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initServices() {
         Rest.initPlaces();
         Rest.initWeather();
+        Rest.initTranslator();
     }
 
 

@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Rest {
 
-    private static RestInterface placesService, weatherService;
+    private static RestInterface placesService, weatherService, translatorService;
 
     private Rest() {
     }
@@ -21,6 +21,10 @@ public class Rest {
 
     public static RestInterface getWeatherService() {
         return weatherService;
+    }
+
+    public static RestInterface getTranslatorService() {
+        return translatorService;
     }
 
     private static Retrofit init(String url) {
@@ -40,6 +44,10 @@ public class Rest {
 
     public static void initWeather() {
         weatherService = init("https://api.openweathermap.org/data/2.5/").create(RestInterface.class);
+    }
+
+    public static void initTranslator() {
+        translatorService = init("https://translate.yandex.net/api/v1.5/tr.json/").create(RestInterface.class);
     }
 
 }

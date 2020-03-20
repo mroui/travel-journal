@@ -1,6 +1,9 @@
 package com.martynaroj.traveljournal.services.retrofit;
 
 import com.martynaroj.traveljournal.services.models.placesAPI.PlacesResult;
+import com.martynaroj.traveljournal.services.models.translatorAPI.DetectLangResult;
+import com.martynaroj.traveljournal.services.models.translatorAPI.LangsResult;
+import com.martynaroj.traveljournal.services.models.translatorAPI.TranslationResult;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherForecastResult;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 
@@ -30,6 +33,25 @@ public interface RestInterface {
             @Query("lat") String lat,
             @Query("lon") String lon,
             @Query("appid") String appid
+    );
+
+    @GET("getLangs")
+    Call<LangsResult> getTranslatorLangs(
+            @Query("key") String key,
+            @Query("ui") String ui
+    );
+
+    @GET("detect")
+    Call<DetectLangResult> detectLang(
+            @Query("key") String key,
+            @Query("text") String text
+    );
+
+    @GET("translate")
+    Call<TranslationResult> getTranslation(
+            @Query("key") String key,
+            @Query("text") String text,
+            @Query("lang") String lang
     );
 
 }
