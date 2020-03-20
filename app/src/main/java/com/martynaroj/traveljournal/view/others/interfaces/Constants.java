@@ -57,4 +57,8 @@ public interface Constants {
     String ALARM_DESC = "ALARM_DESC";
 
     LatLng LAT_LNG_LONDON = new LatLng(51.507359, -0.136439);
+
+    String LANGUAGE_EN = "en";
+    String UTF_8 = "UTF-8";
+
 }
