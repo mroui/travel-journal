@@ -59,6 +59,7 @@ public interface Constants {
     LatLng LAT_LNG_LONDON = new LatLng(51.507359, -0.136439);
 
     String LANGUAGE_EN = "en";
+    int LANGUAGE_EN_INDEX = 10;
     String UTF_8 = "UTF-8";
     String DETECT_LANGUAGE = "Detect language";
 

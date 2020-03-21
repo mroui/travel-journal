@@ -93,20 +93,19 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     private void fillSpinners() {
         if (getContext() != null) {
 
-            int english_default_index = 0;
             List<String> names = new ArrayList<>();
-            names.add(Constants.DETECT_LANGUAGE);
             for (String key : possibilities.keySet()) {
                 names.add(languageNames.get(key));
-                if (key.equals("en")) english_default_index = names.indexOf(languageNames.get(key));
             }
+            Collections.sort(names);
+            names.add(0, Constants.DETECT_LANGUAGE);
 
             adapterFrom = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
             binding.translatorLanguageFromSpinner.setAdapter(adapterFrom);
             binding.translatorLanguageFromSpinner.setSelectedIndex(0);
             adapterTo = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names.subList(1, names.size()));
             binding.translatorLanguageToSpinner.setAdapter(adapterTo);
-            binding.translatorLanguageToSpinner.setSelectedIndex(english_default_index+1);
+            binding.translatorLanguageToSpinner.setSelectedIndex(Constants.LANGUAGE_EN_INDEX);
         }
     }
 
@@ -143,6 +142,7 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
 
     private void getTranslatorLangs() {
+        startProgressBar();
         translatorViewModel.getLangs();
         translatorViewModel.getLangsResultData().observe(getViewLifecycleOwner(), langsResult -> {
             if (langsResult != null) {
