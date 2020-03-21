@@ -38,6 +38,9 @@
     <color name="green_bg_light">#B5EBDE</color>
     <color name="green_bg_dark">#A4D6CA</color>
 
+    <color name="violet_bg_light">#CAB0E4</color>
+    <color name="violet_bg_dark">#B091CD</color>
+
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/light_gray</color>
 
     <color name="transparent">#66000000</color>

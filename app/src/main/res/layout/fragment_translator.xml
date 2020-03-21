@@ -113,7 +113,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginTop="@dimen/margin_small"
                         style="@style/TextInput"
-                        app:boxStrokeColor="@color/yellow_active"
                         android:textColorHint="@color/gray"
                         app:counterEnabled="true"
                         app:counterMaxLength="400"
@@ -144,7 +143,7 @@
                         android:text="@string/translator_translate"
                         android:textColor="@color/white"
                         android:fontFamily="@font/raleway_bold"
-                        app:backgroundTint="@color/main_yellow"/>
+                        app:backgroundTint="@color/main_blue"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/translator_text_to_layout"
@@ -156,7 +155,6 @@
                         app:layout_constraintTop_toBottomOf="@id/translator_translate_button"
                         android:layout_marginTop="@dimen/margin_small"
                         style="@style/TextInput"
-                        app:boxStrokeColor="@color/yellow_active"
                         android:textColorHint="@color/gray"
                         app:boxBackgroundColor="@color/dirty_white"
                         android:layout_weight="5">

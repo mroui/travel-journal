@@ -113,7 +113,8 @@
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
                     style="@style/ExploreMapButton"
-                    app:rippleColor="@color/yellow_bg_lighter"
+                    app:rippleColor="@color/red_bg_lighter"
+                    android:textColor="@color/main_red"
                     android:text="@string/map_show_saved_places"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>
@@ -125,7 +126,8 @@
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
                     style="@style/ExploreMapButton"
-                    app:rippleColor="@color/yellow_bg_lighter"
+                    app:rippleColor="@color/red_bg_lighter"
+                    android:textColor="@color/main_red"
                     android:text="@string/map_nearby_places"
                     android:fontFamily="@font/raleway_bold"
                     android:layout_weight="1"/>

@@ -48,7 +48,8 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
         android:layout_marginTop="@dimen/margin_tiny"
         style="@style/ExploreMapButton"
-        app:rippleColor="@color/yellow_bg_lighter"
+        app:rippleColor="@color/red_bg_lighter"
+        android:textColor="@color/main_red"
         android:text="@string/dialog_button_clear"
         android:fontFamily="@font/raleway_bold"/>
 
@@ -60,7 +61,8 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
         android:layout_marginTop="@dimen/margin_tiny"
         style="@style/ExploreMapButton"
-        app:rippleColor="@color/yellow_bg_lighter"
+        app:rippleColor="@color/red_bg_lighter"
+        android:textColor="@color/main_red"
         android:text="@string/dialog_button_ok"
         android:fontFamily="@font/raleway_bold"/>
 
@@ -73,7 +75,8 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_list"
         android:layout_marginTop="@dimen/margin_tiny"
         style="@style/ExploreMapButton"
-        app:rippleColor="@color/yellow_bg_lighter"
+        app:rippleColor="@color/red_bg_lighter"
+        android:textColor="@color/main_red"
         android:text="@string/dialog_button_cancel"
         android:fontFamily="@font/raleway_bold"/>
 

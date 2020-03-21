@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:fontFamily="@font/raleway_bold"
         android:text="@string/dialog_alarm_date"
-        android:textColor="@color/main_yellow"/>
+        android:textColor="@color/main_violet"/>
 
     <View
         android:id="@+id/dialog_alarm_date_separator"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_date_title"
         android:layout_centerVertical="true"
-        android:background="@color/main_yellow"/>
+        android:background="@color/main_violet"/>
 
     <DatePicker
         android:id="@+id/dialog_alarm_date_picker"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_date_picker"
         android:fontFamily="@font/raleway_bold"
         android:text="@string/dialog_alarm_time"
-        android:textColor="@color/main_yellow"/>
+        android:textColor="@color/main_violet"/>
 
     <View
         android:id="@+id/dialog_alarm_time_separator"
@@ -69,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_time_title"
         android:layout_centerVertical="true"
-        android:background="@color/main_yellow"/>
+        android:background="@color/main_violet"/>
 
     <TimePicker
         android:id="@+id/dialog_alarm_time_picker"
@@ -103,7 +103,7 @@
         android:layout_marginTop="@dimen/margin_tiny"
         android:fontFamily="@font/raleway_bold"
         android:text="@string/dialog_alarm_note"
-        android:textColor="@color/main_yellow"/>
+        android:textColor="@color/main_violet"/>
 
     <View
         android:id="@+id/dialog_alarm_note_separator"
@@ -113,7 +113,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_alarm_note_title"
         android:layout_centerVertical="true"
-        android:background="@color/main_yellow"/>
+        android:background="@color/main_violet"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -151,8 +151,8 @@
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:fontFamily="@font/raleway_bold"
         android:text="@string/dialog_button_ok"
-        android:textColor="@color/main_yellow"
-        app:rippleColor="@color/yellow_bg_lighter"/>
+        android:textColor="@color/main_violet"
+        app:rippleColor="@color/violet_bg_light"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dialog_alarm_button_negative"
@@ -164,7 +164,7 @@
         android:layout_marginEnd="@dimen/margin_small"
         android:fontFamily="@font/raleway_bold"
         android:text="@string/dialog_button_cancel"
-        android:textColor="@color/main_yellow"
-        app:rippleColor="@color/yellow_bg_lighter"/>
+        android:textColor="@color/main_violet"
+        app:rippleColor="@color/violet_bg_light"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
