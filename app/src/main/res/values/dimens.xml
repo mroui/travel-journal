@@ -38,6 +38,8 @@
 
     <dimen name="padding_text_input">14dp</dimen>
 
+    <dimen name="min_input_height">60dp</dimen>
+
     <dimen name="chip_height">24dp</dimen>
     <dimen name="chip_text_size">14dp</dimen>
 
