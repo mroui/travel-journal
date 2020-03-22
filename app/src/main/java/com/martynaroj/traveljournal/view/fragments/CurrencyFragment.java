@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCurrencyBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.CurrencyViewModel;
 
@@ -67,9 +69,8 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
         binding.currencyArrowButton.setOnClickListener(this);
         binding.currencySwapIcon.setOnClickListener(this);
         binding.currencyToSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-            if (selectedFrom == position) {
+            if (selectedFrom == position)
                 swapCurrencies(position, selectedTo);
-            }
             else
                 selectedTo = position;
         });
@@ -78,6 +79,22 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                 swapCurrencies(selectedFrom, position);
             else
                 selectedFrom = position;
+        });
+        binding.currencyAmountInput.addTextChangedListener(new InputTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.currencyAmountInput.hasFocus() && s != null) {
+                    String text = s.toString();
+                    if (text.contains(".")) {
+                        if ((text.substring(text.indexOf(".")).length() > 3 && text.length() <= Constants.MAX_CURRENCY_LENGTH)
+                                || text.substring(text.length() - 1).equals(".") && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
+                            text = text.substring(0, text.length() - 1);
+                            binding.currencyAmountInput.setText(text);
+                            binding.currencyAmountInput.setSelection(text.length());
+                        }
+                    }
+                }
+            }
         });
     }
 
@@ -131,7 +148,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
         currencyViewModel.getCurrencyExchange(from, to);
         currencyViewModel.getCurrencyExchangeResultData().observe(getViewLifecycleOwner(), currencyExchangeResult -> {
             if (currencyExchangeResult != null) {
-                if(possibleRates) {
+                if (possibleRates) {
                     fillSpinners(currencyExchangeResult.getRates());
                 } else {
                     //todo

@@ -83,7 +83,8 @@
                         android:fontFamily="@font/raleway_regular"
                         android:textSize="@dimen/text_small"
                         android:textCursorDrawable="@null"
-                        android:inputType="number"/>
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -140,6 +141,18 @@
                     android:fontFamily="@font/raleway_bold"
                     app:backgroundTint="@color/main_green"/>
 
+                <TextView
+                    android:id="@+id/currency_result_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currency_convert_button"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text="@string/currency_result_title"
+                    android:textColor="@color/main_green"
+                    android:textSize="@dimen/text_regular"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/currency_convert_result"
                     android:layout_width="match_parent"
@@ -147,8 +160,7 @@
                     android:minHeight="@dimen/min_input_height"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/currency_convert_button"
-                    android:layout_marginTop="@dimen/margin_small"
+                    app:layout_constraintTop_toBottomOf="@id/currency_result_title"
                     android:textColorHint="@color/gray"
                     style="@style/TextInput"
                     app:boxBackgroundColor="@color/dirty_white">
@@ -160,7 +172,6 @@
                         android:textSize="@dimen/text_small"
                         android:textCursorDrawable="@null"
                         android:gravity="start"
-                        android:text="0.0"
                         android:focusable="false"
                         android:cursorVisible="false"/>
                 </com.google.android.material.textfield.TextInputLayout>

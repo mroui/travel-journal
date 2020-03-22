@@ -64,5 +64,6 @@ public interface Constants {
 
     String CURRENCY_EUR = "EUR";
     int CURRENCY_EUR_INDEX = 8;
+    int MAX_CURRENCY_LENGTH = 10;
 
 }
