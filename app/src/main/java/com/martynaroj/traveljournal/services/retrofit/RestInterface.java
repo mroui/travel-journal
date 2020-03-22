@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.retrofit;
 
+import com.martynaroj.traveljournal.services.models.currencyAPI.CurrencyExchangeResult;
 import com.martynaroj.traveljournal.services.models.placesAPI.PlacesResult;
 import com.martynaroj.traveljournal.services.models.translatorAPI.DetectLangResult;
 import com.martynaroj.traveljournal.services.models.translatorAPI.LangsResult;
@@ -52,6 +53,12 @@ public interface RestInterface {
             @Query("key") String key,
             @Query("text") String text,
             @Query("lang") String lang
+    );
+
+    @GET("latest")
+    Call<CurrencyExchangeResult> getLatestCurrencyExchange(
+            @Query("base") String base,
+            @Query("symbols") String symbols
     );
 
 }

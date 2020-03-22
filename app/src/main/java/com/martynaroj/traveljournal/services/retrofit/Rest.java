@@ -10,7 +10,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Rest {
 
-    private static RestInterface placesService, weatherService, translatorService;
+    private static RestInterface
+            placesService,
+            weatherService,
+            translatorService,
+            currencyService;
 
     private Rest() {
     }
@@ -25,6 +29,10 @@ public class Rest {
 
     public static RestInterface getTranslatorService() {
         return translatorService;
+    }
+
+    public static RestInterface getCurrencyService() {
+        return currencyService;
     }
 
     private static Retrofit init(String url) {
@@ -48,6 +56,10 @@ public class Rest {
 
     public static void initTranslator() {
         translatorService = init("https://translate.yandex.net/api/v1.5/tr.json/").create(RestInterface.class);
+    }
+
+    public static void initCurrencyConverter() {
+        currencyService = init("https://api.exchangeratesapi.io/").create(RestInterface.class);
     }
 
 }
