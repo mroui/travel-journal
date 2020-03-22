@@ -84,6 +84,7 @@
                         android:textSize="@dimen/text_small"
                         android:textCursorDrawable="@null"
                         android:inputType="numberDecimal"
+                        android:text="@string/currency_default_amount"
                         android:maxLength="10"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -154,7 +155,7 @@
                     android:textSize="@dimen/text_regular"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/currency_convert_result"
+                    android:id="@+id/currency_convert_result_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/min_input_height"
@@ -165,7 +166,7 @@
                     style="@style/TextInput"
                     app:boxBackgroundColor="@color/dirty_white">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/translator_text_to_input"
+                        android:id="@+id/currency_convert_result_input"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/raleway_regular"

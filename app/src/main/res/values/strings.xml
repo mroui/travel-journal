@@ -61,6 +61,7 @@
     <string name="currency_convert">Convert</string>
     <string name="currency_swap">SWAP CURRENCY</string>
     <string name="currency_result_title">Result</string>
+    <string name="currency_default_amount">0.0</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>

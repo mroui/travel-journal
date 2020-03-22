@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCurrencyBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
@@ -17,17 +18,22 @@ import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.CurrencyViewModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class CurrencyFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentCurrencyBinding binding;
     private CurrencyViewModel currencyViewModel;
 
+    private List<String> currencies;
     private int selectedFrom, selectedTo;
+    private String converted;
+    private boolean changes;
 
     public static CurrencyFragment newInstance() {
         return new CurrencyFragment();
@@ -68,17 +74,20 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     private void setListeners() {
         binding.currencyArrowButton.setOnClickListener(this);
         binding.currencySwapIcon.setOnClickListener(this);
+        binding.currencyConvertButton.setOnClickListener(this);
         binding.currencyToSpinner.setOnItemSelectedListener((view, position, id, item) -> {
             if (selectedFrom == position)
                 swapCurrencies(position, selectedTo);
             else
                 selectedTo = position;
+            changes = true;
         });
         binding.currencyFromSpinner.setOnItemSelectedListener((view, position, id, item) -> {
             if (selectedTo == position)
                 swapCurrencies(selectedFrom, position);
             else
                 selectedFrom = position;
+            changes = true;
         });
         binding.currencyAmountInput.addTextChangedListener(new InputTextWatcher() {
             @Override
@@ -86,13 +95,16 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                 if (binding.currencyAmountInput.hasFocus() && s != null) {
                     String text = s.toString();
                     if (text.contains(".")) {
-                        if ((text.substring(text.indexOf(".")).length() > 3 && text.length() <= Constants.MAX_CURRENCY_LENGTH)
-                                || text.substring(text.length() - 1).equals(".") && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
+                        if ((text.substring(text.indexOf(".")).length() > 3
+                                && text.length() <= Constants.MAX_CURRENCY_LENGTH)
+                                || text.substring(text.length() - 1).equals(".")
+                                && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
                             text = text.substring(0, text.length() - 1);
                             binding.currencyAmountInput.setText(text);
                             binding.currencyAmountInput.setSelection(text.length());
                         }
                     }
+                    changes = true;
                 }
             }
         });
@@ -112,13 +124,39 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                         binding.currencyToSpinner.getSelectedIndex()
                 );
                 break;
+            case R.id.currency_convert_button:
+                if (binding.currencyAmountInput.getText() != null
+                    && !binding.currencyAmountInput.getText().toString().equals("")
+                    && Double.parseDouble(binding.currencyAmountInput.getText().toString()) != 0
+                        &&
+                    (converted == null
+                    || (binding.currencyAmountInput.getText() != null
+                    && !converted.equals(binding.currencyAmountInput.getText().toString())))
+                        && changes) {
+
+                    String from = currencies.get(binding.currencyFromSpinner.getSelectedIndex());
+                    String to = currencies.get(binding.currencyToSpinner.getSelectedIndex());
+                    getCurrencyData(from, to, false);
+                }
         }
+    }
+
+
+    //CURRENCY--------------------------------------------------------------------------------------
+
+
+    private void swapCurrencies(int from, int to) {
+        binding.currencyToSpinner.setSelectedIndex(from);
+        binding.currencyFromSpinner.setSelectedIndex(to);
+        selectedTo = from;
+        selectedFrom = to;
+        changes = true;
     }
 
 
     private void fillSpinners(Map<String, Double> rates) {
         if (getContext() != null) {
-            List<String> currencies = new ArrayList<>(rates.keySet());
+            currencies = new ArrayList<>(rates.keySet());
             currencies.add(Constants.CURRENCY_EUR);
             Collections.sort(currencies);
             ArrayAdapter<String> currenciesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, currencies);
@@ -132,17 +170,6 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    //CURRENCY--------------------------------------------------------------------------------------
-
-
-    private void swapCurrencies(int from, int to) {
-        binding.currencyToSpinner.setSelectedIndex(from);
-        binding.currencyFromSpinner.setSelectedIndex(to);
-        selectedTo = from;
-        selectedFrom = to;
-    }
-
-
     private void getCurrencyData(String from, String to, boolean possibleRates) {
         startProgressBar();
         currencyViewModel.getCurrencyExchange(from, to);
@@ -150,15 +177,26 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             if (currencyExchangeResult != null) {
                 if (possibleRates) {
                     fillSpinners(currencyExchangeResult.getRates());
+                } else if (currencyExchangeResult.getRates().get(to) != null) {
+                    converted = Objects.requireNonNull(this.binding.currencyAmountInput.getText()).toString();
+                    binding.currencyConvertResultInput.setText(calculateAmount(currencyExchangeResult.getRates().get(to)));
                 } else {
-                    //todo
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
                 }
+            } else if (!possibleRates) {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
             } else {
-                //todo
-                //showSnackBar(getResources().getString(R.string.messages_error_translation), Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_failed_currencies), Snackbar.LENGTH_LONG);
             }
             stopProgressBar();
         });
+        changes = false;
+    }
+
+
+    private String calculateAmount(Double rate) {
+        Double result = rate * Double.parseDouble(Objects.requireNonNull(binding.currencyAmountInput.getText()).toString());
+        return new DecimalFormat("#.##").format(result);
     }
 
 

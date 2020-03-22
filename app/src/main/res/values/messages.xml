@@ -47,5 +47,7 @@
     <string name="messages_error_translation_not_supported">ERROR: The specified translation direction is not supported</string>
     <string name="messages_error_translation_failed">ERROR: Failed to translate the text</string>
     <string name="messages_error_exceed_translation_daily_limit">ERROR: Exceeded the daily limit on the amount of translated text</string>
+    <string name="messages_error_failed_currencies">ERROR: Failed to load possible currencies</string>
+    <string name="messages_error_failed_convertion">ERROR: Failed to convert, please try again later</string>
 
 </resources>
