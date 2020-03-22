@@ -49,10 +49,17 @@
     <string name="dialog_alarm_cancel_alarm">Cancel Alarm</string>
 
     <string name="translator_title">Translator</string>
-    <string name="translator_swap">SWAP</string>
+    <string name="translator_swap">SWAP LANGUAGES</string>
     <string name="translator_type_text_to_translate">Type text to translate</string>
     <string name="translator_translate">Translate</string>
     <string name="translator_translation">Translation</string>
+
+    <string name="currency_title">Currency\nconverter</string>
+    <string name="currency_amount_title">Amount</string>
+    <string name="currency_from">From</string>
+    <string name="currency_to">To</string>
+    <string name="currency_convert">Convert</string>
+    <string name="currency_swap">SWAP CURRENCY</string>
 
     <string name="login_title">Start\nyour\nadventure</string>
     <string name="login_email">EMAIL</string>

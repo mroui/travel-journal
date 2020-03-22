@@ -2,7 +2,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_currency"
     tools:context=".view.fragments.CurrencyFragment"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -17,11 +18,172 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_regular"
-            android:paddingEnd="@dimen/padding_regular">
+            android:padding="@dimen/padding_regular">
+
+            <ImageView
+                android:id="@+id/currency_arrow_button"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="?android:attr/selectableItemBackground"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back_arrow" />
+
+            <TextView
+                android:id="@+id/currency_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/currency_arrow_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/robotoslab_medium"
+                android:text="@string/currency_title"
+                android:textSize="@dimen/text_bigger"
+                android:textColor="@color/black"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/currency_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/currency_amount_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text="@string/currency_amount_title"
+                    android:textColor="@color/main_green"
+                    android:textSize="@dimen/text_regular"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/currency_amount_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/currency_amount_title"
+                    android:layout_marginTop="@dimen/margin_tiny"
+                    style="@style/TextInput"
+                    app:boxStrokeColor="@color/main_green"
+                    app:hintEnabled="false"
+                    app:errorEnabled="false"
+                    app:errorIconDrawable="@null">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/currency_amount_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:inputType="number"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:id="@+id/currency_spinner_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/currency_amount_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/currency_from_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:layout_weight="6"
+                        style="@style/Spinner"/>
+
+                    <ImageView
+                        android:id="@+id/currency_swap_icon"
+                        android:layout_width="@dimen/small_icon_size"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_swap"
+                        android:contentDescription="@string/translator_swap"
+                        android:layout_weight="1"/>
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/currency_to_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:layout_weight="6"
+                        style="@style/Spinner"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/currency_convert_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currency_spinner_container"
+                    android:padding="@dimen/padding_small"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@string/currency_convert"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/raleway_bold"
+                    app:backgroundTint="@color/main_green"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/currency_convert_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/min_input_height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/currency_convert_button"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textColorHint="@color/gray"
+                    style="@style/TextInput"
+                    app:boxBackgroundColor="@color/dirty_white">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/translator_text_to_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:gravity="start"
+                        android:text="0.0"
+                        android:focusable="false"
+                        android:cursorVisible="false"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/currency_progressbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:visibility="invisible">
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/currency_progressbar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:loading_width="4dp"
+            app:loading_color="@color/white"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
 </FrameLayout>
