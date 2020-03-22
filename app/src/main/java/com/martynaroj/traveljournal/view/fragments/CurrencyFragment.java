@@ -32,7 +32,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
 
     private List<String> currencies;
     private int selectedFrom, selectedTo;
-    private String converted;
+    private Double converted;
     private boolean changes;
 
     public static CurrencyFragment newInstance() {
@@ -65,6 +65,8 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
 
     private void initContentData() {
         getCurrencyData("", "", true);
+        converted = 0D;
+        changes = true;
     }
 
 
@@ -93,17 +95,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.currencyAmountInput.hasFocus() && s != null) {
-                    String text = s.toString();
-                    if (text.contains(".")) {
-                        if ((text.substring(text.indexOf(".")).length() > 3
-                                && text.length() <= Constants.MAX_CURRENCY_LENGTH)
-                                || text.substring(text.length() - 1).equals(".")
-                                && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
-                            text = text.substring(0, text.length() - 1);
-                            binding.currencyAmountInput.setText(text);
-                            binding.currencyAmountInput.setSelection(text.length());
-                        }
-                    }
+                    handleCurrencyTextWatcher(s);
                     changes = true;
                 }
             }
@@ -119,25 +111,12 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                     getParentFragmentManager().popBackStack();
                 break;
             case R.id.currency_swap_icon:
-                swapCurrencies(
-                        binding.currencyFromSpinner.getSelectedIndex(),
-                        binding.currencyToSpinner.getSelectedIndex()
-                );
+                swapCurrencies(binding.currencyFromSpinner.getSelectedIndex(),
+                                binding.currencyToSpinner.getSelectedIndex());
                 break;
             case R.id.currency_convert_button:
-                if (binding.currencyAmountInput.getText() != null
-                    && !binding.currencyAmountInput.getText().toString().equals("")
-                    && Double.parseDouble(binding.currencyAmountInput.getText().toString()) != 0
-                        &&
-                    (converted == null
-                    || (binding.currencyAmountInput.getText() != null
-                    && !converted.equals(binding.currencyAmountInput.getText().toString())))
-                        && changes) {
-
-                    String from = currencies.get(binding.currencyFromSpinner.getSelectedIndex());
-                    String to = currencies.get(binding.currencyToSpinner.getSelectedIndex());
-                    getCurrencyData(from, to, false);
-                }
+                convert();
+                break;
         }
     }
 
@@ -159,7 +138,8 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             currencies = new ArrayList<>(rates.keySet());
             currencies.add(Constants.CURRENCY_EUR);
             Collections.sort(currencies);
-            ArrayAdapter<String> currenciesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, currencies);
+            ArrayAdapter<String> currenciesAdapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, currencies);
             binding.currencyFromSpinner.setAdapter(currenciesAdapter);
             binding.currencyToSpinner.setAdapter(currenciesAdapter);
             binding.currencyFromSpinner.setSelectedIndex(Constants.CURRENCY_EUR_INDEX);
@@ -178,19 +158,33 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                 if (possibleRates) {
                     fillSpinners(currencyExchangeResult.getRates());
                 } else if (currencyExchangeResult.getRates().get(to) != null) {
-                    converted = Objects.requireNonNull(this.binding.currencyAmountInput.getText()).toString();
+                    converted = Double.parseDouble(Objects.requireNonNull(binding.currencyAmountInput.getText()).toString());
                     binding.currencyConvertResultInput.setText(calculateAmount(currencyExchangeResult.getRates().get(to)));
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
-                }
-            } else if (!possibleRates) {
+            } else if (!possibleRates)
                 showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
-            } else {
+            else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_currencies), Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
         changes = false;
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void convert() {
+        Editable editable = binding.currencyAmountInput.getText();
+        String amount = editable != null ? editable.toString() : "";
+
+        if (!amount.equals("") && Double.parseDouble(amount) != 0
+            && (changes || (converted == null || converted != Double.parseDouble(amount)))) {
+                String from = currencies.get(binding.currencyFromSpinner.getSelectedIndex());
+                String to = currencies.get(binding.currencyToSpinner.getSelectedIndex());
+                getCurrencyData(from, to, false);
+        }
     }
 
 
@@ -200,7 +194,19 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    //OTHERS----------------------------------------------------------------------------------------
+    private void handleCurrencyTextWatcher(Editable s) {
+        String text = s.toString();
+        if (text.contains(".")) {
+            if ((text.substring(text.indexOf(".")).length() > 3
+                    && text.length() <= Constants.MAX_CURRENCY_LENGTH)
+                    || text.substring(text.length() - 1).equals(".")
+                    && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
+                text = text.substring(0, text.length() - 1);
+                binding.currencyAmountInput.setText(text);
+                binding.currencyAmountInput.setSelection(text.length());
+            }
+        }
+    }
 
 
     private void startProgressBar() {
