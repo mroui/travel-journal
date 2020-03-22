@@ -4,16 +4,28 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCurrencyBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.CurrencyViewModel;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class CurrencyFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentCurrencyBinding binding;
+    private CurrencyViewModel currencyViewModel;
+
+    private int selectedFrom, selectedTo;
 
     public static CurrencyFragment newInstance() {
         return new CurrencyFragment();
@@ -25,6 +37,8 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
         binding = FragmentCurrencyBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        initViewModels();
+        initContentData();
         setListeners();
 
         return view;
@@ -34,7 +48,16 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    //
+    private void initViewModels() {
+        if (getActivity() != null) {
+            currencyViewModel = new ViewModelProvider(getActivity()).get(CurrencyViewModel.class);
+        }
+    }
+
+
+    private void initContentData() {
+        getCurrencyData("", "", true);
+    }
 
 
     //LISTENERS-------------------------------------------------------------------------------------
@@ -42,6 +65,20 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
 
     private void setListeners() {
         binding.currencyArrowButton.setOnClickListener(this);
+        binding.currencySwapIcon.setOnClickListener(this);
+        binding.currencyToSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            if (selectedFrom == position) {
+                swapCurrencies(position, selectedTo);
+            }
+            else
+                selectedTo = position;
+        });
+        binding.currencyFromSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            if (selectedTo == position)
+                swapCurrencies(selectedFrom, position);
+            else
+                selectedFrom = position;
+        });
     }
 
 
@@ -52,6 +89,28 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
                 break;
+            case R.id.currency_swap_icon:
+                swapCurrencies(
+                        binding.currencyFromSpinner.getSelectedIndex(),
+                        binding.currencyToSpinner.getSelectedIndex()
+                );
+                break;
+        }
+    }
+
+
+    private void fillSpinners(Map<String, Double> rates) {
+        if (getContext() != null) {
+            List<String> currencies = new ArrayList<>(rates.keySet());
+            currencies.add(Constants.CURRENCY_EUR);
+            Collections.sort(currencies);
+            ArrayAdapter<String> currenciesAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, currencies);
+            binding.currencyFromSpinner.setAdapter(currenciesAdapter);
+            binding.currencyToSpinner.setAdapter(currenciesAdapter);
+            binding.currencyFromSpinner.setSelectedIndex(Constants.CURRENCY_EUR_INDEX);
+            selectedFrom = Constants.CURRENCY_EUR_INDEX;
+            binding.currencyToSpinner.setSelectedIndex(0);
+            selectedTo = 0;
         }
     }
 
@@ -59,7 +118,31 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     //CURRENCY--------------------------------------------------------------------------------------
 
 
-    //
+    private void swapCurrencies(int from, int to) {
+        binding.currencyToSpinner.setSelectedIndex(from);
+        binding.currencyFromSpinner.setSelectedIndex(to);
+        selectedTo = from;
+        selectedFrom = to;
+    }
+
+
+    private void getCurrencyData(String from, String to, boolean possibleRates) {
+        startProgressBar();
+        currencyViewModel.getCurrencyExchange(from, to);
+        currencyViewModel.getCurrencyExchangeResultData().observe(getViewLifecycleOwner(), currencyExchangeResult -> {
+            if (currencyExchangeResult != null) {
+                if(possibleRates) {
+                    fillSpinners(currencyExchangeResult.getRates());
+                } else {
+                    //todo
+                }
+            } else {
+                //todo
+                //showSnackBar(getResources().getString(R.string.messages_error_translation), Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
+        });
+    }
 
 
     //OTHERS----------------------------------------------------------------------------------------

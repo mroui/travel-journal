@@ -60,7 +60,9 @@ public interface Constants {
 
     String LANGUAGE_EN = "en";
     int LANGUAGE_EN_INDEX = 10;
-    String UTF_8 = "UTF-8";
     String DETECT_LANGUAGE = "Detect language";
+
+    String CURRENCY_EUR = "EUR";
+    int CURRENCY_EUR_INDEX = 8;
 
 }
