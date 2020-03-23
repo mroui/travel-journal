@@ -59,7 +59,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}">
 
                         <ImageView
                             android:id="@+id/board_new_journey_image"

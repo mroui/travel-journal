@@ -51,6 +51,9 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
@@ -135,6 +138,9 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
     private void setListeners() {
         binding.boardNewJourneyButton.setOnClickListener(this);
     }
@@ -142,17 +148,18 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.board_new_journey_button:
-                startNewJourney();
-                break;
+        if (view.getId() == R.id.board_new_journey_button) {
+            startNewJourney();
         }
     }
 
 
+    //OTHERS----------------------------------------------------------------------------------------
+
+
     private void startNewJourney() {
         if (user != null) {
-
+            changeFragment(CreateTravelFragment.newInstance(user));
         } else {
             showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
         }
@@ -165,12 +172,14 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.boardProgressbarLayout, binding.boardProgressbar);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.boardProgressbarLayout, binding.boardProgressbar);
     }
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.boardProgressbarLayout, binding.boardProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.boardProgressbarLayout, binding.boardProgressbar);
     }
 
 

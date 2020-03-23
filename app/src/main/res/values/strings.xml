@@ -208,4 +208,6 @@
     <string name="dialog_button_settings">SETTINGS</string>
     <string name="dialog_button_no_thanks">NO THANKS</string>
 
+    <string name="create_travel_title">Create travel</string>
+
 </resources>
