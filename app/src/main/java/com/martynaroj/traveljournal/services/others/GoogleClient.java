@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.services.others;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -19,6 +20,7 @@ public class GoogleClient {
 
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInAccount googleSignInAccount;
+    private Context context;
 
 
     public GoogleSignInClient getGoogleSignInClient() {
@@ -32,6 +34,7 @@ public class GoogleClient {
 
 
     public void initGoogleSignInClient(Context context) {
+        this.context = context;
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
@@ -41,8 +44,9 @@ public class GoogleClient {
     }
 
 
-    public String getGoogleSignInAccount(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.RC_SIGN_IN) {
+    public String getGoogleSignInAccount(int requestCode, Intent data) {
+        if (requestCode == Constants.RC_SIGN_IN && context != null) {
+            Resources resources = context.getResources();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 googleSignInAccount = task.getResult(ApiException.class);
@@ -50,15 +54,15 @@ public class GoogleClient {
                     return Constants.SUCCESS;
             } catch (ApiException e) {
                 String statusCode = CommonStatusCodes.getStatusCodeString(e.getStatusCode());
-                String message = "Error: Internal API error";
-                if (statusCode.equals("NETWORK_ERROR"))
-                    message = "Error: Please check your network connection";
-                else if (statusCode.equals("TIMEOUT"))
-                    message = "Error: Timed out while awaiting the result";
+                String message = resources.getString(R.string.messages_error_failed_google_services);
+                if (statusCode.equals(Constants.NETWORK_ERROR))
+                    message = resources.getString(R.string.messages_error_network_connection);
+                else if (statusCode.equals(Constants.TIMEOUT))
+                    message = resources.getString(R.string.messages_error_timed_out);
                 return message;
             }
         }
-        return "Error: Activity request error";
+        return "ERROR: Activity request error, please try again later";
     }
 
 

@@ -22,6 +22,7 @@ public class Notification  extends BaseObservable implements Serializable {
     @Exclude
     private User userFrom;
 
+
     public Notification() {
     }
 
@@ -91,13 +92,10 @@ public class Notification  extends BaseObservable implements Serializable {
             if (obj == null || getClass() != obj.getClass())
                 return false;
             Notification n = (Notification) obj;
-            return id.equals(n.id)
-                    && idFrom.equals(n.idFrom)
-                    && idTo.equals(n.idTo)
-                    && type.equals(n.type)
-                    && timestamp.equals(n.timestamp);
+            return id.equals(n.id);
         } catch (Exception ex) {
             return false;
         }
     }
+
 }

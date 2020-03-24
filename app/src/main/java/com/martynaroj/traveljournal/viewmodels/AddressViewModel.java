@@ -28,8 +28,8 @@ public class AddressViewModel extends AndroidViewModel {
         return statusLiveData;
     }
 
-    public void saveAddress(Address address, String reference) {
-        statusLiveData = addressRepository.saveAddress(address, reference);
+    public void addAddress(Address address, String reference) {
+        statusLiveData = addressRepository.addAddress(address, reference);
     }
 
     public LiveData<Address> getAddressData() {
@@ -47,4 +47,5 @@ public class AddressViewModel extends AndroidViewModel {
     public void detectAddress(PlacesClient placesClient, FindCurrentPlaceRequest request) {
         detectedAddressLiveData = addressRepository.detectAddress(placesClient, request);
     }
+
 }

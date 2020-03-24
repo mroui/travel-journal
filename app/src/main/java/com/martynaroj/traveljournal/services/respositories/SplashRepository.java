@@ -23,6 +23,7 @@ public class SplashRepository {
     private CollectionReference usersRef = rootRef.collection(Constants.USERS);
     private Context context;
 
+
     public SplashRepository(Context context) {
         this.context = context;
     }
@@ -31,9 +32,9 @@ public class SplashRepository {
     public MutableLiveData<DataWrapper<User>> checkUserIsAuth() {
         MutableLiveData<DataWrapper<User>> isUserAuthMutableLiveData = new MutableLiveData<>();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser == null) {
+        if (firebaseUser == null)
             user.setAuthenticated(false);
-        } else {
+        else {
             user.getData().setUid(firebaseUser.getUid());
             user.setAuthenticated(true);
         }
@@ -47,18 +48,15 @@ public class SplashRepository {
         usersRef.document(uid).get().addOnCompleteListener(userTask -> {
             if (userTask.isSuccessful()) {
                 DocumentSnapshot document = userTask.getResult();
-                if (document != null && document.exists()) {
-                    User user = document.toObject(User.class);
-                    userMutableLiveData.setValue(new DataWrapper<>(user,
+                if (document != null && document.exists())
+                    userMutableLiveData.setValue(new DataWrapper<>(document.toObject(User.class),
                             Status.SUCCESS, context.getResources().getString(R.string.messages_auth_success)));
-                } else {
+                else
                     userMutableLiveData.setValue(new DataWrapper<>(null,
                             Status.ERROR, context.getResources().getString(R.string.messages_error_no_user_database)));
-                }
-            } else if(userTask.getException() != null) {
+            } else if (userTask.getException() != null)
                 userMutableLiveData.setValue(new DataWrapper<>(null,
                         Status.ERROR, context.getResources().getString(R.string.messages_error) + userTask.getException().getMessage()));
-            }
         });
         return userMutableLiveData;
     }

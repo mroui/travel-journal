@@ -1,7 +1,5 @@
 package com.martynaroj.traveljournal.services.respositories;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,10 +12,7 @@ import retrofit2.Response;
 
 public class CurrencyRepository {
 
-    private Context context;
-
-    public CurrencyRepository(Context context) {
-        this.context = context;
+    public CurrencyRepository() {
     }
 
     public MutableLiveData<CurrencyExchangeResult> getCurrencyExchangeResult(String from, String to) {

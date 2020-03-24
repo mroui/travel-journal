@@ -166,8 +166,8 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
                 getCurrentWeather(deviceLocation.getLatLng());
             } else {
                 showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
-                stopProgressBar();
             }
+            stopProgressBar();
         });
     }
 
@@ -223,11 +223,10 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == Constants.RC_ACCESS_FINE_LOCATION && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             detectLocation();
-        } else {
+        else
             getCurrentWeather(Constants.LAT_LNG_LONDON);
-        }
     }
 
 

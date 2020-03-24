@@ -26,12 +26,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void initServices() {
-        Rest.initPlaces();
-        Rest.initWeather();
-        Rest.initTranslator();
-        Rest.initCurrencyConverter();
-    }
+    //INIT DATA-------------------------------------------------------------------------------------
 
 
     private void initSplashViewModel() {
@@ -52,6 +47,14 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+    private void initServices() {
+        Rest.initPlaces();
+        Rest.initWeather();
+        Rest.initTranslator();
+        Rest.initCurrencyConverter();
+    }
+
+
     private void getUserFromDatabase(String uid) {
         splashViewModel.setUid(uid);
         splashViewModel.getUserLiveData().observe(this, user -> {
@@ -61,9 +64,13 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+    //OTHERS----------------------------------------------------------------------------------------
+
+
     private void startMainActivity(User user) {
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
         intent.putExtra(USER, user);
         startActivity(intent);
     }
+
 }

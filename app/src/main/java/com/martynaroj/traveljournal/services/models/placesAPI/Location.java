@@ -12,6 +12,7 @@ public class Location implements Serializable {
     @SerializedName("lng")
     private double lng;
 
+
     public double getLat() {
         return lat;
     }
@@ -27,4 +28,5 @@ public class Location implements Serializable {
     public void setLng(double lng) {
         this.lng = lng;
     }
+
 }

@@ -18,4 +18,5 @@ public class ViewPagerListener implements ViewPager.OnPageChangeListener {
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Sys extends BaseObservable implements Serializable {
 
     @SerializedName("country")
-    String country;
+    private String country;
 
     @SerializedName("sunrise")
     private Integer sunrise;

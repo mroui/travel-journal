@@ -28,6 +28,7 @@ public class MarkerRepository {
         markersRef = rootRef.collection(Constants.MARKERS);
     }
 
+
     public MarkerRepository(Context context) {
         this();
         this.context = context;
@@ -41,12 +42,10 @@ public class MarkerRepository {
         marker.setId(markerRef.getId());
 
         markerRef.set(marker).addOnCompleteListener(uidTask -> {
-            if (uidTask.isSuccessful()) {
+            if (uidTask.isSuccessful())
                 markerResponse.setValue(markerRef.getId());
-            } else if (uidTask.getException() != null) {
-                markerResponse.setValue(context.getResources().getString(R.string.messages_error)
-                        + uidTask.getException().getMessage());
-            }
+            else if (uidTask.getException() != null)
+                markerResponse.setValue(context.getResources().getString(R.string.messages_error) + uidTask.getException().getMessage());
         });
         return markerResponse;
     }
@@ -58,13 +57,10 @@ public class MarkerRepository {
         markerRef.get().addOnCompleteListener(uidTask -> {
             if (uidTask.isSuccessful()) {
                 DocumentSnapshot document = uidTask.getResult();
-                if (document != null && document.exists()) {
-                    Marker marker = document.toObject(Marker.class);
-                    markerData.setValue(marker);
-                }
-            } else if (uidTask.getException() != null) {
+                if (document != null && document.exists())
+                    markerData.setValue(document.toObject(Marker.class));
+            } else
                 markerData.setValue(null);
-            }
         });
         return markerData;
     }
@@ -79,9 +75,8 @@ public class MarkerRepository {
         finalTask.addOnCompleteListener(task -> {
             if(task.isSuccessful() && task.getResult() != null) {
                 List<Marker> markers = new ArrayList<>();
-                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                for (DocumentSnapshot documentSnapshot : task.getResult())
                     markers.add(documentSnapshot.toObject(Marker.class));
-                }
                 markersListData.setValue(markers);
             } else
                 markersListData.setValue(null);
@@ -93,11 +88,10 @@ public class MarkerRepository {
     public MutableLiveData<String> removeMarker(String id) {
         MutableLiveData<String> markerResponse = new MutableLiveData<>();
         markersRef.document(id).delete().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful())
                 markerResponse.setValue(context.getResources().getString(R.string.messages_remove_marker_success));
-            } else {
+            else
                 markerResponse.setValue(context.getResources().getString(R.string.messages_error_failed_remove_marker));
-            }
         });
         return markerResponse;
     }

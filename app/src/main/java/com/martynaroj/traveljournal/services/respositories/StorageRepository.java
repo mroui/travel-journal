@@ -24,16 +24,14 @@ public class StorageRepository {
         ref.putBytes(bytes).addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 ref.getDownloadUrl().addOnCompleteListener(uri -> {
-                    if (uri.isSuccessful() && uri.getResult() != null) {
+                    if (uri.isSuccessful() && uri.getResult() != null)
                         statusData.setValue(uri.getResult().toString());
-                    } else if (uri.getException() != null){
+                    else if (uri.getException() != null)
                         statusData.setValue(context.getResources().getString(R.string.messages_error) + uri.getException().getMessage());
-                    }
                 });
-            } else if (task.getException() != null){
+            } else if (task.getException() != null)
                 statusData.setValue(context.getResources().getString(R.string.messages_error)
                         + task.getException().getMessage());
-            }
         });
         return statusData;
     }

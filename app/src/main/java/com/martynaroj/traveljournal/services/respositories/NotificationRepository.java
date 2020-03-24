@@ -23,6 +23,7 @@ public class NotificationRepository {
     private CollectionReference notificationsRef;
     private Context context;
 
+
     private NotificationRepository() {
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         notificationsRef = rootRef.collection(Constants.NOTIFICATIONS);
@@ -41,11 +42,10 @@ public class NotificationRepository {
         DocumentReference notificationRef = notificationsRef.document();
         newNotification.setId(notificationRef.getId());
         notificationRef.set(newNotification).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful())
                 notificationResponse.setValue(newNotification.getId());
-            } else {
+            else
                 notificationResponse.setValue(context.getResources().getString(R.string.messages_error_failed_add_notification));
-            }
         });
         return notificationResponse;
     }
@@ -58,9 +58,8 @@ public class NotificationRepository {
                 DocumentSnapshot document = task.getResult();
                 if (document != null && document.exists()) {
                     Notification notification = document.toObject(Notification.class);
-                    if (notification != null) {
+                    if (notification != null)
                         notificationData.setValue(notification);
-                    }
                 }
             }
         });
@@ -75,25 +74,25 @@ public class NotificationRepository {
             tasks.add(notificationsRef.document(id).get());
         Task<List<DocumentSnapshot>> finalTask = Tasks.whenAllSuccess(tasks);
         finalTask.addOnCompleteListener(task -> {
-            if(task.isSuccessful() && task.getResult() != null) {
+            if (task.isSuccessful() && task.getResult() != null) {
                 List<Notification> notifications = new ArrayList<>();
-                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                for (DocumentSnapshot documentSnapshot : task.getResult())
                     notifications.add(documentSnapshot.toObject(Notification.class));
-                }
                 notificationsListData.setValue(notifications);
-            }
+            } else
+                notificationsListData.setValue(null);
         });
         return notificationsListData;
     }
 
+
     public MutableLiveData<String> removeNotification(String id) {
         MutableLiveData<String> notificationResponse = new MutableLiveData<>();
         notificationsRef.document(id).delete().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful())
                 notificationResponse.setValue(context.getResources().getString(R.string.messages_remove_notification_success));
-            } else {
+            else
                 notificationResponse.setValue(context.getResources().getString(R.string.messages_error_failed_remove_notification));
-            }
         });
         return notificationResponse;
     }

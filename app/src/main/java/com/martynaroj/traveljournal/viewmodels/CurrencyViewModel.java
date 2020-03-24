@@ -16,7 +16,7 @@ public class CurrencyViewModel extends AndroidViewModel {
 
     public CurrencyViewModel(@NonNull Application application) {
         super(application);
-        currencyRepository = new CurrencyRepository(application.getApplicationContext());
+        currencyRepository = new CurrencyRepository();
     }
 
     public void getCurrencyExchange(String from, String to) {

@@ -45,7 +45,7 @@ public class SearchFriendsFragment extends BaseFragment {
         binding = FragmentSearchFriendsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initData();
+        initContentData();
         setListeners();
         focusOnSearchView();
 
@@ -53,11 +53,17 @@ public class SearchFriendsFragment extends BaseFragment {
     }
 
 
-    private void initData() {
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
+    private void initContentData() {
         loggedUser = FirebaseAuth.getInstance().getCurrentUser();
         usersRef = FirebaseFirestore.getInstance().collection(Constants.USERS);
         usersPagingConfig = new PagedList.Config.Builder().setInitialLoadSizeHint(10).setPageSize(3).build();
     }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
@@ -96,16 +102,14 @@ public class SearchFriendsFragment extends BaseFragment {
     }
 
 
-    private void changeFragment(Fragment next) {
-        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
-    }
+    //SEARCHING-------------------------------------------------------------------------------------
 
 
     private void setAdapterObserver() {
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 int totalNumberOfItems = adapter.getItemCount();
-                if(totalNumberOfItems == 0) {
+                if (totalNumberOfItems == 0) {
                     binding.searchFriendsMessage.setVisibility(View.VISIBLE);
                     binding.searchFriendsMessage.setText(getResources().getString(R.string.search_friends_no_results));
                 } else {
@@ -136,6 +140,14 @@ public class SearchFriendsFragment extends BaseFragment {
         binding.searchFriendsRecyclerView.swapAdapter(adapter, true);
         setAdapterOnItemClickListener();
         setAdapterObserver();
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void changeFragment(Fragment next) {
+        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 

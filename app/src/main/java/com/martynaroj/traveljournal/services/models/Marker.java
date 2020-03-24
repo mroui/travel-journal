@@ -15,6 +15,7 @@ public class Marker extends BaseObservable implements Serializable {
     private double latitude;
     private double longitude;
 
+
     public Marker() {
     }
 
@@ -85,11 +86,11 @@ public class Marker extends BaseObservable implements Serializable {
         try {
             if (obj == null || getClass() != obj.getClass())
                 return false;
-
             Marker m = (Marker) obj;
             return (latitude == m.latitude) && (longitude == m.longitude);
         } catch (Exception ex) {
             return false;
         }
     }
+
 }

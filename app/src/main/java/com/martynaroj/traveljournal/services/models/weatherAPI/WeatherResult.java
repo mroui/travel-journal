@@ -95,7 +95,7 @@ public class WeatherResult extends BaseObservable implements Serializable {
 
     @Bindable
     public String getFullName() {
-        return this.name + ", " + this.sys.country;
+        return this.name + ", " + this.sys.getCountry();
     }
 
     @SuppressLint("SimpleDateFormat")

@@ -36,7 +36,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
     private ArrayAdapter<String> adapterFrom;
 
-    private String languageFrom, languageTo, languageResult, text;
+    private String languageResult;
+    private String text;
     private boolean changes;
 
     public static TranslatorFragment newInstance() {
@@ -92,7 +93,6 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     }
 
 
-
     private void fillSpinners() {
         if (getContext() != null) {
 
@@ -106,7 +106,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             adapterFrom = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
             binding.translatorLanguageFromSpinner.setAdapter(adapterFrom);
             binding.translatorLanguageFromSpinner.setSelectedIndex(0);
-            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names.subList(1, names.size()));
+            ArrayAdapter<String> adapterTo = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_dropdown_item, names.subList(1, names.size()));
             binding.translatorLanguageToSpinner.setAdapter(adapterTo);
             binding.translatorLanguageToSpinner.setSelectedIndex(Constants.LANGUAGE_EN_INDEX);
         }
@@ -118,11 +119,10 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     private void setListeners() {
         binding.translatorArrowButton.setOnClickListener(this);
         binding.translatorLanguageFromSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-            if (adapterFrom != null && Objects.equals(adapterFrom.getItem(position), Constants.DETECT_LANGUAGE)) {
+            if (adapterFrom != null && Objects.equals(adapterFrom.getItem(position), Constants.DETECT_LANGUAGE))
                 enableSwapButton(false);
-            } else {
+            else
                 enableSwapButton(true);
-            }
             changes = true;
         });
         binding.translatorLanguageToSpinner.setOnItemSelectedListener((view, position, id, item) -> changes = true);
@@ -160,9 +160,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
                 languagesFromTo = langsResult.getDirs();
                 initPossibleLanguages();
                 fillSpinners();
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_languages), Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
     }
@@ -173,11 +172,10 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             startProgressBar();
             translatorViewModel.getTranslation(text, languageResult);
             translatorViewModel.getTranslationResultData().observe(getViewLifecycleOwner(), translationResult -> {
-                if (translationResult != null) {
+                if (translationResult != null)
                     resultTranslationHandling(translationResult);
-                } else {
+                else
                     showSnackBar(getResources().getString(R.string.messages_error_translation), Snackbar.LENGTH_LONG);
-                }
                 stopProgressBar();
             });
         }
@@ -225,33 +223,27 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             if (!newText.equals(text) || changes) {
                 changes = false;
                 text = newText;
-                languageFrom = (String) binding.translatorLanguageFromSpinner.getItems()
+                String languageFrom = (String) binding.translatorLanguageFromSpinner.getItems()
                         .get(binding.translatorLanguageFromSpinner.getSelectedIndex());
-                languageTo = (String) binding.translatorLanguageToSpinner.getItems()
+                String languageTo = (String) binding.translatorLanguageToSpinner.getItems()
                         .get(binding.translatorLanguageToSpinner.getSelectedIndex());
-                if (languageFrom.equals(Constants.DETECT_LANGUAGE)) {
+                if (languageFrom.equals(Constants.DETECT_LANGUAGE))
                     languageFrom = null;
-                }
                 for (String shortName : languageNames.keySet()) {
-                    if (languageFrom != null && languageFrom.equals(languageNames.get(shortName))) {
+                    if (languageFrom != null && languageFrom.equals(languageNames.get(shortName)))
                         languageFrom = shortName;
-                    }
-                    if (languageTo.equals(languageNames.get(shortName))) {
+                    if (languageTo.equals(languageNames.get(shortName)))
                         languageTo = shortName;
-                    }
                 }
                 languageResult = "";
-                if (languageFrom != null) {
+                if (languageFrom != null)
                     languageResult = languageFrom + "-";
-                }
                 languageResult += languageTo;
                 return true;
-            } else {
+            } else
                 return false;
-            }
-        } else {
+        } else
             return false;
-        }
     }
 
 
@@ -274,8 +266,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     private void swapLanguages() {
         int indexTo = binding.translatorLanguageToSpinner.getSelectedIndex();
         int indexFrom = binding.translatorLanguageFromSpinner.getSelectedIndex();
-        binding.translatorLanguageToSpinner.setSelectedIndex(indexFrom-1);
-        binding.translatorLanguageFromSpinner.setSelectedIndex(indexTo+1);
+        binding.translatorLanguageToSpinner.setSelectedIndex(indexFrom - 1);
+        binding.translatorLanguageFromSpinner.setSelectedIndex(indexTo + 1);
 
         Editable from = binding.translatorTextFromInput.getText();
         Editable to = binding.translatorTextToInput.getText();

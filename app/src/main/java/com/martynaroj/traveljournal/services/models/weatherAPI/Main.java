@@ -78,9 +78,10 @@ public class Main extends BaseObservable implements Serializable {
     }
 
     private String getTempInUnit(Double temp, boolean tempUnits) {
+        DecimalFormat decimalFormat = new DecimalFormat("#0");
         return tempUnits
-                ? new DecimalFormat("#0").format(temp - 273.15D)
-                : new DecimalFormat("#0").format((temp * 9D/5D) - 459.67D);
+                ? decimalFormat.format(temp - 273.15D)
+                : decimalFormat.format((temp * 9D/5D) - 459.67D);
     }
 
     private String getProperDegrees(boolean units) {

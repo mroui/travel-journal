@@ -29,7 +29,7 @@ public class TranslatorRepository {
         Rest.getTranslatorService().getTranslatorLangs(
                 context.getString(R.string.yandex_translate_api_key),
                 Constants.LANGUAGE_EN
-                ).enqueue(new Callback<LangsResult>() {
+        ).enqueue(new Callback<LangsResult>() {
             @Override
             public void onResponse(@NonNull Call<LangsResult> call,
                                    @NonNull Response<LangsResult> response) {

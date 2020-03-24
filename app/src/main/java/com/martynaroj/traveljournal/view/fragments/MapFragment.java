@@ -120,14 +120,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             userViewModel.getUserData(firebaseAuth.getCurrentUser().getUid());
             userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
-                    if (user.getMarkers() != null && !user.getMarkers().isEmpty()) {
+                    if (user.getMarkers() != null && !user.getMarkers().isEmpty())
                         initSavedPlacesMarkers(user.getMarkers());
-                    } else {
+                    else
                         binding.mapSavedPlacesButton.setEnabled(false);
-                    }
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                }
                 stopProgressBar();
             });
         }
@@ -148,9 +146,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                             .title(marker.getDescription());
                     savedPlacesMarkersOptions.add(options);
                 }
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_load_markers), Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
     }
@@ -167,8 +164,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         if (getContext() != null) {
             Places.initialize(getContext(), getString(R.string.google_api_key));
             placesClient = Places.createClient(getContext());
-            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME,
-                    com.google.android.libraries.places.api.model.Place.Field.ADDRESS, com.google.android.libraries.places.api.model.Place.Field.LAT_LNG));
+            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(
+                    com.google.android.libraries.places.api.model.Place.Field.ID,
+                    com.google.android.libraries.places.api.model.Place.Field.NAME,
+                    com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                    com.google.android.libraries.places.api.model.Place.Field.LAT_LNG));
 
             autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
                     .findFragmentById(R.id.map_search_view);
@@ -179,9 +179,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
                         .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
                 autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
                         .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ID, com.google.android.libraries.places.api.model.Place.Field.NAME,
-                        com.google.android.libraries.places.api.model.Place.Field.ADDRESS, com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.OPENING_HOURS,
-                        com.google.android.libraries.places.api.model.Place.Field.PHONE_NUMBER, com.google.android.libraries.places.api.model.Place.Field.RATING));
+                autocompleteFragment.setPlaceFields(Arrays.asList(
+                        com.google.android.libraries.places.api.model.Place.Field.ID,
+                        com.google.android.libraries.places.api.model.Place.Field.NAME,
+                        com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG,
+                        com.google.android.libraries.places.api.model.Place.Field.OPENING_HOURS,
+                        com.google.android.libraries.places.api.model.Place.Field.PHONE_NUMBER,
+                        com.google.android.libraries.places.api.model.Place.Field.RATING));
             }
         }
     }
@@ -194,11 +199,11 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     private void initLocation() {
         if (getContext() != null && ContextCompat.checkSelfPermission(getContext(),
-                ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             detectLocation();
-        } else if (getActivity() != null) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
-        }
+        else if (getActivity() != null)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    Constants.RC_ACCESS_FINE_LOCATION);
     }
 
 
@@ -345,9 +350,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
                 deviceLocation = response.getPlaceLikelihoods().get(0).getPlace();
-                if (deviceLocation.getLatLng() != null) {
+                if (deviceLocation.getLatLng() != null)
                     zoomMap(deviceLocation.getLatLng(), 10.0f);
-                }
                 stopProgressBar();
             } else
                 showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
@@ -416,20 +420,16 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             placeViewModel.getPlaces(deviceLocation.getLatLng(), type);
             placeViewModel.getPlacesResultData().observe(getViewLifecycleOwner(), placesResult -> {
                 if (placesResult != null) {
-                    if (placesResult.getPlaces() != null && !placesResult.getPlaces().isEmpty()) {
-                        nearbyPlaces = placesResult.getPlaces();
-                        addMarkersOnMap(nearbyPlaces);
-                    } else {
+                    if (placesResult.getPlaces() != null && !placesResult.getPlaces().isEmpty())
+                        addMarkersOnMap(placesResult.getPlaces());
+                    else
                         showSnackBar(getResources().getString(R.string.messages_no_places_results), Snackbar.LENGTH_LONG);
-                    }
                     zoomMap(deviceLocation.getLatLng(), 15.0f);
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
-                }
             });
-        } else {
+        } else
             showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
-        }
     }
 
 

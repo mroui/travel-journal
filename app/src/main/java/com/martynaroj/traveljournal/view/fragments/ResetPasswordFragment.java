@@ -41,9 +41,15 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initAuthViewModel() {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
     }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
@@ -62,39 +68,31 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
                 hideKeyboard();
                 if (getParentFragmentManager().getBackStackEntryCount() > 0)
                     getParentFragmentManager().popBackStack();
-                return;
+                break;
             case R.id.forgot_password_send_button:
                 if (validateEmail())
                     sendResetPasswordMail();
+                break;
         }
     }
 
 
-    private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
-    }
-
-
-    private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
-    }
-
-
-    private void showSnackBar(String message, int duration) {
-        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
-    }
+    //VALIDATION------------------------------------------------------------------------------------
 
 
     private boolean validateEmail() {
-        return new FormHandler(getContext()).validateInput(binding.forgotPasswordEmailInput, binding.forgotPasswordEmailLayout);
+        return new FormHandler(getContext()).validateInput(binding.forgotPasswordEmailInput,
+                binding.forgotPasswordEmailLayout);
     }
+
+
+    //RESET PASS------------------------------------------------------------------------------------
 
 
     private void sendResetPasswordMail() {
         if (validateEmail()) {
             startProgressBar();
             String email = Objects.requireNonNull(binding.forgotPasswordEmailInput.getText()).toString();
-
             authViewModel.sendPasswordResetEmail(email);
             authViewModel.getUserForgotPasswordLiveData().observe(this, user -> {
                 stopProgressBar();
@@ -106,6 +104,26 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
                 }
             });
         }
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.forgotPasswordProgressbarLayout, binding.forgotPasswordProgressbar);
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 

@@ -81,9 +81,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         boolean isBroadcastWorking = (PendingIntent.getBroadcast(getContext(), Constants.RC_BROADCAST,
                 broadcastIntent, PendingIntent.FLAG_NO_CREATE) != null);
         binding.setIsBroadcastWorking(isBroadcastWorking);
-        if (isBroadcastWorking) {
+        if (isBroadcastWorking)
             getAlarmSet();
-        }
     }
 
 

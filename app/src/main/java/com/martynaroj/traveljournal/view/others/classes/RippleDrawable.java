@@ -9,14 +9,12 @@ import com.google.android.material.button.MaterialButton;
 
 public abstract class RippleDrawable {
 
-
     public static void setRippleEffectButton(MaterialButton button, int normalColor, int pressedColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             button.setRippleColor(new ColorStateList(new int[][]{ new int[]{}},new int[] {pressedColor}));
         else
             button.setBackgroundDrawable(getStateListDrawable(normalColor, pressedColor));
     }
-
 
     private static StateListDrawable getStateListDrawable(int normalColor, int pressedColor) {
         StateListDrawable states = new StateListDrawable();

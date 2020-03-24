@@ -34,9 +34,9 @@ public class User extends BaseObservable implements Serializable {
     private String activeTravelId;
     private List<String> travels;
 
+
     public User() {
     }
-
 
     public User(String uid, String username, String email) {
         this.uid = uid;

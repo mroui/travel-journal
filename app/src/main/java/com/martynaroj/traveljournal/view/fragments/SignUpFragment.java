@@ -54,6 +54,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initGoogleClient() {
         googleClient = new GoogleClient();
         googleClient.initGoogleSignInClient(binding.getRoot().getContext());
@@ -64,6 +67,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
@@ -77,6 +83,28 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding.signupLogInButton.setOnClickListener(this);
         binding.signupPasswordStrengthMeter.setEditText(binding.signupPasswordInput);
     }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.signup_arrow_button:
+            case R.id.signup_log_in_button:
+                hideKeyboard();
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+                break;
+            case R.id.signup_google_button:
+                signUpWithGoogle();
+                break;
+            case R.id.signup_sign_up_button:
+                signUpWithEmail();
+                break;
+        }
+    }
+
+
+    //VALIDATION------------------------------------------------------------------------------------
 
 
     private boolean validateEmail() {
@@ -110,43 +138,11 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.signup_arrow_button:
-            case R.id.signup_log_in_button:
-                hideKeyboard();
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
-                return;
-            case R.id.signup_google_button:
-                signUpWithGoogle();
-                return;
-            case R.id.signup_sign_up_button:
-                signUpWithEmail();
-        }
-    }
-
-
-    private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
-    }
-
-
-    private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.signupProgressbarLayout, binding.signupProgressbar);
-    }
-
-
-    private void showSnackBar(String message, int duration) {
-        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
-    }
+    //CREDENTIALS-----------------------------------------------------------------------------------
 
 
     private void signUpWithEmail() {
         if (validateUsername() && validateEmail() && validatePasswords()) {
-            startProgressBar();
-
             String email = Objects.requireNonNull(binding.signupEmailInput.getText()).toString();
             String username = Objects.requireNonNull(binding.signupUsernameInput.getText()).toString();
             String password = Objects.requireNonNull(binding.signupPasswordInput.getText()).toString();
@@ -156,28 +152,14 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void signUpWithEmailAuthCredential(String email, String password, String username) {
+        startProgressBar();
         authViewModel.signUpWithEmail(email, password, username);
         authViewModel.getUserLiveData().observe(this, user -> {
-            if (user.getStatus() == Status.LOADING) {
+            if (user.getStatus() == Status.LOADING)
                 sendVerificationMail();
-            } else {
-                stopProgressBar();
+            else
                 showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
-            }
-        });
-    }
-
-
-    private void sendVerificationMail() {
-        authViewModel.sendVerificationMail();
-        authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
             stopProgressBar();
-            if (verificationUser.getStatus() == Status.SUCCESS) {
-                showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
-                getParentFragmentManager().popBackStack();
-            } else {
-                showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
-            }
         });
     }
 
@@ -189,10 +171,44 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
+        AuthCredential googleAuthCredential = googleClient.getGoogleAuthCredential(googleSignInAccount);
+        signInWithGoogleAuthCredential(googleAuthCredential);
+    }
+
+
+    private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
+        startProgressBar();
+        authViewModel.signInWithGoogle(googleAuthCredential);
+        authViewModel.getUserLiveData().observe(this, userData -> {
+            if (userData.getStatus() == Status.SUCCESS)
+                if (!userData.isAdded())
+                    addNewUser(userData);
+                else
+                    getUserData(userData);
+            else
+                showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
+            stopProgressBar();
+        });
+    }
+
+
+    private void sendVerificationMail() {
+        startProgressBar();
+        authViewModel.sendVerificationMail();
+        authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
+            stopProgressBar();
+            showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
+            if (verificationUser.getStatus() == Status.SUCCESS)
+                getParentFragmentManager().popBackStack();
+        });
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String status = googleClient.getGoogleSignInAccount(requestCode, resultCode, data);
+        String status = googleClient.getGoogleSignInAccount(requestCode, data);
         if (status.equals(Constants.SUCCESS)) {
             getGoogleAuthCredential(googleClient.getGoogleSignInAccount());
         } else {
@@ -202,30 +218,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
-        AuthCredential googleAuthCredential = googleClient.getGoogleAuthCredential(googleSignInAccount);
-        signInWithGoogleAuthCredential(googleAuthCredential);
-    }
-
-
-    private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
-        authViewModel.signInWithGoogle(googleAuthCredential);
-        authViewModel.getUserLiveData().observe(this, userData -> {
-            if (userData.getStatus() == Status.SUCCESS) {
-                if (!userData.isAdded()) {
-                    addNewUser(userData);
-                } else {
-                    getUserData(userData);
-                }
-            } else {
-                stopProgressBar();
-                showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
-            }
-        });
-    }
-
-
     private void getUserData(DataWrapper<User> userData) {
+        startProgressBar();
         userViewModel.getUserData(userData.getData().getUid());
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             stopProgressBar();
@@ -236,15 +230,35 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void addNewUser(DataWrapper<User> userData) {
+        startProgressBar();
         authViewModel.addUser(userData);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
-            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
+            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded())
                 getUserData(userData);
-            } else {
-                stopProgressBar();
+            else
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
-            }
+            stopProgressBar();
         });
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.signupProgressbarLayout, binding.signupProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.signupProgressbarLayout, binding.signupProgressbar);
+    }
+
+
+    private void showSnackBar(String message, int duration) {
+        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 

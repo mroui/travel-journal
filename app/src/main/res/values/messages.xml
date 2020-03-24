@@ -27,6 +27,8 @@
     <string name="messages_alarm_set_success">Alarm successfully set!</string>
 
     <string name="messages_error">ERROR: </string>
+    <string name="messages_error_failed_google_services">ERROR: Internal Google services problem, please try again later</string>
+    <string name="messages_error_timed_out">ERROR: Timed out while awaiting the result, please try again later</string>
     <string name="messages_error_no_verified">ERROR: Account is not verified</string>
     <string name="messages_error_no_user_database">ERROR: No such User in a database, try again later</string>
     <string name="messages_error_current_user_not_available">ERROR: Current user is not available, try again later</string>
@@ -36,6 +38,7 @@
     <string name="messages_error_user_identity">ERROR: User identity error, try again later</string>
     <string name="messages_error_network_connection">ERROR: Please check your network connection</string>
     <string name="messages_auth_failed">ERROR: Unhandled authorization error</string>
+    <string name="messages_error_failed_save_location">ERROR: Failed to save location, please try again later</string>
     <string name="messages_error_failed_remove_marker">ERROR: Removing marker failed, try again later</string>
     <string name="messages_error_failed_load_markers">ERROR: Failed to load markers, try again later</string>
     <string name="messages_error_failed_add_notification">ERROR: Sending notification failed, try again later</string>
@@ -50,6 +53,6 @@
     <string name="messages_error_translation_failed">ERROR: Failed to translate the text</string>
     <string name="messages_error_exceed_translation_daily_limit">ERROR: Exceeded the daily limit on the amount of translated text</string>
     <string name="messages_error_failed_currencies">ERROR: Failed to load possible currencies</string>
-    <string name="messages_error_failed_convertion">ERROR: Failed to convert, please try again later</string>
+    <string name="messages_error_failed_convert">ERROR: Failed to convert, please try again later</string>
 
 </resources>

@@ -20,6 +20,7 @@ public class UserRepository {
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = rootRef.collection(Constants.USERS);
 
+
     public MutableLiveData<User> getUserData(String uid) {
         MutableLiveData<User> userData = new MutableLiveData<>();
         DocumentReference userReference = usersRef.document(uid);
@@ -35,6 +36,7 @@ public class UserRepository {
         return userData;
     }
 
+
     public void updateUser(User user, Map<String, Object> map) {
         DocumentReference userReference = usersRef.document(user.getUid());
         userReference.update(map);
@@ -48,14 +50,14 @@ public class UserRepository {
             tasks.add(usersRef.document(id).get());
         Task<List<DocumentSnapshot>> finalTask = Tasks.whenAllSuccess(tasks);
         finalTask.addOnCompleteListener(task -> {
-            if(task.isSuccessful() && task.getResult() != null) {
+            if (task.isSuccessful() && task.getResult() != null) {
                 List<User> users = new ArrayList<>();
-                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                for (DocumentSnapshot documentSnapshot : task.getResult())
                     users.add(documentSnapshot.toObject(User.class));
-                }
                 usersData.setValue(users);
             }
         });
         return usersData;
     }
+
 }

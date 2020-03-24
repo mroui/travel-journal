@@ -32,9 +32,8 @@ public class WeatherRepository {
         ).enqueue(new Callback<WeatherResult>() {
             @Override
             public void onResponse(@NonNull Call<WeatherResult> call, @NonNull Response<WeatherResult> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
                     weatherResultData.setValue(response.body());
-                }
             }
 
             @Override
@@ -56,9 +55,8 @@ public class WeatherRepository {
             @Override
             public void onResponse(@NonNull Call<WeatherForecastResult> call,
                                    @NonNull Response<WeatherForecastResult> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
                     weatherForecastResultData.setValue(response.body());
-                }
             }
 
             @Override

@@ -122,10 +122,9 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     this.user = user;
                     initLocation();
                     initMarkers();
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                    stopProgressBar();
-                }
+                stopProgressBar();
             });
         }
     }
@@ -134,15 +133,15 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     private void initMarkers() {
         markers = new ArrayList<>();
         if (user.getMarkers() != null && !user.getMarkers().isEmpty()) {
+            startProgressBar();
             markerViewModel.getMarkersListData(user.getMarkers());
             markerViewModel.getMarkersList().observe(getViewLifecycleOwner(), markers -> {
                 if (markers != null) {
                     this.markers = markers;
                     addMarkersOnMap();
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_failed_load_markers), Snackbar.LENGTH_LONG);
-                    stopProgressBar();
-                }
+                stopProgressBar();
             });
         }
     }
@@ -160,13 +159,11 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
             startProgressBar();
             addressViewModel.getAddress(user.getLocation());
             addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
-                if (address != null) {
+                if (address != null)
                     setAddressOnMap(address);
-                }
                 stopProgressBar();
             });
-        } else
-            stopProgressBar();
+        }
     }
 
 
@@ -338,9 +335,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     addMarker(description, convertStringToHsv(Integer.toHexString(color)));
                 });
                 dialog.show();
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-            }
         }
     }
 
@@ -405,15 +401,15 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
     private void addMarker(String description, float color) {
         Marker marker = new Marker(description, color, currentPlace.latitude, currentPlace.longitude);
+        startProgressBar();
         markerViewModel.addMarker(marker);
         markerViewModel.getMarkerResponse().observe(getViewLifecycleOwner(), response -> {
             if (!response.contains(getResources().getString(R.string.messages_error))) {
                 marker.setId(response);
                 addMarkerToUser(marker);
-            } else {
+            } else
                 showSnackBar(response, Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            }
+            stopProgressBar();
         });
     }
 
@@ -461,9 +457,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                 }
                 showSnackBar(message, Snackbar.LENGTH_SHORT);
                 refreshMap();
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_update), Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
     }

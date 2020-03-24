@@ -161,9 +161,9 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                     converted = Double.parseDouble(Objects.requireNonNull(binding.currencyAmountInput.getText()).toString());
                     binding.currencyConvertResultInput.setText(calculateAmount(currencyExchangeResult.getRates().get(to)));
                 } else
-                    showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_convert), Snackbar.LENGTH_LONG);
             } else if (!possibleRates)
-                showSnackBar(getResources().getString(R.string.messages_error_failed_convertion), Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_failed_convert), Snackbar.LENGTH_LONG);
             else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_currencies), Snackbar.LENGTH_LONG);
             stopProgressBar();
@@ -172,18 +172,15 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    //OTHERS----------------------------------------------------------------------------------------
-
-
     private void convert() {
         Editable editable = binding.currencyAmountInput.getText();
         String amount = editable != null ? editable.toString() : "";
 
         if (!amount.equals("") && Double.parseDouble(amount) != 0
-            && (changes || (converted == null || converted != Double.parseDouble(amount)))) {
-                String from = currencies.get(binding.currencyFromSpinner.getSelectedIndex());
-                String to = currencies.get(binding.currencyToSpinner.getSelectedIndex());
-                getCurrencyData(from, to, false);
+                && (changes || (converted == null || converted != Double.parseDouble(amount)))) {
+            String from = currencies.get(binding.currencyFromSpinner.getSelectedIndex());
+            String to = currencies.get(binding.currencyToSpinner.getSelectedIndex());
+            getCurrencyData(from, to, false);
         }
     }
 
@@ -207,6 +204,9 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             }
         }
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void startProgressBar() {

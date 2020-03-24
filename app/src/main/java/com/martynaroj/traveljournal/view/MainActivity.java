@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         ProgressBarListener, SnackbarListener {
 
     private NavigationBarAdapter adapter;
-    private List<Fragment> fragmentsList = new ArrayList<>();
+    private List<Fragment> fragmentsList;
     private boolean backPressedOnce = false;
     private ActivityMainBinding binding;
 
@@ -48,26 +48,23 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        User user = getUserFromIntent();
-        initNavAdapter(user);
+        initContentData();
         setListeners();
+    }
+
+
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
+    private void initContentData() {
+        fragmentsList = new ArrayList<>();
         binding.bottomNavigationView.setTypeface(ResourcesCompat.getFont(this, R.font.roboto_light));
+        initNavAdapter(getUserFromIntent());
     }
 
 
     private User getUserFromIntent() {
         return (User) getIntent().getSerializableExtra(Constants.USER);
-    }
-
-
-    private void setListeners() {
-        binding.viewPager.addOnPageChangeListener(new ViewPagerListener() {
-            @Override
-            public void onPageSelected(int i) {
-                binding.bottomNavigationView.setCurrentActiveItem(i);
-            }
-        });
-        binding.bottomNavigationView.setNavigationChangeListener((view, position) -> binding.viewPager.setCurrentItem(position, true));
     }
 
 
@@ -78,9 +75,23 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
             fragmentsList.add(2, ProfileFragment.newInstance(user));
         else
             fragmentsList.add(2, LogInFragment.newInstance());
-
         adapter = new NavigationBarAdapter(fragmentsList, getSupportFragmentManager());
         binding.viewPager.setAdapter(adapter);
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.viewPager.addOnPageChangeListener(new ViewPagerListener() {
+            @Override
+            public void onPageSelected(int i) {
+                binding.bottomNavigationView.setCurrentActiveItem(i);
+            }
+        });
+        binding.bottomNavigationView.setNavigationChangeListener((view, position) ->
+                binding.viewPager.setCurrentItem(position, true));
     }
 
 
@@ -90,14 +101,12 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                 .getCurrentActiveItemPosition()).getChildFragmentManager();
 
         Fragment profileFragment = fragmentManager.findFragmentById(R.id.fragment_profile);
-        if (profileFragment instanceof IOnBackPressed && ((IOnBackPressed) profileFragment).onBackPressed()) {
+        if (profileFragment instanceof IOnBackPressed && ((IOnBackPressed) profileFragment).onBackPressed())
             return;
-        }
 
         Fragment exploreMapFragment = fragmentManager.findFragmentById(R.id.fragment_home);
-        if (exploreMapFragment instanceof IOnBackPressed && ((IOnBackPressed) exploreMapFragment).onBackPressed()) {
+        if (exploreMapFragment instanceof IOnBackPressed && ((IOnBackPressed) exploreMapFragment).onBackPressed())
             return;
-        }
 
         if (adapter.getItem(binding.bottomNavigationView.getCurrentActiveItemPosition())
                 .getChildFragmentManager().getBackStackEntryCount() >= 1) {
@@ -117,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
 
+    //OTHERS----------------------------------------------------------------------------------------
+
+
     @Override
     public void changeFragment(Fragment previous, Fragment next, Boolean addToBackStack) {
         if (previous.getView() != null) {
@@ -125,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                     R.anim.enter_right_to_left, R.anim.exit_right_to_left,
                     R.anim.enter_left_to_right, R.anim.exit_left_to_right);
             fragmentTransaction.replace(previous.getView().getId(), next);
-            if (addToBackStack) fragmentTransaction.addToBackStack(next.getClass().getName());
+            if (addToBackStack)
+                fragmentTransaction.addToBackStack(next.getClass().getName());
             fragmentTransaction.commit();
         }
     }
@@ -133,21 +146,20 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
     @Override
     public void changeNavigationBarItem(int id, Fragment fragment) {
-        if(adapter.getItem(id).getChildFragmentManager().getBackStackEntryCount() > 0)
-            adapter.getItem(id).getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (adapter.getItem(id).getChildFragmentManager().getBackStackEntryCount() > 0)
+            adapter.getItem(id).getChildFragmentManager().popBackStackImmediate(null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
         adapter.changeItem(id, fragment);
         adapter.notifyDataSetChanged();
     }
 
 
     protected void enableDisableViewGroup(ViewGroup viewGroup, boolean enabled) {
-        int childCount = viewGroup.getChildCount();
-        for (int i = 0; i < childCount; i++) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View view = viewGroup.getChildAt(i);
             view.setEnabled(enabled);
-            if (view instanceof ViewGroup) {
+            if (view instanceof ViewGroup)
                 enableDisableViewGroup((ViewGroup) view, enabled);
-            }
         }
     }
 

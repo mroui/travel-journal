@@ -19,4 +19,5 @@ public class InputTextWatcher implements TextWatcher {
     public void afterTextChanged(Editable s) {
 
     }
+
 }

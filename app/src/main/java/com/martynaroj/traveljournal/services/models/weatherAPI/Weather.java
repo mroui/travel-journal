@@ -47,4 +47,5 @@ public class Weather extends BaseObservable implements Serializable {
                 .load("https://openweathermap.org/img/wn/" + imgUrl + "@2x.png")
                 .into(v);
     }
+
 }

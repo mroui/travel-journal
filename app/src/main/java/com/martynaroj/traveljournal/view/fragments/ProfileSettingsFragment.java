@@ -97,12 +97,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
         binding = FragmentProfileSettingsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        initContentView();
-        initGooglePlaces();
-        setListeners();
         initViewModels();
-
+        initContentData();
+        initGooglePlaces();
         initUser();
+
+        setListeners();
 
         return view;
     }
@@ -111,7 +111,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initContentView() {
+    private void initContentData() {
         if (getContext() != null) {
             binding.profileSettingsPrivacyEmailSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
             binding.profileSettingsPrivacyLocationSelect.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
@@ -128,7 +128,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void initGooglePlaces() {
         if (getContext() != null) {
             Places.initialize(getContext(), getString(R.string.google_api_key));
-            placesClient  = Places.createClient(getContext());
+            placesClient = Places.createClient(getContext());
             autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
                     .findFragmentById(R.id.profile_settings_personal_location_autocomplete);
             if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
@@ -204,9 +204,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 }
                 stopProgressBar();
             });
-        } else {
+        } else
             showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-        }
     }
 
 
@@ -372,7 +371,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void getContactInfo() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[] { getResources().getString(R.string.contact_email) });
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.contact_email)});
         startActivity(Intent.createChooser(intent, ""));
     }
 
@@ -386,7 +385,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private boolean isUsernameChanged() {
-        return !user.getUsername().equals(Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString());
+        return !user.getUsername().equals(
+                Objects.requireNonNull(binding.profileSettingsAccountUsernameInput.getText()).toString());
     }
 
 
@@ -453,8 +453,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private boolean isLocationChanged() {
         if (autocompleteFragment != null) {
             return (user.getLocation() == null && newLocation != null)
-                    || (user.getLocation() != null && currentLocation!= null
-                        && newLocation != null && !currentLocation.equals(newLocation))
+                    || (user.getLocation() != null && currentLocation != null
+                    && newLocation != null && !currentLocation.equals(newLocation))
                     || (user.getLocation() != null && newLocation == null);
         }
         return false;
@@ -511,9 +511,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         showSnackBar(status, Snackbar.LENGTH_LONG);
                     stopProgressBar();
                 });
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_current_email_equal), Snackbar.LENGTH_LONG);
-            }
         }
     }
 
@@ -521,16 +520,17 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void changePassword() {
         if (validateChangePassword()) {
             startProgressBar();
-            String currentPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordCurrentInput.getText()).toString();
-            String newPassword = Objects.requireNonNull(binding.profileSettingsAccountPasswordInput.getText()).toString();
+            String currentPassword = Objects.requireNonNull(
+                    binding.profileSettingsAccountPasswordCurrentInput.getText()).toString();
+            String newPassword = Objects.requireNonNull(
+                    binding.profileSettingsAccountPasswordInput.getText()).toString();
             authViewModel.changePassword(currentPassword, newPassword);
             authViewModel.getChangesStatus().observe(this, status -> {
                 if (!status.contains(Constants.ERROR)) {
                     clearInputs();
                     showSnackBar(status, Snackbar.LENGTH_SHORT);
-                } else {
+                } else
                     showSnackBar(status, Snackbar.LENGTH_LONG);
-                }
                 stopProgressBar();
             });
         }
@@ -538,15 +538,18 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void changeProfilePhoto() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.RC_EXTERNAL_STORAGE);
-            } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null)
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(
+                        getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Constants.RC_EXTERNAL_STORAGE
+                );
+            else
                 selectImage();
-            }
-        } else {
+        else
             selectImage();
-        }
     }
 
 
@@ -585,20 +588,22 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void addAddress() {
         startProgressBar();
-        addressViewModel.saveAddress(newLocation, user.getLocation());
+        addressViewModel.addAddress(newLocation, user.getLocation());
         addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
-            if (!status.contains(Constants.ERROR)) {
-                Map<String, Object> changes = new HashMap<>();
-                changes.put(Constants.DB_LOCATION, status);
-                updateUser(changes);
-                if (newLocation == null) newLocation = new Address(status);
-                currentLocation = newLocation;
-                if (currentLocation.getName() != null)
-                    autocompleteFragment.setText(currentLocation.getAddress());
-            } else {
-                showSnackBar(status, Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            }
+            if (status != null) {
+                if (!status.contains(Constants.ERROR)) {
+                    Map<String, Object> changes = new HashMap<>();
+                    changes.put(Constants.DB_LOCATION, status);
+                    updateUser(changes);
+                    if (newLocation == null) newLocation = new Address(status);
+                    currentLocation = newLocation;
+                    if (currentLocation.getName() != null)
+                        autocompleteFragment.setText(currentLocation.getAddress());
+                } else
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
+            } else
+                showSnackBar(getResources().getString(R.string.messages_error_failed_save_location), Snackbar.LENGTH_LONG);
+            stopProgressBar();
         });
     }
 
@@ -611,8 +616,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void savePhotoToStorage(Map<String, Object> changes) {
-        startProgressBar();
         if (newImageUri.getPath() != null && getContext() != null) {
+            startProgressBar();
             File newFile = new File(newImageUri.getPath());
             try {
                 compressor = new Compressor(getContext())
@@ -622,6 +627,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         .compressToBitmap(newFile);
             } catch (IOException e) {
                 showSnackBar(getResources().getString(R.string.messages_error) + e.getMessage(), Snackbar.LENGTH_LONG);
+                stopProgressBar();
             }
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -632,11 +638,11 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
                 if (status.contains(Constants.ERROR)) {
                     showSnackBar(status, Snackbar.LENGTH_LONG);
-                    stopProgressBar();
                 } else {
                     changes.put(Constants.DB_PHOTO, status);
                     updateUser(changes);
                 }
+                stopProgressBar();
             });
         }
     }
@@ -645,13 +651,16 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private void savePrivacyChanges() {
         Map<String, Object> changes = new HashMap<>();
         if (isPrivacyEmailChanged()) {
-            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_EMAIL, binding.profileSettingsPrivacyEmailSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." +
+                    Constants.DB_EMAIL, binding.profileSettingsPrivacyEmailSelect.getSelectedIndex());
         }
         if (isPrivacyLocationChanged()) {
-            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_LOCATION, binding.profileSettingsPrivacyLocationSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." +
+                    Constants.DB_LOCATION, binding.profileSettingsPrivacyLocationSelect.getSelectedIndex());
         }
         if (isPrivacyPreferencesChanged()) {
-            changes.put(Constants.DB_PRIVACY + "." + Constants.DB_PREFERENCES, binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex());
+            changes.put(Constants.DB_PRIVACY + "." +
+                    Constants.DB_PREFERENCES, binding.profileSettingsPrivacyPreferencesSelect.getSelectedIndex());
         }
 
         if (!changes.isEmpty()) {
@@ -671,9 +680,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 showSnackBar(getResources().getString(R.string.messages_changes_saved), Snackbar.LENGTH_SHORT);
                 clearInputs();
                 newImageUri = null;
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_update), Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
     }
@@ -731,7 +739,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void detectLocation() {
-        if(getContext() != null) {
+        if (getContext() != null) {
             if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 startProgressBar();
                 addressViewModel.detectAddress(placesClient, request);
@@ -742,14 +750,13 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                         double lon = place.getLatLng() != null ? place.getLatLng().longitude : 0;
                         newLocation = new Address(place.getName(), place.getAddress(), lat, lon);
                         autocompleteFragment.setText(newLocation.getAddress());
-                        stopProgressBar();
                     } else
                         showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+                    stopProgressBar();
                 });
-            } else if (getActivity() != null){
+            } else if (getActivity() != null)
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
-            }
         }
     }
 

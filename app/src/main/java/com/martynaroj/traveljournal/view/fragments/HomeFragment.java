@@ -36,13 +36,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
 
-    private void setListeners() {
-        binding.homeSearchFriendsButton.setOnClickListener(this);
-        binding.homeExploreMapButton.setOnClickListener(this);
-    }
+    //INIT DATA-------------------------------------------------------------------------------------
 
 
     private void initExploreTravelsAdapter() {
+        //todo adapter, when finish travel class
 //        List<Travel> travels = new ArrayList<>();
 //        travels.add(new Travel(R.drawable.default_avatar, "title1", "desc"));
 //        travels.add(new Travel(R.drawable.default_avatar, "title2", "desc"));
@@ -53,6 +51,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 //        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
 //        binding.homeExploreViewpager.setAdapter(adapter);
 //        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.homeSearchFriendsButton.setOnClickListener(this);
+        binding.homeExploreMapButton.setOnClickListener(this);
     }
 
 
@@ -70,6 +77,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
         }
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private boolean isLoggedUser() {

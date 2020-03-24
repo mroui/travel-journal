@@ -9,6 +9,7 @@ public class Geometry implements Serializable {
     @SerializedName("location")
     private Location location;
 
+
     public Location getLocation() {
         return location;
     }

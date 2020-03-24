@@ -18,17 +18,23 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 public class AddressRepository {
 
-    private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    private CollectionReference addressesRef = rootRef.collection(Constants.ADDRESSES);
+    private CollectionReference addressesRef;
     private Context context;
 
 
+    private AddressRepository() {
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        addressesRef = rootRef.collection(Constants.ADDRESSES);
+    }
+
+
     public AddressRepository(Context context) {
+        this();
         this.context = context;
     }
 
 
-    public MutableLiveData<String> saveAddress(Address address, String reference) {
+    public MutableLiveData<String> addAddress(Address address, String reference) {
         MutableLiveData<String> statusData = new MutableLiveData<>();
 
         DocumentReference addressRef = reference == null ? addressesRef.document() : addressesRef.document(reference);
@@ -36,12 +42,12 @@ public class AddressRepository {
         address.setId(addressRef.getId());
 
         addressRef.set(address).addOnCompleteListener(uidTask -> {
-            if (uidTask.isSuccessful()) {
+            if (uidTask.isSuccessful())
                 statusData.setValue(addressRef.getId());
-            } else if (uidTask.getException() != null) {
-                statusData.setValue(context.getResources().getString(R.string.messages_error)
-                        + uidTask.getException().getMessage());
-            }
+            else if (uidTask.getException() != null)
+                statusData.setValue(context.getResources().getString(R.string.messages_error) + uidTask.getException().getMessage());
+            else
+                statusData.setValue(null);
         });
         return statusData;
     }
@@ -53,13 +59,10 @@ public class AddressRepository {
         addressRef.get().addOnCompleteListener(uidTask -> {
             if (uidTask.isSuccessful()) {
                 DocumentSnapshot document = uidTask.getResult();
-                if (document != null && document.exists()) {
-                    Address address = document.toObject(Address.class);
-                    addressData.setValue(address);
-                }
-            } else if (uidTask.getException() != null) {
+                if (document != null && document.exists())
+                    addressData.setValue(document.toObject(Address.class));
+            } else
                 addressData.setValue(null);
-            }
         });
         return addressData;
     }
@@ -69,12 +72,12 @@ public class AddressRepository {
         MutableLiveData<FindCurrentPlaceResponse> detectedAddress = new MutableLiveData<>();
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
         placeResponse.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful())
                 detectedAddress.setValue(task.getResult());
-            } else if(task.getException() != null) {
+            else
                 detectedAddress.setValue(null);
-            }
         });
         return detectedAddress;
     }
+
 }

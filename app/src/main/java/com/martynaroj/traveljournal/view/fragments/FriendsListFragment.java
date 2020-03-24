@@ -69,18 +69,13 @@ public class FriendsListFragment extends BaseFragment {
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
-    }
-
-
-    private void setListeners() {
-        binding.friendsListArrowButton.setOnClickListener(view -> {
-            if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                getParentFragmentManager().popBackStack();
-        });
     }
 
 
@@ -102,9 +97,8 @@ public class FriendsListFragment extends BaseFragment {
                 if (user != null) {
                     this.loggedUser = user;
                     initTitle();
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                }
                 stopProgressBar();
             });
         }
@@ -114,12 +108,11 @@ public class FriendsListFragment extends BaseFragment {
     @SuppressLint("SetTextI18n")
     private void initTitle() {
         if (user != null && loggedUser != null) {
-            if (user.isUserProfile(loggedUser)) {
+            if (user.isUserProfile(loggedUser))
                 binding.friendsListTitle.setText("My " + getResources().getString(R.string.friends_list_title));
-            } else {
+            else
                 binding.friendsListTitle.setText(user.getUsername() + "\'s\n" +
                         getResources().getString(R.string.friends_list_title));
-            }
         }
     }
 
@@ -132,8 +125,8 @@ public class FriendsListFragment extends BaseFragment {
             userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
                 if (users != null) {
                     initFriendsList(users);
-                    stopProgressBar();
                 }
+                stopProgressBar();
             });
         } else {
             binding.friendsListRecyclerView.setVisibility(View.INVISIBLE);
@@ -164,6 +157,20 @@ public class FriendsListFragment extends BaseFragment {
     }
 
 
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.friendsListArrowButton.setOnClickListener(view -> {
+            if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                getParentFragmentManager().popBackStack();
+        });
+    }
+
+
+    //DIALOG----------------------------------------------------------------------------------------
+
+
     @SuppressLint("SetTextI18n")
     private void showDeleteDialog(User user, int position) {
         if (getContext() != null && getActivity() != null) {
@@ -192,6 +199,9 @@ public class FriendsListFragment extends BaseFragment {
     }
 
 
+    //FRIENDS---------------------------------------------------------------------------------------
+
+
     private void removeFriend(User friend, int position) {
         startProgressBar();
 
@@ -217,13 +227,15 @@ public class FriendsListFragment extends BaseFragment {
                 }
                 showSnackBar(getResources().getString(R.string.messages_remove_friend_success),
                         Snackbar.LENGTH_SHORT);
-            } else {
+            } else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_remove_friend),
                         Snackbar.LENGTH_LONG);
-            }
             stopProgressBar();
         });
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void changeFragment(BaseFragment next) {
@@ -235,12 +247,14 @@ public class FriendsListFragment extends BaseFragment {
 
 
     private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.friendsListProgressbarLayout, binding.friendsListProgressbar);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.friendsListProgressbarLayout, binding.friendsListProgressbar);
     }
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.friendsListProgressbarLayout, binding.friendsListProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.friendsListProgressbarLayout, binding.friendsListProgressbar);
     }
 
 

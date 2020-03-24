@@ -18,7 +18,7 @@ public class WeatherForecastResult extends BaseObservable implements Serializabl
 
 
     @Bindable
-    private List<WeatherList> getList() {
+    public List<WeatherList> getList() {
         return list;
     }
 

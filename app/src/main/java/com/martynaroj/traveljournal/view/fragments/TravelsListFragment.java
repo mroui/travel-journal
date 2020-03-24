@@ -31,6 +31,15 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
+    //
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
     private void setListeners() {
         binding.travelsListArrowButton.setOnClickListener(this);
     }
@@ -44,6 +53,9 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
                     getParentFragmentManager().popBackStack();
         }
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     @Override

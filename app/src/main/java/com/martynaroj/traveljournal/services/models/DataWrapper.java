@@ -15,6 +15,7 @@ public class DataWrapper<T> extends BaseObservable {
     private boolean isAuthenticated = false;
     private boolean isVerified = false;
 
+
     public DataWrapper(T data, Status status, String message, boolean isAuthenticated, boolean isAdded, boolean isVerified) {
         this.data = data;
         this.status = status;
@@ -79,4 +80,5 @@ public class DataWrapper<T> extends BaseObservable {
     public boolean isVerified() {
         return isVerified;
     }
+
 }

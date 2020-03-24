@@ -18,6 +18,7 @@ public class Place implements Serializable {
     @SerializedName("rating")
     private Double rating;
 
+
     public String getName() {
         return name;
     }
@@ -49,4 +50,5 @@ public class Place implements Serializable {
     public void setRating(Double rating) {
         this.rating = rating;
     }
+
 }

@@ -50,4 +50,5 @@ public class CurrencyExchangeResult extends BaseObservable implements Serializab
         this.date = date;
         notifyPropertyChanged(BR.date);
     }
+
 }

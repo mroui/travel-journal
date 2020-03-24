@@ -15,6 +15,7 @@ public class Address extends BaseObservable implements Serializable {
     private double latitude;
     private double longitude;
 
+
     public Address() {
     }
 
@@ -86,4 +87,5 @@ public class Address extends BaseObservable implements Serializable {
         this.longitude = longitude;
         notifyPropertyChanged(BR.longitude);
     }
+
 }

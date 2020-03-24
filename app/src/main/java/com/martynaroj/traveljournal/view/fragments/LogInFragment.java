@@ -61,13 +61,15 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //INIT DATA-------------------------------------------------------------------------------------
+
+
     private void initCredentialsClient() {
         CredentialsOptions options = new CredentialsOptions.Builder()
                 .forceEnableSaveDialog()
                 .build();
-        if (getActivity() != null) {
+        if (getActivity() != null)
             credentialsClient = Credentials.getClient(getActivity(), options);
-        }
     }
 
 
@@ -83,6 +85,9 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
     private void setListeners() {
         new FormHandler(getContext()).addWatcher(binding.loginEmailInput, binding.loginEmailLayout);
         new FormHandler(getContext()).addWatcher(binding.loginPasswordInput, binding.loginPasswordLayout);
@@ -90,16 +95,6 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         binding.loginLogInButton.setOnClickListener(this);
         binding.loginGoogleButton.setOnClickListener(this);
         binding.loginSignUpButton.setOnClickListener(this);
-    }
-
-
-    private boolean validateEmail() {
-        return new FormHandler(getContext()).validateInput(binding.loginEmailInput, binding.loginEmailLayout);
-    }
-
-
-    private boolean validatePassword() {
-        return new FormHandler(getContext()).validateInput(binding.loginPasswordInput, binding.loginPasswordLayout);
     }
 
 
@@ -121,6 +116,22 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    //VALIDATION------------------------------------------------------------------------------------
+
+
+    private boolean validateEmail() {
+        return new FormHandler(getContext()).validateInput(binding.loginEmailInput, binding.loginEmailLayout);
+    }
+
+
+    private boolean validatePassword() {
+        return new FormHandler(getContext()).validateInput(binding.loginPasswordInput, binding.loginPasswordLayout);
+    }
+
+
+    //CREDENTIALS-----------------------------------------------------------------------------------
+
+
     private void logInWithEmail() {
         if (validateEmail() && validatePassword()) {
             startProgressBar();
@@ -134,24 +145,23 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
             authViewModel.logInWithEmail(email, password);
             authViewModel.getUserLiveData().observe(this, userData -> {
                 if (userData.getStatus() == Status.SUCCESS) {
-                    if (userData.isVerified() && !userData.isAdded()) {
+                    if (userData.isVerified() && !userData.isAdded())
                         addNewUser(userData);
-                    } else if (!userData.isVerified()) {
+                    else if (!userData.isVerified()) {
                         showSnackBar(getResources().getString(R.string.messages_error_no_verified), Snackbar.LENGTH_LONG);
                         resendVerificationMail();
-                    } else {
+                    } else
                         getUserData(userData);
-                    }
-                } else {
-                    stopProgressBar();
+                } else
                     showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
-                }
+                stopProgressBar();
             });
         }
     }
 
 
     private void getUserData(DataWrapper<User> userData) {
+        startProgressBar();
         userViewModel.getUserData(userData.getData().getUid());
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             stopProgressBar();
@@ -180,16 +190,15 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void resendVerificationMail() {
+        startProgressBar();
         authViewModel.sendVerificationMail();
         authViewModel.getUserVerificationLiveData().observe(this, verificationUser -> {
-            stopProgressBar();
-            if (verificationUser.getStatus() == Status.SUCCESS) {
-                stopProgressBar();
+            if (verificationUser.getStatus() == Status.SUCCESS)
                 showSnackBar(getResources().getString(R.string.messages_verification_sent),
                         Snackbar.LENGTH_LONG);
-            } else {
+            else
                 showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
-            }
+            stopProgressBar();
         });
     }
 
@@ -204,13 +213,12 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String status = googleClient.getGoogleSignInAccount(requestCode, resultCode, data);
-        if (status.equals(Constants.SUCCESS)) {
+        String status = googleClient.getGoogleSignInAccount(requestCode, data);
+        if (status.equals(Constants.SUCCESS))
             getGoogleAuthCredential(googleClient.getGoogleSignInAccount());
-        } else {
+        else
             showSnackBar(status, Snackbar.LENGTH_LONG);
-            stopProgressBar();
-        }
+        stopProgressBar();
     }
 
 
@@ -221,33 +229,35 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
+        startProgressBar();
         authViewModel.signInWithGoogle(googleAuthCredential);
         authViewModel.getUserLiveData().observe(this, userData -> {
-            if (userData.getStatus() == Status.SUCCESS) {
-                if (!userData.isAdded()) {
+            if (userData.getStatus() == Status.SUCCESS)
+                if (!userData.isAdded())
                     addNewUser(userData);
-                } else {
+                else
                     getUserData(userData);
-                }
-            } else {
-                stopProgressBar();
+            else
                 showSnackBar(userData.getMessage(), Snackbar.LENGTH_LONG);
-            }
+            stopProgressBar();
         });
     }
 
 
     private void addNewUser(DataWrapper<User> user) {
+        startProgressBar();
         authViewModel.addUser(user);
         authViewModel.getAddedUserLiveData().observe(this, newUser -> {
-            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded()) {
+            if (newUser.getStatus() == Status.SUCCESS && newUser.isAdded())
                 getUserData(newUser);
-            } else {
-                stopProgressBar();
+            else
                 showSnackBar(newUser.getMessage(), Snackbar.LENGTH_LONG);
-            }
+            stopProgressBar();
         });
     }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void changeFragment(Fragment next) {
@@ -263,12 +273,14 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.loginProgressbarLayout, binding.loginProgressbar);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.loginProgressbarLayout, binding.loginProgressbar);
     }
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.loginProgressbarLayout, binding.loginProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.loginProgressbarLayout, binding.loginProgressbar);
     }
 
 

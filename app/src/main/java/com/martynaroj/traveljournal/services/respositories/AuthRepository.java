@@ -25,12 +25,19 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 public class AuthRepository {
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    private CollectionReference usersRef = rootRef.collection(Constants.USERS);
+    private CollectionReference usersRef;
     private Context context;
 
-    public AuthRepository(Context context) {
+
+    private AuthRepository() {
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         this.firebaseAuth = FirebaseAuth.getInstance();
+        this.usersRef = rootRef.collection(Constants.USERS);
+    }
+
+
+    public AuthRepository(Context context) {
+        this();
         this.context = context;
     }
 
@@ -46,13 +53,11 @@ public class AuthRepository {
                     firebaseUser.updateProfile(profileUpdates);
                     User user = new User(firebaseUser.getUid(), username, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.LOADING, null));
-                } else {
+                } else
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             context.getResources().getString(R.string.messages_error_user_identity)));
-                }
-            } else {
+            } else
                 handleUserLiveDataErrors(authTask, userLiveData);
-            }
         });
         return userLiveData;
     }
@@ -63,17 +68,15 @@ public class AuthRepository {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             firebaseUser.sendEmailVerification().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
+                if (task.isSuccessful())
                     userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
                             context.getResources().getString(R.string.messages_verification_sent)));
-                } else {
+                else
                     handleUserLiveDataErrors(task, userLiveData);
-                }
             });
-        } else {
+        } else
             userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                     context.getResources().getString(R.string.messages_error_user_identity)));
-        }
         return userLiveData;
     }
 
@@ -81,12 +84,11 @@ public class AuthRepository {
     public LiveData<DataWrapper<User>> sendPasswordResetEmail(String email) {
         MutableLiveData<DataWrapper<User>> userLiveData = new MutableLiveData<>();
         firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+            if (task.isSuccessful())
                 userLiveData.setValue(new DataWrapper<>(null, Status.SUCCESS,
                         context.getResources().getString(R.string.messages_reset_password_sent)));
-            } else {
+            else
                 handleUserLiveDataErrors(task, userLiveData);
-            }
         });
         return userLiveData;
     }
@@ -109,17 +111,14 @@ public class AuthRepository {
                             isAdded = document != null && document.exists();
                             userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                                     context.getResources().getString(R.string.messages_auth_success), true, isAdded, true));
-                        } else {
+                        } else
                             handleUserLiveDataErrors(task, userLiveData);
-                        }
                     });
-                } else {
+                } else
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             context.getResources().getString(R.string.messages_error_user_identity)));
-                }
-            } else {
+            } else
                 handleUserLiveDataErrors(authTask, userLiveData);
-            }
         });
         return userLiveData;
     }
@@ -134,21 +133,18 @@ public class AuthRepository {
                 DocumentSnapshot document = uidTask.getResult();
                 if (document != null && !document.exists()) {
                     uidRef.set(user.getData()).addOnCompleteListener(addingTask -> {
-                        if (addingTask.isSuccessful()) {
+                        if (addingTask.isSuccessful())
                             newUserLiveData.setValue(user);
-                        } else if (addingTask.getException() != null){
+                        else if (addingTask.getException() != null)
                             newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                                     context.getResources().getString(R.string.messages_error)
                                             + addingTask.getException().getMessage()));
-                        }
                     });
-                } else {
+                } else
                     newUserLiveData.setValue(user);
-                }
-            } else if (uidTask.getException() != null) {
+            } else if (uidTask.getException() != null)
                 newUserLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                         context.getResources().getString(R.string.messages_error) + uidTask.getException().getMessage()));
-            }
         });
         return newUserLiveData;
     }
@@ -166,13 +162,11 @@ public class AuthRepository {
                     User user = new User(uid, name, email);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                             context.getResources().getString(R.string.messages_auth_success), true, false, isVerified));
-                } else {
+                } else
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
                             context.getResources().getString(R.string.messages_error_user_identity)));
-                }
-            } else {
+            } else
                 handleUserLiveDataErrors(authTask, userLiveData);
-            }
         });
         return userLiveData;
     }
@@ -188,13 +182,12 @@ public class AuthRepository {
                     User user = document.toObject(User.class);
                     userLiveData.setValue(new DataWrapper<>(user, Status.SUCCESS,
                             context.getResources().getString(R.string.messages_auth_success), true, true, true));
-                } else {
+                } else
                     userLiveData.setValue(new DataWrapper<>(null, Status.ERROR,
-                            context.getResources().getString(R.string.messages_error_no_user_database), true, false, true));
-                }
-            } else {
+                            context.getResources().getString(R.string.messages_error_no_user_database),
+                            true, false, true));
+            } else
                 handleUserLiveDataErrors(task, userLiveData);
-            }
         });
         return userLiveData;
     }
@@ -208,13 +201,12 @@ public class AuthRepository {
             user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
+                        if (task1.isSuccessful())
                             status.setValue(context.getResources().getString(R.string.messages_password_changed));
-                        } else if(task1.getException() != null) {
+                        else if (task1.getException() != null)
                             status.setValue(context.getResources().getString(R.string.messages_error) + task1.getException().getMessage());
-                        }
                     });
-                } else if(task.getException() != null) {
+                } else if (task.getException() != null) {
                     status.setValue(context.getResources().getString(R.string.messages_error) + task.getException().getMessage());
                 }
             });
@@ -231,15 +223,13 @@ public class AuthRepository {
             user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     user.updateEmail(newEmail).addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
+                        if (task1.isSuccessful())
                             status.setValue(context.getResources().getString(R.string.messages_email_changed));
-                        } else if(task1.getException() != null) {
+                        else if (task1.getException() != null)
                             status.setValue(context.getResources().getString(R.string.messages_error) + task1.getException().getMessage());
-                        }
                     });
-                } else if(task.getException() != null) {
+                } else if (task.getException() != null)
                     status.setValue(context.getResources().getString(R.string.messages_error) + task.getException().getMessage());
-                }
             });
         }
         return status;

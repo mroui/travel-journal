@@ -67,4 +67,7 @@ public interface Constants {
     int CURRENCY_EUR_INDEX = 8;
     int MAX_CURRENCY_LENGTH = 10;
 
+    String NETWORK_ERROR = "NETWORK_ERROR";
+    String TIMEOUT = "TIMEOUT";
+
 }

@@ -36,7 +36,9 @@ public class FormHandler {
             layout.setError(context.getResources().getString(R.string.messages_field_no_empty));
             input.requestFocus();
             return false;
-        } else if (input.getInputType() == (InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) && !isValidEmail(value)) {
+        } else if (input.getInputType() ==
+                (InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT)
+                && !isValidEmail(value)) {
             layout.setError(context.getResources().getString(R.string.messages_invalid_email));
             input.requestFocus();
             return false;
@@ -46,12 +48,15 @@ public class FormHandler {
     }
 
 
-    public boolean validateInputsEquality(TextInputEditText input1, TextInputEditText input2, TextInputLayout layout2) {
+    public boolean validateInputsEquality(TextInputEditText input1, TextInputEditText input2,
+                                          TextInputLayout layout2) {
         if (!isEqual(input1, input2)) {
-            if(input1.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD + InputType.TYPE_CLASS_TEXT) {
+            if (input1.getInputType() ==
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD + InputType.TYPE_CLASS_TEXT) {
                 layout2.setError(context.getResources().getString(R.string.messages_password_not_match));
                 input2.requestFocus();
-            } else if (input1.getInputType() == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) {
+            } else if (input1.getInputType() ==
+                    InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT) {
                 layout2.setError(context.getResources().getString(R.string.messages_email_not_match));
                 input2.requestFocus();
             }
@@ -107,4 +112,5 @@ public class FormHandler {
     private void clearFocus(TextInputEditText input) {
         input.clearFocus();
     }
+
 }
