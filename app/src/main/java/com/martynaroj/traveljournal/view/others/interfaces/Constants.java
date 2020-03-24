@@ -46,6 +46,8 @@ public interface Constants {
     String TRANSLATOR = "TRANSLATE";
     String ALARM = "ALARM";
 
+    String PLAN_TO_VISIT_TUTORIAL = "PLAN_TO_VISIT_TUTORIAL";
+
     int NEARBY_PLACES_RADIUS = 500;
 
     String CHANNEL_ID = "ALARM_CHANNEL";
@@ -69,5 +71,4 @@ public interface Constants {
 
     String NETWORK_ERROR = "NETWORK_ERROR";
     String TIMEOUT = "TIMEOUT";
-
 }
