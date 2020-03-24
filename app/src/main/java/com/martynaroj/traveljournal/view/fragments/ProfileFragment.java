@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Geocoder;
@@ -44,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
@@ -218,9 +221,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void checkNewAccount() {
-        if (user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
-        && user.getPhoto() == null)
-            openUpdateProfileDialog();
+        if (getContext() != null) {
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            if (!preferences.getBoolean(Constants.UPDATE_PROFILE_DIALOG, false)
+                && user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
+                && user.getPhoto() == null)
+                openUpdateProfileDialog();
+        }
     }
 
 
@@ -305,6 +312,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             dialog.findViewById(R.id.dialog_update_profile_later_button).setOnClickListener(v -> dialog.dismiss());
             dialog.findViewById(R.id.dialog_update_profile_now_button).setOnClickListener(v -> {
                 openSettings();
+                saveToPreferences();
                 dialog.dismiss();
             });
             dialog.show();
@@ -551,6 +559,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void saveToPreferences() {
+        if (getContext() != null) {
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            preferences.edit().putBoolean(Constants.UPDATE_PROFILE_DIALOG, true).apply();
+        }
+    }
 
 
     private void changeFragment(BaseFragment next) {
