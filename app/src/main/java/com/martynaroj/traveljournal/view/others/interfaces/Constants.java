@@ -72,4 +72,5 @@ public interface Constants {
 
     String NETWORK_ERROR = "NETWORK_ERROR";
     String TIMEOUT = "TIMEOUT";
+
 }
