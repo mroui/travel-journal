@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
@@ -72,11 +74,58 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void setListeners() {
+        binding.createTravelNextButton.setOnClickListener(this);
+        binding.createTravelPreviousButton.setOnClickListener(this);
+        setViewFlipperListeners();
+    }
+
+
+    private void setViewFlipperListeners() {
+        ViewFlipper flipper = binding.createTravelViewFlipper;
+        MaterialButton previous = binding.createTravelPreviousButton;
+        MaterialButton next = binding.createTravelNextButton;
+
+        flipper.addOnLayoutChangeListener((view, l, t, r, b, ol, ot, or, ob) -> {
+            if (flipper.getDisplayedChild() == 0)
+                previous.setEnabled(false);
+            else if (flipper.getDisplayedChild() == flipper.getChildCount() - 1)
+                next.setEnabled(false);
+            else {
+                previous.setEnabled(true);
+                next.setEnabled(true);
+            }
+        });
     }
 
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.create_travel_previous_button:
+                showPreviousStage();
+                break;
+            case R.id.create_travel_next_button:
+                showNextStage();
+                break;
+        }
+    }
+
+
+    private void showPreviousStage() {
+        ViewFlipper flipper = binding.createTravelViewFlipper;
+        flipper.setInAnimation(getContext(), R.anim.enter_left_to_right);
+        flipper.setOutAnimation(getContext(), R.anim.exit_left_to_right);
+        if (flipper.getDisplayedChild() > 0)
+            flipper.showPrevious();
+    }
+
+
+    private void showNextStage() {
+        ViewFlipper flipper = binding.createTravelViewFlipper;
+        flipper.setInAnimation(getContext(), R.anim.enter_right_to_left);
+        flipper.setOutAnimation(getContext(), R.anim.exit_right_to_left);
+        if (flipper.getDisplayedChild() < flipper.getChildCount() - 1)
+            flipper.showNext();
     }
 
 

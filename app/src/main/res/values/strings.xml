@@ -207,6 +207,8 @@
     <string name="dialog_button_clear">CLEAR</string>
     <string name="dialog_button_settings">SETTINGS</string>
     <string name="dialog_button_no_thanks">NO THANKS</string>
+    <string name="dialog_button_previous">PREVIOUS</string>
+    <string name="dialog_button_next">NEXT</string>
 
     <string name="create_travel_title">Create travel</string>
 
