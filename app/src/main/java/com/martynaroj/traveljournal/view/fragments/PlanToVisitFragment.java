@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -55,6 +56,8 @@ import java.util.Objects;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PlanToVisitFragment extends BaseFragment implements View.OnClickListener,
         OnMapReadyCallback, IOnBackPressed {
 
@@ -94,7 +97,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         disableButtons();
 
-        showTutorialSnackbar();
+        checkTutorialSnackbar();
 
         return view;
     }
@@ -500,12 +503,25 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    private void checkTutorialSnackbar() {
+        if (getContext() != null) {
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            if (!preferences.getBoolean(Constants.PLAN_TO_VISIT_TUTORIAL, false)) {
+                showTutorialSnackbar();
+            }
+        }
+    }
+
+
     private void showTutorialSnackbar() {
         tutorialSnackbar = Snackbar.make(binding.getRoot(),
                 getResources().getString(R.string.messages_explore_map_tutorial),
                 Snackbar.LENGTH_INDEFINITE);
         tutorialSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
-                view -> tutorialSnackbar.dismiss());
+                view -> {
+                    tutorialSnackbar.dismiss();
+                    saveToPreferences();
+                });
         tutorialSnackbar.show();
     }
 
@@ -513,6 +529,14 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     private void dismissTutorialSnackbar() {
         if (tutorialSnackbar.isShown())
             tutorialSnackbar.dismiss();
+    }
+
+
+    private void saveToPreferences() {
+        if (getContext() != null) {
+            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
+            preferences.edit().putBoolean(Constants.PLAN_TO_VISIT_TUTORIAL, true).apply();
+        }
     }
 
 
