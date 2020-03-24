@@ -18,6 +18,7 @@ public interface Constants {
     String USERS = "Users";
     String ADDRESSES = "Addresses";
     String NOTIFICATIONS = "Notifications";
+    String MARKERS = "Markers";
 
     String DB_UID = "uid";
     String DB_PHOTO = "photo";

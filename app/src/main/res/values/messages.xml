@@ -36,6 +36,8 @@
     <string name="messages_error_user_identity">ERROR: User identity error, try again later</string>
     <string name="messages_error_network_connection">ERROR: Please check your network connection</string>
     <string name="messages_auth_failed">ERROR: Unhandled authorization error</string>
+    <string name="messages_error_failed_remove_marker">ERROR: Removing marker failed, try again later</string>
+    <string name="messages_error_failed_load_markers">ERROR: Failed to load markers, try again later</string>
     <string name="messages_error_failed_add_notification">ERROR: Sending notification failed, try again later</string>
     <string name="messages_error_friend_notification_exists">ERROR: Your request is already waiting for a response</string>
     <string name="messages_error_failed_remove_notification">ERROR: Removing notification failed, try again later</string>
