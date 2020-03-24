@@ -43,6 +43,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.MarkerViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
@@ -58,13 +59,19 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         OnMapReadyCallback, IOnBackPressed {
 
     private FragmentPlanToVisitBinding binding;
+
     private UserViewModel userViewModel;
     private AddressViewModel addressViewModel;
+    private MarkerViewModel markerViewModel;
+
     private User user;
+    private List<Marker> markers;
+
     private LatLng currentPlace;
     private com.google.android.gms.maps.model.Marker currentMarker;
     private com.google.android.gms.maps.model.Marker clickedMarker;
     private GoogleMap map;
+
     private Snackbar tutorialSnackbar;
     private AutocompleteSupportFragment autocompleteFragment;
 
@@ -100,6 +107,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            markerViewModel = new ViewModelProvider(getActivity()).get(MarkerViewModel.class);
         }
     }
 
@@ -113,9 +121,26 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                 if (user != null) {
                     this.user = user;
                     initLocation();
-                    addMarkersOnMap();
+                    initMarkers();
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
+            });
+        }
+    }
+
+
+    private void initMarkers() {
+        markers = new ArrayList<>();
+        if (user.getMarkers() != null && !user.getMarkers().isEmpty()) {
+            markerViewModel.getMarkersListData(user.getMarkers());
+            markerViewModel.getMarkersList().observe(getViewLifecycleOwner(), markers -> {
+                if (markers != null) {
+                    this.markers = markers;
+                    addMarkersOnMap();
+                } else {
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_load_markers), Snackbar.LENGTH_LONG);
                     stopProgressBar();
                 }
             });
@@ -178,7 +203,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     LatLng latLng = place.getLatLng();
                     if (latLng != null) {
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
-                        if (!user.getMarkers().contains(new Marker(latLng.latitude, latLng.longitude)))
+                        if (!markers.contains(new Marker(latLng.latitude, latLng.longitude)))
                             addTemporaryMarkerOnMap(latLng);
                     }
                 }
@@ -261,8 +286,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void addMarkersOnMap() {
-        if (user != null && user.getMarkers() != null && !user.getMarkers().isEmpty() && map != null) {
-            for (Marker marker : user.getMarkers()) {
+        if (markers != null && !markers.isEmpty() && map != null) {
+            for (Marker marker : markers) {
                 MarkerOptions options = new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(marker.getColor()))
                         .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
@@ -379,37 +404,61 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void addMarker(String description, float color) {
-        List<Marker> newMarkersList = user.getMarkers() != null
+        Marker marker = new Marker(description, color, currentPlace.latitude, currentPlace.longitude);
+        markerViewModel.addMarker(marker);
+        markerViewModel.getMarkerResponse().observe(getViewLifecycleOwner(), response -> {
+            if (!response.contains(getResources().getString(R.string.messages_error))) {
+                marker.setId(response);
+                addMarkerToUser(marker);
+            } else {
+                showSnackBar(response, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        });
+    }
+
+
+    private void addMarkerToUser(Marker marker) {
+        List<String> newMarkersList = user.getMarkers() != null
                 ? new ArrayList<>(user.getMarkers()) : new ArrayList<>();
-        newMarkersList.add(new Marker(description, color, currentPlace.latitude, currentPlace.longitude));
+        newMarkersList.add(marker.getId());
         updateUser(new HashMap<String, Object>() {{
             put(Constants.DB_MARKERS, newMarkersList);
-        }}, true);
+        }}, marker, true);
     }
 
 
     private void removeMarker() {
-        List<Marker> filtered = new ArrayList<>();
-        for (Marker obj : user.getMarkers())
-            if (!obj.equals(new Marker(
-                    clickedMarker.getPosition().latitude,
-                    clickedMarker.getPosition().longitude)))
-                filtered.add(obj);
+        List<String> filtered = new ArrayList<>();
+        Marker markerToRemove = new Marker(
+                clickedMarker.getPosition().latitude,
+                clickedMarker.getPosition().longitude);
+        for (Marker marker : markers)
+            if (!marker.equals(markerToRemove))
+                filtered.add(marker.getId());
+            else
+                markerToRemove = marker;
+        markerViewModel.removeMarker(markerToRemove.getId());
         updateUser(new HashMap<String, Object>() {{
             put(Constants.DB_MARKERS, filtered);
-        }}, false);
+        }}, markerToRemove, false);
     }
 
 
-    private void updateUser(Map<String, Object> changes, boolean adding) {
+    private void updateUser(Map<String, Object> changes, Marker marker, boolean adding) {
         startProgressBar();
         userViewModel.updateUser(user, changes);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;
-                String message = adding
-                        ? getResources().getString(R.string.messages_add_marker_success)
-                        : getResources().getString(R.string.messages_remove_marker_success);
+                String message;
+                if (adding) {
+                    message = getResources().getString(R.string.messages_add_marker_success);
+                    markers.add(marker);
+                } else {
+                    message = getResources().getString(R.string.messages_remove_marker_success);
+                    markers.remove(marker);
+                }
                 showSnackBar(message, Snackbar.LENGTH_SHORT);
                 refreshMap();
             } else {

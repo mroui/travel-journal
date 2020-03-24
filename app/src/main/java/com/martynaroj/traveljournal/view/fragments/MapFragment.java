@@ -41,6 +41,7 @@ import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.MarkerViewModel;
 import com.martynaroj.traveljournal.viewmodels.PlaceViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
@@ -57,6 +58,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     private AddressViewModel addressViewModel;
     private UserViewModel userViewModel;
     private PlaceViewModel placeViewModel;
+    private MarkerViewModel markerViewModel;
 
     private GoogleMap map;
     private FindCurrentPlaceRequest request;
@@ -106,6 +108,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             placeViewModel = new ViewModelProvider(getActivity()).get(PlaceViewModel.class);
+            markerViewModel = new ViewModelProvider(getActivity()).get(MarkerViewModel.class);
         }
     }
 
@@ -131,17 +134,25 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     }
 
 
-    private void initSavedPlacesMarkers(List<com.martynaroj.traveljournal.services.models.Marker> markers) {
-        savedPlacesMarkersOptions = new ArrayList<>();
-        savedPlacesMarkers = new ArrayList<>();
-
-        for (com.martynaroj.traveljournal.services.models.Marker marker : markers) {
-            MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(marker.getColor()))
-                    .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
-                    .title(marker.getDescription());
-            savedPlacesMarkersOptions.add(options);
-        }
+    private void initSavedPlacesMarkers(List<String> markers) {
+        startProgressBar();
+        markerViewModel.getMarkersListData(markers);
+        markerViewModel.getMarkersList().observe(getViewLifecycleOwner(), markerList -> {
+            if (markerList != null) {
+                savedPlacesMarkersOptions = new ArrayList<>();
+                savedPlacesMarkers = new ArrayList<>();
+                for (com.martynaroj.traveljournal.services.models.Marker marker : markerList) {
+                    MarkerOptions options = new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.defaultMarker(marker.getColor()))
+                            .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
+                            .title(marker.getDescription());
+                    savedPlacesMarkersOptions.add(options);
+                }
+            } else {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_load_markers), Snackbar.LENGTH_LONG);
+            }
+            stopProgressBar();
+        });
     }
 
 

@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 public class Marker extends BaseObservable implements Serializable {
 
+    private String id;
     private String description;
     private float color;
     private double latitude;
@@ -27,6 +28,16 @@ public class Marker extends BaseObservable implements Serializable {
         this.color = color;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    @Bindable
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        notifyPropertyChanged(BR.id);
     }
 
     @Bindable

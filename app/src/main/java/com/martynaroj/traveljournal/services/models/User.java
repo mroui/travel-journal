@@ -30,7 +30,7 @@ public class User extends BaseObservable implements Serializable {
     private List<String> friends;
     private List<String> notifications;
     private Map<String, Integer> privacy;
-    private List<Marker> markers;
+    private List<String> markers;
     private String activeTravelId;
     private List<String> travels;
 
@@ -181,12 +181,12 @@ public class User extends BaseObservable implements Serializable {
 
 
     @Bindable
-    public List<Marker> getMarkers() {
+    public List<String> getMarkers() {
         return markers;
     }
 
 
-    public void setMarkers(List<Marker> markers) {
+    public void setMarkers(List<String> markers) {
         this.markers = markers;
         notifyPropertyChanged(BR.markers);
     }
