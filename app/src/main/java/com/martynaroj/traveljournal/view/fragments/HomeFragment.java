@@ -13,12 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
-import com.martynaroj.traveljournal.services.models.Travel;
-import com.martynaroj.traveljournal.view.adapters.ExploreTravelsAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
@@ -48,16 +43,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
 
     private void initExploreTravelsAdapter() {
-        List<Travel> travels = new ArrayList<>();
-        travels.add(new Travel(R.drawable.default_avatar, "title1", "desc"));
-        travels.add(new Travel(R.drawable.default_avatar, "title2", "desc"));
-        travels.add(new Travel(R.drawable.default_avatar, "title3", "desc"));
-        travels.add(new Travel(R.drawable.default_avatar, "title4", "desc"));
-        travels.add(new Travel(R.drawable.default_avatar, "title5", "desc"));
+//        List<Travel> travels = new ArrayList<>();
+//        travels.add(new Travel(R.drawable.default_avatar, "title1", "desc"));
+//        travels.add(new Travel(R.drawable.default_avatar, "title2", "desc"));
+//        travels.add(new Travel(R.drawable.default_avatar, "title3", "desc"));
+//        travels.add(new Travel(R.drawable.default_avatar, "title4", "desc"));
+//        travels.add(new Travel(R.drawable.default_avatar, "title5", "desc"));
 
-        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
-        binding.homeExploreViewpager.setAdapter(adapter);
-        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+//        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
+//        binding.homeExploreViewpager.setAdapter(adapter);
+//        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
     }
 
 
