@@ -265,6 +265,15 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    @Override
+    public boolean onBackPressed() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+        dismissTutorialSnackbar();
+        return true;
+    }
+
+
     //MAP-------------------------------------------------------------------------------------------
 
 
@@ -483,26 +492,6 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    @Override
-    public boolean onBackPressed() {
-        if (getParentFragmentManager().getBackStackEntryCount() > 0)
-            getParentFragmentManager().popBackStack();
-        dismissTutorialSnackbar();
-        return true;
-    }
-
-
-    private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
-    }
-
-
-    private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
-        disableButtons();
-    }
-
-
     private void checkTutorialSnackbar() {
         if (getContext() != null) {
             SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
@@ -526,7 +515,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void dismissTutorialSnackbar() {
-        if (tutorialSnackbar.isShown())
+        if (tutorialSnackbar != null && tutorialSnackbar.isShown())
             tutorialSnackbar.dismiss();
     }
 
@@ -536,6 +525,17 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
             SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
             preferences.edit().putBoolean(Constants.PLAN_TO_VISIT_TUTORIAL, true).apply();
         }
+    }
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
+        disableButtons();
     }
 
 
