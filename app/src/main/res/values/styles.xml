@@ -23,7 +23,7 @@
     </style>
 
     <style name="ExploreMapButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/button_explore_map_text_color</item>
+        <item name="android:textColor">@color/button_yellow_enable_style</item>
     </style>
 
     <style name="Picker">
