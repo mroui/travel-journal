@@ -504,15 +504,6 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void checkTutorialSnackbar() {
-        if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            if (!preferences.getBoolean(Constants.PLAN_TO_VISIT_TUTORIAL, false))
-                showTutorialSnackbar();
-        }
-    }
-
-
-    private void showTutorialSnackbar() {
         tutorialSnackbar = Snackbar.make(binding.getRoot(),
                 getResources().getString(R.string.messages_explore_map_tutorial),
                 Snackbar.LENGTH_INDEFINITE);
