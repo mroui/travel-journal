@@ -97,11 +97,15 @@ public class Main extends BaseObservable implements Serializable {
     }
 
     public String getMinMaxTemp(boolean tempUnits) {
-        return getTempInUnit(this.tempMin, tempUnits)
-                + " - "
-                + getTempInUnit(this.tempMax, tempUnits)
-                + " "
-                + getProperDegrees(tempUnits);
+        if (this.tempMin.equals(this.tempMax)) {
+            return getTempInUnit(this.tempMin, tempUnits) + " " + getProperDegrees(tempUnits);
+        } else {
+            return getTempInUnit(this.tempMin, tempUnits)
+                    + " - "
+                    + getTempInUnit(this.tempMax, tempUnits)
+                    + " "
+                    + getProperDegrees(tempUnits);
+        }
     }
 
     public String getPressureString() {
