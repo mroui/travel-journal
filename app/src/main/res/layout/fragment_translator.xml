@@ -113,7 +113,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginTop="@dimen/margin_small"
                         style="@style/TextInput"
-                        android:textColorHint="@color/gray"
+                        app:hintEnabled="false"
                         app:counterEnabled="true"
                         app:counterMaxLength="400"
                         app:endIconMode="clear_text"
@@ -155,6 +155,7 @@
                         app:layout_constraintTop_toBottomOf="@id/translator_translate_button"
                         android:layout_marginTop="@dimen/margin_small"
                         style="@style/TextInput"
+                        app:hintEnabled="false"
                         android:textColorHint="@color/gray"
                         app:boxBackgroundColor="@color/dirty_white"
                         android:layout_weight="5">
