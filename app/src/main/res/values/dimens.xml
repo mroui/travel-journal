@@ -3,6 +3,7 @@
     <dimen name="margin_tiny">4dp</dimen>
     <dimen name="margin_smaller">8dp</dimen>
     <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_regular_small">18dp</dimen>
     <dimen name="margin_regular">24dp</dimen>
     <dimen name="margin_medium">36dp</dimen>
     <dimen name="margin_big">48dp</dimen>
@@ -30,6 +31,7 @@
     <dimen name="icon_size">36dp</dimen>
     <dimen name="small_icon_size">12dp</dimen>
     <dimen name="badge_size">15dp</dimen>
+    <dimen name="large_image">150dp</dimen>
 
     <dimen name="line_spacing_small">8dp</dimen>
 
@@ -44,4 +46,5 @@
     <dimen name="chip_text_size">14dp</dimen>
 
     <dimen name="corner_radius_small">8dp</dimen>
+
 </resources>

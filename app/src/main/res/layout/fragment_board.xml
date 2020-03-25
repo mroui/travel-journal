@@ -64,7 +64,7 @@
 
                         <ImageView
                             android:id="@+id/board_new_journey_image"
-                            android:layout_width="150dp"
+                            android:layout_width="@dimen/large_image"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_small"
                             android:contentDescription="@string/board_airplane"
