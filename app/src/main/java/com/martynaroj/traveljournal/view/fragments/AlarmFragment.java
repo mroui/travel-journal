@@ -205,17 +205,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void setNotificationBroadcast(String note, Long time) {
         if (getContext() != null) {
-            broadcastIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            broadcastIntent.putExtra(Constants.ALARM_DESC, note);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    getContext(),
-                    Constants.RC_BROADCAST,
-                    broadcastIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            );
-            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-            if (alarmManager != null)
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
+            NotificationBroadcast.sendBroadcast(getContext(), broadcastIntent, time, note);
             showSnackBar(getResources().getString(R.string.messages_alarm_set_success), Snackbar.LENGTH_SHORT);
             checkBroadcast();
         }
