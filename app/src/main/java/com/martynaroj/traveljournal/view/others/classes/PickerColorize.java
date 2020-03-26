@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.others.classes;
 
+import android.app.TimePickerDialog;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.widget.DatePicker;
@@ -10,41 +11,37 @@ import java.lang.reflect.Field;
 
 public abstract class PickerColorize {
 
+
     public static void colorizeDatePicker(DatePicker datePicker, int color) {
-        Resources system = Resources.getSystem();
-        int dayId = system.getIdentifier("day", "id", "android");
-        int monthId = system.getIdentifier("month", "id", "android");
-        int yearId = system.getIdentifier("year", "id", "android");
-
-        NumberPicker dayPicker = datePicker.findViewById(dayId);
-        NumberPicker monthPicker = datePicker.findViewById(monthId);
-        NumberPicker yearPicker = datePicker.findViewById(yearId);
-
-        setDividerColor(dayPicker, color);
-        setDividerColor(monthPicker, color);
-        setDividerColor(yearPicker, color);
+        setDividerColor(datePicker.findViewById(getId("day")), color);
+        setDividerColor(datePicker.findViewById(getId("month")), color);
+        setDividerColor(datePicker.findViewById(getId("year")), color);
     }
 
-    public static void colorizeTimePicker(TimePicker timePicker, int color){
-        Resources system = Resources.getSystem();
-        int hourId = system.getIdentifier("hour", "id", "android");
-        int minuteId = system.getIdentifier("minute", "id", "android");
-        int amPmId = system.getIdentifier("amPm", "id", "android");
 
-        NumberPicker hourPicker = timePicker.findViewById(hourId);
-        NumberPicker minutePicker = timePicker.findViewById(minuteId);
-        NumberPicker amPmPicker = timePicker.findViewById(amPmId);
-
-        setDividerColor(hourPicker, color);
-        setDividerColor(minutePicker, color);
-        setDividerColor(amPmPicker, color);
+    public static void colorizeTimePicker(TimePicker timePicker, int color) {
+        setDividerColor(timePicker.findViewById(getId("hour")), color);
+        setDividerColor(timePicker.findViewById(getId("minute")), color);
+        setDividerColor(timePicker.findViewById(getId("amPm")), color);
     }
+
+
+    public static void colorizeTimePickerDialog(TimePickerDialog timePickerDialog, int color) {
+        setDividerColor(timePickerDialog.findViewById(getId("hour")), color);
+        setDividerColor(timePickerDialog.findViewById(getId("minute")), color);
+        setDividerColor(timePickerDialog.findViewById(getId("amPm")), color);
+    }
+
+
+    private static int getId(String name) {
+        return Resources.getSystem().getIdentifier(name, "id", "android");
+    }
+
 
     private static void setDividerColor(NumberPicker picker, int color) {
         if (picker == null)
             return;
-        final int count = picker.getChildCount();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < picker.getChildCount(); i++) {
             try {
                 Field dividerField = picker.getClass().getDeclaredField("mSelectionDivider");
                 dividerField.setAccessible(true);
