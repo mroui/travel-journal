@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentAlarmBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.classes.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -278,6 +279,10 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
             TimePicker timePicker = dialog.findViewById(R.id.dialog_alarm_time_picker);
             DatePicker datePicker = dialog.findViewById(R.id.dialog_alarm_date_picker);
             TextView errorMessage = dialog.findViewById(R.id.dialog_alarm_error);
+
+            int color = getResources().getColor(R.color.light_gray);
+            PickerColorize.colorizeDatePicker(datePicker, color);
+            PickerColorize.colorizeTimePicker(timePicker, color);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 datePicker.setOnDateChangedListener(
