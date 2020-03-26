@@ -39,7 +39,9 @@
     <string name="alarm_title">Alarm</string>
     <string name="alarm_channel_info">Alarm channel</string>
     <string name="dialog_alarm_perms_title">Additional Permissions</string>
-    <string name="dialog_alarm_perms_desc">To fully use the alarm function, enable additional rights in the settings.</string>
+    <string name="dialog_alarm_perms_desc">
+        To fully use the alarm function, enable additional rights in the settings.
+    </string>
     <string name="dialog_alarm_title">Set alarm</string>
     <string name="dialog_alarm_date">DATE</string>
     <string name="dialog_alarm_time">TIME</string>
@@ -74,8 +76,10 @@
     <string name="login_no_acc_sign_up"><u>Sign up</u></string>
 
     <string name="forgot_password_title">Forgot\nyour\npassword?</string>
-    <string name="forgot_password_info">Don\'t worry! It\'s sometimes happens.
-        Just fill your email and we\'ll help you to reset your password.</string>
+    <string name="forgot_password_info">
+        Don\'t worry! It\'s sometimes happens.
+        Just fill your email and we\'ll help you to reset your password.
+    </string>
     <string name="forgot_password_image">Suitcase</string>
     <string name="forgot_password_back"><u>Back to Login</u></string>
     <string name="forgot_password_send">Send link</string>
@@ -117,11 +121,12 @@
         about yourself</string>
     <string name="profile_settings_personal_location_title">Location</string>
     <string name="profile_settings_personal_location_desc">Set your current location
-        or let us find You</string>
+        or let us find you</string>
     <string name="profile_settings_personal_location_find_me">Find me</string>
     <string name="profile_settings_personal_preferences_title">Preferences</string>
-    <string name="profile_settings_personal_preferences_desc">Choose some preferences tags
-        which you identify with</string>
+    <string name="profile_settings_personal_preferences_desc">
+        Choose some preferences tags which you identify with
+    </string>
     <string name="profile_settings_personal_save">Save personal changes</string>
     <string name="profile_settings_account">ACCOUNT</string>
     <string name="profile_settings_account_username_title">Username</string>
@@ -177,14 +182,17 @@
     <string name="plan_to_visit_add">add</string>
 
     <string name="dialog_unsaved_changes_title">Unsaved changes</string>
-    <string name="dialog_unsaved_changes_desc">Your changes have not been saved. Do you want to
-        discard the changes and continue?</string>
+    <string name="dialog_unsaved_changes_desc">
+        Your changes have not been saved. Do you want to discard the changes and continue?
+    </string>
     <string name="dialog_my_email_title">Your contact email</string>
     <string name="dialog_credits_title">Credits</string>
     <string name="dialog_update_account_title">Welcome on Board, Traveller!</string>
-    <string name="dialog_update_account_desc">Now you can start your own adventure!\n
+    <string name="dialog_update_account_desc">
+        Now you can start your own adventure!\n
         &#127759; &#x2764; &#x270b;\nOops, but wait…\nIt looks like that your traveller\'s
-        account is still unfilled… &#x1f61e;\nWhen do you want to update it?</string>
+        account is still unfilled… &#x1f61e;\nWhen do you want to update it?
+    </string>
     <string name="dialog_remove_friends_title">Remove from friends</string>
     <string name="dialog_remove_friends_desc">Are you sure you want to remove</string>
     <string name="dialog_add_marker_title">Add marker</string>
@@ -211,5 +219,28 @@
     <string name="dialog_button_next">NEXT</string>
 
     <string name="create_travel_title">Create travel</string>
+    <string name="create_travel_stage_0_title">Hey Traveler!</string>
+    <string name="create_travel_stage_0_desc">Looks like you want to create a new journey.
+        That\'s awesome! This creator will guide you
+        step by step.\n\nLet\'s start from the beginning…
+    </string>
+    <string name="create_travel_stage_1_title">Name</string>
+    <string name="create_travel_stage_1_desc">Choose it wisely,\nit will identify your
+        journey in the future.
+    </string>
+    <string name="create_travel_stage_1_name_hint">Awesome 3 days trip in Mediolan</string>
+    <string name="create_travel_stage_2_title">Image</string>
+    <string name="create_travel_stage_2_desc">Upload picture which could also identify your journey.
+        It\'s <b>optional</b> but better to have one than not, right?
+    </string>
+    <string name="create_travel_stage_2_upload_image">Upload image</string>
+    <string name="create_travel_stage_3_title">Date and time</string>
+    <string name="create_travel_stage_3_desc_1">First of all, choose departure
+        date.\nIt\'s also good to plan approximate time, for example time on travel ticket
+    </string>
+    <string name="create_travel_stage_3_from_title">FROM</string>
+    <string name="create_travel_stage_3_to_title">TO</string>
+    <string name="create_travel_stage_3_desc_2">… and similar to arrival date and time.</string>
+    <string name="create_travel_stage_3_set_alarm_title">Set alarm to departure time</string>
 
 </resources>
