@@ -27,12 +27,11 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginBottom="@dimen/margin_medium"
                 android:background="?android:attr/selectableItemBackground"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/back_arrow" />
+                android:contentDescription="@string/back_arrow"/>
 
             <TextView
                 android:id="@+id/create_travel_title"
@@ -62,6 +61,50 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/create_travel_stage_0_image"
+                            android:layout_width="@dimen/large_image"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/airplane2"
+                            android:contentDescription="@string/airplane"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_0_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_medium"
+                            android:text="@string/create_travel_stage_0_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/darker_gray"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_0_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:layout_marginHorizontal="@dimen/margin_regular"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textAlignment="center"
+                            android:text="@string/create_travel_stage_0_desc"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                    </LinearLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,12 +112,285 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_1_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_1_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/yellow_active"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_1_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_1_desc"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/create_travel_stage_1_name_text_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_regular_small"
+                            style="@style/TextInput"
+                            app:boxStrokeColor="@color/yellow_active"
+                            app:hintEnabled="false"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="100"
+                            app:errorEnabled="true"
+                            app:endIconMode="clear_text">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/create_travel_stage_1_name_text_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/raleway_regular"
+                                android:gravity="top"
+                                android:textSize="@dimen/text_small"
+                                android:textCursorDrawable="@null"
+                                android:hint="@string/create_travel_stage_1_name_hint"
+                                android:maxLength="100"
+                                android:inputType="textMultiLine"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_2_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_2_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_2_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/yellow_active"/>
+
+                        <ImageButton
+                            android:id="@+id/create_travel_stage_2_upload_image_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/large_image"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:backgroundTint="@color/light_gray"
+                            android:src="@drawable/ic_add_a_photo_gray"
+                            android:contentDescription="@string/create_travel_stage_2_upload_image"
+                            tools:ignore="UnusedAttribute"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_2_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_2_desc"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/create_travel_stage_3_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_3_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_3_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/yellow_active"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_3_desc_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_3_desc_1"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_3_from_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_3_from_title"
+                            android:textSize="@dimen/text_smaller"
+                            android:textColor="@color/yellow_active"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/margin_tiny"
+                                style="@style/TextInput"
+                                app:boxStrokeColor="@color/yellow_active"
+                                app:startIconDrawable="@drawable/ic_calendar_gray"
+                                app:hintEnabled="false"
+                                android:layout_weight="4">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/create_travel_stage_3_date_from"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/raleway_regular"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:clickable="true"
+                                    android:focusable="false"
+                                    android:cursorVisible="false"
+                                    tools:ignore="KeyboardInaccessibleWidget" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/TextInput"
+                                app:boxStrokeColor="@color/yellow_active"
+                                app:startIconDrawable="@drawable/ic_alarm_gray"
+                                app:hintEnabled="false"
+                                android:layout_weight="5">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/create_travel_stage_3_time_from"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/raleway_regular"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:clickable="true"
+                                    android:focusable="false"
+                                    android:cursorVisible="false"
+                                    tools:ignore="KeyboardInaccessibleWidget" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_3_desc_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_3_desc_2"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_3_to_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_3_to_title"
+                            android:textSize="@dimen/text_smaller"
+                            android:textColor="@color/yellow_active"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/margin_tiny"
+                                style="@style/TextInput"
+                                app:boxStrokeColor="@color/yellow_active"
+                                app:startIconDrawable="@drawable/ic_calendar_gray"
+                                app:hintEnabled="false"
+                                android:layout_weight="4">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/create_travel_stage_3_date_to"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/raleway_regular"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:clickable="true"
+                                    android:focusable="false"
+                                    android:cursorVisible="false"
+                                    tools:ignore="KeyboardInaccessibleWidget" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/TextInput"
+                                app:boxStrokeColor="@color/yellow_active"
+                                app:startIconDrawable="@drawable/ic_alarm_gray"
+                                app:hintEnabled="false"
+                                android:layout_weight="5">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/create_travel_stage_3_time_to"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/raleway_regular"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:clickable="true"
+                                    android:focusable="false"
+                                    android:cursorVisible="false"
+                                    tools:ignore="KeyboardInaccessibleWidget" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+                        
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:theme="@style/CheckBox"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_3_set_alarm_title"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

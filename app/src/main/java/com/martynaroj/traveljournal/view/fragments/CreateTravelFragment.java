@@ -1,6 +1,8 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
+import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +13,30 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class CreateTravelFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentCreateTravelBinding binding;
     private UserViewModel userViewModel;
     private User user;
+
+    private long minDate, maxDate;
+
+    public CreateTravelFragment() {
+    }
+
 
     private CreateTravelFragment(User user) {
         this.user = user;
@@ -40,11 +54,17 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         View view = binding.getRoot();
 
         initViewModels();
+        initContentData();
         observeUserChanges();
 
         setListeners();
 
         return view;
+    }
+
+
+    private void initContentData() {
+         minDate = Calendar.getInstance().getTimeInMillis();
     }
 
 
@@ -76,6 +96,19 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void setListeners() {
         binding.createTravelNextButton.setOnClickListener(this);
         binding.createTravelPreviousButton.setOnClickListener(this);
+        binding.createTravelStage2UploadImageButton.setOnClickListener(this);
+        binding.createTravelStage3DateFrom.setOnClickListener(view ->
+                showDatePickerDialog(binding.createTravelStage3DateFrom)
+        );
+        binding.createTravelStage3TimeFrom.setOnClickListener(view ->
+                showTimePickerDialog(binding.createTravelStage3TimeFrom)
+        );
+        binding.createTravelStage3DateTo.setOnClickListener(view ->
+                showDatePickerDialog(binding.createTravelStage3DateTo)
+        );
+        binding.createTravelStage3TimeTo.setOnClickListener(view ->
+                showTimePickerDialog(binding.createTravelStage3TimeTo)
+        );
         setViewFlipperListeners();
     }
 
@@ -107,8 +140,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             case R.id.create_travel_next_button:
                 showNextStage();
                 break;
+            case R.id.create_travel_stage_2_upload_image_button:
+                break;
         }
     }
+
+
+    //STAGES----------------------------------------------------------------------------------------
 
 
     private void showPreviousStage() {
@@ -126,6 +164,74 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         flipper.setOutAnimation(getContext(), R.anim.exit_right_to_left);
         if (flipper.getDisplayedChild() < flipper.getChildCount() - 1)
             flipper.showNext();
+    }
+
+
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
+    private void showTimePickerDialog(TextInputEditText editText) {
+        if (getContext() != null) {
+            Calendar now = Calendar.getInstance();
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    getContext(),
+                    R.style.DateTimePicker,
+                    (timePicker, hourOfDay, minute) -> setTime(editText, hourOfDay, minute),
+                    now.get(Calendar.HOUR),
+                    now.get(Calendar.MINUTE),
+                    false
+            );
+            timePickerDialog.show();
+            PickerColorize.colorizeTimePickerDialog(timePickerDialog,
+                    getResources().getColor(R.color.yellow_active));
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void showDatePickerDialog(TextInputEditText editText) {
+        if (getContext() != null) {
+            Calendar now = Calendar.getInstance();
+            MaterialStyledDatePickerDialog datePickerDialog = new MaterialStyledDatePickerDialog(
+                    getContext(),
+                    R.style.DateTimePicker,
+                    (datePicker, year, month, day) -> setDate(editText, year, month, day),
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
+            );
+
+            if (editText == binding.createTravelStage3DateFrom && maxDate != 0) {
+                datePickerDialog.getDatePicker().setMinDate(now.getTimeInMillis());
+                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+            } else if (editText == binding.createTravelStage3DateTo) {
+                datePickerDialog.getDatePicker().setMinDate(minDate);
+            }
+
+            PickerColorize.colorizeDatePicker(datePickerDialog.getDatePicker(),
+                    getResources().getColor(R.color.yellow_active));
+            datePickerDialog.show();
+        }
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    private void setDate(TextInputEditText editText, int year, int month, int day) {
+        Calendar date = Calendar.getInstance();
+        date.set(year, month, day);
+        editText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date.getTime()));
+
+        if (editText == binding.createTravelStage3DateTo)
+            maxDate = date.getTimeInMillis();
+        else
+            minDate = date.getTimeInMillis();
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    private void setTime(TextInputEditText editText, int hoursOfDay, int minute) {
+        Calendar date = Calendar.getInstance();
+        date.set(0, 0, 0, hoursOfDay, minute);
+        editText.setText(new SimpleDateFormat("h:mm a").format(date.getTime()));
     }
 
 
