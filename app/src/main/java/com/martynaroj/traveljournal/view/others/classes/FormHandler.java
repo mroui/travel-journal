@@ -93,7 +93,7 @@ public class FormHandler {
     }
 
 
-    public static void handleCurrency(Editable s, TextInputEditText editText) {
+    public void handleCurrency(Editable s, TextInputEditText editText) {
         String text = s.toString();
         if (text.contains(".")) {
             if ((text.substring(text.indexOf(".")).length() > 3

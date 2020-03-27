@@ -96,7 +96,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.currencyAmountInput.hasFocus() && s != null) {
-                    FormHandler.handleCurrency(s, binding.currencyAmountInput);
+                    new FormHandler(getContext()).handleCurrency(s, binding.currencyAmountInput);
                     changes = true;
                 }
             }

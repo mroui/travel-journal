@@ -169,7 +169,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.createTravelStage7BudgetInput.hasFocus() && s != null)
-                    FormHandler.handleCurrency(s, binding.createTravelStage7BudgetInput);
+                    new FormHandler(getContext()).handleCurrency(s, binding.createTravelStage7BudgetInput);
             }
         });
         binding.createTravelStage9FinishButton.setOnClickListener(this);
@@ -253,8 +253,28 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         ViewFlipper flipper = binding.createTravelViewFlipper;
         flipper.setInAnimation(getContext(), R.anim.enter_right_to_left);
         flipper.setOutAnimation(getContext(), R.anim.exit_right_to_left);
-        if (flipper.getDisplayedChild() < flipper.getChildCount() - 1)
+        if (!handleErrors() && flipper.getDisplayedChild() < flipper.getChildCount() - 1)
             flipper.showNext();
+    }
+
+
+    private boolean handleErrors() {
+        boolean errors = false;
+        switch (binding.createTravelViewFlipper.getDisplayedChild()) {
+            case R.id.create_travel_stage_1_container:
+                errors = validateName();
+                break;
+        }
+        return errors;
+    }
+
+
+    private boolean validateName() {
+        return new FormHandler(getContext()).validateLength(
+                binding.createTravelStage1NameTextInput,
+                binding.createTravelStage1NameTextLayout,
+                8
+        );
     }
 
 
