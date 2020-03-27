@@ -95,7 +95,6 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
     private void fillSpinners() {
         if (getContext() != null) {
-
             List<String> names = new ArrayList<>();
             for (String key : possibilities.keySet()) {
                 names.add(languageNames.get(key));

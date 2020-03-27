@@ -70,7 +70,11 @@
                         android:layout_height="wrap_content"
                         android:spinnerMode="dropdown"
                         android:layout_weight="6"
-                        style="@style/Spinner"/>
+                        style="@style/Spinner"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_smaller"
+                        app:ms_background_color="@color/dirty_white"
+                        app:ms_arrow_tint="@color/main_blue"/>
 
                     <ImageView
                         android:id="@+id/translator_language_swap_icon"
@@ -89,7 +93,11 @@
                         android:layout_height="wrap_content"
                         android:spinnerMode="dropdown"
                         android:layout_weight="6"
-                        style="@style/Spinner"/>
+                        style="@style/Spinner"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_smaller"
+                        app:ms_background_color="@color/dirty_white"
+                        app:ms_arrow_tint="@color/main_blue"/>
 
                 </LinearLayout>
 
