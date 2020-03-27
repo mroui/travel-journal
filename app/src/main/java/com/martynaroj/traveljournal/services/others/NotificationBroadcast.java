@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.view.others.classes;
+package com.martynaroj.traveljournal.services.others;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

@@ -40,7 +40,7 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
-        <receiver android:name=".view.others.classes.NotificationBroadcast" android:exported="true" >
+        <receiver android:name=".services.others.NotificationBroadcast" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.NOTIFY" />
             </intent-filter>

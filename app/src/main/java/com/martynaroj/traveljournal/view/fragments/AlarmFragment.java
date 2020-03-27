@@ -29,7 +29,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentAlarmBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
-import com.martynaroj.traveljournal.view.others.classes.NotificationBroadcast;
+import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
