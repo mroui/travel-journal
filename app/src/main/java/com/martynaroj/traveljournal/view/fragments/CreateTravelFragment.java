@@ -66,6 +66,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private AutocompleteSupportFragment autocompleteFragment;
 
     private Uri imageUri;
+    private long dateFrom, dateTo, timeFrom, timeTo;
 
     public CreateTravelFragment() {
     }
@@ -170,18 +171,22 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         binding.createTravelNextButton.setOnClickListener(this);
         binding.createTravelPreviousButton.setOnClickListener(this);
         binding.createTravelStage2UploadImageButton.setOnClickListener(this);
-        binding.createTravelStage3DateFrom.setOnClickListener(view ->
-                showDatePickerDialog(binding.createTravelStage3DateFrom)
-        );
-        binding.createTravelStage3TimeFrom.setOnClickListener(view ->
-                showTimePickerDialog(binding.createTravelStage3TimeFrom)
-        );
-        binding.createTravelStage3DateTo.setOnClickListener(view ->
-                showDatePickerDialog(binding.createTravelStage3DateTo)
-        );
-        binding.createTravelStage3TimeTo.setOnClickListener(view ->
-                showTimePickerDialog(binding.createTravelStage3TimeTo)
-        );
+        binding.createTravelStage3DateFrom.setOnClickListener(view -> {
+            binding.createTravelStage3Error.setVisibility(View.GONE);
+            showDatePickerDialog(binding.createTravelStage3DateFrom);
+        });
+        binding.createTravelStage3TimeFrom.setOnClickListener(view -> {
+            binding.createTravelStage3Error.setVisibility(View.GONE);
+            showTimePickerDialog(binding.createTravelStage3TimeFrom);
+        });
+        binding.createTravelStage3DateTo.setOnClickListener(view -> {
+            binding.createTravelStage3Error.setVisibility(View.GONE);
+            showDatePickerDialog(binding.createTravelStage3DateTo);
+        });
+        binding.createTravelStage3TimeTo.setOnClickListener(view -> {
+            binding.createTravelStage3Error.setVisibility(View.GONE);
+            showTimePickerDialog(binding.createTravelStage3TimeTo);
+        });
         binding.createTravelStage5TransportUploadFileButton.setOnClickListener(this);
         binding.createTravelStage7BudgetInput.addTextChangedListener(new InputTextWatcher() {
             @Override
@@ -290,6 +295,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             case 1:
                 noErrors = validateName();
                 break;
+            case 3:
+                noErrors = validateDatesTimes();
+                break;
         }
         return noErrors;
     }
@@ -301,6 +309,15 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 binding.createTravelStage1NameTextLayout,
                 8
         );
+    }
+
+
+    private boolean validateDatesTimes() {
+        if (dateFrom == 0 || dateTo == 0 || timeFrom == 0 || timeTo == 0) {
+            binding.createTravelStage3Error.setVisibility(View.VISIBLE);
+            return false;
+        }
+        return true;
     }
 
 
@@ -394,10 +411,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         date.set(year, month, day);
         editText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date.getTime()));
 
-        if (editText == binding.createTravelStage3DateTo)
+        if (editText == binding.createTravelStage3DateTo) {
             maxDate = date.getTimeInMillis();
-        else
+            dateTo = maxDate;
+        } else {
             minDate = date.getTimeInMillis();
+            dateFrom = minDate;
+        }
     }
 
 
@@ -406,6 +426,11 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         Calendar date = Calendar.getInstance();
         date.set(0, 0, 0, hoursOfDay, minute);
         editText.setText(new SimpleDateFormat("h:mm a").format(date.getTime()));
+
+        if (editText == binding.createTravelStage3TimeFrom)
+            timeFrom = date.getTimeInMillis();
+        else
+            timeTo = date.getTimeInMillis();
     }
 
 
