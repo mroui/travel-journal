@@ -32,7 +32,6 @@ public class FormHandler {
 
     public boolean validateInput(TextInputEditText input, TextInputLayout layout) {
         String value = input.getText() == null ? "" : input.getText().toString();
-        layout.setErrorEnabled(true);
         if (value.isEmpty()) {
             layout.setError(context.getResources().getString(R.string.messages_field_no_empty));
             input.requestFocus();
@@ -44,7 +43,7 @@ public class FormHandler {
             input.requestFocus();
             return false;
         } else
-            layout.setErrorEnabled(false);
+            layout.setError(null);
         return true;
     }
 
@@ -63,7 +62,7 @@ public class FormHandler {
             }
             return false;
         } else
-            layout2.setErrorEnabled(false);
+            layout2.setError(null);
         return true;
     }
 
@@ -82,13 +81,12 @@ public class FormHandler {
 
     public boolean validateLength(TextInputEditText input, TextInputLayout layout, int minLength) {
         String value = input.getText() == null ? "" : input.getText().toString();
-        layout.setErrorEnabled(true);
         if (value.length() < minLength) {
             layout.setError("Enter at least " + minLength + " characters");
             input.requestFocus();
             return false;
         } else
-            layout.setErrorEnabled(false);
+            layout.setError(null);
         return true;
     }
 
