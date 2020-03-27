@@ -7,18 +7,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -33,6 +40,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private User user;
 
     private long minDate, maxDate;
+
+    private AutocompleteSupportFragment autocompleteFragment;
 
     public CreateTravelFragment() {
     }
@@ -55,16 +64,12 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
         initViewModels();
         initContentData();
+        initGooglePlaces();
         observeUserChanges();
 
         setListeners();
 
         return view;
-    }
-
-
-    private void initContentData() {
-         minDate = Calendar.getInstance().getTimeInMillis();
     }
 
 
@@ -75,6 +80,38 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
+    }
+
+
+    private void initContentData() {
+        minDate = Calendar.getInstance().getTimeInMillis();
+        fillSpinner(binding.createTravelStage5TransportTypeSpinner,
+                getResources().getStringArray(R.array.transport));
+        fillSpinner(binding.createTravelStage6AccommodationTypeSpinner,
+                getResources().getStringArray(R.array.accommodation));
+
+    }
+
+
+    private void fillSpinner(MaterialSpinner spinner, String[] stringArray) {
+        if (getContext() != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    getContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    stringArray
+            );
+            spinner.setAdapter(adapter);
+        }
+    }
+
+
+    private void initGooglePlaces() {
+        GooglePlaces.init(getContext());
+        autocompleteFragment = GooglePlaces.initAutoComplete(
+                getContext(),
+                R.id.create_travel_stage_4_search_place,
+                getChildFragmentManager()
+        );
     }
 
 
@@ -109,7 +146,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         binding.createTravelStage3TimeTo.setOnClickListener(view ->
                 showTimePickerDialog(binding.createTravelStage3TimeTo)
         );
+        binding.createTravelStage5TransportUploadFileButton.setOnClickListener(this);
         setViewFlipperListeners();
+        setAutocompleteFragmentListeners();
     }
 
 
@@ -131,6 +170,28 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    private void setAutocompleteFragmentListeners() {
+        if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull com.google.android.libraries.places.api.model.Place place) {
+                    LatLng latLng = place.getLatLng();
+                    if (latLng != null) {
+                        //todo
+                    }
+                }
+
+                @Override
+                public void onError(@NonNull Status status) {
+                }
+            });
+            autocompleteFragment.getView()
+                    .findViewById(R.id.places_autocomplete_clear_button)
+                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+        }
+    }
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -141,6 +202,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 showNextStage();
                 break;
             case R.id.create_travel_stage_2_upload_image_button:
+                break;
+            case R.id.create_travel_stage_5_transport_upload_file_button:
                 break;
         }
     }
