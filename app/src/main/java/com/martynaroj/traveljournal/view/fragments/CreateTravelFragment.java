@@ -1,19 +1,30 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -32,12 +43,17 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CreateTravelFragment extends BaseFragment implements View.OnClickListener {
 
@@ -48,6 +64,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private long minDate, maxDate;
 
     private AutocompleteSupportFragment autocompleteFragment;
+
+    private Uri imageUri;
 
     public CreateTravelFragment() {
     }
@@ -228,6 +246,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 showNextStage();
                 break;
             case R.id.create_travel_stage_2_upload_image_button:
+                checkReadStoragePermissions();
                 break;
             case R.id.create_travel_stage_5_transport_upload_file_button:
                 break;
@@ -244,8 +263,10 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         ViewFlipper flipper = binding.createTravelViewFlipper;
         flipper.setInAnimation(getContext(), R.anim.enter_left_to_right);
         flipper.setOutAnimation(getContext(), R.anim.exit_left_to_right);
-        if (flipper.getDisplayedChild() > 0)
+        if (flipper.getDisplayedChild() > 0) {
+            hideKeyboard();
             flipper.showPrevious();
+        }
     }
 
 
@@ -253,19 +274,24 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         ViewFlipper flipper = binding.createTravelViewFlipper;
         flipper.setInAnimation(getContext(), R.anim.enter_right_to_left);
         flipper.setOutAnimation(getContext(), R.anim.exit_right_to_left);
-        if (!handleErrors() && flipper.getDisplayedChild() < flipper.getChildCount() - 1)
+        if (handleErrors() && flipper.getDisplayedChild() < flipper.getChildCount() - 1) {
+            hideKeyboard();
             flipper.showNext();
+        }
     }
 
 
+    //VALIDATIONS-----------------------------------------------------------------------------------
+
+
     private boolean handleErrors() {
-        boolean errors = false;
+        boolean noErrors = true;
         switch (binding.createTravelViewFlipper.getDisplayedChild()) {
-            case R.id.create_travel_stage_1_container:
-                errors = validateName();
+            case 1:
+                noErrors = validateName();
                 break;
         }
-        return errors;
+        return noErrors;
     }
 
 
@@ -275,6 +301,43 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 binding.createTravelStage1NameTextLayout,
                 8
         );
+    }
+
+
+    //FILES-----------------------------------------------------------------------------------------
+
+
+    private void checkReadStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null)
+            if (ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(
+                        getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        Constants.RC_EXTERNAL_STORAGE
+                );
+            else
+                selectImage();
+        else
+            selectImage();
+    }
+
+
+    private void selectImage() {
+        if (getActivity() != null && getContext() != null) {
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(3, 2)
+                    .start(getContext(), this);
+        }
+    }
+
+
+    private void loadImage() {
+        if (getContext() != null)
+            Glide.with(getContext())
+                    .load(imageUri).centerCrop()
+                    .into(binding.createTravelStage2UploadImageButton);
     }
 
 
@@ -351,6 +414,29 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    protected void hideKeyboard() {
+        if (getActivity() != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK && result != null) {
+                imageUri = result.getUri();
+                loadImage();
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
+                showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
+        }
     }
 
 

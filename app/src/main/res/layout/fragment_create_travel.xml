@@ -202,11 +202,12 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_margin="@dimen/margin_regular"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/create_travel_stage_2_title"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_2_title"
@@ -215,8 +216,8 @@
 
                         <ImageButton
                             android:id="@+id/create_travel_stage_2_upload_image_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/large_image"
+                            android:layout_width="@dimen/travel_image_w"
+                            android:layout_height="@dimen/travel_image_h"
                             android:layout_marginTop="@dimen/margin_tiny"
                             android:backgroundTint="@color/dirty_white"
                             android:src="@drawable/ic_add_a_photo_gray"
