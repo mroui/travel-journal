@@ -9,12 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,7 +24,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -39,6 +36,7 @@ import com.martynaroj.traveljournal.databinding.FragmentPlanToVisitBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Marker;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
@@ -172,19 +170,12 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
     private void initGooglePlaces() {
         if (getContext() != null) {
-            Places.initialize(getContext(), getString(R.string.google_api_key));
-            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.explore_map_search_view);
-            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTextSize(14.0f);
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
-                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
-                        .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
-            }
+            GooglePlaces.init(getContext());
+            autocompleteFragment = GooglePlaces.initAutoComplete(
+                    getContext(),
+                    R.id.explore_map_search_view,
+                    getChildFragmentManager()
+            );
         }
     }
 

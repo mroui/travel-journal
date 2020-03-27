@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -26,7 +24,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -37,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentMapBinding;
 import com.martynaroj.traveljournal.services.models.placesAPI.Place;
+import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -162,32 +160,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     private void initGooglePlaces() {
         if (getContext() != null) {
-            Places.initialize(getContext(), getString(R.string.google_api_key));
-            placesClient = Places.createClient(getContext());
-            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(
-                    com.google.android.libraries.places.api.model.Place.Field.ID,
-                    com.google.android.libraries.places.api.model.Place.Field.NAME,
-                    com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-                    com.google.android.libraries.places.api.model.Place.Field.LAT_LNG));
-
-            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.map_search_view);
-            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTextSize(14.0f);
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
-                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
-                        .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(
-                        com.google.android.libraries.places.api.model.Place.Field.ID,
-                        com.google.android.libraries.places.api.model.Place.Field.NAME,
-                        com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG,
-                        com.google.android.libraries.places.api.model.Place.Field.OPENING_HOURS,
-                        com.google.android.libraries.places.api.model.Place.Field.PHONE_NUMBER,
-                        com.google.android.libraries.places.api.model.Place.Field.RATING));
-            }
+            GooglePlaces.init(getContext());
+            placesClient = GooglePlaces.initClient(getContext());
+            request = GooglePlaces.initRequest();
+            autocompleteFragment = GooglePlaces.initAutoComplete(
+                    getContext(),
+                    R.id.map_search_view,
+                    getChildFragmentManager()
+            );
         }
     }
 
