@@ -32,6 +32,7 @@
     <dimen name="small_icon_size">12dp</dimen>
     <dimen name="badge_size">15dp</dimen>
     <dimen name="large_image">150dp</dimen>
+    <dimen name="small_image">75dp</dimen>
 
     <dimen name="line_spacing_small">8dp</dimen>
 

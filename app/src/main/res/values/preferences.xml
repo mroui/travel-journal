@@ -78,10 +78,10 @@
     <string name="motel">motel</string>
     <string name="summerhouse">summerhouse</string>
     <string name="tent">tent</string>
-    <string name="campsite">campsite</string>
     <string name="camping">camping</string>
-    <string name="camp">camp</string>
     <string name="apartments">apartments</string>
+    <string name="train">train</string>
+    <string name="cottage">cottage</string>
 
 
     <string-array name="preferences">
@@ -100,9 +100,7 @@
         <item>@string/beach</item>
         <item>@string/bike</item>
         <item>@string/bus</item>
-        <item>@string/camp</item>
         <item>@string/camping</item>
-        <item>@string/campsite</item>
         <item>@string/car</item>
         <item>@string/chill</item>
         <item>@string/city</item>
@@ -154,6 +152,7 @@
         <item>@string/summer</item>
         <item>@string/sunset</item>
         <item>@string/tent</item>
+        <item>@string/train</item>
         <item>@string/travel</item>
         <item>@string/trekking</item>
         <item>@string/trip</item>
@@ -166,5 +165,29 @@
         <item>@string/vacation</item>
         <item>@string/views</item>
         <item>@string/voyage</item>
+        <item>@string/cottage</item>
     </string-array>
+
+
+    <string-array name="transport">
+        <item>@string/airplane</item>
+        <item>@string/bike</item>
+        <item>@string/bus</item>
+        <item>@string/car</item>
+        <item>@string/foot</item>
+        <item>@string/ship</item>
+        <item>@string/train</item>
+    </string-array>
+
+
+    <string-array name="accommodation">
+        <item>@string/airbnb</item>
+        <item>@string/apartments</item>
+        <item>@string/cottage</item>
+        <item>@string/hostel</item>
+        <item>@string/hotel</item>
+        <item>@string/motel</item>
+        <item>@string/camping</item>
+    </string-array>
+
 </resources>
