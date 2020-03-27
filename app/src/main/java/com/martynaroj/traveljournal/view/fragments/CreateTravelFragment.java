@@ -4,6 +4,7 @@ package com.martynaroj.traveljournal.view.fragments;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,16 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
+import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
+import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class CreateTravelFragment extends BaseFragment implements View.OnClickListener {
@@ -89,7 +95,19 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 getResources().getStringArray(R.array.transport));
         fillSpinner(binding.createTravelStage6AccommodationTypeSpinner,
                 getResources().getStringArray(R.array.accommodation));
+        fillTagsInput();
+    }
 
+
+    private void fillTagsInput() {
+        if (getContext() != null) {
+            final HashtagAdapter adapter = new HashtagAdapter(
+                    getContext(),
+                    new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.preferences)))
+            );
+            binding.createTravelStage8TagsInput.setAdapter(adapter);
+            binding.createTravelStage8TagsInput.setThreshold(1);
+        }
     }
 
 
@@ -147,6 +165,14 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 showTimePickerDialog(binding.createTravelStage3TimeTo)
         );
         binding.createTravelStage5TransportUploadFileButton.setOnClickListener(this);
+        binding.createTravelStage7BudgetInput.addTextChangedListener(new InputTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.createTravelStage7BudgetInput.hasFocus() && s != null)
+                    FormHandler.handleCurrency(s, binding.createTravelStage7BudgetInput);
+            }
+        });
+        binding.createTravelStage9FinishButton.setOnClickListener(this);
         setViewFlipperListeners();
         setAutocompleteFragmentListeners();
     }
@@ -204,6 +230,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             case R.id.create_travel_stage_2_upload_image_button:
                 break;
             case R.id.create_travel_stage_5_transport_upload_file_button:
+                break;
+            case R.id.create_travel_stage_9_finish_button:
                 break;
         }
     }

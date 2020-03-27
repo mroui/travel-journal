@@ -56,7 +56,12 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_small">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_0_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -107,7 +112,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_1_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -170,7 +182,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_2_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -218,7 +237,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_3_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -286,7 +312,7 @@
                                     android:clickable="true"
                                     android:focusable="false"
                                     android:cursorVisible="false"
-                                    tools:ignore="KeyboardInaccessibleWidget" />
+                                    tools:ignore="KeyboardInaccessibleWidget,TooDeepLayout"/>
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
@@ -394,7 +420,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_4_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -471,7 +504,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_5_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -584,7 +624,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/create_travel_stage_6_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -696,6 +743,212 @@
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/create_travel_stage_7_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_7_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_7_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/yellow_active"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_7_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_7_desc"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"
+                            tools:ignore="TooManyViews"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/create_travel_stage_7_budget_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            style="@style/TextInput"
+                            app:boxStrokeColor="@color/yellow_active"
+                            app:hintEnabled="false"
+                            app:errorEnabled="false"
+                            app:errorIconDrawable="@null">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/create_travel_stage_7_budget_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/raleway_regular"
+                                android:gravity="top"
+                                android:textSize="@dimen/text_small"
+                                android:textCursorDrawable="@null"
+                                android:inputType="numberDecimal"
+                                android:text="@string/currency_default_amount"
+                                android:maxLength="10"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/create_travel_stage_8_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_margin="@dimen/margin_regular"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_8_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/create_travel_stage_8_title"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/yellow_active"/>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_8_desc_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_8_desc_1"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/create_travel_stage_8_tags_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            style="@style/TextInput"
+                            app:boxStrokeColor="@color/yellow_active"
+                            app:hintEnabled="false">
+                            <com.hootsuite.nachos.NachoTextView
+                                android:id="@+id/create_travel_stage_8_tags_input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/padding_smaller"
+                                android:textSize="@dimen/text_small"
+                                android:hint="@string/create_travel_stage_8_tags_hint"
+                                android:textColorHint="@color/gray"
+                                android:fontFamily="@font/raleway_regular"
+                                app:chipBackground="@color/transparent_light"
+                                app:chipTextColor="@color/black"
+                                app:chipTextSize="@dimen/chip_text_size"
+                                app:chipHeight="@dimen/chip_height"
+                                android:textCursorDrawable="@null"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/create_travel_stage_8_desc_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:text="@string/create_travel_stage_8_desc_2"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/dark_gray"/>
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:fillViewport="true">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/create_travel_stage_9_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_margin="@dimen/margin_regular"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/create_travel_stage_9_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/raleway_bold"
+                                android:text="@string/create_travel_stage_9_finish"
+                                android:textSize="@dimen/text_big"
+                                android:textColor="@color/yellow_active"/>
+
+                            <TextView
+                                android:id="@+id/create_travel_stage_9_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_tiny"
+                                android:fontFamily="@font/raleway_regular"
+                                android:text="@string/create_travel_stage_9_desc"
+                                android:textSize="@dimen/text_small"
+                                android:textColor="@color/dark_gray"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/create_travel_stage_9_finish_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/padding_small"
+                                android:layout_marginTop="@dimen/margin_small"
+                                android:text="@string/create_travel_stage_9_finish"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/raleway_bold"
+                                app:backgroundTint="@color/yellow_active"/>
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.core.widget.NestedScrollView>
 
             </ViewFlipper>
 
