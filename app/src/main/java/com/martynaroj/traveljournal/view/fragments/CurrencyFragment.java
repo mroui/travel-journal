@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCurrencyBinding;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.CurrencyViewModel;
@@ -95,7 +96,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.currencyAmountInput.hasFocus() && s != null) {
-                    handleCurrencyTextWatcher(s);
+                    FormHandler.handleCurrency(s, binding.currencyAmountInput);
                     changes = true;
                 }
             }
@@ -188,21 +189,6 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     private String calculateAmount(Double rate) {
         Double result = rate * Double.parseDouble(Objects.requireNonNull(binding.currencyAmountInput.getText()).toString());
         return new DecimalFormat("#.##").format(result);
-    }
-
-
-    private void handleCurrencyTextWatcher(Editable s) {
-        String text = s.toString();
-        if (text.contains(".")) {
-            if ((text.substring(text.indexOf(".")).length() > 3
-                    && text.length() <= Constants.MAX_CURRENCY_LENGTH)
-                    || text.substring(text.length() - 1).equals(".")
-                    && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
-                text = text.substring(0, text.length() - 1);
-                binding.currencyAmountInput.setText(text);
-                binding.currencyAmountInput.setSelection(text.length());
-            }
-        }
     }
 
 

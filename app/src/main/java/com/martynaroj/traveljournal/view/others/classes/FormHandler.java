@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 public class FormHandler {
 
@@ -89,6 +90,21 @@ public class FormHandler {
         } else
             layout.setErrorEnabled(false);
         return true;
+    }
+
+
+    public static void handleCurrency(Editable s, TextInputEditText editText) {
+        String text = s.toString();
+        if (text.contains(".")) {
+            if ((text.substring(text.indexOf(".")).length() > 3
+                    && text.length() <= Constants.MAX_CURRENCY_LENGTH)
+                    || text.substring(text.length() - 1).equals(".")
+                    && text.length() >= Constants.MAX_CURRENCY_LENGTH) {
+                text = text.substring(0, text.length() - 1);
+                editText.setText(text);
+                editText.setSelection(text.length());
+            }
+        }
     }
 
 
