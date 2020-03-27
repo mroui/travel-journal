@@ -6,16 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -24,12 +21,11 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentWeatherBinding;
+import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
-
-import java.util.Arrays;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -78,24 +74,14 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
     private void initGooglePlaces() {
         if (getContext() != null) {
-            Places.initialize(getContext(), getString(R.string.google_api_key));
-            placesClient = Places.createClient(getContext());
-            request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID,
-                    Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG));
-
-            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.weather_search_view);
-            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTextSize(14.0f);
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setHint(getResources().getString(R.string.weather_search_city));
-                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
-                        .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG));
-            }
+            GooglePlaces.init(getContext());
+            placesClient = GooglePlaces.initClient(getContext());
+            request = GooglePlaces.initRequest();
+            autocompleteFragment = GooglePlaces.initAutoComplete(
+                    getContext(),
+                    R.id.weather_search_view,
+                    getChildFragmentManager()
+            );
         }
     }
 

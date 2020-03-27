@@ -15,18 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -41,6 +38,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
@@ -127,22 +125,14 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void initGooglePlaces() {
         if (getContext() != null) {
-            Places.initialize(getContext(), getString(R.string.google_api_key));
-            placesClient = Places.createClient(getContext());
-            autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.profile_settings_personal_location_autocomplete);
-            if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTextSize(14.0f);
-                ((EditText) autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_input))
-                        .setTypeface(ResourcesCompat.getFont(getContext(), R.font.raleway_medium));
-                autocompleteFragment.getView().findViewById(R.id.places_autocomplete_search_button)
-                        .setVisibility(View.GONE);
-                autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
-                request = FindCurrentPlaceRequest.newInstance(Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                        Place.Field.ADDRESS, Place.Field.LAT_LNG));
-            }
+            GooglePlaces.init(getContext());
+            placesClient = GooglePlaces.initClient(getContext());
+            request = GooglePlaces.initRequest();
+            autocompleteFragment = GooglePlaces.initAutoComplete(
+                    getContext(),
+                    R.id.profile_settings_personal_location_autocomplete,
+                    getChildFragmentManager()
+            );
         }
     }
 

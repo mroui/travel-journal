@@ -96,7 +96,6 @@
                 android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 tools:ignore="FragmentTagUsage"/>
 
-
             <LinearLayout
                 android:id="@+id/map_buttons"
                 android:layout_width="match_parent"
