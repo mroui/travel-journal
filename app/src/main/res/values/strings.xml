@@ -253,12 +253,14 @@
     <string name="create_travel_stage_5_transport_upload_file">Upload file</string>
     <string name="create_travel_stage_5_transport_upload_file_desc"><b>Optionally,</b> you can
         upload important file, such as ticket to keep it around.
+        \nAvailable type: image/pdf
     </string>
     <string name="create_travel_stage_5_transport_contact_desc">Also <b>optionally</b>, it\'s good
         to have a contact, for example to carrier.
     </string>
     <string name="create_travel_stage_5_transport_contact_hint">Phone number, e-mail address…
     </string>
+    <string name="create_travel_stage_5_file_remove">Remove file</string>
     <string name="create_travel_stage_6_title">Accommodation</string>
     <string name="create_travel_stage_6_desc">Select the type of accommodation,\nit will appear in
         the travel tags.

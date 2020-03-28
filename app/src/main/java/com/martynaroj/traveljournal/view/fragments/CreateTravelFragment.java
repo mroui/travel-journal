@@ -7,9 +7,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.button.MaterialButton;
@@ -62,11 +64,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private User user;
 
     private long minDate, maxDate;
-
     private AutocompleteSupportFragment autocompleteFragment;
 
     private Uri imageUri;
     private long dateFrom, dateTo, timeFrom, timeTo;
+    private Place destination;
+    private String transportType;
+    private Uri transportFileUri;
 
     public CreateTravelFragment() {
     }
@@ -195,6 +199,11 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     new FormHandler(getContext()).handleCurrency(s, binding.createTravelStage7BudgetInput);
             }
         });
+        binding.createTravelStage5TransportTypeSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            transportType = getResources().getStringArray(R.array.transport)[position];
+            binding.createTravelStage5Error.setVisibility(View.GONE);
+        });
+        binding.createTravelStage5TransportFileRemoveButton.setOnClickListener(this);
         binding.createTravelStage9FinishButton.setOnClickListener(this);
         setViewFlipperListeners();
         setAutocompleteFragmentListeners();
@@ -223,11 +232,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         if (autocompleteFragment != null && autocompleteFragment.getView() != null) {
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
-                public void onPlaceSelected(@NonNull com.google.android.libraries.places.api.model.Place place) {
-                    LatLng latLng = place.getLatLng();
-                    if (latLng != null) {
-                        //todo
-                    }
+                public void onPlaceSelected(@NonNull Place place) {
+                    binding.createTravelStage4Error.setVisibility(View.GONE);
+                    destination = place;
                 }
 
                 @Override
@@ -236,7 +243,10 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             });
             autocompleteFragment.getView()
                     .findViewById(R.id.places_autocomplete_clear_button)
-                    .setOnClickListener(view -> autocompleteFragment.setText(""));
+                    .setOnClickListener(view -> {
+                        autocompleteFragment.setText("");
+                        destination = null;
+                    });
         }
     }
 
@@ -251,10 +261,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 showNextStage();
                 break;
             case R.id.create_travel_stage_2_upload_image_button:
-                checkReadStoragePermissions();
+                checkPermissionsToSelectImage();
                 break;
             case R.id.create_travel_stage_5_transport_upload_file_button:
+                checkPermissionsToSelectFile();
                 break;
+            case R.id.create_travel_stage_5_transport_file_remove_button:
+                removeFile(Constants.TRANSPORT_FILE);
             case R.id.create_travel_stage_9_finish_button:
                 break;
         }
@@ -286,17 +299,24 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    //VALIDATIONS-----------------------------------------------------------------------------------
+    //VALIDATION-----------------------------------------------------------------------------------
 
 
     private boolean handleErrors() {
         boolean noErrors = true;
         switch (binding.createTravelViewFlipper.getDisplayedChild()) {
+            //todo: uncomment
             case 1:
                 noErrors = validateName();
                 break;
             case 3:
                 noErrors = validateDatesTimes();
+                break;
+            case 4:
+                noErrors = validateDestination();
+                break;
+            case 5:
+                noErrors = validateTransport();
                 break;
         }
         return noErrors;
@@ -321,22 +341,65 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    private boolean validateDestination() {
+        if (destination == null) {
+            binding.createTravelStage4Error.setVisibility(View.VISIBLE);
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean validateTransport() {
+        if (transportType == null) {
+            binding.createTravelStage5Error.setVisibility(View.VISIBLE);
+            return false;
+        }
+        return true;
+    }
+
+
     //FILES-----------------------------------------------------------------------------------------
 
 
-    private void checkReadStoragePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null)
-            if (ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(
-                        getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Constants.RC_EXTERNAL_STORAGE
-                );
+    private void checkPermissionsToSelectImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (isReadStoragePermissionsGranted())
+                requestReadStoragePermissions();
             else
                 selectImage();
         else
             selectImage();
+    }
+
+    private void checkPermissionsToSelectFile() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (!isReadStoragePermissionsGranted())
+                requestReadStoragePermissions();
+            else
+                selectFile();
+        else
+            selectFile();
+    }
+
+
+    private boolean isReadStoragePermissionsGranted() {
+        if (getContext() != null)
+            return ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        else
+            return false;
+    }
+
+
+    private void requestReadStoragePermissions() {
+        if (getActivity() != null) {
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    Constants.RC_EXTERNAL_STORAGE_IMG
+            );
+        }
     }
 
 
@@ -350,11 +413,71 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    private void selectFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        String[] mimeTypes = {"image/*", "application/pdf"};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        } else {
+            StringBuilder mimeTypesStr = new StringBuilder();
+            for (String mimeType : mimeTypes)
+                mimeTypesStr.append(mimeType).append("|");
+            intent.setType(mimeTypesStr.substring(0, mimeTypesStr.length() - 1));
+        }
+        startActivityForResult(intent, Constants.RC_EXTERNAL_STORAGE_FILE);
+    }
+
+
     private void loadImage() {
         if (getContext() != null)
             Glide.with(getContext())
                     .load(imageUri).centerCrop()
                     .into(binding.createTravelStage2UploadImageButton);
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void loadFile(String type) {
+        if (type.equals(Constants.TRANSPORT_FILE)) {
+            binding.createTravelStage5TransportFileContainer.setVisibility(View.VISIBLE);
+            binding.createTravelStage5TransportFileName.setText(getFileName(transportFileUri));
+        } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
+            //todo
+        }
+    }
+
+
+    private void removeFile(String type) {
+        if (type.equals(Constants.TRANSPORT_FILE)) {
+            transportFileUri = null;
+            binding.createTravelStage5TransportFileContainer.setVisibility(View.GONE);
+        } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
+            //todo
+        }
+    }
+
+
+    private String getFileName(Uri uri) {
+        if (getContext() != null) {
+            String result = null;
+            if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+                try (Cursor cursor = getContext().getContentResolver().query(
+                        uri, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst())
+                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+            if (result == null) {
+                result = uri.getPath();
+                if (result != null) {
+                    int cut = result.lastIndexOf('/');
+                    if (cut != -1) result = result.substring(cut + 1);
+                }
+            }
+            return result;
+        }
+        return null;
     }
 
 
@@ -460,9 +583,14 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             if (resultCode == RESULT_OK && result != null) {
                 imageUri = result.getUri();
                 loadImage();
-            }
-            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
                 showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
+        }
+        if (requestCode == Constants.RC_EXTERNAL_STORAGE_FILE && resultCode == RESULT_OK && data != null) {
+            transportFileUri = data.getData();
+            loadFile(Constants.TRANSPORT_FILE);
+        } else {
+            showSnackBar(getResources().getString(R.string.messages_error_no_file_selected), Snackbar.LENGTH_LONG);
         }
     }
 
