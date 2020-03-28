@@ -18,9 +18,9 @@ public class StorageRepository {
         this.context = context;
     }
 
-    public MutableLiveData<String> saveToStorage(byte[] bytes, String userUid) {
+    public MutableLiveData<String> saveToStorage(byte[] bytes, String name, String path) {
         MutableLiveData<String> statusData = new MutableLiveData<>();
-        StorageReference ref = storageReference.child("images/profiles").child(userUid + ".jpg");
+        StorageReference ref = storageReference.child(path).child(name);
         ref.putBytes(bytes).addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 ref.getDownloadUrl().addOnCompleteListener(uri -> {

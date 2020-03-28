@@ -22,8 +22,8 @@ public class StorageViewModel extends AndroidViewModel {
         return statusLiveData;
     }
 
-    public void saveToStorage(byte[] bytes, String userUid) {
-        statusLiveData = storageRepository.saveToStorage(bytes, userUid);
+    public void saveToStorage(byte[] bytes, String name, String path) {
+        statusLiveData = storageRepository.saveToStorage(bytes, name, path);
     }
 
 }

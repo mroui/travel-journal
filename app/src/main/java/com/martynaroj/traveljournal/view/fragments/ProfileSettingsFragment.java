@@ -42,6 +42,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
@@ -51,9 +52,6 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,8 +59,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import id.zelory.compressor.Compressor;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
@@ -607,24 +603,9 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void savePhotoToStorage(Map<String, Object> changes) {
         if (newImageUri.getPath() != null && getContext() != null) {
-            startProgressBar();
-            File newFile = new File(newImageUri.getPath());
-            try {
-                compressor = new Compressor(getContext())
-                        .setMaxHeight(150)
-                        .setMaxWidth(150)
-                        .setQuality(100)
-                        .compressToBitmap(newFile);
-            } catch (IOException e) {
-                showSnackBar(getResources().getString(R.string.messages_error) + e.getMessage(), Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            }
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            compressor.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] thumb = byteArrayOutputStream.toByteArray();
-
-            storageViewModel.saveToStorage(thumb, user.getUid());
+            byte [] thumb = FileCompressor.compressToByte(getContext(), newImageUri, 150,
+                    150, 100, Bitmap.CompressFormat.JPEG);
+            storageViewModel.saveToStorage(thumb, user.getUid() + ".jpg", user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
                 if (status.contains(Constants.ERROR)) {
                     showSnackBar(status, Snackbar.LENGTH_LONG);
