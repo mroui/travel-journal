@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,24 +39,30 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
+import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -63,6 +70,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private FragmentCreateTravelBinding binding;
     private UserViewModel userViewModel;
+    private StorageViewModel storageViewModel;
     private User user;
 
     private long minDate, maxDate;
@@ -74,6 +82,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private Place destination;
     private String transportType, accommodationType;
     private Uri transportFileUri, accommodationFileUri;
+
+    private Travel travel;
 
     public CreateTravelFragment() {
     }
@@ -111,6 +121,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
         }
     }
 
@@ -245,7 +256,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             previous.setEnabled(true);
             next.setEnabled(true);
         }
-        if(flipper.getDisplayedChild() == 8 && !transportAccommodationTagsAdded)
+        if (flipper.getDisplayedChild() == 8 && !transportAccommodationTagsAdded)
             addTransportAccommodationTags();
     }
 
@@ -256,7 +267,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 @Override
                 public void onPlaceSelected(@NonNull Place place) {
                     binding.createTravelStage4Error.setVisibility(View.GONE);
-                    destination = place;
+                    if (place.getLatLng() != null)
+                        destination = place;
                 }
 
                 @Override
@@ -296,6 +308,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 removeFile(Constants.ACCOMMODATION_FILE);
                 break;
             case R.id.create_travel_stage_9_finish_button:
+                finish();
                 break;
         }
     }
@@ -613,6 +626,54 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    //DATABASE--------------------------------------------------------------------------------------
+
+
+    private void finish() {
+        String name = Objects.requireNonNull(binding.createTravelStage1NameTextInput.getText()).toString();
+        Uri imageUri = this.imageUri;
+        Timestamp dateTimeFrom = new Timestamp(dateFrom + timeFrom);
+        Timestamp dateTimeTo = new Timestamp(dateTo + timeTo);
+        boolean ifSetAlarm = binding.createTravelStage3SetAlarm.isChecked();
+        Address destination = new Address(
+                this.destination.getName(),
+                this.destination.getAddress(),
+                Objects.requireNonNull(this.destination.getLatLng()).latitude,
+                this.destination.getLatLng().longitude
+        );
+        Uri transportUri = transportFileUri;
+        String transportContact = binding.createTravelStage5TransportContactInput.getText() != null
+                ? binding.createTravelStage5TransportContactInput.getText().toString() : null;
+        //Reservation transport = new Reservation(transportType, transportUri, transportContact);
+
+        Uri accommodationUri = accommodationFileUri;
+        String accommodationContact = binding.createTravelStage5TransportContactInput.getText() != null
+                ? binding.createTravelStage5TransportContactInput.getText().toString() : null;
+        //Reservation transport = new Reservation(accommodationType, accommodationUri, accommodationContact);
+        Double budget = Double.valueOf(Objects.requireNonNull(binding.createTravelStage7BudgetInput.getText()).toString());
+        List<String> tags = binding.createTravelStage8TagsInput.getChipValues();
+    }
+
+
+    private void saveImageToStorage(Uri uri, int height, int width, int quality,
+                                    Bitmap.CompressFormat format, String name, String path) {
+        if (uri.getPath() != null && getContext() != null) {
+            byte[] thumb = FileCompressor.compressToByte(getContext(), uri, height,
+                    width, quality, format);
+            startProgressBar();
+            storageViewModel.saveToStorage(thumb, name, path);
+            storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
+                if (status.contains(Constants.ERROR)) {
+                    showSnackBar(status, Snackbar.LENGTH_LONG);
+                } else {
+                    travel.setImage(status);
+                }
+                stopProgressBar();
+            });
+        }
+    }
+
+
     //OTHERS----------------------------------------------------------------------------------------
 
 
@@ -623,6 +684,18 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    }
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.createTravelProgressbarLayout, binding.createTravelProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.createTravelProgressbarLayout, binding.createTravelProgressbar);
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -419,6 +419,7 @@
                             android:visibility="gone"/>
                         
                         <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/create_travel_stage_3_set_alarm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
@@ -1113,5 +1114,20 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/create_travel_progressbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:visibility="invisible">
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/create_travel_progressbar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:loading_width="4dp"
+            app:loading_color="@color/white"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
 </FrameLayout>
