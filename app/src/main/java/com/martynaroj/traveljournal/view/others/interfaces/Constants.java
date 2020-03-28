@@ -5,7 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 public interface Constants {
     int RC_SIGN_IN = 9001;
     int RC_SAVE_CREDENTIALS = 9002;
-    int RC_EXTERNAL_STORAGE = 8001;
+    int RC_EXTERNAL_STORAGE_IMG = 8001;
+    int RC_EXTERNAL_STORAGE_FILE = 8002;
     int RC_ACCESS_FINE_LOCATION = 7001;
     int RC_BROADCAST = 6001;
     int PREFERENCES_VIEW_HEIGHT = 303;
@@ -72,5 +73,8 @@ public interface Constants {
 
     String NETWORK_ERROR = "NETWORK_ERROR";
     String TIMEOUT = "TIMEOUT";
+
+    String TRANSPORT_FILE = "TRANSPORT_FILE";
+    String ACCOMMODATION_FILE = "ACCOMMODATION_FILE";
 
 }

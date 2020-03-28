@@ -534,7 +534,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 ActivityCompat.requestPermissions(
                         getActivity(),
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Constants.RC_EXTERNAL_STORAGE
+                        Constants.RC_EXTERNAL_STORAGE_IMG
                 );
             else
                 selectImage();
