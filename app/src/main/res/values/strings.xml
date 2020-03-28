@@ -274,6 +274,7 @@
     </string>
     <string name="create_travel_stage_6_accommodation_contact_hint">Phone number, e-mail address…
     </string>
+    <string name="create_travel_stage_6_file_remove">Remove file</string>
     <string name="create_travel_stage_7_title">Budget</string>
     <string name="create_travel_stage_7_desc">Enter total estimated budget for the trip including
         accommodation, transport, meals, expenses… all of them.

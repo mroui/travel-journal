@@ -69,8 +69,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private Uri imageUri;
     private long dateFrom, dateTo, timeFrom, timeTo;
     private Place destination;
-    private String transportType;
-    private Uri transportFileUri;
+    private String transportType, accommodationType;
+    private Uri transportFileUri, accommodationFileUri;
 
     public CreateTravelFragment() {
     }
@@ -192,6 +192,17 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             showTimePickerDialog(binding.createTravelStage3TimeTo);
         });
         binding.createTravelStage5TransportUploadFileButton.setOnClickListener(this);
+        binding.createTravelStage5TransportTypeSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            transportType = getResources().getStringArray(R.array.transport)[position];
+            binding.createTravelStage5Error.setVisibility(View.GONE);
+        });
+        binding.createTravelStage5TransportFileRemoveButton.setOnClickListener(this);
+        binding.createTravelStage6AccommodationUploadFileButton.setOnClickListener(this);
+        binding.createTravelStage6AccommodationTypeSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            accommodationType = getResources().getStringArray(R.array.accommodation)[position];
+            binding.createTravelStage6Error.setVisibility(View.GONE);
+        });
+        binding.createTravelStage6AccommodationFileRemoveButton.setOnClickListener(this);
         binding.createTravelStage7BudgetInput.addTextChangedListener(new InputTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -199,11 +210,6 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     new FormHandler(getContext()).handleCurrency(s, binding.createTravelStage7BudgetInput);
             }
         });
-        binding.createTravelStage5TransportTypeSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-            transportType = getResources().getStringArray(R.array.transport)[position];
-            binding.createTravelStage5Error.setVisibility(View.GONE);
-        });
-        binding.createTravelStage5TransportFileRemoveButton.setOnClickListener(this);
         binding.createTravelStage9FinishButton.setOnClickListener(this);
         setViewFlipperListeners();
         setAutocompleteFragmentListeners();
@@ -264,10 +270,15 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 checkPermissionsToSelectImage();
                 break;
             case R.id.create_travel_stage_5_transport_upload_file_button:
+            case R.id.create_travel_stage_6_accommodation_upload_file_button:
                 checkPermissionsToSelectFile();
                 break;
             case R.id.create_travel_stage_5_transport_file_remove_button:
                 removeFile(Constants.TRANSPORT_FILE);
+                break;
+            case R.id.create_travel_stage_6_accommodation_file_remove_button:
+                removeFile(Constants.ACCOMMODATION_FILE);
+                break;
             case R.id.create_travel_stage_9_finish_button:
                 break;
         }
@@ -305,7 +316,6 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private boolean handleErrors() {
         boolean noErrors = true;
         switch (binding.createTravelViewFlipper.getDisplayedChild()) {
-            //todo: uncomment
             case 1:
                 noErrors = validateName();
                 break;
@@ -318,6 +328,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             case 5:
                 noErrors = validateTransport();
                 break;
+            case 6:
+                noErrors = validateAccommodation();
         }
         return noErrors;
     }
@@ -353,6 +365,15 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private boolean validateTransport() {
         if (transportType == null) {
             binding.createTravelStage5Error.setVisibility(View.VISIBLE);
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean validateAccommodation() {
+        if (accommodationType == null) {
+            binding.createTravelStage6Error.setVisibility(View.VISIBLE);
             return false;
         }
         return true;
@@ -443,7 +464,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             binding.createTravelStage5TransportFileContainer.setVisibility(View.VISIBLE);
             binding.createTravelStage5TransportFileName.setText(getFileName(transportFileUri));
         } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
-            //todo
+            binding.createTravelStage6AccommodationFileContainer.setVisibility(View.VISIBLE);
+            binding.createTravelStage6AccommodationFileName.setText(getFileName(accommodationFileUri));
         }
     }
 
@@ -453,7 +475,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             transportFileUri = null;
             binding.createTravelStage5TransportFileContainer.setVisibility(View.GONE);
         } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
-            //todo
+            accommodationFileUri = null;
+            binding.createTravelStage6AccommodationFileContainer.setVisibility(View.GONE);
         }
     }
 
@@ -587,8 +610,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
         }
         if (requestCode == Constants.RC_EXTERNAL_STORAGE_FILE && resultCode == RESULT_OK && data != null) {
-            transportFileUri = data.getData();
-            loadFile(Constants.TRANSPORT_FILE);
+            if (binding.createTravelViewFlipper.getDisplayedChild() == 5) {
+                transportFileUri = data.getData();
+                loadFile(Constants.TRANSPORT_FILE);
+            } else if (binding.createTravelViewFlipper.getDisplayedChild() == 6) {
+                accommodationFileUri = data.getData();
+                loadFile(Constants.ACCOMMODATION_FILE);
+            }
         } else {
             showSnackBar(getResources().getString(R.string.messages_error_no_file_selected), Snackbar.LENGTH_LONG);
         }
