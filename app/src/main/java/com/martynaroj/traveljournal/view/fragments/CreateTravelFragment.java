@@ -54,6 +54,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -65,6 +67,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private long minDate, maxDate;
     private AutocompleteSupportFragment autocompleteFragment;
+    private boolean transportAccommodationTagsAdded;
 
     private Uri imageUri;
     private long dateFrom, dateTo, timeFrom, timeTo;
@@ -135,7 +138,10 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void addTransportAccommodationTags() {
-        binding.createTravelStage8TagsInput.setText(new ArrayList<>(Arrays.asList(transportType, accommodationType)));
+        binding.createTravelStage8TagsInput.setText(
+                new ArrayList<>(Arrays.asList("#" + transportType, "#" + accommodationType))
+        );
+        transportAccommodationTagsAdded = true;
     }
 
 
@@ -215,6 +221,12 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     new FormHandler(getContext()).handleCurrency(s, binding.createTravelStage7BudgetInput);
             }
         });
+        binding.createTravelStage8TagsInput.setOnClickListener(view ->
+                binding.createTravelStage8Error.setVisibility(View.GONE)
+        );
+        binding.createTravelStage8TagsInput.setOnFocusChangeListener((view, focus) ->
+                binding.createTravelStage8Error.setVisibility(View.GONE)
+        );
         binding.createTravelStage9FinishButton.setOnClickListener(this);
         setAutocompleteFragmentListeners();
     }
@@ -233,7 +245,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             previous.setEnabled(true);
             next.setEnabled(true);
         }
-        if(flipper.getDisplayedChild() == 8)
+        if(flipper.getDisplayedChild() == 8 && !transportAccommodationTagsAdded)
             addTransportAccommodationTags();
     }
 
@@ -336,6 +348,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 break;
             case 6:
                 noErrors = validateAccommodation();
+                break;
+            case 8:
+                noErrors = validateTags();
         }
         return noErrors;
     }
@@ -380,6 +395,16 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private boolean validateAccommodation() {
         if (accommodationType == null) {
             binding.createTravelStage6Error.setVisibility(View.VISIBLE);
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean validateTags() {
+        binding.createTravelStage8TagsInput.setText(getUniqueTags());
+        if (binding.createTravelStage8TagsInput.getChipValues().size() < 3) {
+            binding.createTravelStage8Error.setVisibility(View.VISIBLE);
             return false;
         }
         return true;
@@ -589,6 +614,11 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private List<String> getUniqueTags() {
+        return new ArrayList<>(new LinkedHashSet<>(binding.createTravelStage8TagsInput.getChipValues()));
+    }
 
 
     private void showSnackBar(String message, int duration) {

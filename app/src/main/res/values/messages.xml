@@ -29,6 +29,7 @@
     <string name="messages_destination_fill">Destination field must be filled!</string>
     <string name="messages_transport_select">Transport type must be selected!</string>
     <string name="messages_accommodation_select">Accommodation type must be selected!</string>
+    <string name="messages_not_enough_tags">Enter at least 3 unique tags!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_failed_google_services">ERROR: Internal Google services problem, please try again later</string>

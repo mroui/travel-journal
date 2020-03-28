@@ -992,6 +992,18 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
+                            android:id="@+id/create_travel_stage_8_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:layout_marginHorizontal="@dimen/margin_tiny"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@string/messages_not_enough_tags"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/error"
+                            android:visibility="gone"/>
+
+                        <TextView
                             android:id="@+id/create_travel_stage_8_desc_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
