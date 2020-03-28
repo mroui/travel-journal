@@ -3,12 +3,14 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +19,10 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
@@ -45,10 +49,12 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -66,7 +72,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CreateTravelFragment extends BaseFragment implements View.OnClickListener {
+public class CreateTravelFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentCreateTravelBinding binding;
     private UserViewModel userViewModel;
@@ -194,6 +200,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void setListeners() {
+        binding.createTravelArrowButton.setOnClickListener(this);
         binding.createTravelNextButton.setOnClickListener(this);
         binding.createTravelPreviousButton.setOnClickListener(this);
         binding.createTravelStage2UploadImageButton.setOnClickListener(this);
@@ -288,6 +295,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.create_travel_arrow_button:
+                showUnsavedChangesDialog();
+                break;
             case R.id.create_travel_previous_button:
                 showPreviousStage();
                 break;
@@ -626,6 +636,47 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    private void showUnsavedChangesDialog() {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_unsaved_changes_title));
+            message.setText(getResources().getString(R.string.dialog_unsaved_changes_desc));
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    buttonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setOnClickListener(v -> {
+                hideKeyboard();
+                dialog.dismiss();
+                if (getParentFragmentManager().getBackStackEntryCount() > 0)
+                    getParentFragmentManager().popBackStack();
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    buttonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+
     //DATABASE--------------------------------------------------------------------------------------
 
 
@@ -729,6 +780,13 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         } else {
             showSnackBar(getResources().getString(R.string.messages_error_no_file_selected), Snackbar.LENGTH_LONG);
         }
+    }
+
+
+    @Override
+    public boolean onBackPressed() {
+        showUnsavedChangesDialog();
+        return true;
     }
 
 
