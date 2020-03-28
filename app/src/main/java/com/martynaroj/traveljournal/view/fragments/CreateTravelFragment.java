@@ -391,9 +391,11 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     now.get(Calendar.DAY_OF_MONTH)
             );
 
-            if (editText == binding.createTravelStage3DateFrom && maxDate != 0) {
+            if (editText == binding.createTravelStage3DateFrom) {
                 datePickerDialog.getDatePicker().setMinDate(now.getTimeInMillis());
-                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+                if (maxDate != 0) {
+                    datePickerDialog.getDatePicker().setMaxDate(maxDate);
+                }
             } else if (editText == binding.createTravelStage3DateTo) {
                 datePickerDialog.getDatePicker().setMinDate(minDate);
             }
