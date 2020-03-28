@@ -134,6 +134,11 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    private void addTransportAccommodationTags() {
+        binding.createTravelStage8TagsInput.setText(new ArrayList<>(Arrays.asList(transportType, accommodationType)));
+    }
+
+
     private void fillSpinner(MaterialSpinner spinner, String[] stringArray) {
         if (getContext() != null) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -211,26 +216,25 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             }
         });
         binding.createTravelStage9FinishButton.setOnClickListener(this);
-        setViewFlipperListeners();
         setAutocompleteFragmentListeners();
     }
 
 
-    private void setViewFlipperListeners() {
+    private void listenViewChanges() {
         ViewFlipper flipper = binding.createTravelViewFlipper;
         MaterialButton previous = binding.createTravelPreviousButton;
         MaterialButton next = binding.createTravelNextButton;
 
-        flipper.addOnLayoutChangeListener((view, l, t, r, b, ol, ot, or, ob) -> {
-            if (flipper.getDisplayedChild() == 0)
-                previous.setEnabled(false);
-            else if (flipper.getDisplayedChild() == flipper.getChildCount() - 1)
-                next.setEnabled(false);
-            else {
-                previous.setEnabled(true);
-                next.setEnabled(true);
-            }
-        });
+        if (flipper.getDisplayedChild() == 0)
+            previous.setEnabled(false);
+        else if (flipper.getDisplayedChild() == flipper.getChildCount() - 1)
+            next.setEnabled(false);
+        else {
+            previous.setEnabled(true);
+            next.setEnabled(true);
+        }
+        if(flipper.getDisplayedChild() == 8)
+            addTransportAccommodationTags();
     }
 
 
@@ -296,6 +300,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             hideKeyboard();
             flipper.showPrevious();
         }
+        listenViewChanges();
     }
 
 
@@ -307,6 +312,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             hideKeyboard();
             flipper.showNext();
         }
+        listenViewChanges();
     }
 
 
