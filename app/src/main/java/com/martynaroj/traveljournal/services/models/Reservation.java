@@ -11,7 +11,6 @@ public class Reservation extends BaseObservable implements Serializable {
 
     private String id;
     private String type;
-    private String address;
     private String file;
     private String contact;
 
@@ -21,13 +20,6 @@ public class Reservation extends BaseObservable implements Serializable {
 
     public Reservation(String type, String file, String contact) {
         this.type = type;
-        this.file = file;
-        this.contact = contact;
-    }
-
-    public Reservation(String type, String address, String file, String contact) {
-        this.type = type;
-        this.address = address;
         this.file = file;
         this.contact = contact;
     }
@@ -50,16 +42,6 @@ public class Reservation extends BaseObservable implements Serializable {
     public void setType(String type) {
         this.type = type;
         notifyPropertyChanged(BR.type);
-    }
-
-    @Bindable
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-        notifyPropertyChanged(BR.address);
     }
 
     @Bindable

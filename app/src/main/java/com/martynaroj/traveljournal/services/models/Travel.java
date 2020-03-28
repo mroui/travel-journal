@@ -13,11 +13,11 @@ public class Travel extends BaseObservable implements Serializable {
 
     private String id;
     private String owner;
-    private String image;
     private String name;
+    private String image;
     private Timestamp datetimeFrom;
     private Timestamp datetimeTo;
-    private String address;
+    private String destination;
     private String transport;
     private String accommodation;
     private Double budget;
@@ -28,14 +28,14 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
     public Travel(String owner, String image, String name, Timestamp datetimeFrom,
-                  Timestamp datetimeTo, String address, String transport, String accommodation,
+                  Timestamp datetimeTo, String destination, String transport, String accommodation,
                   Double budget, List<String> tags) {
         this.owner = owner;
         this.image = image;
         this.name = name;
         this.datetimeFrom = datetimeFrom;
         this.datetimeTo = datetimeTo;
-        this.address = address;
+        this.destination = destination;
         this.transport = transport;
         this.accommodation = accommodation;
         this.budget = budget;
@@ -103,13 +103,13 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String getAddress() {
-        return address;
+    public String getDestination() {
+        return destination;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-        notifyPropertyChanged(BR.address);
+    public void setDestination(String destination) {
+        this.destination = destination;
+        notifyPropertyChanged(BR.destination);
     }
 
     @Bindable
