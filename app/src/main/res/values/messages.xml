@@ -61,5 +61,10 @@
     <string name="messages_error_failed_currencies">ERROR: Failed to load possible currencies</string>
     <string name="messages_error_failed_convert">ERROR: Failed to convert, please try again later</string>
     <string name="messages_error_no_file_selected">ERROR: No file selected</string>
+    <string name="messages_error_failed_add_transport">ERROR: Failed to save transport data, please try again later</string>
+    <string name="messages_error_failed_add_accommodation">ERROR: Failed to save accommodation data, please try again later</string>
+    <string name="messages_error_failed_load_file">ERROR: Failed to load file, please try again later</string>
+    <string name="messages_error_failed_add_travel">ERROR: Failed to add travel, please try again later</string>
+    <string name="messages_error_failed_add_destination">Failed to add destination address, please try again later</string>
 
 </resources>
