@@ -35,7 +35,7 @@ public class UserViewModel extends AndroidViewModel {
 
     public void updateUser(User user, Map<String, Object> map) {
         userRepository.updateUser(user, map);
-        userLiveData = userRepository.getUserData(user.getUid());
+        getUserData(user.getUid());
     }
 
     public void setUser(User user) {
