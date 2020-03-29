@@ -33,6 +33,7 @@ public interface Constants {
     String DB_PRIVACY = "privacy";
     String DB_FRIENDS = "friends";
     String DB_MARKERS = "markers";
+    String DB_ACTIVE_TRAVEL_ID = "activeTravelId";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";

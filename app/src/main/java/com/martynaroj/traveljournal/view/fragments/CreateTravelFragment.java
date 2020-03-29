@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -104,6 +105,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private Travel travel;
     private String travelId, destinationId, accommodationId, transportId;
 
+    private MutableLiveData<Boolean> destinationLiveData, travelLiveData,
+            reservationLiveData, changesLiveData;
+
     public CreateTravelFragment() {
     }
 
@@ -124,6 +128,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         View view = binding.getRoot();
 
         initViewModels();
+        initLiveData();
         initContentData();
         initGooglePlaces();
         observeUserChanges();
@@ -145,6 +150,14 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
         }
+    }
+
+
+    private void initLiveData() {
+        destinationLiveData = new MutableLiveData<>(false);
+        travelLiveData = new MutableLiveData<>(false);
+        reservationLiveData = new MutableLiveData<>(false);
+        changesLiveData = new MutableLiveData<>(false);
     }
 
 
@@ -718,10 +731,37 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void finish() {
+        startProgressBar();
         createTravel();
         setAlarm();
         createDestinationAddress();
         checkFilesToSave();
+        observeFinishTravel();
+    }
+
+
+    private void observeFinishTravel() {
+        destinationLiveData.observe(getViewLifecycleOwner(), result -> {
+            if (destinationLiveData.getValue() != null && destinationLiveData.getValue()
+                    && travelLiveData.getValue() != null && travelLiveData.getValue()
+                    && reservationLiveData.getValue() != null && reservationLiveData.getValue()) {
+                addTravelToUser();
+            }
+        });
+    }
+
+
+    private void addTravelToUser() {
+        userViewModel.updateUser(user, new HashMap<String, Object>() {{
+            put(Constants.DB_ACTIVE_TRAVEL_ID, travelId);
+        }});
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), newUser -> {
+            if (newUser != null) {
+                userViewModel.setUser(newUser);
+            }
+            stopProgressBar();
+            //todo: exit fragment to board? + show dialog to help with preparing packing list
+        });
     }
 
 
@@ -745,9 +785,16 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void addTravel() {
         travelViewModel.addTravel(travel);
         travelViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
-            if (status != null && status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR))
-                showSnackBar(getResources().getString(R.string.messages_error_failed_add_travel),
-                        Snackbar.LENGTH_LONG);
+            if (status != null) {
+                if (!status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR)) {
+                    travelLiveData.setValue(true);
+                    changesLiveData.setValue(true);
+                } else {
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_travel),
+                            Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
+            }
         });
     }
 
@@ -767,18 +814,15 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travelId;
 
         if (imageUri != null)
-            prepareFileToSave(Constants.IMAGE, null, imageUri,
-                    Constants.IMAGE + System.currentTimeMillis(), path);
+            prepareFileToSave(Constants.IMAGE, null, imageUri, path);
 
         if (transportFileUri != null)
-            prepareFileToSave(Constants.TRANSPORT, transportId, transportFileUri,
-                    Constants.TRANSPORT + System.currentTimeMillis(), path);
+            prepareFileToSave(Constants.TRANSPORT, transportId, transportFileUri, path);
         else
             createReservation(Constants.TRANSPORT, transportId, null);
 
         if (accommodationFileUri != null)
-            prepareFileToSave(Constants.ACCOMMODATION, accommodationId, accommodationFileUri,
-                    Constants.ACCOMMODATION + System.currentTimeMillis(), path);
+            prepareFileToSave(Constants.ACCOMMODATION, accommodationId, accommodationFileUri, path);
         else
             createReservation(Constants.ACCOMMODATION, accommodationId, null);
     }
@@ -799,35 +843,43 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void addDestination(Address destination) {
         addressViewModel.addAddress(destination, destinationId);
         addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
-            if (status != null && status.contains(getResources().getString(R.string.messages_error))) {
-                showSnackBar(getResources().getString(R.string.messages_error_failed_add_destination),
-                        Snackbar.LENGTH_LONG);
+            if (status != null) {
+                if (!status.contains(getResources().getString(R.string.messages_error))) {
+                    destinationLiveData.setValue(true);
+                    changesLiveData.setValue(true);
+                } else {
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_destination),
+                            Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
             }
         });
     }
 
 
-    private void prepareFileToSave(String kind, String reservationId, Uri uri, String name, String path) {
+    private void prepareFileToSave(String kind, String reservationId, Uri uri, String path) {
         if (uri.getPath() != null && getContext() != null) {
             String fileName = getFileName(uri);
             if (fileName != null) {
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 if (Objects.equals(fileExtension.trim(), Constants.PDF_EXT))
-                    addFile(kind, reservationId, uri, null, name + Constants.PDF_EXT, path);
+                    addFile(kind, reservationId, uri, null, kind + Constants.PDF_EXT, path);
                 else {
                     byte[] thumb = FileCompressor.compressToByte(getContext(), uri);
                     if (thumb != null)
-                        addFile(kind, reservationId, null, thumb, name + Constants.JPG_EXT, path);
-                    else
+                        addFile(kind, reservationId, null, thumb, kind + Constants.JPG_EXT, path);
+                    else {
                         showSnackBar(getResources().getString(R.string.messages_error_failed_load_file),
                                 Snackbar.LENGTH_LONG);
+                        stopProgressBar();
+                    }
                 }
             }
         }
     }
 
 
-    private void addFile(String kind, String reservationId, Uri uri, byte [] thumb, String name, String path) {
+    private void addFile(String kind, String reservationId, Uri uri, byte[] thumb, String name, String path) {
         if (uri == null)
             storageViewModel.saveImageToStorage(thumb, name, path);
         else
@@ -841,8 +893,10 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     }});
                 else
                     createReservation(kind, reservationId, status);
-            else
+            else {
                 showSnackBar(status, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
         });
     }
 
@@ -876,13 +930,19 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void addReservation(String kind, Reservation reservation) {
         reservationViewModel.addReservation(reservation);
         reservationViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
-            if (status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR)) {
-                if (kind.equals(Constants.TRANSPORT))
-                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_transport),
-                            Snackbar.LENGTH_LONG);
-                else if (kind.equals(Constants.ACCOMMODATION))
-                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_accommodation),
-                            Snackbar.LENGTH_LONG);
+            if (status != null) {
+                if (!status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR)) {
+                    reservationLiveData.setValue(true);
+                    changesLiveData.setValue(true);
+                } else {
+                    stopProgressBar();
+                    if (kind.equals(Constants.TRANSPORT))
+                        showSnackBar(getResources().getString(R.string.messages_error_failed_add_transport),
+                                Snackbar.LENGTH_LONG);
+                    else if (kind.equals(Constants.ACCOMMODATION))
+                        showSnackBar(getResources().getString(R.string.messages_error_failed_add_accommodation),
+                                Snackbar.LENGTH_LONG);
+                }
             }
         });
     }
