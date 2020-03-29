@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.services.respositories;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -18,7 +19,7 @@ public class StorageRepository {
         this.context = context;
     }
 
-    public MutableLiveData<String> saveToStorage(byte[] bytes, String name, String path) {
+    public MutableLiveData<String> saveImageToStorage(byte[] bytes, String name, String path) {
         MutableLiveData<String> statusData = new MutableLiveData<>();
         StorageReference ref = storageReference.child(path).child(name);
         ref.putBytes(bytes).addOnCompleteListener(task -> {
@@ -28,6 +29,25 @@ public class StorageRepository {
                         statusData.setValue(uri.getResult().toString());
                     else if (uri.getException() != null)
                         statusData.setValue(context.getResources().getString(R.string.messages_error) + uri.getException().getMessage());
+                });
+            } else if (task.getException() != null)
+                statusData.setValue(context.getResources().getString(R.string.messages_error)
+                        + task.getException().getMessage());
+        });
+        return statusData;
+    }
+
+
+    public MutableLiveData<String> saveFileToStorage(Uri uri, String name, String path) {
+        MutableLiveData<String> statusData = new MutableLiveData<>();
+        StorageReference ref = storageReference.child(path).child(name);
+        ref.putFile(uri).addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                ref.getDownloadUrl().addOnCompleteListener(url -> {
+                    if (url.isSuccessful() && url.getResult() != null)
+                        statusData.setValue(url.getResult().toString());
+                    else if (url.getException() != null)
+                        statusData.setValue(context.getResources().getString(R.string.messages_error) + url.getException().getMessage());
                 });
             } else if (task.getException() != null)
                 statusData.setValue(context.getResources().getString(R.string.messages_error)
