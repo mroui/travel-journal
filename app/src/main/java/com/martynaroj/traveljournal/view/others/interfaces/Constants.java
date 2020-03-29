@@ -20,6 +20,8 @@ public interface Constants {
     String ADDRESSES = "Addresses";
     String NOTIFICATIONS = "Notifications";
     String MARKERS = "Markers";
+    String TRAVELS = "Travels";
+    String RESERVATIONS = "Reservations";
 
     String DB_UID = "uid";
     String DB_PHOTO = "photo";
@@ -76,5 +78,14 @@ public interface Constants {
 
     String TRANSPORT_FILE = "TRANSPORT_FILE";
     String ACCOMMODATION_FILE = "ACCOMMODATION_FILE";
+
+    String IMAGE = "image";
+    String ACCOMMODATION = "accommodation";
+    String TRANSPORT = "transport";
+
+    String STORAGE_TRAVELS = "travels";
+
+    String PDF_EXT = ".pdf";
+    String JPG_EXT = ".jpg";
 
 }
