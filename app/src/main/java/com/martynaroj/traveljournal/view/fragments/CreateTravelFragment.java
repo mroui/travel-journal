@@ -741,7 +741,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void observeFinishTravel() {
-        destinationLiveData.observe(getViewLifecycleOwner(), result -> {
+        changesLiveData.observe(getViewLifecycleOwner(), result -> {
             if (destinationLiveData.getValue() != null && destinationLiveData.getValue()
                     && travelLiveData.getValue() != null && travelLiveData.getValue()
                     && reservationLiveData.getValue() != null && reservationLiveData.getValue()) {
@@ -932,8 +932,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         reservationViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
             if (status != null) {
                 if (!status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR)) {
-                    reservationLiveData.setValue(true);
                     changesLiveData.setValue(true);
+                    reservationLiveData.setValue(true);
                 } else {
                     stopProgressBar();
                     if (kind.equals(Constants.TRANSPORT))
