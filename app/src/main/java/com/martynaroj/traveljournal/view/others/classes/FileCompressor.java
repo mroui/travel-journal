@@ -12,26 +12,24 @@ import id.zelory.compressor.Compressor;
 
 public abstract class FileCompressor {
 
-    public static byte[] compressToByte(Context context, Uri uri, int height, int width,
-                                         int quality, Bitmap.CompressFormat compressFormat) {
-        if (uri.getPath() != null) {
-            File newFile = new File(uri.getPath());
-            Bitmap compressor;
+    public static byte[] compressToByte(Context context, Uri uri) {
+        Bitmap compressor;
+        String path = FileUriUtils.getPath(context, uri);
+        if (path != null) {
             try {
                 compressor = new Compressor(context)
-                        .setMaxHeight(height)
-                        .setMaxWidth(width)
-                        .setQuality(quality)
-                        .compressToBitmap(newFile);
+                        .setMaxHeight(100)
+                        .setMaxWidth(100)
+                        .setQuality(100)
+                        .compressToBitmap(new File(path));
             } catch (IOException e) {
                 return null;
             }
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            compressor.compress(compressFormat, quality, byteArrayOutputStream);
-
+            compressor.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
-        }
-        return null;
+        } else
+            return null;
     }
 
 }
