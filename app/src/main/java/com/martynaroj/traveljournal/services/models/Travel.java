@@ -27,11 +27,11 @@ public class Travel extends BaseObservable implements Serializable {
     public Travel() {
     }
 
-    public Travel(String owner, String image, String name, Timestamp datetimeFrom,
+    public Travel(String id, String owner, String name, Timestamp datetimeFrom,
                   Timestamp datetimeTo, String destination, String transport, String accommodation,
                   Double budget, List<String> tags) {
+        this.id = id;
         this.owner = owner;
-        this.image = image;
         this.name = name;
         this.datetimeFrom = datetimeFrom;
         this.datetimeTo = datetimeTo;

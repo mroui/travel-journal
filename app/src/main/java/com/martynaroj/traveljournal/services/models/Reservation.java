@@ -18,7 +18,8 @@ public class Reservation extends BaseObservable implements Serializable {
     public Reservation() {
     }
 
-    public Reservation(String type, String file, String contact) {
+    public Reservation(String id, String type, String file, String contact) {
+        this.id = id;
         this.type = type;
         this.file = file;
         this.contact = contact;
