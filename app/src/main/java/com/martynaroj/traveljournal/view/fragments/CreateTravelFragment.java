@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -40,13 +39,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
 import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
+import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
@@ -56,18 +58,23 @@ import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
+import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
@@ -75,8 +82,13 @@ import static android.app.Activity.RESULT_OK;
 public class CreateTravelFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentCreateTravelBinding binding;
+
     private UserViewModel userViewModel;
     private StorageViewModel storageViewModel;
+    private TravelViewModel travelViewModel;
+    private AddressViewModel addressViewModel;
+    private ReservationViewModel reservationViewModel;
+
     private User user;
 
     private long minDate, maxDate;
@@ -90,6 +102,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private Uri transportFileUri, accommodationFileUri;
 
     private Travel travel;
+    private String travelId, destinationId, accommodationId, transportId;
 
     public CreateTravelFragment() {
     }
@@ -128,6 +141,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
+            travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
+            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
         }
     }
 
@@ -139,6 +155,15 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         fillSpinner(binding.createTravelStage6AccommodationTypeSpinner,
                 getResources().getStringArray(R.array.accommodation));
         fillTagsInput();
+        generateIds();
+    }
+
+
+    private void generateIds() {
+        travelId = travelViewModel.generateId();
+        destinationId = addressViewModel.generateId();
+        transportId = reservationViewModel.generateId();
+        accommodationId = reservationViewModel.generateId();
     }
 
 
@@ -439,7 +464,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private void checkPermissionsToSelectImage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (isReadStoragePermissionsGranted())
+            if (!isReadStoragePermissionsGranted())
                 requestReadStoragePermissions();
             else
                 selectImage();
@@ -558,7 +583,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    //DIALOGS---------------------------------------------------------------------------------------
+    //DIALOGS & DATES-------------------------------------------------------------------------------
 
 
     private void showTimePickerDialog(TextInputEditText editText) {
@@ -568,7 +593,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     getContext(),
                     R.style.DateTimePicker,
                     (timePicker, hourOfDay, minute) -> setTime(editText, hourOfDay, minute),
-                    now.get(Calendar.HOUR),
+                    now.get(Calendar.HOUR_OF_DAY),
                     now.get(Calendar.MINUTE),
                     false
             );
@@ -604,35 +629,6 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     getResources().getColor(R.color.yellow_active));
             datePickerDialog.show();
         }
-    }
-
-
-    @SuppressLint("SimpleDateFormat")
-    private void setDate(TextInputEditText editText, int year, int month, int day) {
-        Calendar date = Calendar.getInstance();
-        date.set(year, month, day);
-        editText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date.getTime()));
-
-        if (editText == binding.createTravelStage3DateTo) {
-            maxDate = date.getTimeInMillis();
-            dateTo = maxDate;
-        } else {
-            minDate = date.getTimeInMillis();
-            dateFrom = minDate;
-        }
-    }
-
-
-    @SuppressLint("SimpleDateFormat")
-    private void setTime(TextInputEditText editText, int hoursOfDay, int minute) {
-        Calendar date = Calendar.getInstance();
-        date.set(0, 0, 0, hoursOfDay, minute);
-        editText.setText(new SimpleDateFormat("h:mm a").format(date.getTime()));
-
-        if (editText == binding.createTravelStage3TimeFrom)
-            timeFrom = date.getTimeInMillis();
-        else
-            timeTo = date.getTimeInMillis();
     }
 
 
@@ -677,51 +673,218 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    @SuppressLint("SimpleDateFormat")
+    private void setDate(TextInputEditText editText, int year, int month, int day) {
+        Calendar date = Calendar.getInstance();
+        date.set(year, month, day);
+        editText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date.getTime()));
+
+        if (editText == binding.createTravelStage3DateTo) {
+            maxDate = date.getTimeInMillis();
+            dateTo = maxDate;
+        } else {
+            minDate = date.getTimeInMillis();
+            dateFrom = minDate;
+        }
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    private void setTime(TextInputEditText editText, int hoursOfDay, int minute) {
+        Calendar date = Calendar.getInstance();
+        date.set(0, 0, 0, hoursOfDay, minute);
+        editText.setText(new SimpleDateFormat("h:mm a").format(date.getTime()));
+
+        if (editText == binding.createTravelStage3TimeFrom)
+            timeFrom = date.getTimeInMillis();
+        else
+            timeTo = date.getTimeInMillis();
+    }
+
+
+    private Date getDateTime(long dateFrom, long timeFrom) {
+        Calendar now = Calendar.getInstance();
+        Calendar date = Calendar.getInstance();
+        Calendar time = Calendar.getInstance();
+        date.setTime(new Date(dateFrom));
+        time.setTime(new Date(timeFrom));
+        now.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.HOUR), time.get(Calendar.MINUTE));
+        return now.getTime();
+    }
+
+
     //DATABASE--------------------------------------------------------------------------------------
 
 
     private void finish() {
-        String name = Objects.requireNonNull(binding.createTravelStage1NameTextInput.getText()).toString();
-        Uri imageUri = this.imageUri;
-        Timestamp dateTimeFrom = new Timestamp(dateFrom + timeFrom);
-        Timestamp dateTimeTo = new Timestamp(dateTo + timeTo);
-        boolean ifSetAlarm = binding.createTravelStage3SetAlarm.isChecked();
+        createTravel();
+        setAlarm();
+        createDestinationAddress();
+        checkFilesToSave();
+    }
+
+
+    private void createTravel() {
+        travel = new Travel(
+                travelId,
+                user.getUid(),
+                Objects.requireNonNull(binding.createTravelStage1NameTextInput.getText()).toString(),
+                new Timestamp(getDateTime(dateFrom, timeFrom)),
+                new Timestamp(getDateTime(dateTo, timeTo)),
+                destinationId,
+                transportId,
+                accommodationId,
+                Double.valueOf(Objects.requireNonNull(binding.createTravelStage7BudgetInput.getText()).toString()),
+                binding.createTravelStage8TagsInput.getChipValues()
+        );
+        addTravel();
+    }
+
+
+    private void addTravel() {
+        travelViewModel.addTravel(travel);
+        travelViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
+            if (status != null && status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR))
+                showSnackBar(getResources().getString(R.string.messages_error_failed_add_travel),
+                        Snackbar.LENGTH_LONG);
+        });
+    }
+
+
+    private void setAlarm() {
+        if (binding.createTravelStage3SetAlarm.isChecked())
+            NotificationBroadcast.sendBroadcast(
+                    getContext(),
+                    new Intent(getContext(), NotificationBroadcast.class),
+                    getDateTime(dateFrom, timeFrom).getTime(),
+                    getResources().getString(R.string.messages_travel_start)
+            );
+    }
+
+
+    private void checkFilesToSave() {
+        String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travelId;
+
+        if (imageUri != null)
+            prepareFileToSave(Constants.IMAGE, null, imageUri,
+                    Constants.IMAGE + System.currentTimeMillis(), path);
+
+        if (transportFileUri != null)
+            prepareFileToSave(Constants.TRANSPORT, transportId, transportFileUri,
+                    Constants.TRANSPORT + System.currentTimeMillis(), path);
+        else
+            createReservation(Constants.TRANSPORT, transportId, null);
+
+        if (accommodationFileUri != null)
+            prepareFileToSave(Constants.ACCOMMODATION, accommodationId, accommodationFileUri,
+                    Constants.ACCOMMODATION + System.currentTimeMillis(), path);
+        else
+            createReservation(Constants.ACCOMMODATION, accommodationId, null);
+    }
+
+
+    private void createDestinationAddress() {
         Address destination = new Address(
+                destinationId,
                 this.destination.getName(),
                 this.destination.getAddress(),
                 Objects.requireNonNull(this.destination.getLatLng()).latitude,
                 this.destination.getLatLng().longitude
         );
-        Uri transportUri = transportFileUri;
-        String transportContact = binding.createTravelStage5TransportContactInput.getText() != null
-                ? binding.createTravelStage5TransportContactInput.getText().toString() : null;
-        //Reservation transport = new Reservation(transportType, transportUri, transportContact);
-
-        Uri accommodationUri = accommodationFileUri;
-        String accommodationContact = binding.createTravelStage5TransportContactInput.getText() != null
-                ? binding.createTravelStage5TransportContactInput.getText().toString() : null;
-        //Reservation transport = new Reservation(accommodationType, accommodationUri, accommodationContact);
-        Double budget = Double.valueOf(Objects.requireNonNull(binding.createTravelStage7BudgetInput.getText()).toString());
-        List<String> tags = binding.createTravelStage8TagsInput.getChipValues();
+        addDestination(destination);
     }
 
 
-    private void saveImageToStorage(Uri uri, int height, int width, int quality,
-                                    Bitmap.CompressFormat format, String name, String path) {
+    private void addDestination(Address destination) {
+        addressViewModel.addAddress(destination, destinationId);
+        addressViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
+            if (status != null && status.contains(getResources().getString(R.string.messages_error))) {
+                showSnackBar(getResources().getString(R.string.messages_error_failed_add_destination),
+                        Snackbar.LENGTH_LONG);
+            }
+        });
+    }
+
+
+    private void prepareFileToSave(String kind, String reservationId, Uri uri, String name, String path) {
         if (uri.getPath() != null && getContext() != null) {
-            byte[] thumb = FileCompressor.compressToByte(getContext(), uri, height,
-                    width, quality, format);
-            startProgressBar();
-            storageViewModel.saveToStorage(thumb, name, path);
-            storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
-                if (status.contains(Constants.ERROR)) {
-                    showSnackBar(status, Snackbar.LENGTH_LONG);
-                } else {
-                    travel.setImage(status);
+            String fileName = getFileName(uri);
+            if (fileName != null) {
+                String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+                if (Objects.equals(fileExtension.trim(), Constants.PDF_EXT))
+                    addFile(kind, reservationId, uri, null, name + Constants.PDF_EXT, path);
+                else {
+                    byte[] thumb = FileCompressor.compressToByte(getContext(), uri);
+                    if (thumb != null)
+                        addFile(kind, reservationId, null, thumb, name + Constants.JPG_EXT, path);
+                    else
+                        showSnackBar(getResources().getString(R.string.messages_error_failed_load_file),
+                                Snackbar.LENGTH_LONG);
                 }
-                stopProgressBar();
-            });
+            }
         }
+    }
+
+
+    private void addFile(String kind, String reservationId, Uri uri, byte [] thumb, String name, String path) {
+        if (uri == null)
+            storageViewModel.saveImageToStorage(thumb, name, path);
+        else
+            storageViewModel.saveFileToStorage(uri, name, path);
+
+        storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
+            if (status != null && !status.contains(getResources().getString(R.string.messages_error)))
+                if (kind.equals(Constants.IMAGE))
+                    updateTravel(new HashMap<String, Object>() {{
+                        put(kind, status);
+                    }});
+                else
+                    createReservation(kind, reservationId, status);
+            else
+                showSnackBar(status, Snackbar.LENGTH_LONG);
+        });
+    }
+
+
+    private void updateTravel(Map<String, Object> changes) {
+        travelViewModel.updateTravel(travel.getId(), changes);
+        travelViewModel.getTravelData().observe(getViewLifecycleOwner(), travelData -> {
+            if (travelData != null) {
+                travel = travelData;
+            }
+        });
+    }
+
+
+    private void createReservation(String kind, String id, String file) {
+        String contact = null;
+        String type = null;
+        if (kind.equals(Constants.TRANSPORT)) {
+            Editable s = binding.createTravelStage5TransportContactInput.getText();
+            contact = s != null ? s.toString() : null;
+            type = transportType;
+        } else if (kind.equals(Constants.ACCOMMODATION)) {
+            Editable s = binding.createTravelStage6AccommodationContactInput.getText();
+            contact = s != null ? s.toString() : null;
+            type = accommodationType;
+        }
+        addReservation(kind, new Reservation(id, type, file, contact));
+    }
+
+
+    private void addReservation(String kind, Reservation reservation) {
+        reservationViewModel.addReservation(reservation);
+        reservationViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
+            if (status.equals(com.martynaroj.traveljournal.view.others.enums.Status.ERROR)) {
+                if (kind.equals(Constants.TRANSPORT))
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_transport),
+                            Snackbar.LENGTH_LONG);
+                else if (kind.equals(Constants.ACCOMMODATION))
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_add_accommodation),
+                            Snackbar.LENGTH_LONG);
+            }
+        });
     }
 
 
@@ -768,8 +931,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 loadImage();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
                 showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
-        }
-        if (requestCode == Constants.RC_EXTERNAL_STORAGE_FILE && resultCode == RESULT_OK && data != null) {
+        } else if (requestCode == Constants.RC_EXTERNAL_STORAGE_FILE && resultCode == RESULT_OK && data != null) {
             if (binding.createTravelViewFlipper.getDisplayedChild() == 5) {
                 transportFileUri = data.getData();
                 loadFile(Constants.TRANSPORT_FILE);
