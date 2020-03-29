@@ -24,6 +24,10 @@ public class AddressViewModel extends AndroidViewModel {
         addressRepository = new AddressRepository(application.getApplicationContext());
     }
 
+    public String generateId() {
+        return addressRepository.generateId();
+    }
+
     public LiveData<String> getStatus() {
         return statusLiveData;
     }

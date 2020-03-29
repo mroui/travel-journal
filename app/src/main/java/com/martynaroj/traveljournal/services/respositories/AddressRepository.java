@@ -33,6 +33,10 @@ public class AddressRepository {
         this.context = context;
     }
 
+    public String generateId() {
+        return addressesRef.document().getId();
+    }
+
 
     public MutableLiveData<String> addAddress(Address address, String reference) {
         MutableLiveData<String> statusData = new MutableLiveData<>();
