@@ -81,7 +81,7 @@ public class FormHandler {
 
     public boolean validateLength(TextInputEditText input, TextInputLayout layout, int minLength) {
         String value = input.getText() == null ? "" : input.getText().toString();
-        if (value.length() < minLength) {
+        if (value.length() < minLength || value.trim().isEmpty() || value.trim().length() < minLength) {
             layout.setError("Enter at least " + minLength + " characters");
             input.requestFocus();
             return false;
