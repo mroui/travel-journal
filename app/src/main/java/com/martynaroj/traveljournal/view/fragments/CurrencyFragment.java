@@ -121,8 +121,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.currency_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.currency_swap_icon:
                 swapCurrencies(binding.currencyFromSpinner.getSelectedIndex(),
@@ -206,6 +205,12 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void startProgressBar() {

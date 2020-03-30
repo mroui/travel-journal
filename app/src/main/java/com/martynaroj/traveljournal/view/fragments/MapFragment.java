@@ -263,8 +263,7 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.map_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.map_saved_places_button:
                 checkSavedPlaces();
@@ -463,6 +462,12 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     private String getPlaceTypeKey(String type) {
         return type.toLowerCase().replaceAll("\\s", "_");
+    }
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
     }
 
 

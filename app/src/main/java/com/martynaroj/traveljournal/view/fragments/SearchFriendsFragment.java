@@ -69,8 +69,7 @@ public class SearchFriendsFragment extends BaseFragment {
     private void setListeners() {
         binding.searchFriendsArrowButton.setOnClickListener(view -> {
             hideKeyboard();
-            if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                getParentFragmentManager().popBackStack();
+            back();
         });
         binding.searchFriendsSearchView.setOnQueryTextListener(new SearchViewListener() {
             @Override
@@ -144,6 +143,12 @@ public class SearchFriendsFragment extends BaseFragment {
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void changeFragment(Fragment next) {

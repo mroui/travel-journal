@@ -91,8 +91,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             case R.id.signup_arrow_button:
             case R.id.signup_log_in_button:
                 hideKeyboard();
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.signup_google_button:
                 signUpWithGoogle();
@@ -200,7 +199,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             stopProgressBar();
             showSnackBar(verificationUser.getMessage(), Snackbar.LENGTH_LONG);
             if (verificationUser.getStatus() == Status.SUCCESS)
-                getParentFragmentManager().popBackStack();
+                back();
         });
     }
 
@@ -243,6 +242,12 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void startProgressBar() {

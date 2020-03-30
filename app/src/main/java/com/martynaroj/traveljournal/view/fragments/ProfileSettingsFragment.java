@@ -264,8 +264,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             case R.id.profile_settings_arrow_button:
                 if (!areAnyChanges()) {
                     hideKeyboard();
-                    if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                        getParentFragmentManager().popBackStack();
+                    back();
                 } else showUnsavedChangesDialog();
                 return;
             case R.id.profile_settings_personal_picture_section:
@@ -319,8 +318,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
             buttonPositive.setOnClickListener(v -> {
                 hideKeyboard();
                 dialog.dismiss();
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
@@ -728,6 +726,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
         }
+    }
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
     }
 
 

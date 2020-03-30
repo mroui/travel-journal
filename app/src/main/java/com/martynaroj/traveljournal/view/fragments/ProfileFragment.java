@@ -101,9 +101,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             binding.setUser(user);
             initPreferences();
             initLocalization();
-        } else if (getParentFragmentManager().getBackStackEntryCount() > 0) {
-            getParentFragmentManager().popBackStack();
-        }
+        } else
+            back();
     }
 
 
@@ -380,8 +379,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.profile_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.profile_notifications:
                 getNotifications();
@@ -557,6 +555,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void saveToPreferences() {

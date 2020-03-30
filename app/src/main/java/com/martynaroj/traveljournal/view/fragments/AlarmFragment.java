@@ -239,8 +239,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.alarm_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.alarm_set_button:
                 showSetAlarmDialog();
@@ -341,6 +340,12 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
             intent.putExtra("android.provider.extra.APP_PACKAGE", getContext().getPackageName());
             startActivity(intent);
         }
+    }
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
     }
 
 

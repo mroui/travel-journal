@@ -147,8 +147,7 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.translator_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.translator_language_swap_icon:
                 swapLanguages();
@@ -288,6 +287,12 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             binding.translatorTextFromInput.setText(to.toString());
             binding.translatorTextToInput.setText(from.toString());
         }
+    }
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
     }
 
 

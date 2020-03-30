@@ -66,8 +66,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
             case R.id.forgot_password_arrow_button:
             case R.id.forgot_password_back_button:
                 hideKeyboard();
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.forgot_password_send_button:
                 if (validateEmail())
@@ -98,7 +97,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
                 stopProgressBar();
                 if (user.getStatus() == Status.SUCCESS) {
                     showSnackBar(user.getMessage(), Snackbar.LENGTH_SHORT);
-                    getParentFragmentManager().popBackStack();
+                    back();
                 } else {
                     showSnackBar(user.getMessage(), Snackbar.LENGTH_LONG);
                 }
@@ -108,6 +107,12 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void startProgressBar() {

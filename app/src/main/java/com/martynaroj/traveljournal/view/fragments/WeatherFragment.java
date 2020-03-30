@@ -143,8 +143,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.weather_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.weather_switch_temp_units:
                 changeTempUnits();
@@ -199,6 +198,12 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private void startProgressBar() {

@@ -16,17 +16,21 @@ public class BaseFragment extends Fragment {
     private ProgressBarListener progressBarListener;
     private SnackbarListener snackbarListener;
 
+
     protected NavigationListener getNavigationInteractions() {
         return navigationListener;
     }
+
 
     protected ProgressBarListener getProgressBarInteractions() {
         return progressBarListener;
     }
 
+
     protected SnackbarListener getSnackBarInteractions() {
         return snackbarListener;
     }
+
 
     @SuppressWarnings("ConstantConditions")
     protected void hideKeyboard() {
@@ -35,6 +39,7 @@ public class BaseFragment extends Fragment {
                     .hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
     }
+
 
     @Override
     public void onDetach() {
@@ -54,4 +59,5 @@ public class BaseFragment extends Fragment {
             snackbarListener = (SnackbarListener) context;
         }
     }
+
 }

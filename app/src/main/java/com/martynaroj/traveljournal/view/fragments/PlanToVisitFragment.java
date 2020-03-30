@@ -213,8 +213,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         dismissTutorialSnackbar();
         switch (view.getId()) {
             case R.id.explore_map_arrow_button:
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
                 break;
             case R.id.explore_map_add_place_button:
                 showColorPickerDialog();
@@ -256,8 +255,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public boolean onBackPressed() {
-        if (getParentFragmentManager().getBackStackEntryCount() > 0)
-            getParentFragmentManager().popBackStack();
+        back();
         dismissTutorialSnackbar();
         return true;
     }
@@ -504,6 +502,12 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         if (getContext() != null) {
             SharedPreferencesUtils.setBoolean(getContext(), Constants.PLAN_TO_VISIT_TUTORIAL, true);
         }
+    }
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
     }
 
 
