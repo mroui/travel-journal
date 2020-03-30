@@ -227,8 +227,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             this.user = user;
             if (user == null) {
                 showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
             }
         });
     }
@@ -669,8 +668,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             buttonPositive.setOnClickListener(v -> {
                 hideKeyboard();
                 dialog.dismiss();
-                if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                    getParentFragmentManager().popBackStack();
+                back();
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
             RippleDrawable.setRippleEffectButton(
@@ -758,9 +756,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), newUser -> {
             if (newUser != null) {
                 userViewModel.setUser(newUser);
+                back();
             }
             stopProgressBar();
-            //todo: exit fragment to board? + show dialog to help with preparing packing list
         });
     }
 
@@ -949,6 +947,12 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
 
 
     private List<String> getUniqueTags() {
