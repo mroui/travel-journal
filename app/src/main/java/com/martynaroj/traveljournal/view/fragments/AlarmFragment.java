@@ -3,12 +3,9 @@ package com.martynaroj.traveljournal.view.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentAlarmBinding;
+import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
-import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -87,15 +84,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && getContext() != null) {
-            NotificationChannel channel = new NotificationChannel(
-                    Constants.CHANNEL_ID,
-                    Constants.CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription(getResources().getString(R.string.alarm_channel_info));
-            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
-            if (notificationManager != null) notificationManager.createNotificationChannel(channel);
+        if (getContext() != null) {
+            NotificationBroadcast.createNotificationChannel(getContext());
         }
     }
 
@@ -107,7 +97,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
             public void run() {
                 Calendar now = Calendar.getInstance();
                 if (alarmTime < now.getTimeInMillis() || isAlarmCanceled) {
-                    binding.setIsBroadcastWorking(false);
+                    if (binding != null)
+                        binding.setIsBroadcastWorking(false);
                     timer.cancel();
                 }
             }
@@ -142,14 +133,6 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         binding.alarmAlarmSetDate.setText(new SimpleDateFormat("dd.MM.yyyy").format(alarmDate.getTime()));
         binding.alarmAlarmSetTime.setText(new SimpleDateFormat("hh:mm a").format(alarmDate.getTime()));
         binding.alarmAlarmSetNote.setText(alarmNote);
-    }
-
-
-    private void saveAlarmSet(long time, String note) {
-        if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            preferences.edit().putLong(Constants.ALARM_TIME, time).putString(Constants.ALARM_NOTE, note).apply();
-        }
     }
 
 
@@ -214,7 +197,8 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                     broadcastIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
             );
-            if (alarmManager != null) alarmManager.cancel(pendingIntent);
+            if (alarmManager != null)
+                alarmManager.cancel(pendingIntent);
             isAlarmCanceled = true;
         }
     }
@@ -275,7 +259,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
                         (timePicker1, i, i1) -> errorMessage.setVisibility(View.GONE)
                 );
             }
-            datePicker.setMinDate(new Date().getTime() - 100);
+            datePicker.setMinDate(new Date().getTime() - 1000);
             buttonPositive.setOnClickListener(v -> setAlarm(dialog, datePicker, timePicker));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 

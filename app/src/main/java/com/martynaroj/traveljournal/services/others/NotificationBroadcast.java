@@ -1,10 +1,13 @@
 package com.martynaroj.traveljournal.services.others;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -26,6 +29,21 @@ public class NotificationBroadcast extends BroadcastReceiver {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(Constants.RC_BROADCAST, builder.build());
     }
+
+
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && context != null) {
+            NotificationChannel channel = new NotificationChannel(
+                    Constants.CHANNEL_ID,
+                    Constants.CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription(context.getResources().getString(R.string.alarm_channel_info));
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 
     public static void sendBroadcast(Context context, Intent broadcastIntent, Long time, String note) {
         broadcastIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
