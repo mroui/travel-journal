@@ -94,6 +94,8 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         initMarkerInfoAdapter();
         setListeners();
 
+        observeUserChanges();
+
         return view;
     }
 
@@ -184,6 +186,14 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
         else if (getActivity() != null)
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     Constants.RC_ACCESS_FINE_LOCATION);
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null)
+                back();
+        });
     }
 
 

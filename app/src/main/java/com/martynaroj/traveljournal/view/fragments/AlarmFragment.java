@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,6 +31,7 @@ import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,6 +42,7 @@ import java.util.TimerTask;
 public class AlarmFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentAlarmBinding binding;
+    private UserViewModel userViewModel;
     private Intent broadcastIntent;
     private Timer timer;
     private boolean isAlarmCanceled;
@@ -54,6 +57,9 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
         binding = FragmentAlarmBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        initViewModels();
+        observeUserChanges();
+
         initBroadcastIntent();
         checkBroadcast();
         createNotificationChannel();
@@ -67,6 +73,21 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
 
     //INIT DATA-------------------------------------------------------------------------------------
+
+
+    private void initViewModels() {
+        if (getActivity() != null) {
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+        }
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null)
+                back();
+        });
+    }
 
 
     private void initBroadcastIntent() {

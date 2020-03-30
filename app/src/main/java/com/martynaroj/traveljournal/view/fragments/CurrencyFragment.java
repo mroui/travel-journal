@@ -18,6 +18,7 @@ import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.CurrencyViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Objects;
 public class CurrencyFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentCurrencyBinding binding;
+    private UserViewModel userViewModel;
     private CurrencyViewModel currencyViewModel;
 
     private List<String> currencies;
@@ -47,6 +49,8 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
         View view = binding.getRoot();
 
         initViewModels();
+        observeUserChanges();
+
         initContentData();
         setListeners();
 
@@ -60,7 +64,16 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
     private void initViewModels() {
         if (getActivity() != null) {
             currencyViewModel = new ViewModelProvider(getActivity()).get(CurrencyViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null)
+                back();
+        });
     }
 
 
@@ -113,7 +126,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.currency_swap_icon:
                 swapCurrencies(binding.currencyFromSpinner.getSelectedIndex(),
-                                binding.currencyToSpinner.getSelectedIndex());
+                        binding.currencyToSpinner.getSelectedIndex());
                 break;
             case R.id.currency_convert_button:
                 convert();

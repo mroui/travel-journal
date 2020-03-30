@@ -17,6 +17,7 @@ import com.martynaroj.traveljournal.services.models.translatorAPI.TranslationRes
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.TranslatorViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +30,7 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
 
     private FragmentTranslatorBinding binding;
     private TranslatorViewModel translatorViewModel;
+    private UserViewModel userViewModel;
 
     private List<String> languagesFromTo;
     private Map<String, String> languageNames;
@@ -54,6 +56,8 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
         initContentData();
         setListeners();
 
+        observeUserChanges();
+
         return view;
     }
 
@@ -64,6 +68,7 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
     private void initViewModels() {
         if (getActivity() != null) {
             translatorViewModel = new ViewModelProvider(getActivity()).get(TranslatorViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
     }
 
@@ -111,6 +116,15 @@ public class TranslatorFragment extends BaseFragment implements View.OnClickList
             binding.translatorLanguageToSpinner.setSelectedIndex(Constants.LANGUAGE_EN_INDEX);
         }
     }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null)
+                back();
+        });
+    }
+
 
     //LISTENERS-------------------------------------------------------------------------------------
 

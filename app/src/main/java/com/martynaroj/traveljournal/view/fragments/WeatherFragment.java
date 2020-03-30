@@ -25,6 +25,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -35,6 +36,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
     private AddressViewModel addressViewModel;
     private WeatherViewModel weatherViewModel;
+    private UserViewModel userViewModel;
 
     private FindCurrentPlaceRequest request;
     private PlacesClient placesClient;
@@ -57,6 +59,8 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
         setListeners();
 
+        observeUserChanges();
+
         return view;
     }
 
@@ -68,6 +72,7 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
         if (getActivity() != null) {
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             weatherViewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
     }
 
@@ -94,6 +99,14 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     Constants.RC_ACCESS_FINE_LOCATION);
         }
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null)
+                back();
+        });
     }
 
 
