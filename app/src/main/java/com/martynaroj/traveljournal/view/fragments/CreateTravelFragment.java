@@ -58,6 +58,7 @@ import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
+import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
@@ -720,7 +721,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         date.setTime(new Date(dateFrom));
         time.setTime(new Date(timeFrom));
         now.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
-                time.get(Calendar.HOUR), time.get(Calendar.MINUTE));
+                time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
         return now.getTime();
     }
 
@@ -798,13 +799,20 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void setAlarm() {
-        if (binding.createTravelStage3SetAlarm.isChecked())
+        if (binding.createTravelStage3SetAlarm.isChecked()) {
+            String note = getResources().getString(R.string.messages_travel_start);
+            long dateEnd = getDateTime(dateFrom, timeFrom).getTime();
+            long timeDifference = dateEnd - Calendar.getInstance().getTimeInMillis();
+
+            SharedPreferencesUtils.saveAlarmSet(getContext(), dateEnd, note);
+            NotificationBroadcast.createNotificationChannel(getContext());
             NotificationBroadcast.sendBroadcast(
                     getContext(),
                     new Intent(getContext(), NotificationBroadcast.class),
-                    getDateTime(dateFrom, timeFrom).getTime(),
+                    timeDifference,
                     getResources().getString(R.string.messages_travel_start)
             );
+        }
     }
 
 
