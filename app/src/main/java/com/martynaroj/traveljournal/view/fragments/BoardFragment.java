@@ -110,7 +110,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
             binding.setUser(user);
-            if (user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
+            if (user != null && user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
                 loadTravel(user.getActiveTravelId());
         });
     }
