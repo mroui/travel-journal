@@ -2,7 +2,6 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Geocoder;
@@ -32,6 +31,7 @@ import com.martynaroj.traveljournal.services.models.Notification;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.NotificationAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.NotificationViewModel;
@@ -45,8 +45,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
@@ -222,10 +220,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void checkNewAccount() {
         if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            if (!preferences.getBoolean(Constants.UPDATE_PROFILE_DIALOG, false)
-                && user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
-                && user.getPhoto() == null)
+            if (!SharedPreferencesUtils.getBoolean(getContext(), Constants.UPDATE_PROFILE_DIALOG, false)
+                    && user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
+                    && user.getPhoto() == null)
                 openUpdateProfileDialog();
         }
     }
@@ -239,13 +236,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
             } else
                 binding.setLocation(null);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
 
     private void getNotifications() {
         if (getContext() != null) {
-            if (user.getNotifications()!=null && !user.getNotifications().isEmpty()) {
+            if (user.getNotifications() != null && !user.getNotifications().isEmpty()) {
                 startProgressBar();
                 notificationViewModel.getNotificationsListData(user.getNotifications());
                 notificationViewModel.getNotificationsList().observe(getViewLifecycleOwner(), list -> {
@@ -268,7 +266,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         userViewModel.getUsersListData(usersIds);
         userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
             if (users != null) {
-                for (int i=0; i<notifications.size(); i++) {
+                for (int i = 0; i < notifications.size(); i++) {
                     notifications.get(i).setUserFrom(users.get(i));
                 }
                 showNotificationsDialog(notifications);
@@ -512,7 +510,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void getContactInfo() {
         if (user != null) {
             if (loggedUser != null && user.isUserProfile(loggedUser)) {
-                    showContactDialog();
+                showContactDialog();
             } else {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("plain/text");
@@ -563,8 +561,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void saveToPreferences() {
         if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            preferences.edit().putBoolean(Constants.UPDATE_PROFILE_DIALOG, true).apply();
+            SharedPreferencesUtils.setBoolean(getContext(), Constants.UPDATE_PROFILE_DIALOG, true);
         }
     }
 

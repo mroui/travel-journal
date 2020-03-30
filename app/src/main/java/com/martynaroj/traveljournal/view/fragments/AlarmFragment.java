@@ -31,6 +31,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
+import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.text.SimpleDateFormat;
@@ -38,8 +39,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AlarmFragment extends BaseFragment implements View.OnClickListener {
 
@@ -117,12 +116,9 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void checkPermissionsDialog() {
-        if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            if (!preferences.getBoolean(Constants.ALARM_DIALOG, false)
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                showPermissionsDialog();
-            }
+        if (!SharedPreferencesUtils.getBoolean(getContext(), Constants.ALARM_DIALOG, false)
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            showPermissionsDialog();
         }
     }
 
@@ -132,16 +128,14 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void getAlarmSet() {
         if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-
-            String alarmNote = preferences.getString(Constants.ALARM_NOTE, "");
+            String alarmNote = SharedPreferencesUtils.getString(getContext(), Constants.ALARM_NOTE, "");
             Calendar alarmDate = Calendar.getInstance();
-            alarmDate.setTimeInMillis(preferences.getLong(Constants.ALARM_TIME, 0));
-
+            alarmDate.setTimeInMillis(SharedPreferencesUtils.getLong(getContext(), Constants.ALARM_TIME, 0));
             setAlarmData(alarmDate, alarmNote);
             initTimer(alarmDate.getTimeInMillis());
         }
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private void setAlarmData(Calendar alarmDate, String alarmNote) {
@@ -161,8 +155,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void saveShownAlarmDialog() {
         if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            preferences.edit().putBoolean(Constants.ALARM_DIALOG, true).apply();
+            SharedPreferencesUtils.setBoolean(getContext(), Constants.ALARM_DIALOG, true);
         }
     }
 
@@ -196,7 +189,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
             (dialog.findViewById(R.id.dialog_alarm_error)).setVisibility(View.VISIBLE);
         } else {
             isAlarmCanceled = false;
-            saveAlarmSet(dateEnd.getTimeInMillis(), note);
+            SharedPreferencesUtils.saveAlarmSet(getContext(), dateEnd.getTimeInMillis(), note);
             setNotificationBroadcast(note, timeDifference);
             dialog.dismiss();
         }

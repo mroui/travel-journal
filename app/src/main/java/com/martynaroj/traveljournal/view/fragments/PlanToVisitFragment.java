@@ -1,7 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,6 +39,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.MarkerViewModel;
@@ -53,8 +53,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class PlanToVisitFragment extends BaseFragment implements View.OnClickListener,
         OnMapReadyCallback, IOnBackPressed {
@@ -504,19 +502,20 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
     private void saveToPreferences() {
         if (getContext() != null) {
-            SharedPreferences preferences = getContext().getSharedPreferences(Constants.PREFERENCES, MODE_PRIVATE);
-            preferences.edit().putBoolean(Constants.PLAN_TO_VISIT_TUTORIAL, true).apply();
+            SharedPreferencesUtils.setBoolean(getContext(), Constants.PLAN_TO_VISIT_TUTORIAL, true);
         }
     }
 
 
     private void startProgressBar() {
-        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout,
+                binding.exploreMapProgressbar);
     }
 
 
     private void stopProgressBar() {
-        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout, binding.exploreMapProgressbar);
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMapProgressbarLayout,
+                binding.exploreMapProgressbar);
         disableButtons();
     }
 
