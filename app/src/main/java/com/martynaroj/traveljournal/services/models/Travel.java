@@ -5,6 +5,7 @@ import androidx.databinding.Bindable;
 
 import com.google.firebase.Timestamp;
 import com.martynaroj.traveljournal.BR;
+import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,6 +23,8 @@ public class Travel extends BaseObservable implements Serializable {
     private String accommodation;
     private Double budget;
     private List<String> tags;
+    private List<PackingCategory> packingList;
+    private boolean isPacking;
 
 
     public Travel() {
@@ -150,6 +153,26 @@ public class Travel extends BaseObservable implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
         notifyPropertyChanged(BR.tags);
+    }
+
+    @Bindable
+    public List<PackingCategory> getPackingList() {
+        return packingList;
+    }
+
+    public void setPackingList(List<PackingCategory> packingList) {
+        this.packingList = packingList;
+        notifyPropertyChanged(BR.packingList);
+    }
+
+    @Bindable
+    public boolean isPacking() {
+        return isPacking;
+    }
+
+    public void setPacking(boolean packing) {
+        isPacking = packing;
+        notifyPropertyChanged(BR.packing);
     }
 
 }

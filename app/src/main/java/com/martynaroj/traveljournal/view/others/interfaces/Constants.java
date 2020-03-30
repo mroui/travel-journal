@@ -34,6 +34,8 @@ public interface Constants {
     String DB_FRIENDS = "friends";
     String DB_MARKERS = "markers";
     String DB_ACTIVE_TRAVEL_ID = "activeTravelId";
+    String DB_IS_PACKING = "isPacking";
+    String DB_PACKING_LIST = "packingList";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
