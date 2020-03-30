@@ -1,33 +1,45 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
+import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BoardFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentBoardBinding binding;
     private UserViewModel userViewModel;
+    private TravelViewModel travelViewModel;
     private User user;
+    private Travel travel;
 
     public static BoardFragment newInstance() {
         return new BoardFragment();
@@ -57,6 +69,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
         }
     }
 
@@ -97,6 +110,23 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
             binding.setUser(user);
+            if (user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
+                loadTravel(user.getActiveTravelId());
+        });
+    }
+
+
+    private void loadTravel(String id) {
+        startProgressBar();
+        travelViewModel.getTravel(id);
+        travelViewModel.getTravelData().observe(getViewLifecycleOwner(), travel -> {
+            if (travel != null) {
+                this.travel = travel;
+                //todo: set travel on view later
+                //binding.setTravel(travel);
+                checkPackingList();
+            }
+            stopProgressBar();
         });
     }
 
@@ -113,7 +143,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                     .highlightedColor(Color.WHITE)
                     .rippleEffect(true)
                     .listener(index -> {
-                        if(user != null) {
+                        if (user != null) {
                             switch (index) {
                                 case 0:
                                     changeFragment(MapFragment.newInstance());
@@ -130,9 +160,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                                 case 4:
                                     changeFragment(AlarmFragment.newInstance());
                             }
-                        } else {
+                        } else
                             showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                        }
                     });
         } else return null;
     }
@@ -150,6 +179,64 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View view) {
         if (view.getId() == R.id.board_new_journey_button) {
             startNewJourney();
+        }
+    }
+
+
+    //DIALOG----------------------------------------------------------------------------------------
+
+
+    private void checkPackingList() {
+        if (!this.travel.isPacking() && travel.getPackingList() == null) {
+            showPackingDialog();
+        }
+    }
+
+
+    private void showPackingDialog() {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_packing_title));
+            message.setText(getResources().getString(R.string.dialog_packing_desc));
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    buttonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setOnClickListener(v -> {
+                dialog.dismiss();
+                travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+                    put(Constants.DB_IS_PACKING, true);
+                    put(Constants.DB_PACKING_LIST, new ArrayList<>());
+                }});
+                //todo: go to packing list fragment
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    buttonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setOnClickListener(v -> {
+                dialog.dismiss();
+                travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+                    put(Constants.DB_PACKING_LIST, new ArrayList<>());
+                }});
+            });
+
+            dialog.show();
         }
     }
 

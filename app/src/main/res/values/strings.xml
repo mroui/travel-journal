@@ -290,4 +290,7 @@
         by going back to previous stages.\nIf everything is OK, just press button.
     </string>
 
+    <string name="dialog_packing_title">Packing List</string>
+    <string name="dialog_packing_desc">Would you like to create a packing list?</string>
+
 </resources>
