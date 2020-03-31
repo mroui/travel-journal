@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="packing_categories">
+        <item name="accessories">Accessories</item>
+        <item name="cosmetics">Cosmetics</item>
+        <item name="clothes">Clothes</item>
+        <item name="documents">Documents</item>
+        <item name="electronics">Electronics</item>
+        <item name="essentials">Essentials</item>
+        <item name="food">Food</item>
+        <item name="medicines">Medicines</item>
+        <item name="toiletries">Toiletries</item>
+        <item name="others">Others</item>
+    </string-array>
+</resources>
