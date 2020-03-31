@@ -24,7 +24,7 @@ public class Travel extends BaseObservable implements Serializable {
     private Double budget;
     private List<String> tags;
     private List<PackingCategory> packingList;
-    private boolean isPacking;
+    private boolean packing;
 
 
     public Travel() {
@@ -167,11 +167,11 @@ public class Travel extends BaseObservable implements Serializable {
 
     @Bindable
     public boolean isPacking() {
-        return isPacking;
+        return packing;
     }
 
     public void setPacking(boolean packing) {
-        isPacking = packing;
+        this.packing = packing;
         notifyPropertyChanged(BR.packing);
     }
 
