@@ -9,6 +9,9 @@
         <variable
             name="user"
             type="com.martynaroj.traveljournal.services.models.User"/>
+        <variable
+            name="travel"
+            type="com.martynaroj.traveljournal.services.models.Travel"/>
     </data>
 
     <FrameLayout
@@ -25,21 +28,18 @@
             tools:ignore="UselessParent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/board_content_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_regular"
-                android:paddingEnd="@dimen/padding_regular">
+                android:padding="@dimen/padding_regular">
 
                 <TextView
                     android:id="@+id/board_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/board_content_container"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginBottom="@dimen/margin_small"
                     android:fontFamily="@font/robotoslab_medium"
                     android:text="@string/board_title"
                     android:textAlignment="center"
@@ -47,44 +47,61 @@
                     android:textSize="@dimen/text_bigger"/>
 
                 <LinearLayout
-                    android:id="@+id/board_content_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/board_new_journey_image"
+                        android:layout_width="@dimen/large_image"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}">
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:contentDescription="@string/board_airplane"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/airplane"/>
 
-                        <ImageView
-                            android:id="@+id/board_new_journey_image"
-                            android:layout_width="@dimen/large_image"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_small"
-                            android:contentDescription="@string/board_airplane"
-                            android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/airplane"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/board_new_journey_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/padding_small"
-                            android:text="@string/board_desc"
-                            android:textColor="@color/white"
-                            android:fontFamily="@font/raleway_bold"
-                            app:backgroundTint="@color/yellow_active" />
-
-                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/board_new_journey_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_small"
+                        android:text="@string/board_desc"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/raleway_bold"
+                        app:backgroundTint="@color/yellow_active" />
 
                 </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:visibility="@{user.activeTravel ? View.VISIBLE : View.GONE}">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/board_packing_list_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/board_floating_menu_button"
+                    app:layout_constraintTop_toBottomOf="@+id/board_floating_menu_button"
+                    android:layout_marginStart="@dimen/margin_smaller"
+                    style="@style/FloatingActionButton"
+                    android:src="@drawable/ic_clothes"
+                    app:rippleColor="@color/middle_gray"
+                    android:visibility="@{travel != null &amp;&amp; travel.packing ? View.VISIBLE : View.GONE}"/>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/board_floating_menu_button"
@@ -92,8 +109,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="@dimen/margin_regular"
                     app:bmb_normalColor="@color/light_gray"
+                    app:bmb_highlightedColor="@color/middle_gray"
                     app:bmb_buttonEnum="textInsideCircle"
                     app:bmb_piecePlaceEnum="piecePlace_dot_5_4"
                     app:bmb_buttonPlaceEnum="buttonPlace_sc_5_4"

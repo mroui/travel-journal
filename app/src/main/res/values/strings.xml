@@ -22,6 +22,7 @@
     <string name="board_title">Welcome on board!</string>
     <string name="board_desc">Start a new Journey</string>
     <string name="board_airplane">AIRPLANE</string>
+    <string name="board_packing_ist">Packing List</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
