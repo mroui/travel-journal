@@ -909,7 +909,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private void updateTravel(Map<String, Object> changes) {
         travelViewModel.updateTravel(travel.getId(), changes);
-        travelViewModel.getTravelData().observe(getViewLifecycleOwner(), travelData -> {
+        travelViewModel.getTravelLiveData().observe(getViewLifecycleOwner(), travelData -> {
             if (travelData != null) {
                 travel = travelData;
             }

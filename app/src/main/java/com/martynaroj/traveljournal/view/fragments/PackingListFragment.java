@@ -10,14 +10,21 @@ import androidx.annotation.NonNull;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentPackingListBinding;
+import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 
 public class PackingListFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentPackingListBinding binding;
+    private Travel travel;
 
-    static PackingListFragment newInstance() {
-        return new PackingListFragment();
+    private PackingListFragment(Travel travel) {
+        this.travel = travel;
+    }
+
+
+    static PackingListFragment newInstance(Travel travel) {
+        return new PackingListFragment(travel);
     }
 
 

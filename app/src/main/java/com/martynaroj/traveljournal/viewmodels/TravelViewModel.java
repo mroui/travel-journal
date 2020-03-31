@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.respositories.TravelRepository;
@@ -17,10 +18,12 @@ public class TravelViewModel extends AndroidViewModel {
     private TravelRepository travelRepository;
     private LiveData<Status> statusLiveData;
     private LiveData<Travel> travelLiveData;
+    private MutableLiveData<Travel> travel;
 
     public TravelViewModel(@NonNull Application application) {
         super(application);
         travelRepository = new TravelRepository(application.getApplicationContext());
+        travel = new MutableLiveData<>();
     }
 
     public String generateId() {
@@ -37,15 +40,24 @@ public class TravelViewModel extends AndroidViewModel {
 
     public void updateTravel(String id, Map<String, Object> changes) {
         travelRepository.updateTravel(id, changes);
-        getTravel(id);
+        getTravelData(id);
     }
 
-    public void getTravel(String id) {
+    public void getTravelData(String id) {
         travelLiveData = travelRepository.getTravel(id);
     }
 
-    public LiveData<Travel> getTravelData() {
+    public LiveData<Travel> getTravelLiveData() {
         return travelLiveData;
     }
+
+    public void setTravel(Travel travel) {
+        this.travel.setValue(travel);
+    }
+
+    public LiveData<Travel> getTravel() {
+        return travel;
+    }
+
 
 }

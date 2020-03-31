@@ -23,6 +23,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -32,6 +33,8 @@ import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BoardFragment extends BaseFragment implements View.OnClickListener {
 
@@ -56,6 +59,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         initFloatingMenu();
 
         observeUserChanges();
+        observeTravelChanges();
 
         setListeners();
 
@@ -83,9 +87,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 if (user != null) {
                     this.user = user;
                     binding.setUser(user);
-                } else {
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                }
                 stopProgressBar();
             });
         }
@@ -112,20 +115,18 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             binding.setUser(user);
             if (user != null && user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
                 loadTravel(user.getActiveTravelId());
+            else
+                travelViewModel.setTravel(null);
         });
     }
 
 
-    private void loadTravel(String id) {
+    private void observeTravelChanges() {
         startProgressBar();
-        travelViewModel.getTravel(id);
-        travelViewModel.getTravelData().observe(getViewLifecycleOwner(), travel -> {
-            if (travel != null) {
-                this.travel = travel;
-                //todo: set travel on view later
-                //binding.setTravel(travel);
-                checkPackingList();
-            }
+        travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
+            this.travel = travel;
+            binding.setTravel(travel);
+            checkPackingList();
             stopProgressBar();
         });
     }
@@ -167,18 +168,32 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    private List<PackingCategory> getBasicPackingList() {
+        List<PackingCategory> basicList = new ArrayList<>();
+        for (String category : getResources().getStringArray(R.array.packing_categories))
+            basicList.add(new PackingCategory(category));
+        return basicList;
+    }
+
+
     //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
         binding.boardNewJourneyButton.setOnClickListener(this);
+        binding.boardPackingListButton.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.board_new_journey_button) {
-            startNewJourney();
+        switch (view.getId()) {
+            case R.id.board_new_journey_button:
+                startNewJourney();
+                break;
+            case R.id.board_packing_list_button:
+                changeFragment(PackingListFragment.newInstance(this.travel));
+                break;
         }
     }
 
@@ -187,7 +202,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void checkPackingList() {
-        if (!this.travel.isPacking() && travel.getPackingList() == null) {
+        if (this.travel != null && !this.travel.isPacking() && travel.getPackingList() == null) {
             showPackingDialog();
         }
     }
@@ -216,11 +231,11 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
             buttonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
-                travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+                updateTravel(new HashMap<String, Object>() {{
                     put(Constants.DB_IS_PACKING, true);
-                    put(Constants.DB_PACKING_LIST, new ArrayList<>());
+                    put(Constants.DB_PACKING_LIST, getBasicPackingList());
                 }});
-                changeFragment(PackingListFragment.newInstance());
+                changeFragment(PackingListFragment.newInstance(this.travel));
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
             RippleDrawable.setRippleEffectButton(
@@ -231,13 +246,30 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
             buttonNegative.setOnClickListener(v -> {
                 dialog.dismiss();
-                travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+                updateTravel(new HashMap<String, Object>() {{
                     put(Constants.DB_PACKING_LIST, new ArrayList<>());
                 }});
             });
 
             dialog.show();
         }
+    }
+
+
+    //DATABASE--------------------------------------------------------------------------------------
+
+
+    private void loadTravel(String id) {
+        travelViewModel.getTravelData(id);
+        travelViewModel.getTravelLiveData().observe(getViewLifecycleOwner(), travel ->
+                travelViewModel.setTravel(travel)
+        );
+    }
+
+
+    private void updateTravel(Map<String, Object> changes) {
+        travelViewModel.updateTravel(travel.getId(), changes);
+        loadTravel(travel.getId());
     }
 
 
