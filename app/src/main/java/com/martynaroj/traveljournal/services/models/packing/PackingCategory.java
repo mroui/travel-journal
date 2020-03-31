@@ -12,6 +12,9 @@ public class PackingCategory extends BaseObservable implements Serializable {
     private String name;
     private List<PackingItem> items;
 
+    public PackingCategory() {
+    }
+
 
     public PackingCategory(String name) {
         this.name = name;

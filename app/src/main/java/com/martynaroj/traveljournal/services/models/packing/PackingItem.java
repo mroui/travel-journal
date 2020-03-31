@@ -12,6 +12,9 @@ public class PackingItem extends BaseObservable implements Serializable {
     private String name;
     private boolean checked;
 
+    public PackingItem() {
+    }
+
 
     public PackingItem(String name) {
         this.name = name;
