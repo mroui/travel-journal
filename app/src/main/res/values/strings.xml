@@ -293,4 +293,6 @@
     <string name="dialog_packing_title">Packing List</string>
     <string name="dialog_packing_desc">Would you like to create a packing list?</string>
 
+    <string name="packing_list_title">Packing List</string>
+
 </resources>

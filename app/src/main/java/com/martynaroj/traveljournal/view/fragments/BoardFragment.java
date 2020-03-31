@@ -220,7 +220,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                     put(Constants.DB_IS_PACKING, true);
                     put(Constants.DB_PACKING_LIST, new ArrayList<>());
                 }});
-                //todo: go to packing list fragment
+                changeFragment(PackingListFragment.newInstance());
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
             RippleDrawable.setRippleEffectButton(
