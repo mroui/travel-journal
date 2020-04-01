@@ -91,7 +91,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupIndex, int itemIndex, boolean b, View view, ViewGroup viewGroup) {
         if (view == null) {
             bindingItem = ItemPackingItemBinding.inflate(LayoutInflater.from(context), viewGroup, false);
-            view = bindingGroup.getRoot();
+            view = bindingItem.getRoot();
         }
         bindingItem.packingItemName.setText(getChild(groupIndex, itemIndex).getName());
         return view;
