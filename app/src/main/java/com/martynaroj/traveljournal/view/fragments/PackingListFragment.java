@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -84,7 +85,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     private void observeTravelChanges() {
         travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
-            if(travel == null) {
+            if (travel == null) {
                 showSnackBar(getResources().getString(R.string.messages_error_failed_load_travel),
                         Snackbar.LENGTH_LONG);
                 back();
@@ -107,7 +108,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     private void initListData() {
         if (travel != null) {
             Map<PackingCategory, List<PackingItem>> items = new HashMap<>();
-            for(PackingCategory category : travel.getPackingList())
+            for (PackingCategory category : travel.getPackingList())
                 items.put(category, category.getItems());
             binding.packingListExpandableList.setAdapter(new PackingAdapter(
                     getContext(),
@@ -123,6 +124,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     private void setListeners() {
         binding.packingListArrowButton.setOnClickListener(this);
+        setOnListScrollListener();
     }
 
 
@@ -135,6 +137,23 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             case R.id.packing_list_add_button:
                 break;
         }
+    }
+
+
+    private void setOnListScrollListener() {
+        binding.packingListExpandableList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE)
+                    binding.packingListAddButton.show();
+                else
+                    binding.packingListAddButton.hide();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int i, int i1, int i2) {
+            }
+        });
     }
 
 
