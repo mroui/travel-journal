@@ -1,15 +1,22 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentPackingListBinding;
@@ -18,6 +25,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
@@ -31,6 +39,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     private UserViewModel userViewModel;
     private TravelViewModel travelViewModel;
     private Travel travel;
+    private PackingAdapter adapter;
 
     private PackingListFragment(Travel travel) {
         this.travel = travel;
@@ -110,11 +119,8 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             Map<PackingCategory, List<PackingItem>> items = new HashMap<>();
             for (PackingCategory category : travel.getPackingList())
                 items.put(category, category.getItems());
-            binding.packingListExpandableList.setAdapter(new PackingAdapter(
-                    getContext(),
-                    travel.getPackingList(),
-                    items
-            ));
+            adapter = new PackingAdapter(getContext(), travel.getPackingList(), items);
+            binding.packingListExpandableList.setAdapter(adapter);
         }
     }
 
@@ -124,6 +130,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     private void setListeners() {
         binding.packingListArrowButton.setOnClickListener(this);
+        setOnListLongClickListener();
         setOnListScrollListener();
     }
 
@@ -137,6 +144,23 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             case R.id.packing_list_add_button:
                 break;
         }
+    }
+
+
+    private void setOnListLongClickListener() {
+        binding.packingListExpandableList.setOnItemLongClickListener((parent, view, index, id) -> {
+            if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                int groupIndex = ExpandableListView.getPackedPositionGroup(id);
+                int itemIndex = ExpandableListView.getPackedPositionChild(id);
+                showRemoveDialog(false, groupIndex, itemIndex, adapter.getChild(groupIndex, itemIndex).getName());
+                return true;
+            } else if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                int groupIndex = ExpandableListView.getPackedPositionGroup(id);
+                showRemoveDialog(true, groupIndex, 0, adapter.getGroup(groupIndex).getName());
+                return true;
+            }
+            return false;
+        });
     }
 
 
@@ -154,6 +178,49 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             public void onScroll(AbsListView view, int i, int i1, int i2) {
             }
         });
+    }
+
+
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
+    @SuppressLint("SetTextI18n")
+    private void showRemoveDialog(boolean isGroup, int groupIndex, int itemIndex, String name) {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_packing_list_remove_title));
+            message.setText(getResources().getString(R.string.dialog_packing_list_remove_desc) + " " + name + "?");
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    buttonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setOnClickListener(v -> {
+                adapter.removeItem(isGroup, groupIndex, itemIndex);
+                dialog.dismiss();
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    buttonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.yellow_bg_lighter)
+            );
+            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
     }
 
 

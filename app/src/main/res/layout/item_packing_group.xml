@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="@dimen/padding_medium"
-    android:background="@color/dirty_white"
+    android:background="@drawable/ripple_packing_group"
     android:orientation="horizontal"
     android:layout_gravity="center"
     tools:ignore="RtlSymmetry">
