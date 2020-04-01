@@ -62,6 +62,19 @@
                 android:foregroundGravity="center"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/packing_list_finish_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="@dimen/margin_small"
+                style="@style/FloatingActionButton"
+                android:src="@drawable/ic_done_white"
+                app:tint="@color/white"
+                app:backgroundTint="@color/blue_active"
+                app:rippleColor="@color/blue_bg_light"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/packing_list_add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,6 +83,19 @@
                 android:layout_margin="@dimen/margin_small"
                 style="@style/FloatingActionButton"
                 android:src="@android:drawable/ic_input_add"
+                app:tint="@color/white"
+                app:backgroundTint="@color/red_active"
+                app:rippleColor="@color/red_bg_light"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/packing_list_menu_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="@dimen/margin_small"
+                style="@style/FloatingActionButton"
+                android:src="@drawable/ic_more_white"
                 app:tint="@color/white"
                 app:backgroundTint="@color/yellow_active"
                 app:rippleColor="@color/yellow_bg_light"/>

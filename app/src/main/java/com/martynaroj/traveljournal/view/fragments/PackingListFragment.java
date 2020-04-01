@@ -40,6 +40,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     private TravelViewModel travelViewModel;
     private Travel travel;
     private PackingAdapter adapter;
+    private boolean isMenuOpen;
 
     private PackingListFragment(Travel travel) {
         this.travel = travel;
@@ -130,6 +131,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     private void setListeners() {
         binding.packingListArrowButton.setOnClickListener(this);
+        binding.packingListMenuButton.setOnClickListener(this);
         setOnListLongClickListener();
         setOnListScrollListener();
     }
@@ -141,7 +143,8 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             case R.id.packing_list_arrow_button:
                 back();
                 break;
-            case R.id.packing_list_add_button:
+            case R.id.packing_list_menu_button:
+                onClickMenu();
                 break;
         }
     }
@@ -168,16 +171,50 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         binding.packingListExpandableList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE)
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    binding.packingListMenuButton.show();
                     binding.packingListAddButton.show();
-                else
+                    binding.packingListFinishButton.show();
+                } else {
+                    if (isMenuOpen)
+                        closeMenu();
+                    binding.packingListMenuButton.hide();
                     binding.packingListAddButton.hide();
+                    binding.packingListFinishButton.hide();
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int i, int i1, int i2) {
             }
         });
+    }
+
+
+    //MENU------------------------------------------------------------------------------------------
+
+
+    private void onClickMenu() {
+        if (isMenuOpen)
+            closeMenu();
+        else
+            openMenu();
+    }
+
+
+    private void openMenu() {
+        isMenuOpen = true;
+        binding.packingListAddButton.animate()
+                .translationY(-getResources().getDimension(R.dimen.packing_menu_button_1_height));
+        binding.packingListFinishButton.animate()
+                .translationY(-getResources().getDimension(R.dimen.packing_menu_button_2_height));
+    }
+
+
+    private void closeMenu() {
+        isMenuOpen = false;
+        binding.packingListAddButton.animate().translationY(0);
+        binding.packingListFinishButton.animate().translationY(0);
     }
 
 

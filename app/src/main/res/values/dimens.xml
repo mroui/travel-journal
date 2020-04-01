@@ -52,4 +52,7 @@
 
     <dimen name="corner_radius_small">8dp</dimen>
 
+    <dimen name="packing_menu_button_1_height">65dp</dimen>
+    <dimen name="packing_menu_button_2_height">130dp</dimen>
+
 </resources>
