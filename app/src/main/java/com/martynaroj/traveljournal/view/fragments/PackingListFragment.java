@@ -27,6 +27,7 @@ import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
@@ -133,6 +134,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     private void setListeners() {
         binding.packingListArrowButton.setOnClickListener(this);
         binding.packingListMenuButton.setOnClickListener(this);
+        binding.packingListFinishButton.setOnClickListener(this);
         setOnListLongClickListener();
         setOnListScrollListener();
     }
@@ -146,6 +148,9 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.packing_list_menu_button:
                 onClickMenu();
+                break;
+            case R.id.packing_list_finish_button:
+                showFinishDialog();
                 break;
         }
     }
@@ -222,6 +227,21 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     //DIALOGS---------------------------------------------------------------------------------------
 
 
+    private void finishPacking() {
+        travel.setPacking(false);
+        travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_IS_PACKING, false);
+        }});
+        travelViewModel.setTravel(travel);
+        if (isMenuOpen)
+            closeMenu();
+        back();
+    }
+
+
+    //DIALOGS---------------------------------------------------------------------------------------
+
+
     @SuppressLint("SetTextI18n")
     private void showRemoveDialog(boolean isGroup, int groupIndex, int itemIndex, String name) {
         if (getContext() != null && getActivity() != null) {
@@ -255,6 +275,46 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
             buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void showFinishDialog() {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_custom);
+
+            TextView title = dialog.findViewById(R.id.dialog_custom_title);
+            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+
+            title.setText(getResources().getString(R.string.dialog_packing_list_finish_title));
+            message.setText(getResources().getString(R.string.dialog_packing_list_finish_desc));
+            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    buttonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.blue_bg_light)
+            );
+            buttonPositive.setTextColor(getResources().getColor(R.color.blue_active));
+            buttonPositive.setOnClickListener(v -> {
+                finishPacking();
+                dialog.dismiss();
+            });
+            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    buttonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.blue_bg_light)
+            );
+            buttonNegative.setTextColor(getResources().getColor(R.color.blue_active));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
             dialog.show();

@@ -297,5 +297,8 @@
     <string name="packing_list_title">Packing List</string>
     <string name="dialog_packing_list_remove_title">Remove list item</string>
     <string name="dialog_packing_list_remove_desc">Are you sure you want to remove </string>
+    <string name="dialog_packing_list_finish_title">Finish packing</string>
+    <string name="dialog_packing_list_finish_desc">Are you already packed?
+        \nYou won\'t be able to open your luggage again!</string>
 
 </resources>
