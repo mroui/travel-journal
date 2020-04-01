@@ -260,10 +260,12 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void loadTravel(String id) {
+        startProgressBar();
         travelViewModel.getTravelData(id);
-        travelViewModel.getTravelLiveData().observe(getViewLifecycleOwner(), travel ->
-                travelViewModel.setTravel(travel)
-        );
+        travelViewModel.getTravelLiveData().observe(getViewLifecycleOwner(), travel -> {
+            travelViewModel.setTravel(travel);
+            stopProgressBar();
+        });
     }
 
 
