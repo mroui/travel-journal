@@ -22,7 +22,8 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     private List<PackingCategory> listGroup;
     private Map<PackingCategory, List<PackingItem>> listItem;
 
-    public PackingAdapter(Context context, List<PackingCategory> listGroup, Map<PackingCategory, List<PackingItem>> listItem) {
+    public PackingAdapter(Context context, List<PackingCategory> listGroup,
+                          Map<PackingCategory, List<PackingItem>> listItem) {
         this.context = context;
         this.listGroup = listGroup;
         this.listItem = listItem;
@@ -85,7 +86,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
         }
         ((TextView) view.findViewById(R.id.packing_group_name)).setText(category.getName());
         ((TextView) view.findViewById(R.id.packing_group_child_count))
-                .setText("(" + getCheckedChildCount(groupIndex) + ")");
+                .setText("(" + getUncheckedChildCount(groupIndex) + ")");
         return view;
     }
 
@@ -109,7 +110,6 @@ public class PackingAdapter extends BaseExpandableListAdapter {
             item.setChecked(b1);
             notifyDataSetChanged();
         });
-
         return view;
     }
 
@@ -120,16 +120,29 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     }
 
 
-    private long getCheckedChildCount(int groupIndex) {
+    private long getUncheckedChildCount(int groupIndex) {
         List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
         if (children != null) {
             long size = 0;
             for (PackingItem item : children)
-                if (item.isChecked())
+                if (!item.isChecked())
                     size++;
             return size;
         }
         return 0;
+    }
+
+
+    public void removeItem(boolean isGroup, int groupIndex, int itemIndex) {
+        if(isGroup) {
+            listItem.remove(listGroup.get(groupIndex));
+            listGroup.remove(groupIndex);
+        } else {
+            List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+            if (children != null)
+                children.remove(itemIndex);
+        }
+        notifyDataSetChanged();
     }
 
 }
