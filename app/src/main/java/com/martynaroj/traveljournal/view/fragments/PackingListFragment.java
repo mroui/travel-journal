@@ -25,6 +25,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PackingListFragment extends BaseFragment implements View.OnClickListener {
+public class PackingListFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentPackingListBinding binding;
     private UserViewModel userViewModel;
@@ -270,6 +271,16 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    @Override
+    public boolean onBackPressed() {
+        if (isMenuOpen) {
+            closeMenu();
+            return true;
+        } else
+            return false;
+    }
+
+
     private void startProgressBar() {
         getProgressBarInteractions().startProgressBar(binding.getRoot(),
                 binding.packingListProgressbarLayout, binding.packingListProgressbar);
@@ -292,4 +303,5 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         super.onDestroy();
         binding = null;
     }
+
 }
