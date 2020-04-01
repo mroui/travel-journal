@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
-import com.martynaroj.traveljournal.databinding.ItemPackingGroupBinding;
-import com.martynaroj.traveljournal.databinding.ItemPackingItemBinding;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 
@@ -18,8 +19,6 @@ import java.util.Map;
 public class PackingAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private ItemPackingGroupBinding bindingGroup;
-    private ItemPackingItemBinding bindingItem;
     private List<PackingCategory> listGroup;
     private Map<PackingCategory, List<PackingItem>> listItem;
 
@@ -64,7 +63,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupIndex, int itemIndex) {
-        return groupIndex*itemIndex;
+        return itemIndex;
     }
 
 
@@ -74,26 +73,43 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
     public View getGroupView(int groupIndex, boolean b, View view, ViewGroup viewGroup) {
+        final PackingCategory category = getGroup(groupIndex);
         if (view == null) {
-            bindingGroup = ItemPackingGroupBinding.inflate(LayoutInflater.from(context), viewGroup, false);
-            view = bindingGroup.getRoot();
+            LayoutInflater layoutInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert layoutInflater != null;
+            view = layoutInflater.inflate(R.layout.item_packing_group, null);
         }
-        bindingGroup.packingGroupName.setText(getGroup(groupIndex).getName());
-        bindingGroup.packingGroupChildCount.setText("(" + getChildrenCount(groupIndex) + ")");
+        ((TextView) view.findViewById(R.id.packing_group_name)).setText(category.getName());
+        ((TextView) view.findViewById(R.id.packing_group_child_count))
+                .setText("(" + getCheckedChildCount(groupIndex) + ")");
         return view;
     }
 
 
+    @SuppressLint("InflateParams")
     @Override
     public View getChildView(int groupIndex, int itemIndex, boolean b, View view, ViewGroup viewGroup) {
+        final PackingItem item = getChild(groupIndex, itemIndex);
         if (view == null) {
-            bindingItem = ItemPackingItemBinding.inflate(LayoutInflater.from(context), viewGroup, false);
-            view = bindingItem.getRoot();
+            LayoutInflater layoutInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert layoutInflater != null;
+            view = layoutInflater.inflate(R.layout.item_packing_item, null);
         }
-        bindingItem.packingItemName.setText(getChild(groupIndex, itemIndex).getName());
+        ((TextView) view.findViewById(R.id.packing_item_name)).setText(item.getName());
+
+        CheckBox checkBox = view.findViewById(R.id.packing_item_check);
+        checkBox.setOnCheckedChangeListener(null);
+        checkBox.setChecked(item.isChecked());
+        checkBox.setOnCheckedChangeListener((compoundButton, b1) -> {
+            item.setChecked(b1);
+            notifyDataSetChanged();
+        });
+
         return view;
     }
 
@@ -101,6 +117,19 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+
+    private long getCheckedChildCount(int groupIndex) {
+        List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+        if (children != null) {
+            long size = 0;
+            for (PackingItem item : children)
+                if (item.isChecked())
+                    size++;
+            return size;
+        }
+        return 0;
     }
 
 }
