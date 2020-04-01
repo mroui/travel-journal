@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getGroupView(int groupIndex, boolean b, View view, ViewGroup viewGroup) {
         if (view == null) {
@@ -80,6 +82,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
             view = bindingGroup.getRoot();
         }
         bindingGroup.packingGroupName.setText(getGroup(groupIndex).getName());
+        bindingGroup.packingGroupChildCount.setText("(" + getChildrenCount(groupIndex) + ")");
         return view;
     }
 
