@@ -58,6 +58,7 @@
                 android:layoutDirection="rtl"
                 android:divider="@color/white"
                 android:dividerHeight="4dp"
+                android:childDivider="@color/dirty_white"
                 android:foregroundGravity="center"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
