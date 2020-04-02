@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.widget.AutoCompleteTextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -32,7 +33,7 @@ public class FormHandler {
 
     public boolean validateInput(TextInputEditText input, TextInputLayout layout) {
         String value = input.getText() == null ? "" : input.getText().toString();
-        if (value.isEmpty()) {
+        if (value.isEmpty() || value.trim().isEmpty()) {
             layout.setError(context.getResources().getString(R.string.messages_field_no_empty));
             input.requestFocus();
             return false;
@@ -40,6 +41,18 @@ public class FormHandler {
                 (InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS + InputType.TYPE_CLASS_TEXT)
                 && !isValidEmail(value)) {
             layout.setError(context.getResources().getString(R.string.messages_invalid_email));
+            input.requestFocus();
+            return false;
+        } else
+            layout.setError(null);
+        return true;
+    }
+
+
+    public boolean validateInput(AutoCompleteTextView input, TextInputLayout layout) {
+        String value = input.getText() == null ? "" : input.getText().toString();
+        if (value.isEmpty() || value.trim().isEmpty()) {
+            layout.setError(context.getResources().getString(R.string.messages_field_no_empty));
             input.requestFocus();
             return false;
         } else
