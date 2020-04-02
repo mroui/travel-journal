@@ -55,4 +55,35 @@
     <dimen name="packing_menu_button_1_height">65dp</dimen>
     <dimen name="packing_menu_button_2_height">130dp</dimen>
 
+    <dimen name="dialog_input_width">250dp</dimen>
+    <dimen name="dialog_button_width">80dp</dimen>
+
+    <dimen name="item_user_height">80dp</dimen>
+    <dimen name="item_travel_height">200dp</dimen>
+    <dimen name="item_travel_image_height">130dp</dimen>
+    <dimen name="item_notification_height">240dp</dimen>
+    <dimen name="item_notification_image_height">60dp</dimen>
+
+    <dimen name="weather_image_height">80dp</dimen>
+    <dimen name="weather_icon_height">50dp</dimen>
+
+    <dimen name="progressbar_size">60dp</dimen>
+    <dimen name="progressbar_loading_width">4dp</dimen>
+
+    <dimen name="password_strength_meter_height">4dp</dimen>
+
+    <dimen name="profile_user_height">250dp</dimen>
+    <dimen name="profile_user_details_height">275dp</dimen>
+    <dimen name="profile_user_image_margin_top">40dp</dimen>
+    <dimen name="profile_user_hashtag_view_width">104dp</dimen>
+    <dimen name="profile_user_image_size">120dp</dimen>
+
+    <dimen name="home_looping_travels_height">212dp</dimen>
+    <dimen name="home_search_section_height">200dp</dimen>
+    <dimen name="home_explore_map_icon_size">100dp</dimen>
+    <dimen name="home_search_friends_icon_size">40dp</dimen>
+    <dimen name="home_search_travels_icon_size">40dp</dimen>
+
+    <dimen name="dialog_nearby_list_height">350dp</dimen>
+
 </resources>

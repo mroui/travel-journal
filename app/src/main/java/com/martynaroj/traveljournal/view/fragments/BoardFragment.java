@@ -228,7 +228,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
                 updateTravel(new HashMap<String, Object>() {{
@@ -243,7 +243,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonNegative.setOnClickListener(v -> {
                 dialog.dismiss();
                 updateTravel(new HashMap<String, Object>() {{

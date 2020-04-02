@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/item_travel_height"
             android:orientation="vertical"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/home_explore_item_image"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="@dimen/item_travel_image_height"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/home_explore_item_travel_image"/>
 

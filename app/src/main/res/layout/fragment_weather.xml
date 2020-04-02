@@ -159,7 +159,7 @@
                             <ImageView
                                 android:id="@+id/weather_current_weather_image"
                                 android:layout_width="match_parent"
-                                android:layout_height="80dp"
+                                android:layout_height="@dimen/weather_image_height"
                                 android:contentDescription="@string/weather_current_weather_icon"
                                 android:scaleType="fitCenter"
                                 app:iconUrl="@{weatherResult.weather.get(0).icon}"/>
@@ -317,7 +317,7 @@
                         <ImageView
                             android:id="@+id/weather_forecast_first_icon"
                             android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/weather_icon_height"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/weather_current_weather_icon"
@@ -357,7 +357,7 @@
                         <ImageView
                             android:id="@+id/weather_forecast_second_icon"
                             android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/weather_icon_height"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/weather_current_weather_icon"
@@ -397,7 +397,7 @@
                         <ImageView
                             android:id="@+id/weather_forecast_third_icon"
                             android:layout_width="wrap_content"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/weather_icon_height"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/weather_current_weather_icon"
@@ -429,9 +429,9 @@
             android:visibility="invisible">
             <com.victor.loading.rotate.RotateLoading
                 android:id="@+id/weather_progressbar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:loading_width="4dp"
+                android:layout_width="@dimen/progressbar_size"
+                android:layout_height="@dimen/progressbar_size"
+                app:loading_width="@dimen/progressbar_loading_width"
                 app:loading_color="@color/white"
                 android:layout_gravity="center"/>
         </FrameLayout>

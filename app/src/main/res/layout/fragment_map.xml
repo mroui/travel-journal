@@ -111,7 +111,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/red_bg_lighter"
                     android:textColor="@color/main_red"
                     android:text="@string/map_show_saved_places"
@@ -124,7 +124,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/red_bg_lighter"
                     android:textColor="@color/main_red"
                     android:text="@string/map_nearby_places"
@@ -145,9 +145,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/map_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>

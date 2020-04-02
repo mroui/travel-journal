@@ -63,7 +63,7 @@
             <com.asksira.loopingviewpager.LoopingViewPager
                 android:id="@+id/home_explore_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="212dp"
+                android:layout_height="@dimen/home_looping_travels_height"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/home_explore_more"
@@ -97,7 +97,7 @@
             <RelativeLayout
                 android:id="@+id/home_search_section"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/home_search_section_height"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -143,7 +143,7 @@
                     <ImageView
                         android:id="@+id/home_explore_map_icon"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp"
+                        android:layout_height="@dimen/home_explore_map_icon_size"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,7 +192,7 @@
 
                     <ImageView
                         android:id="@+id/home_search_friends_icon"
-                        android:layout_width="40dp"
+                        android:layout_width="@dimen/home_search_friends_icon_size"
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/home_search_friends_text"
@@ -232,7 +232,7 @@
 
                     <ImageView
                         android:id="@+id/home_search_travels_icon"
-                        android:layout_width="40dp"
+                        android:layout_width="@dimen/home_search_travels_icon_size"
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/home_search_travels_text"
@@ -260,9 +260,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/home_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>

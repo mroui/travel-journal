@@ -3,7 +3,7 @@
     <style name="NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/black</item>
-        <item name="colorPrimary">@color/blue_active</item>
+        <item name="colorPrimary">@color/main_blue</item>
         <item name="colorControlHighlight">@color/transparent_light</item>
     </style>
 
@@ -13,7 +13,7 @@
         <item name="boxCornerRadiusTopEnd">0dp</item>
         <item name="boxCornerRadiusBottomEnd">5dp</item>
         <item name="boxBackgroundColor">@color/white</item>
-        <item name="boxStrokeColor">@color/blue_active</item>
+        <item name="boxStrokeColor">@color/main_blue</item>
         <item name="android:textColorHint">@color/black</item>
         <item name="hintTextColor">@color/black</item>
     </style>
@@ -22,7 +22,7 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="ExploreMapButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="YellowTextButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/button_yellow_enable_style</item>
     </style>
 
@@ -37,16 +37,25 @@
     </style>
 
     <style name="DateTimePicker" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="colorAccent">@color/yellow_active</item>
-        <item name="colorPrimary">@color/yellow_active</item>
+        <item name="colorAccent">@color/main_yellow</item>
+        <item name="colorPrimary">@color/main_yellow</item>
     </style>
 
     <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="colorAccent">@color/yellow_active</item>
+        <item name="colorAccent">@color/main_yellow</item>
     </style>
 
     <style name="FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">@color/light_gray</item>
+    </style>
+
+    <style name="EditTextSpinner" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorAccent">@color/main_red</item>
+        <item name="colorPrimary">@color/main_red</item>
+    </style>
+
+    <style name="RedTextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/button_red_enable_style</item>
     </style>
 
 </resources>

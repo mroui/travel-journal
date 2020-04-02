@@ -1212,11 +1212,11 @@
 
             <com.victor.loading.rotate.RotateLoading
                 android:id="@+id/profile_settings_progressbar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/progressbar_size"
+                android:layout_height="@dimen/progressbar_size"
+                app:loading_width="@dimen/progressbar_loading_width"
                 android:layout_gravity="center"
-                app:loading_color="@color/white"
-                app:loading_width="4dp" />
+                app:loading_color="@color/white"/>
         </FrameLayout>
 
     </FrameLayout>

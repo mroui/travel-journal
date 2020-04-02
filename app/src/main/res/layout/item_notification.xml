@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="240dp"
+    android:layout_width="@dimen/item_notification_height"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_tiny"
     app:cardCornerRadius="@dimen/corner_radius_small">
@@ -21,7 +21,7 @@
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/notification_item_user_image"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/item_notification_image_height"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:adjustViewBounds="true"

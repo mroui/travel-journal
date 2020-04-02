@@ -37,7 +37,7 @@
                 <View
                     android:id="@+id/profile_background"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="@dimen/profile_user_height"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -98,7 +98,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/profile_user_details"
                         android:layout_width="match_parent"
-                        android:layout_height="275dp"
+                        android:layout_height="@dimen/profile_user_details_height"
                         android:layout_marginStart="@dimen/margin_regular"
                         android:layout_marginEnd="@dimen/margin_regular"
                         android:layout_marginTop="100dp"
@@ -228,12 +228,12 @@
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profile_image"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="@dimen/profile_user_image_size"
+                    android:layout_height="@dimen/profile_user_image_size"
                     app:layout_constraintStart_toStartOf="@+id/profile_user_details_container"
                     app:layout_constraintEnd_toEndOf="@+id/profile_user_details_container"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="@dimen/profile_user_image_margin_top"
                     android:contentDescription="@string/profile_image"
                     app:imageUrl="@{user.photo}"
                     app:civ_border_width="1dp"
@@ -245,7 +245,7 @@
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/profile_preferences"
                     android:layout_width="match_parent"
-                    android:layout_height="104dp"
+                    android:layout_height="@dimen/profile_user_hashtag_view_width"
                     android:layout_marginTop="@dimen/margin_regular"
                     android:layout_marginStart="@dimen/margin_regular"
                     android:layout_marginEnd="@dimen/margin_regular"
@@ -336,9 +336,9 @@
             android:visibility="invisible">
             <com.victor.loading.rotate.RotateLoading
                 android:id="@+id/profile_progressbar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:loading_width="4dp"
+                android:layout_width="@dimen/progressbar_size"
+                android:layout_height="@dimen/progressbar_size"
+                app:loading_width="@dimen/progressbar_loading_width"
                 app:loading_color="@color/white"
                 android:layout_gravity="center"/>
         </FrameLayout>

@@ -104,7 +104,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/yellow_bg_lighter"
                     android:text="@string/plan_to_visit_add"
                     android:fontFamily="@font/raleway_bold"
@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/yellow_bg_lighter"
                     android:text="@string/plan_to_visit_remove"
                     android:fontFamily="@font/raleway_bold"
@@ -134,9 +134,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/explore_map_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>

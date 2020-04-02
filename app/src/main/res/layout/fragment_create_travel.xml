@@ -141,7 +141,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_1_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_1_desc"
@@ -159,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
                             style="@style/TextInput"
-                            app:boxStrokeColor="@color/yellow_active"
+                            app:boxStrokeColor="@color/main_yellow"
                             app:hintEnabled="false"
                             app:counterEnabled="true"
                             app:counterMaxLength="100"
@@ -212,7 +212,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_2_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <ImageButton
                             android:id="@+id/create_travel_stage_2_upload_image_button"
@@ -267,7 +267,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_3_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_3_desc_1"
@@ -287,7 +287,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_3_from_title"
                             android:textSize="@dimen/text_smaller"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -300,7 +300,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="@dimen/margin_tiny"
                                 style="@style/TextInput"
-                                app:boxStrokeColor="@color/yellow_active"
+                                app:boxStrokeColor="@color/main_yellow"
                                 app:startIconDrawable="@drawable/ic_calendar_gray"
                                 app:hintEnabled="false"
                                 android:layout_weight="4">
@@ -320,7 +320,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 style="@style/TextInput"
-                                app:boxStrokeColor="@color/yellow_active"
+                                app:boxStrokeColor="@color/main_yellow"
                                 app:startIconDrawable="@drawable/ic_alarm_gray"
                                 app:hintEnabled="false"
                                 android:layout_weight="5">
@@ -356,7 +356,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_3_to_title"
                             android:textSize="@dimen/text_smaller"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -369,7 +369,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="@dimen/margin_tiny"
                                 style="@style/TextInput"
-                                app:boxStrokeColor="@color/yellow_active"
+                                app:boxStrokeColor="@color/main_yellow"
                                 app:startIconDrawable="@drawable/ic_calendar_gray"
                                 app:hintEnabled="false"
                                 android:layout_weight="4">
@@ -389,7 +389,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 style="@style/TextInput"
-                                app:boxStrokeColor="@color/yellow_active"
+                                app:boxStrokeColor="@color/main_yellow"
                                 app:startIconDrawable="@drawable/ic_alarm_gray"
                                 app:hintEnabled="false"
                                 android:layout_weight="5">
@@ -462,7 +462,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_4_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_4_desc"
@@ -558,7 +558,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_5_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_5_desc"
@@ -584,7 +584,7 @@
                             android:fontFamily="@font/raleway_regular"
                             android:textSize="@dimen/text_small"
                             app:ms_background_color="@color/dirty_white"
-                            app:ms_arrow_tint="@color/yellow_active"/>
+                            app:ms_arrow_tint="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_5_error"
@@ -669,7 +669,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:layout_marginHorizontal="@dimen/margin_tiny"
                             style="@style/TextInput"
-                            app:boxStrokeColor="@color/yellow_active"
+                            app:boxStrokeColor="@color/main_yellow"
                             app:hintEnabled="false"
                             app:counterEnabled="true"
                             app:counterMaxLength="150"
@@ -723,7 +723,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_6_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_6_desc"
@@ -749,7 +749,7 @@
                             android:fontFamily="@font/raleway_regular"
                             android:textSize="@dimen/text_small"
                             app:ms_background_color="@color/dirty_white"
-                            app:ms_arrow_tint="@color/yellow_active"/>
+                            app:ms_arrow_tint="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_6_error"
@@ -835,7 +835,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:layout_marginHorizontal="@dimen/margin_tiny"
                             style="@style/TextInput"
-                            app:boxStrokeColor="@color/yellow_active"
+                            app:boxStrokeColor="@color/main_yellow"
                             app:hintEnabled="false"
                             app:counterEnabled="true"
                             app:counterMaxLength="150"
@@ -888,7 +888,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_7_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_7_desc"
@@ -906,7 +906,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
                             style="@style/TextInput"
-                            app:boxStrokeColor="@color/yellow_active"
+                            app:boxStrokeColor="@color/main_yellow"
                             app:hintEnabled="false"
                             app:errorEnabled="false"
                             app:errorIconDrawable="@null">
@@ -956,7 +956,7 @@
                             android:fontFamily="@font/raleway_bold"
                             android:text="@string/create_travel_stage_8_title"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/yellow_active"/>
+                            android:textColor="@color/main_yellow"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_8_desc_1"
@@ -974,7 +974,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_small"
                             style="@style/TextInput"
-                            app:boxStrokeColor="@color/yellow_active"
+                            app:boxStrokeColor="@color/main_yellow"
                             app:hintEnabled="false">
                             <com.hootsuite.nachos.NachoTextView
                                 android:id="@+id/create_travel_stage_8_tags_input"
@@ -1047,7 +1047,7 @@
                                 android:fontFamily="@font/raleway_bold"
                                 android:text="@string/create_travel_stage_9_finish"
                                 android:textSize="@dimen/text_big"
-                                android:textColor="@color/yellow_active"/>
+                                android:textColor="@color/main_yellow"/>
 
                             <TextView
                                 android:id="@+id/create_travel_stage_9_desc"
@@ -1068,7 +1068,7 @@
                                 android:text="@string/create_travel_stage_9_finish"
                                 android:textColor="@color/white"
                                 android:fontFamily="@font/raleway_bold"
-                                app:backgroundTint="@color/yellow_active"/>
+                                app:backgroundTint="@color/main_yellow"/>
 
                         </LinearLayout>
 
@@ -1092,7 +1092,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/yellow_bg_light"
                     android:text="@string/dialog_button_previous"
                     android:fontFamily="@font/raleway_bold"
@@ -1103,7 +1103,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding_small"
-                    style="@style/ExploreMapButton"
+                    style="@style/YellowTextButton"
                     app:rippleColor="@color/yellow_bg_light"
                     android:text="@string/dialog_button_next"
                     android:fontFamily="@font/raleway_bold"
@@ -1123,9 +1123,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/create_travel_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>

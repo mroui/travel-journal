@@ -357,7 +357,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
             buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
             buttonPositive.setRippleColor(ColorStateList
                     .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
-            TextViewCompat.setTextAppearance(buttonPositive, R.style.ExploreMapButton);
+            TextViewCompat.setTextAppearance(buttonPositive, R.style.YellowTextButton);
             buttonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
                 if (clickedMarker != null)
@@ -366,7 +366,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
             buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
             buttonNegative.setRippleColor(ColorStateList
                     .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
-            TextViewCompat.setTextAppearance(buttonNegative, R.style.ExploreMapButton);
+            TextViewCompat.setTextAppearance(buttonNegative, R.style.YellowTextButton);
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
             dialog.show();

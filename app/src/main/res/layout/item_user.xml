@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/user_item"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/item_user_height"
         android:focusable="true"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground">

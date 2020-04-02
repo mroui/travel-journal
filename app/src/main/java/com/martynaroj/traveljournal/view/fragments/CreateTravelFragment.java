@@ -612,7 +612,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             );
             timePickerDialog.show();
             PickerColorize.colorizeTimePickerDialog(timePickerDialog,
-                    getResources().getColor(R.color.yellow_active));
+                    getResources().getColor(R.color.main_yellow));
         }
     }
 
@@ -639,7 +639,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             }
 
             PickerColorize.colorizeDatePicker(datePickerDialog.getDatePicker(),
-                    getResources().getColor(R.color.yellow_active));
+                    getResources().getColor(R.color.main_yellow));
             datePickerDialog.show();
         }
     }
@@ -665,7 +665,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonPositive.setOnClickListener(v -> {
                 hideKeyboard();
                 dialog.dismiss();
@@ -677,7 +677,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
             dialog.show();

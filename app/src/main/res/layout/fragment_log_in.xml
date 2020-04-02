@@ -110,7 +110,7 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/raleway_regular"
                 android:text="@string/login_forgot_password"
-                android:textColor="@color/blue_active"
+                android:textColor="@color/main_blue"
                 android:textSize="@dimen/text_small"/>
 
             <com.google.android.material.button.MaterialButton
@@ -125,7 +125,7 @@
                 android:text="@string/login_log_in"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
-                app:backgroundTint="@color/blue_active" />
+                app:backgroundTint="@color/main_blue" />
 
             <RelativeLayout
                 android:id="@+id/login_OR_separator"
@@ -204,7 +204,7 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_regular"
                     android:text="@string/login_no_acc_sign_up"
-                    android:textColor="@color/blue_active"/>
+                    android:textColor="@color/main_blue"/>
 
             </RelativeLayout>
 
@@ -220,9 +220,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/login_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>

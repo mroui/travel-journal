@@ -124,7 +124,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signup_password_input"
                     android:layout_width="match_parent"
-                    android:layout_height="59dp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/raleway_regular"
                     android:hint="@string/signup_password"
                     android:inputType="textPassword"
@@ -139,8 +139,7 @@
                 app:layout_constraintTop_toBottomOf="@id/signup_password_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="1dp"
-                app:strengthBarHeight="4dp"
+                app:strengthBarHeight="@dimen/password_strength_meter_height"
                 app:animateChanges="true"
                 app:showStrengthLabel="true"
                 app:showStrengthBar="true"
@@ -181,7 +180,7 @@
                 android:text="@string/signup_sign_up"
                 android:textColor="@color/white"
                 android:fontFamily="@font/raleway_bold"
-                app:backgroundTint="@color/blue_active" />
+                app:backgroundTint="@color/main_blue" />
 
             <RelativeLayout
                 android:id="@+id/signup_OR_separator"
@@ -260,7 +259,7 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_regular"
                     android:text="@string/signup_account_log_in"
-                    android:textColor="@color/blue_active"/>
+                    android:textColor="@color/main_blue"/>
 
             </RelativeLayout>
 
@@ -276,9 +275,9 @@
         android:visibility="invisible">
         <com.victor.loading.rotate.RotateLoading
             android:id="@+id/signup_progressbar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:loading_width="4dp"
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            app:loading_width="@dimen/progressbar_loading_width"
             app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>
