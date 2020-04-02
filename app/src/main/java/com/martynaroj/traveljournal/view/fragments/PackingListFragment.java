@@ -326,6 +326,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void back() {
+        updatePackingList();
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
     }
@@ -336,8 +337,19 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         if (isMenuOpen) {
             closeMenu();
             return true;
-        } else
+        } else {
+            updatePackingList();
             return false;
+        }
+    }
+
+
+    private void updatePackingList() {
+        travel.setPackingList(adapter.getList());
+        travelViewModel.setTravel(travel);
+        travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_PACKING_LIST, adapter.getList());
+        }});
     }
 
 

@@ -145,4 +145,8 @@ public class PackingAdapter extends BaseExpandableListAdapter {
         notifyDataSetChanged();
     }
 
+    public List<PackingCategory> getList() {
+        return listGroup;
+    }
+
 }
