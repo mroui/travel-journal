@@ -13,6 +13,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -145,8 +146,34 @@ public class PackingAdapter extends BaseExpandableListAdapter {
         notifyDataSetChanged();
     }
 
+
     public List<PackingCategory> getList() {
         return listGroup;
+    }
+
+
+    public List<String> getGroupNamesList() {
+        List<String> groupsNames = new ArrayList<>();
+        for(PackingCategory category : getList())
+            groupsNames.add(category.getName());
+        return groupsNames;
+    }
+
+
+    public void addGroup(PackingCategory newCategory) {
+        listGroup.add(newCategory);
+        listItem.put(newCategory, new ArrayList<>());
+        notifyDataSetChanged();
+    }
+
+
+    public void addItem(PackingCategory group, PackingItem item) {
+        int groupIndex = getGroupNamesList().indexOf(group.getName());
+        List<PackingItem> items = listItem.get(listGroup.get(groupIndex));
+        listGroup.get(groupIndex).getItems().add(item);
+        if (items != null)
+            items.add(item);
+        notifyDataSetChanged();
     }
 
 }

@@ -300,5 +300,9 @@
     <string name="dialog_packing_list_finish_title">Finish packing</string>
     <string name="dialog_packing_list_finish_desc">Are you already packed?
         \nYou won\'t be able to open your luggage again!</string>
+    <string name="dialog_add_packing_item_title">Add item</string>
+    <string name="dialog_add_packing_item_desc">Enter a name\nand choose or create a category</string>
+    <string name="dialog_add_packing_item_category">Category</string>
+    <string name="dialog_add_packing_item_name">Name</string>
 
 </resources>

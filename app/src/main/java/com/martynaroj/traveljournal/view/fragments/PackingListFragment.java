@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -18,6 +20,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentPackingListBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
@@ -26,6 +31,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
@@ -135,6 +141,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         binding.packingListArrowButton.setOnClickListener(this);
         binding.packingListMenuButton.setOnClickListener(this);
         binding.packingListFinishButton.setOnClickListener(this);
+        binding.packingListAddButton.setOnClickListener(this);
         setOnListLongClickListener();
         setOnListScrollListener();
     }
@@ -151,6 +158,9 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.packing_list_finish_button:
                 showFinishDialog();
+                break;
+            case R.id.packing_list_add_button:
+                showAddDialog();
                 break;
         }
     }
@@ -224,7 +234,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    //DIALOGS---------------------------------------------------------------------------------------
+    //PACKING---------------------------------------------------------------------------------------
 
 
     private void finishPacking() {
@@ -236,6 +246,26 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         if (isMenuOpen)
             closeMenu();
         back();
+    }
+
+
+    private void updatePackingList() {
+        travel.setPackingList(adapter.getList());
+        travelViewModel.setTravel(travel);
+        travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_PACKING_LIST, adapter.getList());
+        }});
+    }
+
+
+    private void addItem(TextInputEditText nameInput, MaterialAutoCompleteTextView categoryInput) {
+        String itemName = nameInput.getText() != null ? nameInput.getText().toString() : "";
+        String categoryName = categoryInput.getText() != null ? categoryInput.getText().toString() : "";
+        PackingCategory newCategory = new PackingCategory(categoryName);
+        PackingItem newItem = new PackingItem(itemName);
+        if (!adapter.getGroupNamesList().contains(categoryName))
+            adapter.addGroup(newCategory);
+        adapter.addItem(newCategory, newItem);
     }
 
 
@@ -263,7 +293,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonPositive.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonPositive.setOnClickListener(v -> {
                 adapter.removeItem(isGroup, groupIndex, itemIndex);
                 dialog.dismiss();
@@ -274,7 +304,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.yellow_bg_lighter)
             );
-            buttonNegative.setTextColor(getResources().getColor(R.color.yellow_active));
+            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
             dialog.show();
@@ -303,7 +333,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.blue_bg_light)
             );
-            buttonPositive.setTextColor(getResources().getColor(R.color.blue_active));
+            buttonPositive.setTextColor(getResources().getColor(R.color.main_blue));
             buttonPositive.setOnClickListener(v -> {
                 finishPacking();
                 dialog.dismiss();
@@ -314,7 +344,39 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
                     Color.TRANSPARENT,
                     getResources().getColor(R.color.blue_bg_light)
             );
-            buttonNegative.setTextColor(getResources().getColor(R.color.blue_active));
+            buttonNegative.setTextColor(getResources().getColor(R.color.main_blue));
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+    private void showAddDialog() {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_add_packing_item);
+
+            TextInputLayout nameLayout = dialog.findViewById(R.id.dialog_add_packing_item_name_input_layout);
+            TextInputEditText nameInput = dialog.findViewById(R.id.dialog_add_packing_item_name_input);
+            TextInputLayout categoryLayout = dialog.findViewById(R.id.dialog_add_packing_item_category_input_layout);
+            MaterialAutoCompleteTextView categoryInput = dialog.findViewById(R.id.dialog_add_packing_item_category_input);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_add_packing_item_add_button);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_add_packing_item_cancel_button);
+
+            categoryInput.setThreshold(1);
+            categoryInput.setAdapter(new ArrayAdapter<>(
+                    getContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    adapter.getGroupNamesList())
+            );
+            buttonPositive.setOnClickListener(v -> {
+                if (validateInput(nameInput, nameLayout) && validateInput(categoryInput, categoryLayout)) {
+                    addItem(nameInput, categoryInput);
+                    dialog.dismiss();
+                }
+            });
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
 
             dialog.show();
@@ -323,6 +385,16 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private boolean validateInput(TextInputEditText input, TextInputLayout layout) {
+        return new FormHandler(getContext()).validateInput(input, layout);
+    }
+
+
+    private boolean validateInput(AutoCompleteTextView input, TextInputLayout layout) {
+        return new FormHandler(getContext()).validateInput(input, layout);
+    }
 
 
     private void back() {
@@ -341,15 +413,6 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             updatePackingList();
             return false;
         }
-    }
-
-
-    private void updatePackingList() {
-        travel.setPackingList(adapter.getList());
-        travelViewModel.setTravel(travel);
-        travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
-            put(Constants.DB_PACKING_LIST, adapter.getList());
-        }});
     }
 
 

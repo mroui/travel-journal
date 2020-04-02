@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_small">
+
+    <TextView
+        android:id="@+id/dialog_add_packing_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_add_packing_item_title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"/>
+
+    <TextView
+        android:id="@+id/dialog_add_packing_item_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_add_packing_item_title"
+        android:fontFamily="@font/raleway_regular"
+        android:text="@string/dialog_add_packing_item_desc"
+        android:textAlignment="textStart"
+        android:textSize="@dimen/text_regular"
+        android:textColor="@color/gray"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_add_packing_item_name_input_layout"
+        android:layout_width="@dimen/dialog_input_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_add_packing_item_desc"
+        android:layout_marginTop="@dimen/margin_tiny"
+        style="@style/TextInput"
+        app:boxStrokeColor="@color/main_red"
+        app:hintEnabled="false"
+        app:errorEnabled="true"
+        app:endIconMode="clear_text"
+        app:errorIconDrawable="@null">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dialog_add_packing_item_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/raleway_regular"
+            android:textSize="@dimen/text_small"
+            android:textCursorDrawable="@null"
+            android:hint="@string/dialog_add_packing_item_name"
+            android:textColorHint="@color/gray"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_add_packing_item_category_input_layout"
+        android:layout_width="@dimen/dialog_input_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_add_packing_item_name_input_layout"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:theme="@style/EditTextSpinner"
+        app:hintEnabled="false"
+        app:errorEnabled="true"
+        app:errorIconDrawable="@null">
+        <com.google.android.material.textview.MaterialAutoCompleteTextView
+            android:id="@+id/dialog_add_packing_item_category_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_smaller"
+            android:textSize="@dimen/text_small"
+            android:fontFamily="@font/raleway_regular"
+            android:background="@color/dirty_white"
+            android:hint="@string/dialog_add_packing_item_category"
+            android:textColorHint="@color/gray"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialog_add_packing_item_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_add_packing_item_category_input_layout"
+        android:layout_marginTop="@dimen/margin_tiny"
+        style="@style/RedTextButton"
+        app:rippleColor="@color/red_bg_lighter"
+        android:text="@string/dialog_button_add"
+        android:fontFamily="@font/raleway_bold"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dialog_add_packing_item_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_add_packing_item_add_button"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_add_packing_item_category_input_layout"
+        style="@style/RedTextButton"
+        app:rippleColor="@color/red_bg_lighter"
+        android:text="@string/dialog_button_cancel"
+        android:fontFamily="@font/raleway_bold"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
