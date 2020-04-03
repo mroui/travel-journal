@@ -86,61 +86,62 @@
 
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:id="@+id/board_travel_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/board_title"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/board_floating_menu_button"
+                    android:orientation="vertical"
+                    android:gravity="center"
                     android:visibility="@{user.activeTravel ? View.VISIBLE : View.GONE}">
 
                     <TextView
                         android:id="@+id/board_travel_days_remain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="@dimen/margin_regular"
                         android:fontFamily="@font/raleway_bold"
                         android:text="@{travel != null ? travel.daysRemainsString : null}"
                         android:textAlignment="center"
-                        android:textColor="@color/gray"
-                        android:textSize="@dimen/text_big"/>
+                        android:textColor="@color/main_yellow"
+                        android:textSize="@dimen/text_big"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
 
                     <LinearLayout
                         android:id="@+id/board_travel_destination_weather_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/board_travel_days_remain"
-                        android:layout_marginTop="@dimen/margin_small"
                         android:orientation="horizontal"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:layout_weight="1">
 
-                        <TextView
-                            android:id="@+id/board_travel_destination"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/raleway_bold"
-                            android:text="@{destination != null ? destination.name.toUpperCase() : null}"
-                            android:layout_marginHorizontal="@dimen/margin_smaller"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_medium"
-                            android:textAlignment="textEnd"
-                            android:layout_weight="1"/>
+                        <ImageView
+                            android:id="@+id/board_travel_weather_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/weather_image_height"
+                            android:contentDescription="@string/board_travel_weather_icon"
+                            android:scaleType="fitEnd"
+                            app:iconUrl="@{weatherResult.weather.get(0).icon}"
+                            android:layout_weight="1"
+                            tools:ignore="NestedWeights"/>
 
                         <LinearLayout
-                            android:id="@+id/board_travel_weather_container"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/margin_smaller"
                             android:orientation="vertical"
-                            android:gravity="center"
                             android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/board_travel_destination"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/raleway_bold"
+                                android:text="@{destination != null ? destination.name.toUpperCase() : null}"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_medium"/>
 
                             <TextView
                                 android:id="@+id/board_travel_weather_temperature"
@@ -148,7 +149,6 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_light"
                                 android:text="@{weatherResult.main.getUniversalTempString()}"
-                                android:textAlignment="textStart"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/text_medium"/>
 
@@ -159,7 +159,6 @@
                                 android:layout_marginTop="@dimen/margin_smaller"
                                 android:fontFamily="@font/raleway_bold"
                                 android:text="@{weatherResult.weather.get(0).description.toUpperCase()}"
-                                android:textAlignment="textStart"
                                 android:textColor="@color/gray"
                                 android:textSize="@dimen/text_smaller"/>
 
@@ -168,85 +167,81 @@
                     </LinearLayout>
 
                     <androidx.gridlayout.widget.GridLayout
-                        android:id="@+id/board_travel_grid_container"
+                        android:id="@+id/board_travel_grid"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/board_travel_destination_weather_container"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_tiny"
+                        app:rowCount="2"
                         app:columnCount="3"
-                        app:rowCount="2">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/board_travel_grid_add_photo_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
-                            
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_gravity="center"
-                                android:gravity="center">
-
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_add_photo_image"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
-
-                                <TextView
-                                    android:id="@+id/board_travel_grid_add_photo_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
-
-                            </LinearLayout>
-                            
-                        </com.google.android.material.card.MaterialCardView>
+                        android:layout_weight="5">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_add_note_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
                             app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
+                            app:cardBackgroundColor="@color/red_bg_light"
+                            app:rippleColor="@color/red_bg_dark"
+                            tools:ignore="PrivateResource">
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
                                 android:orientation="vertical"
-                                android:layout_gravity="center"
                                 android:gravity="center">
 
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_add_note_image"
+                                <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="NOTES"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/board_travel_grid_add_photo_card"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
+                            app:cardBackgroundColor="@color/green_bg_light"
+                            app:rippleColor="@color/green_bg_dark"
+                            tools:ignore="PrivateResource">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
+                                android:orientation="vertical"
+                                android:gravity="center">
 
                                 <TextView
-                                    android:id="@+id/board_travel_grid_add_note_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="PHOTOS"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
 
@@ -254,110 +249,35 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_add_place_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
                             app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
+                            app:cardBackgroundColor="@color/yellow_bg_light"
+                            app:rippleColor="@color/yellow_bg_dark"
+                            tools:ignore="PrivateResource">
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
                                 android:orientation="vertical"
-                                android:layout_gravity="center"
                                 android:gravity="center">
 
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_add_place_image"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
-
                                 <TextView
-                                    android:id="@+id/board_travel_grid_add_place_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="PLACES"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/board_travel_grid_nearby_places_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_gravity="center"
-                                android:gravity="center">
-
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_nearby_place_image"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
-
-                                <TextView
-                                    android:id="@+id/board_travel_grid_nearby_place_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/board_travel_grid_budget_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
-                            app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_gravity="center"
-                                android:gravity="center">
-
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_budget_image"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
-
-                                <TextView
-                                    android:id="@+id/board_travel_grid_budget_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
 
@@ -365,36 +285,107 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_basic_info_card"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_regular"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
-                            app:cardElevation="@dimen/cardview_default_elevation"
-                            tools:ignore="PrivateResource"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
                             app:layout_columnWeight="1"
-                            app:layout_rowWeight="1">
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
+                            app:cardBackgroundColor="@color/blue_bg_light"
+                            app:rippleColor="@color/blue_bg_dark"
+                            tools:ignore="PrivateResource">
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
                                 android:orientation="vertical"
-                                android:layout_gravity="center"
                                 android:gravity="center">
 
-                                <ImageView
-                                    android:id="@+id/board_travel_grid_basic_info_image"
+                                <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_clothes"/>
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="INFO"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/board_travel_grid_manage_budget_card"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_small"
+                            app:cardBackgroundColor="@color/pink_bg_light"
+                            app:rippleColor="@color/pink_bg_dark"
+                            tools:ignore="PrivateResource">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
+                                android:orientation="vertical"
+                                android:gravity="center">
 
                                 <TextView
-                                    android:id="@+id/board_travel_grid_basic_info_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_regular"
-                                    android:text="ADD PHOTO"
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="BUDGET"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/text_tiny"/>
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/board_travel_grid_explore_places_card"
+                            android:layout_height="0dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/margin_half_small"
+                            android:layout_marginEnd="@dimen/margin_half_small"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            app:layout_columnWeight="1"
+                            app:layout_rowWeight="1"
+                            app:cardElevation="@dimen/cardview_default_elevation"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
+                            app:cardBackgroundColor="@color/violet_bg_light"
+                            app:rippleColor="@color/violet_bg_dark"
+                            tools:ignore="PrivateResource">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_tiny"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/raleway_medium"
+                                    android:text="EXPLORE"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/text_smaller"
+                                    android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
 
@@ -402,7 +393,13 @@
 
                     </androidx.gridlayout.widget.GridLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/board_packing_list_button"
