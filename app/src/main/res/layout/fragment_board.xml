@@ -101,22 +101,22 @@
                     <TextView
                         android:id="@+id/board_travel_days_remain"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:fontFamily="@font/raleway_bold"
                         android:text="@{travel != null ? travel.daysRemainsString : null}"
                         android:textAlignment="center"
                         android:textColor="@color/main_yellow"
                         android:textSize="@dimen/text_big"
                         android:gravity="center"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"/>
 
                     <LinearLayout
                         android:id="@+id/board_travel_destination_weather_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:layout_weight="1">
+                        android:layout_weight="4">
 
                         <ImageView
                             android:id="@+id/board_travel_weather_icon"
@@ -171,19 +171,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_tiny"
+                        app:useDefaultMargins="true"
                         app:rowCount="2"
                         app:columnCount="3"
-                        android:layout_weight="5">
+                        android:layout_weight="6">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_add_note_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
-                            app:layout_columnWeight="1"
+                            android:layout_height="0dp"
                             app:layout_rowWeight="1"
+                            app:layout_columnWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/red_bg_light"
@@ -209,7 +207,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_add_a_note_white"/>
 
                             </LinearLayout>
 
@@ -217,13 +215,10 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_add_photo_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
-                            app:layout_columnWeight="1"
+                            android:layout_height="0dp"
                             app:layout_rowWeight="1"
+                            app:layout_columnWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/green_bg_light"
@@ -249,7 +244,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_add_a_photo_white"/>
 
                             </LinearLayout>
 
@@ -257,11 +252,8 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_add_place_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_height="0dp"
                             app:layout_columnWeight="1"
                             app:layout_rowWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
@@ -289,7 +281,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_add_a_place_white"/>
 
                             </LinearLayout>
 
@@ -297,11 +289,8 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_basic_info_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_height="0dp"
                             app:layout_columnWeight="1"
                             app:layout_rowWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
@@ -329,7 +318,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_info_white"/>
 
                             </LinearLayout>
 
@@ -337,15 +326,12 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_manage_budget_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_height="0dp"
                             app:layout_columnWeight="1"
                             app:layout_rowWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
-                            app:cardCornerRadius="@dimen/corner_radius_small"
+                            app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/pink_bg_light"
                             app:rippleColor="@color/pink_bg_dark"
                             tools:ignore="PrivateResource">
@@ -369,7 +355,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_money_white"/>
 
                             </LinearLayout>
 
@@ -377,11 +363,8 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/board_travel_grid_explore_places_card"
-                            android:layout_height="0dp"
                             android:layout_width="0dp"
-                            android:layout_marginStart="@dimen/margin_half_small"
-                            android:layout_marginEnd="@dimen/margin_half_small"
-                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_height="0dp"
                             app:layout_columnWeight="1"
                             app:layout_rowWeight="1"
                             app:cardElevation="@dimen/cardview_default_elevation"
@@ -409,7 +392,7 @@
                                     android:shadowDx="3"
                                     android:shadowDy="3"
                                     android:shadowRadius="0.01"
-                                    android:drawableTop="@drawable/ic_clothes"/>
+                                    android:drawableTop="@drawable/ic_explore_white"/>
 
                             </LinearLayout>
 
