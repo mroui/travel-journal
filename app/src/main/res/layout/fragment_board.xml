@@ -99,11 +99,10 @@
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginTop="@dimen/margin_smaller"
                         android:fontFamily="@font/roboto_light"
-                        android:text="@{travel != null ? travel.daysRemainsString : String.valueOf(0)}"
+                        android:text="@{travel != null ? travel.daysRemainsString : null}"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_big"
-                        android:visibility="@{travel != null &amp;&amp; travel.isContinues() ? View.VISIBLE : View.GONE}"/>
+                        android:textSize="@dimen/text_big"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

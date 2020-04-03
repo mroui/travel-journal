@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -9,6 +11,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +32,9 @@ public class Travel extends BaseObservable implements Serializable {
     private List<PackingCategory> packingList;
     private boolean packing;
 
-
     public Travel() {
     }
+
 
     public Travel(String id, String owner, String name, Timestamp datetimeFrom,
                   Timestamp datetimeTo, String destination, String transport, String accommodation,
@@ -48,115 +51,138 @@ public class Travel extends BaseObservable implements Serializable {
         this.tags = tags;
     }
 
+
     @Bindable
     public String getId() {
         return id;
     }
+
 
     public void setId(String id) {
         this.id = id;
         notifyPropertyChanged(BR.id);
     }
 
+
     @Bindable
     public String getOwner() {
         return owner;
     }
+
 
     public void setOwner(String owner) {
         this.owner = owner;
         notifyPropertyChanged(BR.owner);
     }
 
+
     @Bindable
     public String getImage() {
         return image;
     }
+
 
     public void setImage(String image) {
         this.image = image;
         notifyPropertyChanged(BR.image);
     }
 
+
     @Bindable
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
         notifyPropertyChanged(BR.name);
     }
 
+
     @Bindable
     public Timestamp getDatetimeFrom() {
         return datetimeFrom;
     }
+
 
     public void setDatetimeFrom(Timestamp datetimeFrom) {
         this.datetimeFrom = datetimeFrom;
         notifyPropertyChanged(BR.datetimeFrom);
     }
 
+
     @Bindable
     public Timestamp getDatetimeTo() {
         return datetimeTo;
     }
+
 
     public void setDatetimeTo(Timestamp datetimeTo) {
         this.datetimeTo = datetimeTo;
         notifyPropertyChanged(BR.datetimeTo);
     }
 
+
     @Bindable
     public String getDestination() {
         return destination;
     }
+
 
     public void setDestination(String destination) {
         this.destination = destination;
         notifyPropertyChanged(BR.destination);
     }
 
+
     @Bindable
     public String getTransport() {
         return transport;
     }
+
 
     public void setTransport(String transport) {
         this.transport = transport;
         notifyPropertyChanged(BR.transport);
     }
 
+
     @Bindable
     public String getAccommodation() {
         return accommodation;
     }
+
 
     public void setAccommodation(String accommodation) {
         this.accommodation = accommodation;
         notifyPropertyChanged(BR.accommodation);
     }
 
+
     @Bindable
     public Double getBudget() {
         return budget;
     }
+
 
     public void setBudget(Double budget) {
         this.budget = budget;
         notifyPropertyChanged(BR.budget);
     }
 
+
     @Bindable
     public List<String> getTags() {
         return tags;
     }
 
+
     public void setTags(List<String> tags) {
         this.tags = tags;
         notifyPropertyChanged(BR.tags);
     }
+
 
     @Bindable
     public List<PackingCategory> getPackingList() {
@@ -168,15 +194,18 @@ public class Travel extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.packingList);
     }
 
+
     @Bindable
     public boolean isPacking() {
         return packing;
     }
 
+
     public void setPacking(boolean packing) {
         this.packing = packing;
         notifyPropertyChanged(BR.packing);
     }
+
 
     private long whatDay() {
         Calendar now = Calendar.getInstance();
@@ -215,9 +244,12 @@ public class Travel extends BaseObservable implements Serializable {
         long differenceTo = endDate.getTimeInMillis() - now.getTimeInMillis();
         long daysTo = TimeUnit.DAYS.convert(differenceTo, TimeUnit.MILLISECONDS) + 1;
 
-        if (daysFrom < 1 || daysTo < 1)
-            return 0;
-        return daysFrom;
+        if (daysFrom < 1)
+            return com.martynaroj.traveljournal.view.others.enums.Travel.BEFORE.value;
+        else if (daysTo < 1)
+            return com.martynaroj.traveljournal.view.others.enums.Travel.AFTER.value;
+        else
+            return daysFrom;
     }
 
 
@@ -225,13 +257,21 @@ public class Travel extends BaseObservable implements Serializable {
         long days = whatDay();
         if (days >= 1)
             return days + Constants.DAY;
-        else
-            return "";
+        else if (days == com.martynaroj.traveljournal.view.others.enums.Travel.BEFORE.value) {
+            return Constants.STARTS_ON + getDateString(datetimeFrom.getSeconds() * 1000);
+        } else if (days == com.martynaroj.traveljournal.view.others.enums.Travel.AFTER.value) {
+            return Constants.ENDS_ON + getDateString(datetimeTo.getSeconds() * 1000);
+        }
+        return "";
     }
 
 
-    public boolean isContinues() {
-        return whatDay() >= 1;
+    @SuppressLint("SimpleDateFormat")
+    private String getDateString(long time) {
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(time);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return format.format(date.getTime());
     }
 
 }
