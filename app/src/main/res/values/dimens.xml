@@ -2,6 +2,7 @@
 <resources>
     <dimen name="margin_tiniest">2dp</dimen>
     <dimen name="margin_tiny">4dp</dimen>
+    <dimen name="margin_half_small">6dp</dimen>
     <dimen name="margin_smaller">8dp</dimen>
     <dimen name="margin_small">12dp</dimen>
     <dimen name="margin_regular_small">18dp</dimen>
@@ -50,6 +51,7 @@
     <dimen name="chip_height">24dp</dimen>
     <dimen name="chip_text_size">14dp</dimen>
 
+    <dimen name="corner_radius_tiny">4dp</dimen>
     <dimen name="corner_radius_small">8dp</dimen>
 
     <dimen name="packing_menu_button_1_height">65dp</dimen>
