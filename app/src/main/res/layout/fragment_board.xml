@@ -200,11 +200,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="NOTES"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_notes"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
@@ -236,11 +240,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="PHOTOS"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_photos"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
@@ -272,11 +280,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="PLACES"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_places"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
@@ -308,11 +320,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="INFO"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_info"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
@@ -344,11 +360,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="BUDGET"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_budget"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>
@@ -380,11 +400,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/raleway_medium"
-                                    android:text="EXPLORE"
+                                    android:fontFamily="@font/raleway_bold"
+                                    android:text="@string/board_travel_grid_card_explore"
                                     android:textAlignment="center"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"
+                                    android:shadowColor="@color/transparent_light"
+                                    android:shadowDx="3"
+                                    android:shadowDy="3"
+                                    android:shadowRadius="0.01"
                                     android:drawableTop="@drawable/ic_clothes"/>
 
                             </LinearLayout>

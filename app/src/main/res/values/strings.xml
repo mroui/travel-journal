@@ -305,5 +305,11 @@
     <string name="dialog_add_packing_item_desc">Enter a name\nand choose or create a category</string>
     <string name="dialog_add_packing_item_category">Category</string>
     <string name="dialog_add_packing_item_name">Name</string>
+    <string name="board_travel_grid_card_notes">NOTES</string>
+    <string name="board_travel_grid_card_photos">PHOTOS</string>
+    <string name="board_travel_grid_card_places">PLACES</string>
+    <string name="board_travel_grid_card_info">INFO</string>
+    <string name="board_travel_grid_card_budget">BUDGET</string>
+    <string name="board_travel_grid_card_explore">EXPLORE</string>
 
 </resources>
