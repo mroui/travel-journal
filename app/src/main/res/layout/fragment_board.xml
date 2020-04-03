@@ -288,7 +288,7 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/board_travel_grid_basic_info_card"
+                            android:id="@+id/board_travel_grid_details_card"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             app:layout_columnWeight="1"
@@ -310,7 +310,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/raleway_bold"
-                                    android:text="@string/board_travel_grid_card_info"
+                                    android:text="@string/board_travel_grid_card_details"
                                     android:textAlignment="center"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/text_smaller"

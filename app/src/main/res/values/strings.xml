@@ -24,6 +24,12 @@
     <string name="board_airplane">AIRPLANE</string>
     <string name="board_packing_ist">Packing List</string>
     <string name="board_travel_weather_icon">WEATHER</string>
+    <string name="board_travel_grid_card_notes">NOTES</string>
+    <string name="board_travel_grid_card_photos">PHOTOS</string>
+    <string name="board_travel_grid_card_places">PLACES</string>
+    <string name="board_travel_grid_card_details">DETAILS</string>
+    <string name="board_travel_grid_card_budget">BUDGET</string>
+    <string name="board_travel_grid_card_explore">EXPLORE</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
@@ -305,11 +311,5 @@
     <string name="dialog_add_packing_item_desc">Enter a name\nand choose or create a category</string>
     <string name="dialog_add_packing_item_category">Category</string>
     <string name="dialog_add_packing_item_name">Name</string>
-    <string name="board_travel_grid_card_notes">NOTES</string>
-    <string name="board_travel_grid_card_photos">PHOTOS</string>
-    <string name="board_travel_grid_card_places">PLACES</string>
-    <string name="board_travel_grid_card_info">INFO</string>
-    <string name="board_travel_grid_card_budget">BUDGET</string>
-    <string name="board_travel_grid_card_explore">EXPLORE</string>
 
 </resources>
