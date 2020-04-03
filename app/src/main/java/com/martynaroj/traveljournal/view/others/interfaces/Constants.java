@@ -92,4 +92,7 @@ public interface Constants {
     String JPG_EXT = ".jpg";
 
     String DAY = " day";
+    String STARTS_ON = "Starts on ";
+    String ENDS_ON = "Ended on ";
+
 }
