@@ -116,4 +116,8 @@ public class Main extends BaseObservable implements Serializable {
         return this.humidity + " %";
     }
 
+    public String getUniversalTempString() {
+        return getGeneralTempDegrees(false) + " / " + getGeneralTempDegrees(true);
+    }
+
 }
