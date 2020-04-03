@@ -16,19 +16,24 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
+import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
+import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 
 import java.util.ArrayList;
@@ -41,8 +46,13 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private FragmentBoardBinding binding;
     private UserViewModel userViewModel;
     private TravelViewModel travelViewModel;
+    private AddressViewModel addressViewModel;
+    private WeatherViewModel weatherViewModel;
+
     private User user;
     private Travel travel;
+    private Address destination;
+    private WeatherResult weatherResult;
 
     public static BoardFragment newInstance() {
         return new BoardFragment();
@@ -74,6 +84,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
+            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            weatherViewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
         }
     }
 
@@ -112,7 +124,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
-            binding.setUser(user);
+            initContentData();
             if (user != null && user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
                 loadTravel(user.getActiveTravelId());
             else
@@ -122,12 +134,10 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void observeTravelChanges() {
-        startProgressBar();
         travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
             this.travel = travel;
-            binding.setTravel(travel);
+            initContentData();
             checkPackingList();
-            stopProgressBar();
         });
     }
 
@@ -173,6 +183,14 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         for (String category : getResources().getStringArray(R.array.packing_categories))
             basicList.add(new PackingCategory(category));
         return basicList;
+    }
+
+
+    private void initContentData() {
+        binding.setUser(user);
+        binding.setTravel(travel);
+        binding.setDestination(destination);
+        binding.setWeatherResult(weatherResult);
     }
 
 
@@ -259,19 +277,51 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     //DATABASE--------------------------------------------------------------------------------------
 
 
+    private void updateTravel(Map<String, Object> changes) {
+        travelViewModel.updateTravel(travel.getId(), changes);
+        loadTravel(travel.getId());
+    }
+
+
     private void loadTravel(String id) {
         startProgressBar();
         travelViewModel.getTravelData(id);
         travelViewModel.getTravelLiveData().observe(getViewLifecycleOwner(), travel -> {
             travelViewModel.setTravel(travel);
-            stopProgressBar();
+            this.travel = travel;
+            initContentData();
+            if (travel != null)
+                loadDestination(travel.getDestination());
+            else
+                stopProgressBar();
         });
     }
 
 
-    private void updateTravel(Map<String, Object> changes) {
-        travelViewModel.updateTravel(travel.getId(), changes);
-        loadTravel(travel.getId());
+    private void loadDestination(String id) {
+        startProgressBar();
+        addressViewModel.getAddress(id);
+        addressViewModel.getAddressData().observe(getViewLifecycleOwner(), destination -> {
+            this.destination = destination;
+            initContentData();
+            if (destination != null)
+                loadWeather();
+            else
+                stopProgressBar();
+        });
+    }
+
+
+    private void loadWeather() {
+        startProgressBar();
+        weatherViewModel.getWeather(new LatLng(destination.getLatitude(), destination.getLongitude()));
+        weatherViewModel.getWeatherResultData().observe(getViewLifecycleOwner(), weatherResult -> {
+            this.weatherResult = weatherResult;
+            initContentData();
+            if (weatherResult == null)
+                showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+            stopProgressBar();
+        });
     }
 
 

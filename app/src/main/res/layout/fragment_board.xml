@@ -12,6 +12,12 @@
         <variable
             name="travel"
             type="com.martynaroj.traveljournal.services.models.Travel"/>
+        <variable
+            name="destination"
+            type="com.martynaroj.traveljournal.services.models.Address"/>
+        <variable
+            name="weatherResult"
+            type="com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult"/>
     </data>
 
     <FrameLayout
@@ -55,7 +61,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}">
+                    android:visibility="gone">
+                <!--TODO android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}"-->
 
                     <ImageView
                         android:id="@+id/board_new_journey_image"
@@ -87,22 +94,78 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/board_title"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="@dimen/margin_tiny"
                     android:visibility="@{user.activeTravel ? View.VISIBLE : View.GONE}">
 
                     <TextView
-                        android:id="@+id/board_travel_day_view"
+                        android:id="@+id/board_travel_days_remain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="@dimen/margin_smaller"
-                        android:fontFamily="@font/roboto_light"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:fontFamily="@font/raleway_bold"
                         android:text="@{travel != null ? travel.daysRemainsString : null}"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gray"
                         android:textSize="@dimen/text_big"/>
+
+                    <LinearLayout
+                        android:id="@+id/board_travel_destination_weather_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/board_travel_days_remain"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/board_travel_destination"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_bold"
+                            android:text="@{destination != null ? destination.name.toUpperCase() : null}"
+                            android:layout_marginHorizontal="@dimen/margin_smaller"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_medium"
+                            android:textAlignment="textEnd"
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:id="@+id/board_travel_weather_container"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_smaller"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/board_travel_weather_temperature"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto_light"
+                                android:text="@{weatherResult.main.getUniversalTempString()}"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_medium"/>
+
+                            <TextView
+                                android:id="@+id/board_travel_weather_desc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_smaller"
+                                android:fontFamily="@font/raleway_bold"
+                                android:text="@{weatherResult.weather.get(0).description.toUpperCase()}"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/text_smaller" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
