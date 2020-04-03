@@ -91,4 +91,5 @@ public interface Constants {
     String PDF_EXT = ".pdf";
     String JPG_EXT = ".jpg";
 
+    String DAY = " day";
 }

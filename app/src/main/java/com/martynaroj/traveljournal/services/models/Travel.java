@@ -6,9 +6,12 @@ import androidx.databinding.Bindable;
 import com.google.firebase.Timestamp;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Travel extends BaseObservable implements Serializable {
 
@@ -173,6 +176,62 @@ public class Travel extends BaseObservable implements Serializable {
     public void setPacking(boolean packing) {
         this.packing = packing;
         notifyPropertyChanged(BR.packing);
+    }
+
+    private long whatDay() {
+        Calendar now = Calendar.getInstance();
+        Calendar startDate = Calendar.getInstance();
+        Calendar endDate = Calendar.getInstance();
+
+        startDate.setTimeInMillis(datetimeFrom.getSeconds() * 1000);
+        startDate.set(
+                startDate.get(Calendar.YEAR),
+                startDate.get(Calendar.MONTH),
+                startDate.get(Calendar.DAY_OF_MONTH),
+                0, 0, 0
+        );
+        startDate.set(Calendar.MILLISECOND, 0);
+
+        now.set(
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH),
+                0, 0, 0
+        );
+        now.set(Calendar.MILLISECOND, 0);
+
+        endDate.setTimeInMillis(datetimeTo.getSeconds() * 1000);
+        endDate.set(
+                endDate.get(Calendar.YEAR),
+                endDate.get(Calendar.MONTH),
+                endDate.get(Calendar.DAY_OF_MONTH),
+                0, 0, 0
+        );
+        endDate.set(Calendar.MILLISECOND, 0);
+
+        long differenceFrom = now.getTimeInMillis() - startDate.getTimeInMillis();
+        long daysFrom = TimeUnit.DAYS.convert(differenceFrom, TimeUnit.MILLISECONDS) + 1;
+
+        long differenceTo = endDate.getTimeInMillis() - now.getTimeInMillis();
+        long daysTo = TimeUnit.DAYS.convert(differenceTo, TimeUnit.MILLISECONDS) + 1;
+
+        if (daysFrom < 1 || daysTo < 1)
+            return 0;
+        return daysFrom;
+    }
+
+
+    public String getDaysRemainsString() {
+        long days = whatDay();
+        if (days >= 1)
+            return days + Constants.DAY;
+        else
+            return "";
+    }
+
+
+    public boolean isContinues() {
+        return whatDay() >= 1;
     }
 
 }
