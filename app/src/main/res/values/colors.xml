@@ -6,6 +6,7 @@
     <color name="main_blue">#50BFEA</color>
     <color name="main_green">#6BC6B1</color>
     <color name="main_violet">#B184DC</color>
+    <color name="main_pink">#DE8AD1</color>
 
     <color name="main_light_blue">#7DD0F0</color>
 
@@ -39,8 +40,11 @@
     <color name="green_bg_light">#AFE8DB</color>
     <color name="green_bg_dark">#90D0C1</color>
 
-    <color name="violet_bg_light">#CAB0E4</color>
+    <color name="violet_bg_light">#D6BDEE</color>
     <color name="violet_bg_dark">#B091CD</color>
+
+    <color name="pink_bg_light">#EDC2E6</color>
+    <color name="pink_bg_dark">#DCA6D3</color>
 
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/light_gray</color>
 
