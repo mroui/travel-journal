@@ -33,6 +33,7 @@
     <dimen name="icon_size">36dp</dimen>
     <dimen name="small_icon_size">12dp</dimen>
     <dimen name="badge_size">15dp</dimen>
+    <dimen name="regular_image">64dp</dimen>
     <dimen name="large_image">150dp</dimen>
     <dimen name="small_image">75dp</dimen>
 
