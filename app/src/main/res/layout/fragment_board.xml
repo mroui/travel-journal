@@ -186,6 +186,8 @@
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/red_bg_light"
                             app:rippleColor="@color/red_bg_dark"
+                            android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                            android:alpha="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? 1.0f : 0.4f}"
                             tools:ignore="PrivateResource">
 
                             <LinearLayout
@@ -223,6 +225,8 @@
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/green_bg_light"
                             app:rippleColor="@color/green_bg_dark"
+                            android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                            android:alpha="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? 1.0f : 0.4f}"
                             tools:ignore="PrivateResource">
 
                             <LinearLayout
@@ -260,6 +264,8 @@
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/yellow_bg_light"
                             app:rippleColor="@color/yellow_bg_dark"
+                            android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                            android:alpha="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? 1.0f : 0.4f}"
                             tools:ignore="PrivateResource">
 
                             <LinearLayout
@@ -334,6 +340,8 @@
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/pink_bg_light"
                             app:rippleColor="@color/pink_bg_dark"
+                            android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                            android:alpha="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? 1.0f : 0.4f}"
                             tools:ignore="PrivateResource">
 
                             <LinearLayout
@@ -371,6 +379,8 @@
                             app:cardCornerRadius="@dimen/corner_radius_tiny"
                             app:cardBackgroundColor="@color/violet_bg_light"
                             app:rippleColor="@color/violet_bg_dark"
+                            android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                            android:alpha="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? 1.0f : 0.4f}"
                             tools:ignore="PrivateResource">
 
                             <LinearLayout
@@ -432,7 +442,9 @@
                     android:layout_marginStart="@dimen/margin_smaller"
                     style="@style/FloatingActionButton"
                     android:src="@drawable/ic_emoticon"
-                    app:rippleColor="@color/middle_gray"/>
+                    app:rippleColor="@color/middle_gray"
+                    android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
+                    android:visibility="@{travel != null &amp;&amp; travel.packing ? View.VISIBLE : View.GONE}"/>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/board_floating_menu_button"

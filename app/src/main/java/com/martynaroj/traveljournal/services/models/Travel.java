@@ -207,7 +207,7 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
-    private long whatDay() {
+    public long whatDay() {
         Calendar now = Calendar.getInstance();
         Calendar startDate = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
