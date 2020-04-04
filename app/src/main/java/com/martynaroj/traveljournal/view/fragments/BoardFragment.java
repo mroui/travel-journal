@@ -199,7 +199,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void setListeners() {
         binding.boardNewJourneyButton.setOnClickListener(this);
-        binding.boardPackingListButton.setOnClickListener(this);
+        binding.boardFloatingPackingListButton.setOnClickListener(this);
     }
 
 
@@ -209,7 +209,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             case R.id.board_new_journey_button:
                 startNewJourney();
                 break;
-            case R.id.board_packing_list_button:
+            case R.id.board_floating_packing_list_button:
                 changeFragment(PackingListFragment.newInstance(this.travel));
                 break;
         }
