@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
+import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
@@ -53,6 +55,9 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private Travel travel;
     private Address destination;
     private WeatherResult weatherResult;
+
+    private ImageView emojiHappy, emojiNormal, emojiSad, emojiLucky, emojiShocked, emojiBored;
+    private Emoji rate;
 
     public static BoardFragment newInstance() {
         return new BoardFragment();
@@ -200,6 +205,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private void setListeners() {
         binding.boardNewJourneyButton.setOnClickListener(this);
         binding.boardFloatingPackingListButton.setOnClickListener(this);
+        binding.boardFloatingRateButton.setOnClickListener(this);
     }
 
 
@@ -211,6 +217,27 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.board_floating_packing_list_button:
                 changeFragment(PackingListFragment.newInstance(this.travel));
+                break;
+            case R.id.board_floating_rate_button:
+                showRateDialog();
+                break;
+            case R.id.dialog_rate_day_emoji_happy:
+                emojiOnClick(Emoji.HAPPY, view, R.drawable.ic_emoji_happy_color);
+                break;
+            case R.id.dialog_rate_day_emoji_normal:
+                emojiOnClick(Emoji.NORMAL, view, R.drawable.ic_emoji_normal_color);
+                break;
+            case R.id.dialog_rate_day_emoji_sad:
+                emojiOnClick(Emoji.SAD, view, R.drawable.ic_emoji_sad_color);
+                break;
+            case R.id.dialog_rate_day_emoji_lucky:
+                emojiOnClick(Emoji.LUCKY, view, R.drawable.ic_emoji_lucky_color);
+                break;
+            case R.id.dialog_rate_day_emoji_shocked:
+                emojiOnClick(Emoji.SHOCKED, view, R.drawable.ic_emoji_shocked_color);
+                break;
+            case R.id.dialog_rate_day_emoji_bored:
+                emojiOnClick(Emoji.BORED, view, R.drawable.ic_emoji_bored_color);
                 break;
         }
     }
@@ -270,6 +297,93 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             });
 
             dialog.show();
+        }
+    }
+
+
+    private void showRateDialog() {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.dialog_rate_day);
+
+            emojiHappy = dialog.findViewById(R.id.dialog_rate_day_emoji_happy);
+            emojiNormal = dialog.findViewById(R.id.dialog_rate_day_emoji_normal);
+            emojiSad = dialog.findViewById(R.id.dialog_rate_day_emoji_sad);
+            emojiLucky = dialog.findViewById(R.id.dialog_rate_day_emoji_lucky);
+            emojiShocked = dialog.findViewById(R.id.dialog_rate_day_emoji_shocked);
+            emojiBored = dialog.findViewById(R.id.dialog_rate_day_emoji_bored);
+            setDefaultEmoji();
+            setEmojiListener();
+
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_rate_day_button_positive);
+            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_rate_day_button_negative);
+            buttonNegative.setOnClickListener(v -> dialog.dismiss());
+            buttonPositive.setOnClickListener(v -> {
+                //todo: update travel day rate
+                dialog.dismiss();
+            });
+            dialog.show();
+        }
+    }
+
+
+    //EMOJI-----------------------------------------------------------------------------------------
+
+
+    private void setEmojiListener() {
+        emojiHappy.setOnClickListener(this);
+        emojiNormal.setOnClickListener(this);
+        emojiSad.setOnClickListener(this);
+        emojiLucky.setOnClickListener(this);
+        emojiShocked.setOnClickListener(this);
+        emojiBored.setOnClickListener(this);
+    }
+
+
+    private void emojiOnClick(Emoji rate, View view, int resource) {
+        this.rate = rate;
+        clearEmoji();
+        ((ImageView) view).setImageResource(resource);
+    }
+
+
+    private void clearEmoji() {
+        emojiHappy.setImageResource(R.drawable.ic_emoji_happy);
+        emojiNormal.setImageResource(R.drawable.ic_emoji_normal);
+        emojiSad.setImageResource(R.drawable.ic_emoji_sad);
+        emojiLucky.setImageResource(R.drawable.ic_emoji_lucky);
+        emojiShocked.setImageResource(R.drawable.ic_emoji_shocked);
+        emojiBored.setImageResource(R.drawable.ic_emoji_bored);
+    }
+
+
+    private void setDefaultEmoji() {
+        if (this.rate != null) {
+            switch (this.rate) {
+                case HAPPY:
+                    emojiOnClick(Emoji.HAPPY, emojiHappy, R.drawable.ic_emoji_happy_color);
+                    break;
+                case NORMAL:
+                    emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
+                    break;
+                case SAD:
+                    emojiOnClick(Emoji.SAD, emojiSad, R.drawable.ic_emoji_sad_color);
+                    break;
+                case LUCKY:
+                    emojiOnClick(Emoji.LUCKY, emojiLucky, R.drawable.ic_emoji_lucky_color);
+                    break;
+                case SHOCKED:
+                    emojiOnClick(Emoji.SHOCKED, emojiShocked, R.drawable.ic_emoji_shocked_color);
+                    break;
+                case BORED:
+                    emojiOnClick(Emoji.BORED, emojiBored, R.drawable.ic_emoji_bored_color);
+                    break;
+            }
+        } else {
+            this.rate = Emoji.NORMAL;
+            emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
         }
     }
 
