@@ -206,6 +206,12 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         binding.boardNewJourneyButton.setOnClickListener(this);
         binding.boardFloatingPackingListButton.setOnClickListener(this);
         binding.boardFloatingRateButton.setOnClickListener(this);
+        binding.boardTravelGridAddNoteCard.setOnClickListener(this);
+        binding.boardTravelGridAddPhotoCard.setOnClickListener(this);
+        binding.boardTravelGridAddPlaceCard.setOnClickListener(this);
+        binding.boardTravelGridDetailsCard.setOnClickListener(this);
+        binding.boardTravelGridManageBudgetCard.setOnClickListener(this);
+        binding.boardTravelGridExplorePlacesCard.setOnClickListener(this);
     }
 
 
@@ -238,6 +244,24 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.dialog_rate_day_emoji_bored:
                 emojiOnClick(Emoji.BORED, view, R.drawable.ic_emoji_bored_color);
+                break;
+            case R.id.board_travel_grid_add_note_card:
+                //todo add note
+                break;
+            case R.id.board_travel_grid_add_photo_card:
+                //todo add photo
+                break;
+            case R.id.board_travel_grid_add_place_card:
+                //todo add place
+                break;
+            case R.id.board_travel_grid_details_card:
+                //todo go to details
+                break;
+            case R.id.board_travel_grid_manage_budget_card:
+                //todo go to budget
+                break;
+            case R.id.board_travel_grid_explore_places_card:
+                //todo go to explore places
                 break;
         }
     }
