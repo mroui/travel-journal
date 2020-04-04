@@ -312,4 +312,13 @@
     <string name="dialog_add_packing_item_category">Category</string>
     <string name="dialog_add_packing_item_name">Name</string>
 
+    <string name="dialog_rate_day_title">Rate day</string>
+    <string name="dialog_rate_day_desc">How was your day, how did you enjoy it?</string>
+    <string name="dialog_rate_day_emoji_happy">EMOJI HAPPY</string>
+    <string name="dialog_rate_day_emoji_normal">EMOJI NORMAL</string>
+    <string name="dialog_rate_day_emoji_sad">EMOJI SAD</string>
+    <string name="dialog_rate_day_emoji_lucky">EMOJI LUCKY</string>
+    <string name="dialog_rate_day_emoji_shock">EMOJI SHOCK</string>
+    <string name="dialog_rate_day_emoji_bored">EMOJI BORED</string>
+
 </resources>
