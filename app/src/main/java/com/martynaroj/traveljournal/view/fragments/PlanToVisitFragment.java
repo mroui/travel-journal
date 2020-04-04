@@ -349,7 +349,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
             TextView title = dialog.findViewById(R.id.dialog_custom_title);
             TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
             MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
 
             title.setText(getResources().getString(R.string.dialog_remove_marker_title));

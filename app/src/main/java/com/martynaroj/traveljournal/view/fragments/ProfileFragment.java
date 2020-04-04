@@ -346,7 +346,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             TextView title = dialog.findViewById(R.id.dialog_custom_title);
             TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_buttom_positive);
+            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
             MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
 
             title.setText(getResources().getString(R.string.dialog_my_email_title));

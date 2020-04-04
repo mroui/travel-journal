@@ -30,7 +30,7 @@
         android:textColor="@color/gray"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/dialog_custom_buttom_positive"
+        android:id="@+id/dialog_custom_button_positive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
         android:id="@+id/dialog_custom_button_negative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_custom_buttom_positive"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_custom_button_positive"
         app:layout_constraintTop_toBottomOf="@+id/dialog_custom_desc"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_marginEnd="@dimen/margin_small"
