@@ -449,16 +449,17 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void loadDays() {
         days = new ArrayList<>();
-        startProgressBar();
         if (travel.getDays().size() > 0) {
+            startProgressBar();
             dayViewModel.getDaysListData(travel.getDays());
             dayViewModel.getDaysList().observe(getViewLifecycleOwner(), list -> {
                 if (list != null)
                     days = list;
-                stopProgressBar();
                 checkDays();
+                stopProgressBar();
             });
-        }
+        } else
+            checkDays();
     }
 
 
