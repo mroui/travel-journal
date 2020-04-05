@@ -7,9 +7,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
@@ -53,6 +55,19 @@ public class DayRepository {
             }
         });
         return daysData;
+    }
+
+
+    public MutableLiveData<Status> addDay(Day day) {
+        MutableLiveData<Status> status = new MutableLiveData<>();
+        DocumentReference dayRef = daysRef.document(day.getId());
+        dayRef.set(day).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                status.setValue(Status.SUCCESS);
+            } else
+                status.setValue(Status.ERROR);
+        });
+        return status;
     }
 
 }

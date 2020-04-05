@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.respositories.DayRepository;
+import com.martynaroj.traveljournal.view.others.enums.Status;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class DayViewModel extends AndroidViewModel {
 
     private DayRepository dayRepository;
     private LiveData<List<Day>> daysLiveData;
+    private LiveData<Status> statusLiveData;
 
     public DayViewModel(@NonNull Application application) {
         super(application);
@@ -31,6 +33,14 @@ public class DayViewModel extends AndroidViewModel {
 
     public LiveData<List<Day>> getDaysList() {
         return daysLiveData;
+    }
+
+    public void addDay(Day day) {
+        statusLiveData = dayRepository.addDay(day);
+    }
+
+    public LiveData<Status> getStatusData() {
+        return statusLiveData;
     }
 
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
@@ -32,6 +33,7 @@ import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
+import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
@@ -41,6 +43,7 @@ import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -465,15 +468,27 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             if (travel.getDays().size() == whichDay) {
                 getToday(travel.getDays().get((int) whichDay - 1));
             } else {
-                while (travel.getDays().size() != whichDay - 1) {
-                    //todo fill empty days
+                while (travel.getDays().size() != whichDay - 1)
                     travel.getDays().add(null);
-                }
-                //todo add today new day
-                travel.getDays().add(dayViewModel.generateId());
+                addNewDay();
             }
-            //todo load all days from database
         }
+    }
+
+
+    private void addNewDay() {
+        String id = dayViewModel.generateId();
+        today = new Day(id,  new Timestamp(Calendar.getInstance().getTime()));
+        dayViewModel.addDay(today);
+        dayViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
+            if (status != null && !status.equals(Status.ERROR)) {
+                travel.getDays().add(id);
+                updateTravel(new HashMap<String, Object>() {{
+                    put(Constants.DB_DAYS, travel.getDays());
+                }});
+            } else
+                showSnackBar(getResources().getString(R.string.messages_error_failed_add_new_day), Snackbar.LENGTH_LONG);
+        });
     }
 
 
