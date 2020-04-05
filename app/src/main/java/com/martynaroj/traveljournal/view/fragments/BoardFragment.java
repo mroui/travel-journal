@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
 import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
@@ -33,6 +34,7 @@ import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
@@ -50,6 +52,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private TravelViewModel travelViewModel;
     private AddressViewModel addressViewModel;
     private WeatherViewModel weatherViewModel;
+    private DayViewModel dayViewModel;
 
     private User user;
     private Travel travel;
@@ -58,6 +61,9 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private ImageView emojiHappy, emojiNormal, emojiSad, emojiLucky, emojiShocked, emojiBored;
     private Emoji rate;
+
+    private List<Day> days;
+    private Day today;
 
     public static BoardFragment newInstance() {
         return new BoardFragment();
@@ -91,6 +97,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             weatherViewModel = new ViewModelProvider(getActivity()).get(WeatherViewModel.class);
+            dayViewModel = new ViewModelProvider(getActivity()).get(DayViewModel.class);
         }
     }
 
@@ -428,11 +435,55 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             travelViewModel.setTravel(travel);
             this.travel = travel;
             initContentData();
-            if (travel != null)
+            if (travel != null) {
                 loadDestination(travel.getDestination());
-            else
+                loadDays();
+            } else
                 stopProgressBar();
         });
+    }
+
+
+    private void loadDays() {
+        days = new ArrayList<>();
+        startProgressBar();
+        if (travel.getDays().size() > 0) {
+            dayViewModel.getDaysListData(travel.getDays());
+            dayViewModel.getDaysList().observe(getViewLifecycleOwner(), list -> {
+                if (list != null)
+                    days = list;
+                stopProgressBar();
+                checkDays();
+            });
+        }
+    }
+
+
+    private void checkDays() {
+        long whichDay = travel.whatDay();
+        if (whichDay >= 1) {
+            if (travel.getDays().size() == whichDay) {
+                getToday(travel.getDays().get((int) whichDay - 1));
+            } else {
+                while (travel.getDays().size() != whichDay - 1) {
+                    //todo fill empty days
+                    travel.getDays().add(null);
+                }
+                //todo add today new day
+                travel.getDays().add(dayViewModel.generateId());
+            }
+            //todo load all days from database
+        }
+    }
+
+
+    private void getToday(String id) {
+        if (travel != null && travel.getDays() != null && id != null && days.size() > 0)
+            for (Day day : days)
+                if (day.getId().equals(id)) {
+                    today = day;
+                    break;
+                }
     }
 
 

@@ -25,4 +25,12 @@ public class DayViewModel extends AndroidViewModel {
         return dayRepository.generateId();
     }
 
+    public void getDaysListData(List<String> daysIds) {
+        daysLiveData = dayRepository.getDays(daysIds);
+    }
+
+    public LiveData<List<Day>> getDaysList() {
+        return daysLiveData;
+    }
+
 }

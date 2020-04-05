@@ -36,4 +36,23 @@ public class DayRepository {
         return daysRef.document().getId();
     }
 
+
+    public MutableLiveData<List<Day>> getDays(List<String> daysIds) {
+        MutableLiveData<List<Day>> daysData = new MutableLiveData<>();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for (String id : daysIds)
+            if (id != null)
+                tasks.add(daysRef.document(id).get());
+        Task<List<DocumentSnapshot>> finalTask = Tasks.whenAllSuccess(tasks);
+        finalTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Day> days = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : task.getResult())
+                    days.add(documentSnapshot.toObject(Day.class));
+                daysData.setValue(days);
+            }
+        });
+        return daysData;
+    }
+
 }
