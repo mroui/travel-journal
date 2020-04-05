@@ -22,6 +22,7 @@ public interface Constants {
     String MARKERS = "Markers";
     String TRAVELS = "Travels";
     String RESERVATIONS = "Reservations";
+    String DAYS = "Days";
 
     String DB_UID = "uid";
     String DB_PHOTO = "photo";
