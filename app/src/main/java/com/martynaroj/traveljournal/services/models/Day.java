@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -29,14 +30,10 @@ public class Day extends BaseObservable implements Serializable {
     }
 
 
-    public Day(String id, Timestamp date, Integer rate, List<Photo> photos, List<Note> notes, List<Place> places) {
+    public Day(String id, Timestamp date) {
         this();
         this.id = id;
         this.date = date;
-        this.rate = rate;
-        this.photos = photos;
-        this.notes = notes;
-        this.places = places;
     }
 
 
@@ -109,6 +106,31 @@ public class Day extends BaseObservable implements Serializable {
     public void setPlaces(List<Place> places) {
         this.places = places;
         notifyPropertyChanged(BR.places);
+    }
+
+
+    @Bindable
+    public List<Cost> getCosts() {
+        return costs;
+    }
+
+
+    public void setCosts(List<Cost> costs) {
+        this.costs = costs;
+        notifyPropertyChanged(BR.costs);
+    }
+
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            Day d = (Day) obj;
+            return (id.equals(d.getId()));
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
 }
