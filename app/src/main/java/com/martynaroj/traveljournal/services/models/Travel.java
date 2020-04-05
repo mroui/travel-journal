@@ -12,6 +12,7 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,14 +32,20 @@ public class Travel extends BaseObservable implements Serializable {
     private List<String> tags;
     private List<PackingCategory> packingList;
     private boolean packing;
+    private List<String> days;
+
 
     public Travel() {
+        tags = new ArrayList<>();
+        packingList = new ArrayList<>();
+        days = new ArrayList<>();
     }
 
 
     public Travel(String id, String owner, String name, Timestamp datetimeFrom,
                   Timestamp datetimeTo, String destination, String transport, String accommodation,
-                  Double budget, List<String> tags) {
+                  Double budget, List<String> tags, List<String> days) {
+        this();
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -49,6 +56,7 @@ public class Travel extends BaseObservable implements Serializable {
         this.accommodation = accommodation;
         this.budget = budget;
         this.tags = tags;
+        this.days = days;
     }
 
 
@@ -181,6 +189,18 @@ public class Travel extends BaseObservable implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags;
         notifyPropertyChanged(BR.tags);
+    }
+
+
+    @Bindable
+    public List<String> getDays() {
+        return days;
+    }
+
+
+    public void setDays(List<String> days) {
+        this.days = days;
+        notifyPropertyChanged(BR.days);
     }
 
 
