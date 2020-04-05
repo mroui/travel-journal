@@ -14,6 +14,7 @@ import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +37,20 @@ public class User extends BaseObservable implements Serializable {
 
 
     public User() {
+        this.preferences = new ArrayList<>();
+        this.friends = new ArrayList<>();
+        this.notifications = new ArrayList<>();
+        this.privacy = new HashMap<>();
+        this.markers = new ArrayList<>();
+        this.travels = new ArrayList<>();
     }
 
+
     public User(String uid, String username, String email) {
+        this();
         this.uid = uid;
         this.username = username;
         this.email = email;
-
-        this.privacy = new HashMap<>();
         defineDefaultPrivacy();
     }
 
