@@ -11,6 +11,7 @@ import com.martynaroj.traveljournal.services.respositories.DayRepository;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
 import java.util.List;
+import java.util.Map;
 
 public class DayViewModel extends AndroidViewModel {
 
@@ -41,6 +42,10 @@ public class DayViewModel extends AndroidViewModel {
 
     public LiveData<Status> getStatusData() {
         return statusLiveData;
+    }
+
+    public void updateDay(String id, Map<String, Object> changes) {
+        dayRepository.updateDay(id, changes);
     }
 
 }

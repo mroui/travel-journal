@@ -16,6 +16,7 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DayRepository {
 
@@ -69,5 +70,11 @@ public class DayRepository {
         });
         return status;
     }
+
+
+    public void updateDay(String id, Map<String, Object> changes) {
+        daysRef.document(id).update(changes);
+    }
+
 
 }
