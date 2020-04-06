@@ -61,8 +61,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:visibility="gone">
-                <!--TODO android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}"-->
+                    android:visibility="@{user.activeTravel ? View.GONE : View.VISIBLE}">
 
                     <ImageView
                         android:id="@+id/board_new_journey_image"
