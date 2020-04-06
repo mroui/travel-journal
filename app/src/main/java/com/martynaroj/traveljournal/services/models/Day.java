@@ -6,6 +6,7 @@ import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.google.firebase.Timestamp;
+import com.martynaroj.traveljournal.view.others.enums.Emoji;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Day extends BaseObservable implements Serializable {
         notes = new ArrayList<>();
         places = new ArrayList<>();
         costs = new ArrayList<>();
+        rate = Emoji.NORMAL.ordinal();
     }
 
 
