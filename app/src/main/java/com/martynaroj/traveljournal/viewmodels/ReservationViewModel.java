@@ -10,10 +10,13 @@ import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.respositories.ReservationRepository;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
+import java.util.List;
+
 public class ReservationViewModel extends AndroidViewModel {
 
     private ReservationRepository reservationRepository;
     private LiveData<Status> statusLiveData;
+    private LiveData<List<Reservation>> reservationsLiveData;
 
     public ReservationViewModel(@NonNull Application application) {
         super(application);
@@ -30,6 +33,14 @@ public class ReservationViewModel extends AndroidViewModel {
 
     public LiveData<Status> getStatusData() {
         return statusLiveData;
+    }
+
+    public void getReservations(List<String> ids) {
+        reservationsLiveData = reservationRepository.getReservations(ids);
+    }
+
+    public LiveData<List<Reservation>> getReservationsList() {
+        return reservationsLiveData;
     }
 
 }
