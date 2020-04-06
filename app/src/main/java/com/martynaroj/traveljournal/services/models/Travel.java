@@ -1,12 +1,16 @@
 package com.martynaroj.traveljournal.services.models;
 
 import android.annotation.SuppressLint;
+import android.widget.ImageView;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.martynaroj.traveljournal.BR;
+import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
@@ -291,6 +295,17 @@ public class Travel extends BaseObservable implements Serializable {
         date.setTimeInMillis(time);
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         return format.format(date.getTime());
+    }
+
+
+    @BindingAdapter("travelUrl")
+    public static void loadImage(ImageView v, String imgUrl){
+        Glide.with(v.getContext())
+                .load(imgUrl)
+                .fitCenter()
+                .placeholder(R.drawable.no_image)
+                .centerCrop()
+                .into(v);
     }
 
 }
