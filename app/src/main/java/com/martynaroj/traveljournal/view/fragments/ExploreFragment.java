@@ -39,7 +39,7 @@ import java.util.Objects;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class ExploreFragment extends BaseFragment implements OnMapReadyCallback {
+public class ExploreFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback {
 
     private FragmentExploreBinding binding;
     private UserViewModel userViewModel;
@@ -146,7 +146,22 @@ public class ExploreFragment extends BaseFragment implements OnMapReadyCallback 
 
 
     private void setListeners() {
-        binding.exploreArrowButton.setOnClickListener(view -> back());
+        binding.exploreArrowButton.setOnClickListener(this);
+        binding.exploreNearbyPlacesButton.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.explore_arrow_button:
+                back();
+                break;
+            case R.id.explore_nearby_places_button:
+                searchNearbyPlaces();
+                binding.exploreNearbyPlacesButton.setEnabled(false);
+                break;
+        }
     }
 
 
@@ -188,9 +203,17 @@ public class ExploreFragment extends BaseFragment implements OnMapReadyCallback 
         addressViewModel.detectAddress(placesClient, request);
         addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
-                com.google.android.libraries.places.api.model.Place place = response.getPlaceLikelihoods().get(0).getPlace();
-                if (place.getLatLng() != null)
-                    searchNearbyPlaces(place.getLatLng());
+                com.google.android.libraries.places.api.model.Place place = response
+                        .getPlaceLikelihoods().get(0).getPlace();
+                if (place.getLatLng() != null) {
+                    destination = new Address(
+                            place.getName(),
+                            place.getAddress(),
+                            place.getLatLng().latitude,
+                            place.getLatLng().longitude
+                    );
+                    zoomMap(place.getLatLng(), 15.0f);
+                }
             } else
                 showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
             stopProgressBar();
@@ -227,7 +250,9 @@ public class ExploreFragment extends BaseFragment implements OnMapReadyCallback 
     }
 
 
-    private void searchNearbyPlaces(LatLng latLng) {
+    private void searchNearbyPlaces() {
+        startProgressBar();
+        LatLng latLng = new LatLng(destination.getLatitude(), destination.getLongitude());
         placeViewModel.getPlaces(latLng, null);
         placeViewModel.getPlacesResultData().observe(getViewLifecycleOwner(), placesResult -> {
             if (placesResult != null) {
@@ -238,6 +263,7 @@ public class ExploreFragment extends BaseFragment implements OnMapReadyCallback 
                 zoomMap(latLng, 15.0f);
             } else
                 showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+            stopProgressBar();
         });
     }
 
@@ -274,7 +300,7 @@ public class ExploreFragment extends BaseFragment implements OnMapReadyCallback 
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             detectLocation();
         else
-            searchNearbyPlaces(new LatLng(destination.getLatitude(), destination.getLongitude()));
+            zoomMap(new LatLng(destination.getLatitude(), destination.getLongitude()), 15.0f);
     }
 
 
