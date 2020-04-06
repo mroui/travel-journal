@@ -98,4 +98,6 @@ public interface Constants {
     String STARTS_ON = "Starts on ";
     String ENDS_ON = "Ended on ";
 
+    String BUNDLE_DESTINATION = "DESTINATION";
+
 }

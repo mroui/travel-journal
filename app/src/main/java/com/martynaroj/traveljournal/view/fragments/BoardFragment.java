@@ -271,7 +271,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 //todo go to budget
                 break;
             case R.id.board_travel_grid_explore_places_card:
-                //todo go to explore places
+                changeFragment(ExploreFragment.newInstance(destination));
                 break;
         }
     }

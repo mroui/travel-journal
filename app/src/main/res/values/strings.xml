@@ -31,6 +31,8 @@
     <string name="board_travel_grid_card_budget">BUDGET</string>
     <string name="board_travel_grid_card_explore">EXPLORE</string>
 
+    <string name="explore_title">Explore</string>
+
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
     <string name="map_nearby_places">Nearby places</string>
