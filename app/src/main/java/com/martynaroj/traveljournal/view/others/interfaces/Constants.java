@@ -38,6 +38,7 @@ public interface Constants {
     String DB_IS_PACKING = "packing";
     String DB_PACKING_LIST = "packingList";
     String DB_DAYS = "days";
+    String DB_RATE = "rate";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";

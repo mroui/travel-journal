@@ -355,7 +355,10 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_rate_day_button_negative);
             buttonNegative.setOnClickListener(v -> dialog.dismiss());
             buttonPositive.setOnClickListener(v -> {
-                //todo: update travel day rate
+                today.setRate(rate.ordinal());
+                updateDay(new HashMap<String, Object>() {{
+                    put(Constants.DB_RATE, rate.ordinal());
+                }});
                 dialog.dismiss();
             });
             dialog.show();
@@ -394,30 +397,25 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void setDefaultEmoji() {
-        if (this.rate != null) {
-            switch (this.rate) {
-                case HAPPY:
-                    emojiOnClick(Emoji.HAPPY, emojiHappy, R.drawable.ic_emoji_happy_color);
-                    break;
-                case NORMAL:
-                    emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
-                    break;
-                case SAD:
-                    emojiOnClick(Emoji.SAD, emojiSad, R.drawable.ic_emoji_sad_color);
-                    break;
-                case LUCKY:
-                    emojiOnClick(Emoji.LUCKY, emojiLucky, R.drawable.ic_emoji_lucky_color);
-                    break;
-                case SHOCKED:
-                    emojiOnClick(Emoji.SHOCKED, emojiShocked, R.drawable.ic_emoji_shocked_color);
-                    break;
-                case BORED:
-                    emojiOnClick(Emoji.BORED, emojiBored, R.drawable.ic_emoji_bored_color);
-                    break;
-            }
-        } else {
-            this.rate = Emoji.NORMAL;
-            emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
+        switch (Emoji.values()[today.getRate()]) {
+            case HAPPY:
+                emojiOnClick(Emoji.HAPPY, emojiHappy, R.drawable.ic_emoji_happy_color);
+                break;
+            case NORMAL:
+                emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
+                break;
+            case SAD:
+                emojiOnClick(Emoji.SAD, emojiSad, R.drawable.ic_emoji_sad_color);
+                break;
+            case LUCKY:
+                emojiOnClick(Emoji.LUCKY, emojiLucky, R.drawable.ic_emoji_lucky_color);
+                break;
+            case SHOCKED:
+                emojiOnClick(Emoji.SHOCKED, emojiShocked, R.drawable.ic_emoji_shocked_color);
+                break;
+            case BORED:
+                emojiOnClick(Emoji.BORED, emojiBored, R.drawable.ic_emoji_bored_color);
+                break;
         }
     }
 
@@ -428,6 +426,11 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private void updateTravel(Map<String, Object> changes) {
         travelViewModel.updateTravel(travel.getId(), changes);
         loadTravel(travel.getId());
+    }
+
+
+    private void updateDay(Map<String, Object> changes) {
+        dayViewModel.updateDay(today.getId(), changes);
     }
 
 
