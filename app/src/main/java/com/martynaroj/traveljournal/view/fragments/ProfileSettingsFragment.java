@@ -5,7 +5,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -71,7 +70,6 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private User user;
 
     private Uri newImageUri;
-    private Bitmap compressor;
     private StorageViewModel storageViewModel;
 
     private Address newLocation;
