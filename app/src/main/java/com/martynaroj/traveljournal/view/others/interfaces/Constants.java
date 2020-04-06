@@ -99,5 +99,6 @@ public interface Constants {
     String ENDS_ON = "Ended on ";
 
     String BUNDLE_DESTINATION = "DESTINATION";
+    String BUNDLE_TRAVEL = "TRAVEL";
 
 }
