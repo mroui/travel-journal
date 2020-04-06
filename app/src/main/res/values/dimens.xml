@@ -39,6 +39,8 @@
 
     <dimen name="travel_image_h">200dp</dimen>
     <dimen name="travel_image_w">300dp</dimen>
+    <dimen name="travel_image_half_h">100dp</dimen>
+    <dimen name="travel_image_half_w">150dp</dimen>
 
     <dimen name="line_spacing_small">8dp</dimen>
 
