@@ -11,7 +11,8 @@
     <dimen name="margin_big">48dp</dimen>
     <dimen name="margin_bigger">64dp</dimen>
 
-    <dimen name="padding_minimal">2sp</dimen>
+    <dimen name="padding_minimal">2dp</dimen>
+    <dimen name="padding_tiniest">4dp</dimen>
     <dimen name="padding_tiny">8dp</dimen>
     <dimen name="padding_smaller">12dp</dimen>
     <dimen name="padding_small">18dp</dimen>
@@ -90,5 +91,7 @@
     <dimen name="home_search_travels_icon_size">40dp</dimen>
 
     <dimen name="dialog_nearby_list_height">350dp</dimen>
+
+    <dimen name="details_hashtag_view_width">104dp</dimen>
 
 </resources>
