@@ -3,10 +3,13 @@ package com.martynaroj.traveljournal.services.models;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
 
+@IgnoreExtraProperties
 public class Reservation extends BaseObservable implements Serializable {
 
     private String id;
@@ -65,6 +68,7 @@ public class Reservation extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.contact);
     }
 
+    @Exclude
     public boolean isContactEmpty() {
         return contact == null || contact.equals("");
     }
