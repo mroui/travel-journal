@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_arrow_button"
                     android:layout_marginTop="@dimen/margin_regular"
                     android:fontFamily="@font/raleway_bold"
                     android:textSize="@dimen/text_medium"
@@ -280,8 +280,134 @@
                     android:layout_marginTop="@dimen/margin_smaller"
                     android:background="@color/gray"/>
 
+                <LinearLayout
+                    android:id="@+id/details_accommodation_type_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_budget_separator"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/details_accommodation_type_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_accommodation_title"
+                        android:drawableStart="@drawable/ic_accommodation"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/details_accommodation_type_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{accommodation.type.substring(0, 1).toUpperCase() + accommodation.type.substring(1)}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/details_accommodation_file_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_type_container"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:visibility="@{accommodation.file != null ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/details_accommodation_file_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_accommodation_transport_file_title"
+                        android:drawableStart="@drawable/ic_file_download"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/details_accommodation_file_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_bold"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@string/details_accommodation_transport_download_file"
+                        android:textColor="@color/main_blue"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/details_accommodation_contact_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_file_container"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:visibility="@{accommodation != null &amp;&amp; !accommodation.contactEmpty ? View.VISIBLE : View.GONE}">
+
+                    <TextView
+                        android:id="@+id/details_accommodation_contact_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_accommodation_transport_contact_title"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/details_accommodation_contact_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{accommodation.contact}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/details_accommodation_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_contact_container"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    android:background="@color/gray"/>
+
                 <com.greenfrvr.hashtagview.HashtagView
-                    android:id="@+id/details_hashtag_view"
+                    android:id="@+id/details_tags_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/details_hashtag_view_width"
                     android:layout_marginTop="@dimen/margin_regular"
@@ -289,7 +415,7 @@
                     android:layout_marginEnd="@dimen/margin_regular"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_budget_separator"
+                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_separator"
                     app:tagTextGravity="center"
                     app:tagMargin="@dimen/margin_smaller"
                     app:rowMargin="@dimen/margin_smaller"
@@ -303,18 +429,18 @@
                     app:tagTextColor="@color/dark_gray"/>
 
                 <TextView
-                    android:id="@+id/details_hashtag_see_all_button"
+                    android:id="@+id/details_tags_see_all_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_hashtag_view"
+                    app:layout_constraintTop_toBottomOf="@+id/details_tags_view"
                     android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_bold"
                     android:textSize="@dimen/text_regular"
                     android:textColor="@color/main_blue"
                     android:layout_gravity="center"
-                    android:text="@string/details_travel_hashtag_see_all"
+                    android:text="@string/details_travel_tags_see_all"
                     android:visibility="@{travel != null &amp;&amp; travel.tags.size() > 55 ? View.VISIBLE : View.GONE}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
