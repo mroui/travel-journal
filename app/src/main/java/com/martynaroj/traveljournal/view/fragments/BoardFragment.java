@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
@@ -61,6 +60,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private Travel travel;
     private Address destination;
     private WeatherResult weatherResult;
+    private Dialog packingDialog;
 
     private ImageView emojiHappy, emojiNormal, emojiSad, emojiLucky, emojiShocked, emojiBored;
     private Emoji rate;
@@ -281,7 +281,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void checkPackingList() {
-        if (this.travel != null && !this.travel.isPacking() && travel.getPackingList() == null) {
+        if (this.travel != null && !this.travel.isPacking() && travel.getPackingList() == null
+        && (packingDialog == null || !packingDialog.isShowing())) {
             showPackingDialog();
         }
     }
@@ -289,15 +290,15 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void showPackingDialog() {
         if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_custom);
+            packingDialog = new Dialog(getContext());
+            packingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            packingDialog.setCancelable(false);
+            packingDialog.setContentView(R.layout.dialog_custom);
 
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
+            TextView title = packingDialog.findViewById(R.id.dialog_custom_title);
+            TextView message = packingDialog.findViewById(R.id.dialog_custom_desc);
+            MaterialButton buttonPositive = packingDialog.findViewById(R.id.dialog_custom_button_positive);
+            MaterialButton buttonNegative = packingDialog.findViewById(R.id.dialog_custom_button_negative);
 
             title.setText(getResources().getString(R.string.dialog_packing_title));
             message.setText(getResources().getString(R.string.dialog_packing_desc));
@@ -309,7 +310,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             );
             buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonPositive.setOnClickListener(v -> {
-                dialog.dismiss();
+                packingDialog.dismiss();
+                this.travel.setPackingList(getBasicPackingList());
                 updateTravel(new HashMap<String, Object>() {{
                     put(Constants.DB_IS_PACKING, true);
                     put(Constants.DB_PACKING_LIST, getBasicPackingList());
@@ -324,13 +326,14 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             );
             buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonNegative.setOnClickListener(v -> {
-                dialog.dismiss();
+                packingDialog.dismiss();
+                this.travel.setPackingList(new ArrayList<>());
                 updateTravel(new HashMap<String, Object>() {{
                     put(Constants.DB_PACKING_LIST, new ArrayList<>());
                 }});
             });
 
-            dialog.show();
+            packingDialog.show();
         }
     }
 
@@ -482,7 +485,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void addNewDay() {
         String id = dayViewModel.generateId();
-        today = new Day(id,  new Timestamp(Calendar.getInstance().getTime()));
+        today = new Day(id,  Calendar.getInstance().getTimeInMillis());
         dayViewModel.addDay(today);
         dayViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
             if (status != null && !status.equals(Status.ERROR)) {
