@@ -96,11 +96,11 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                         transport = reservations.get(0);
                     }
                     initContentData();
-                    stopProgressBar();
                 } else {
                     showSnackBar(getResources().getString(R.string.messages_error_failed_load_travel), Snackbar.LENGTH_LONG);
                     back();
                 }
+                stopProgressBar();
             });
         }
     }
