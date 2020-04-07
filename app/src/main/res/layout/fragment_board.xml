@@ -443,7 +443,7 @@
                     android:src="@drawable/ic_emoticon"
                     app:rippleColor="@color/middle_gray"
                     android:enabled="@{travel != null &amp;&amp; travel.whatDay() >= 1 ? true : false}"
-                    android:visibility="@{travel != null &amp;&amp; travel.packing ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{travel != null ? View.VISIBLE : View.GONE}"/>
 
                 <com.nightonke.boommenu.BoomMenuButton
                     android:id="@+id/board_floating_menu_button"
