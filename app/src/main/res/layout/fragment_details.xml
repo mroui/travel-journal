@@ -64,98 +64,258 @@
                     android:textColor="@color/black"/>
 
                 <TextView
-                    android:id="@+id/details_preview_title"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/details_travel_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_arrow_button"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="@dimen/margin_regular"
                     android:fontFamily="@font/raleway_bold"
-                    android:text="@string/details_preview_title"
-                    android:textColor="@color/main_blue"/>
+                    android:textSize="@dimen/text_medium"
+                    android:text="@{travel.name}"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"/>
+
+                <ImageView
+                    android:id="@+id/details_travel_image"
+                    android:layout_width="@dimen/travel_image_half_w"
+                    android:layout_height="@dimen/travel_image_half_h"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_travel_name"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    app:travelUrl="@{travel.image}"
+                    android:contentDescription="@string/details_travel_image"/>
+
+                <LinearLayout
+                    android:id="@+id/details_destination_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_travel_image"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/details_destination_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_detination_title"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/details_destination_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{destination.name + ',' + ' ' + destination.address}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>
 
                 <View
-                    android:id="@+id/details_preview_separator"
+                    android:id="@+id/details_destination_separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_preview_title"
-                    android:layout_marginBottom="@dimen/margin_smaller"
-                    android:layout_centerVertical="true"
-                    android:background="@color/main_blue"/>
+                    app:layout_constraintTop_toBottomOf="@+id/details_destination_container"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    android:background="@color/gray"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/details_preview_container"
+                <LinearLayout
+                    android:id="@+id/details_departure_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/details_preview_separator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/margin_regular">
+                    app:layout_constraintTop_toBottomOf="@+id/details_destination_separator"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                     <TextView
-                        android:id="@+id/details_preview_travel_name"
-                        android:layout_width="match_parent"
+                        android:id="@+id/details_departure_title"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:fontFamily="@font/raleway_bold"
-                        android:textSize="@dimen/text_bigger"
-                        android:text="@{travel.name}"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"/>
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_departure_title"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/details_departure_value"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/details_preview_travel_name"
-                        android:layout_marginTop="@dimen/margin_regular"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{travel.getDateTimeString(travel.datetimeFrom)}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="3"/>
 
-                        <ImageView
-                            android:id="@+id/details_preview_travel_image"
-                            android:layout_width="@dimen/travel_image_half_w"
-                            android:layout_height="@dimen/travel_image_half_h"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:src="@color/light_gray"
-                            app:travelUrl="@{travel.image}"
-                            android:contentDescription="@string/details_travel_image"/>
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_tiny"
-                            android:orientation="vertical"
-                            android:layout_gravity="center">
+                <View
+                    android:id="@+id/details_departure_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_departure_container"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    android:background="@color/gray"/>
 
-                            <TextView
-                                android:id="@+id/details_preview_destination_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/raleway_regular"
-                                android:textSize="@dimen/text_small"
-                                android:text="@{destination.name}"
-                                android:textColor="@color/black"/>
+                <LinearLayout
+                    android:id="@+id/details_arrival_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_departure_separator"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                            <TextView
-                                android:id="@+id/details_preview_destination_address"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/raleway_regular"
-                                android:textSize="@dimen/text_small"
-                                android:text="@{destination.address}"
-                                android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/details_arrival_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_arrival_title"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/details_arrival_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{travel.getDateTimeString(travel.datetimeTo)}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="3"/>
 
-                    </LinearLayout>
+                </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <View
+                    android:id="@+id/details_arrival_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_arrival_container"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    android:background="@color/gray"/>
+
+                <LinearLayout
+                    android:id="@+id/details_budget_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_arrival_separator"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/details_budget_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_small"
+                        android:text="@string/details_budget_title"
+                        android:drawableStart="@drawable/ic_money"
+                        android:drawablePadding="@dimen/padding_tiniest"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        android:layout_weight="2"/>
+
+                    <TextView
+                        android:id="@+id/details_budget_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="textEnd"
+                        android:text="@{travel.budget.toString()}"
+                        android:textColor="@color/darker_gray"
+                        android:layout_weight="3"/>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/details_budget_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_budget_container"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    android:background="@color/gray"/>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/details_hashtag_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/details_hashtag_view_width"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:layout_marginStart="@dimen/margin_regular"
+                    android:layout_marginEnd="@dimen/margin_regular"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_budget_separator"
+                    app:tagTextGravity="center"
+                    app:tagMargin="@dimen/margin_smaller"
+                    app:rowMargin="@dimen/margin_smaller"
+                    app:tagPaddingBottom="@dimen/padding_tiny"
+                    app:tagPaddingLeft="@dimen/padding_tiny"
+                    app:tagPaddingTop="@dimen/padding_tiny"
+                    app:tagPaddingRight="@dimen/padding_tiny"
+                    app:tagBackground="@drawable/oval_background_hashtag"
+                    app:tagForeground="?android:attr/selectableItemBackground"
+                    app:tagTextSize="@dimen/text_small"
+                    app:tagTextColor="@color/dark_gray"/>
+
+                <TextView
+                    android:id="@+id/details_hashtag_see_all_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/details_hashtag_view"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:fontFamily="@font/raleway_bold"
+                    android:textSize="@dimen/text_regular"
+                    android:textColor="@color/main_blue"
+                    android:layout_gravity="center"
+                    android:text="@string/details_travel_hashtag_see_all"
+                    android:visibility="@{travel != null &amp;&amp; travel.tags.size() > 55 ? View.VISIBLE : View.GONE}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
