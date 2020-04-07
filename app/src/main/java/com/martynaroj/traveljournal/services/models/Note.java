@@ -4,13 +4,11 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
-import com.google.firebase.Timestamp;
-
 import java.io.Serializable;
 
 public class Note extends BaseObservable implements Serializable {
 
-    private Timestamp date;
+    private long date;
     private String description;
 
 
@@ -18,19 +16,19 @@ public class Note extends BaseObservable implements Serializable {
     }
 
 
-    Note(Timestamp date, String description) {
+    Note(long date, String description) {
         this.date = date;
         this.description = description;
     }
 
 
     @Bindable
-    public Timestamp getDate() {
+    public long getDate() {
         return date;
     }
 
 
-    public void setDate(Timestamp date) {
+    public void setDate(long date) {
         this.date = date;
         notifyPropertyChanged(BR.date);
     }

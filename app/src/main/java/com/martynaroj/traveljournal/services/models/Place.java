@@ -3,8 +3,6 @@ package com.martynaroj.traveljournal.services.models;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
-import com.google.firebase.Timestamp;
-
 import java.io.Serializable;
 
 public class Place extends Note implements Serializable {
@@ -17,7 +15,7 @@ public class Place extends Note implements Serializable {
     }
 
 
-    public Place(Timestamp date, String description, String address, Integer rate) {
+    public Place(long date, String description, String address, Integer rate) {
         super(date, description);
         this.address = address;
         this.rate = rate;

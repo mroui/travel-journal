@@ -5,7 +5,6 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
-import com.google.firebase.Timestamp;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 
 import java.io.Serializable;
@@ -15,7 +14,7 @@ import java.util.List;
 public class Day extends BaseObservable implements Serializable {
 
     private String id;
-    private Timestamp date;
+    private long date;
     private Integer rate;
     private List<Photo> photos;
     private List<Note> notes;
@@ -32,7 +31,7 @@ public class Day extends BaseObservable implements Serializable {
     }
 
 
-    public Day(String id, Timestamp date) {
+    public Day(String id, long date) {
         this();
         this.id = id;
         this.date = date;
@@ -52,12 +51,12 @@ public class Day extends BaseObservable implements Serializable {
 
 
     @Bindable
-    public Timestamp getDate() {
+    public long getDate() {
         return date;
     }
 
 
-    public void setDate(Timestamp date) {
+    public void setDate(long date) {
         this.date = date;
         notifyPropertyChanged(BR.date);
     }

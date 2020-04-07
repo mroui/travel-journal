@@ -40,7 +40,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.Timestamp;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentCreateTravelBinding;
@@ -714,7 +713,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    private Date getDateTime(long dateFrom, long timeFrom) {
+    private long getDateTime(long dateFrom, long timeFrom) {
         Calendar now = Calendar.getInstance();
         Calendar date = Calendar.getInstance();
         Calendar time = Calendar.getInstance();
@@ -722,7 +721,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         time.setTime(new Date(timeFrom));
         now.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH),
                 time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
-        return now.getTime();
+        return now.getTimeInMillis();
     }
 
 
@@ -769,8 +768,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 travelId,
                 user.getUid(),
                 Objects.requireNonNull(binding.createTravelStage1NameTextInput.getText()).toString(),
-                new Timestamp(getDateTime(dateFrom, timeFrom)),
-                new Timestamp(getDateTime(dateTo, timeTo)),
+                getDateTime(dateFrom, timeFrom),
+                getDateTime(dateTo, timeTo),
                 destinationId,
                 transportId,
                 accommodationId,
@@ -801,7 +800,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void setAlarm() {
         if (binding.createTravelStage3SetAlarm.isChecked()) {
             String note = getResources().getString(R.string.messages_travel_start);
-            long dateEnd = getDateTime(dateFrom, timeFrom).getTime();
+            long dateEnd = getDateTime(dateFrom, timeFrom);
             long timeDifference = dateEnd - Calendar.getInstance().getTimeInMillis();
 
             SharedPreferencesUtils.saveAlarmSet(getContext(), dateEnd, note);

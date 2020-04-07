@@ -8,7 +8,7 @@ import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
@@ -27,8 +27,8 @@ public class Travel extends BaseObservable implements Serializable {
     private String owner;
     private String name;
     private String image;
-    private Timestamp datetimeFrom;
-    private Timestamp datetimeTo;
+    private long datetimeFrom;
+    private long datetimeTo;
     private String destination;
     private String transport;
     private String accommodation;
@@ -41,13 +41,12 @@ public class Travel extends BaseObservable implements Serializable {
 
     public Travel() {
         tags = new ArrayList<>();
-        packingList = new ArrayList<>();
         days = new ArrayList<>();
     }
 
 
-    public Travel(String id, String owner, String name, Timestamp datetimeFrom,
-                  Timestamp datetimeTo, String destination, String transport, String accommodation,
+    public Travel(String id, String owner, String name, long datetimeFrom,
+                  long datetimeTo, String destination, String transport, String accommodation,
                   Double budget, List<String> tags) {
         this();
         this.id = id;
@@ -112,24 +111,24 @@ public class Travel extends BaseObservable implements Serializable {
 
 
     @Bindable
-    public Timestamp getDatetimeFrom() {
+    public long getDatetimeFrom() {
         return datetimeFrom;
     }
 
 
-    public void setDatetimeFrom(Timestamp datetimeFrom) {
+    public void setDatetimeFrom(long datetimeFrom) {
         this.datetimeFrom = datetimeFrom;
         notifyPropertyChanged(BR.datetimeFrom);
     }
 
 
     @Bindable
-    public Timestamp getDatetimeTo() {
+    public long getDatetimeTo() {
         return datetimeTo;
     }
 
 
-    public void setDatetimeTo(Timestamp datetimeTo) {
+    public void setDatetimeTo(long datetimeTo) {
         this.datetimeTo = datetimeTo;
         notifyPropertyChanged(BR.datetimeTo);
     }
@@ -235,7 +234,7 @@ public class Travel extends BaseObservable implements Serializable {
         Calendar startDate = Calendar.getInstance();
         Calendar endDate = Calendar.getInstance();
 
-        startDate.setTimeInMillis(datetimeFrom.getSeconds() * 1000);
+        startDate.setTimeInMillis(datetimeFrom);
         startDate.set(
                 startDate.get(Calendar.YEAR),
                 startDate.get(Calendar.MONTH),
@@ -252,7 +251,7 @@ public class Travel extends BaseObservable implements Serializable {
         );
         now.set(Calendar.MILLISECOND, 0);
 
-        endDate.setTimeInMillis(datetimeTo.getSeconds() * 1000);
+        endDate.setTimeInMillis(datetimeTo);
         endDate.set(
                 endDate.get(Calendar.YEAR),
                 endDate.get(Calendar.MONTH),
@@ -276,14 +275,15 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public String getDaysRemainsString() {
         long days = whatDay();
         if (days >= 1)
             return days + Constants.DAY;
         else if (days == com.martynaroj.traveljournal.view.others.enums.Travel.BEFORE.value) {
-            return Constants.STARTS_ON + getDateString(datetimeFrom.getSeconds() * 1000);
+            return Constants.STARTS_ON + getDateString(datetimeFrom);
         } else if (days == com.martynaroj.traveljournal.view.others.enums.Travel.AFTER.value) {
-            return Constants.ENDS_ON + getDateString(datetimeTo.getSeconds() * 1000);
+            return Constants.ENDS_ON + getDateString(datetimeTo);
         }
         return "";
     }
@@ -302,14 +302,13 @@ public class Travel extends BaseObservable implements Serializable {
     private String getTimeString(long time) {
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(time);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm aa");
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm aa");
         return format.format(date.getTime());
     }
 
 
-    public String getDateTimeString(Timestamp timestamp) {
-        long milisec = timestamp.toDate().getTime();
-        return getDateString(milisec) + ", " + getTimeString(milisec);
+    public String getDateTimeString(long time) {
+        return getDateString(time) + ", " + getTimeString(time);
     }
 
 
