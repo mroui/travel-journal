@@ -298,6 +298,21 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
+    private String getTimeString(long time) {
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(time);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm aa");
+        return format.format(date.getTime());
+    }
+
+
+    public String getDateTimeString(Timestamp timestamp) {
+        long milisec = timestamp.toDate().getTime();
+        return getDateString(milisec) + ", " + getTimeString(milisec);
+    }
+
+
     @BindingAdapter("travelUrl")
     public static void loadImage(ImageView v, String imgUrl){
         Glide.with(v.getContext())
