@@ -170,7 +170,6 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     public void addItem(PackingCategory group, PackingItem item) {
         int groupIndex = getGroupNamesList().indexOf(group.getName());
         List<PackingItem> items = listItem.get(listGroup.get(groupIndex));
-        listGroup.get(groupIndex).getItems().add(item);
         if (items != null)
             items.add(item);
         notifyDataSetChanged();
