@@ -65,4 +65,8 @@ public class Reservation extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.contact);
     }
 
+    public boolean isContactEmpty() {
+        return contact == null || contact.equals("");
+    }
+
 }
