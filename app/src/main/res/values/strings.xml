@@ -36,7 +36,16 @@
 
     <string name="details_title">Details</string>
     <string name="details_travel_image">Travel image</string>
-    <string name="details_travel_hashtag_see_all">See all hashtags</string>
+    <string name="details_travel_tags_see_all">See all tags</string>
+    <string name="details_detination_title">Destination</string>
+    <string name="details_departure_title">Departure</string>
+    <string name="details_arrival_title">Arrival</string>
+    <string name="details_budget_title">Budget</string>
+    <string name="details_accommodation_title">Accommodation</string>
+    <string name="details_accommodation_transport_contact_title">Contact</string>
+    <string name="details_accommodation_transport_file_title">File</string>
+    <string name="details_accommodation_transport_download_file">Download file</string>
+    <string name="details_transport_title">Transport</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
@@ -327,9 +336,5 @@
     <string name="dialog_rate_day_emoji_lucky">EMOJI LUCKY</string>
     <string name="dialog_rate_day_emoji_shock">EMOJI SHOCK</string>
     <string name="dialog_rate_day_emoji_bored">EMOJI BORED</string>
-    <string name="details_detination_title">Destination</string>
-    <string name="details_departure_title">Departure</string>
-    <string name="details_arrival_title">Arrival</string>
-    <string name="details_budget_title">Budget</string>
 
 </resources>
