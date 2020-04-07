@@ -1096,6 +1096,7 @@
                     app:rippleColor="@color/yellow_bg_light"
                     android:text="@string/dialog_button_previous"
                     android:fontFamily="@font/raleway_bold"
+                    android:enabled="false"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.button.MaterialButton
