@@ -548,7 +548,7 @@
                     <com.greenfrvr.hashtagview.HashtagView
                         android:id="@+id/details_tags_view"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/details_hashtag_view_width"
+                        android:layout_height="@dimen/details_hashtag_view_height"
                         android:layout_marginTop="@dimen/margin_regular"
                         android:layout_marginStart="@dimen/margin_regular"
                         android:layout_marginEnd="@dimen/margin_regular"

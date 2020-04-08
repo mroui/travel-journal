@@ -81,7 +81,7 @@
     <dimen name="profile_user_height">250dp</dimen>
     <dimen name="profile_user_details_height">275dp</dimen>
     <dimen name="profile_user_image_margin_top">40dp</dimen>
-    <dimen name="profile_user_hashtag_view_width">104dp</dimen>
+    <dimen name="profile_user_hashtag_view_height">104dp</dimen>
     <dimen name="profile_user_image_size">120dp</dimen>
 
     <dimen name="home_looping_travels_height">212dp</dimen>
@@ -92,6 +92,6 @@
 
     <dimen name="dialog_nearby_list_height">350dp</dimen>
 
-    <dimen name="details_hashtag_view_width">104dp</dimen>
+    <dimen name="details_hashtag_view_height">104dp</dimen>
 
 </resources>

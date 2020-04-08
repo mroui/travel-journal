@@ -245,7 +245,7 @@
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/profile_preferences"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/profile_user_hashtag_view_width"
+                    android:layout_height="@dimen/profile_user_hashtag_view_height"
                     android:layout_marginTop="@dimen/margin_regular"
                     android:layout_marginStart="@dimen/margin_regular"
                     android:layout_marginEnd="@dimen/margin_regular"
@@ -304,7 +304,7 @@
                     android:text="@string/profile_settings"
                     android:textColor="@color/white"
                     android:fontFamily="@font/raleway_bold"
-                    app:backgroundTint="@color/main_light_blue"
+                    app:backgroundTint="@color/main_blue"
                     android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"/>
 
                 <com.google.android.material.button.MaterialButton
@@ -321,7 +321,7 @@
                     android:text="@string/profile_sign_out"
                     android:textColor="@color/white"
                     android:fontFamily="@font/raleway_bold"
-                    app:backgroundTint="@color/main_light_blue"
+                    app:backgroundTint="@color/main_blue"
                     android:visibility="@{user.isUserProfile(loggedUser) ? View.VISIBLE : View.GONE}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
