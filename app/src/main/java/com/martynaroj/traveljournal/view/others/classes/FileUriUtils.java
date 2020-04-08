@@ -17,7 +17,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Objects;
 
-abstract class FileUriUtils {
+public abstract class FileUriUtils {
 
     static String getPath(final Context context, final Uri uri) {
         if (DocumentsContract.isDocumentUri(context, uri)) {
@@ -188,6 +188,29 @@ abstract class FileUriUtils {
     private static boolean isGoogleDriveUri(Uri uri) {
         return "com.google.android.apps.docs.storage".equals(uri.getAuthority())
                 || "com.google.android.apps.docs.storage.legacy".equals(uri.getAuthority());
+    }
+
+
+    public static String getFileName(Context context, Uri uri) {
+        if (context != null) {
+            String result = null;
+            if (uri.getScheme() != null && uri.getScheme().equals("content")) {
+                try (Cursor cursor = context.getContentResolver().query(
+                        uri, null, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst())
+                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+            if (result == null) {
+                result = uri.getPath();
+                if (result != null) {
+                    int cut = result.lastIndexOf('/');
+                    if (cut != -1) result = result.substring(cut + 1);
+                }
+            }
+            return result;
+        }
+        return null;
     }
 
 }

@@ -8,12 +8,10 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +51,7 @@ import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
+import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
@@ -553,18 +552,19 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                     .placeholder(R.drawable.ic_add_a_photo_gray)
                     .into(binding.createTravelStage2UploadImageButton);
         binding.createTravelStage2UploadImageFileContainer.setVisibility(View.VISIBLE);
-        binding.createTravelStage2UploadImageFileName.setText(getFileName(imageUri));
+        binding.createTravelStage2UploadImageFileName.setText(FileUriUtils.getFileName(getContext(), imageUri));
     }
+
 
 
     @SuppressLint("SetTextI18n")
     private void loadFile(String type) {
         if (type.equals(Constants.TRANSPORT_FILE)) {
             binding.createTravelStage5TransportFileContainer.setVisibility(View.VISIBLE);
-            binding.createTravelStage5TransportFileName.setText(getFileName(transportFileUri));
+            binding.createTravelStage5TransportFileName.setText(FileUriUtils.getFileName(getContext(), transportFileUri));
         } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
             binding.createTravelStage6AccommodationFileContainer.setVisibility(View.VISIBLE);
-            binding.createTravelStage6AccommodationFileName.setText(getFileName(accommodationFileUri));
+            binding.createTravelStage6AccommodationFileName.setText(FileUriUtils.getFileName(getContext(), accommodationFileUri));
         }
     }
 
@@ -585,29 +585,6 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 binding.createTravelStage2UploadImageFileContainer.setVisibility(View.GONE);
                 break;
         }
-    }
-
-
-    private String getFileName(Uri uri) {
-        if (getContext() != null) {
-            String result = null;
-            if (uri.getScheme() != null && uri.getScheme().equals("content")) {
-                try (Cursor cursor = getContext().getContentResolver().query(
-                        uri, null, null, null, null)) {
-                    if (cursor != null && cursor.moveToFirst())
-                        result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            }
-            if (result == null) {
-                result = uri.getPath();
-                if (result != null) {
-                    int cut = result.lastIndexOf('/');
-                    if (cut != -1) result = result.substring(cut + 1);
-                }
-            }
-            return result;
-        }
-        return null;
     }
 
 
@@ -884,7 +861,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void prepareFileToSave(String kind, String reservationId, Uri uri, String path,
                                    Integer maxHeight, Integer maxWidth) {
         if (uri.getPath() != null && getContext() != null) {
-            String fileName = getFileName(uri);
+            String fileName = FileUriUtils.getFileName(getContext(), uri);
             if (fileName != null) {
                 String fileExtension = fileName.substring(fileName.lastIndexOf("."));
                 if (Objects.equals(fileExtension.trim(), Constants.PDF_EXT))
