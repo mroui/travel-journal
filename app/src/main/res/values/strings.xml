@@ -47,6 +47,18 @@
     <string name="details_transport_title">Transport</string>
     <string name="details_see_all_tags"><u>+ See all tags</u></string>
     <string name="details_see_less_tags"><u>- See less tags</u></string>
+    <string name="details_edit_minor_details">Edit minor details</string>
+    <string name="details_end_travel">End travel</string>
+
+    <string name="dialog_edit_travel_details_title">Edit minor travel details</string>
+    <string name="dialog_edit_travel_details_desc">It\'s still possible to edit travel details that
+    are merely identification, social aspect</string>
+    <string name="dialog_edit_travel_details_name_title">NAME</string>
+    <string name="dialog_edit_travel_details_name_hint">Awesome 3 days trip in Mediolan</string>
+    <string name="dialog_edit_travel_details_image_title">IMAGE</string>
+    <string name="dialog_edit_travel_details_image_file_remove_button">Remove image</string>
+    <string name="dialog_edit_travel_details_tags_title">TAGS</string>
+    <string name="dialog_edit_travel_details_tags_hint">Beach, europe, culture, landscape…</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
