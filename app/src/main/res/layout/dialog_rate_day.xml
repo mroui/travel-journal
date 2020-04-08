@@ -126,7 +126,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:text="@string/dialog_button_ok"
         android:textColor="@color/main_yellow"
-        app:rippleColor="@color/main_yellow"
+        app:rippleColor="@color/yellow_bg_light"
         android:fontFamily="@font/raleway_bold"/>
 
     <com.google.android.material.button.MaterialButton
@@ -139,7 +139,7 @@
         android:layout_marginEnd="@dimen/margin_small"
         android:text="@string/dialog_button_cancel"
         android:textColor="@color/main_yellow"
-        app:rippleColor="@color/main_yellow"
+        app:rippleColor="@color/yellow_bg_light"
         android:fontFamily="@font/raleway_bold"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
