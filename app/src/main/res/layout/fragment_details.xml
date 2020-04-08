@@ -347,7 +347,7 @@
 
                     <TextView
                         android:id="@+id/details_accommodation_file_value"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_small"
                         android:fontFamily="@font/raleway_bold"
@@ -355,7 +355,7 @@
                         android:textAlignment="textEnd"
                         android:text="@string/details_accommodation_transport_download_file"
                         android:textColor="@color/main_blue"
-                        android:layout_weight="3"/>
+                        android:background="?android:attr/selectableItemBackground"/>
 
                 </LinearLayout>
 
@@ -475,7 +475,7 @@
 
                     <TextView
                         android:id="@+id/details_transport_file_value"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_small"
                         android:fontFamily="@font/raleway_bold"
@@ -483,7 +483,7 @@
                         android:textAlignment="textEnd"
                         android:text="@string/details_accommodation_transport_download_file"
                         android:textColor="@color/main_blue"
-                        android:layout_weight="3"/>
+                        android:background="?android:attr/selectableItemBackground"/>
 
                 </LinearLayout>
 

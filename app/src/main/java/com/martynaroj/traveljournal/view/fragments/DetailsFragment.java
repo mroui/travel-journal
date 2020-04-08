@@ -1,5 +1,8 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,10 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class DetailsFragment extends BaseFragment implements View.OnClickListener {
 
@@ -52,7 +59,6 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             destination = (Address) getArguments().getSerializable(Constants.BUNDLE_DESTINATION);
         }
     }
-
 
 
     @Override
@@ -129,6 +135,9 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private void setListeners() {
         binding.detailsArrowButton.setOnClickListener(this);
+        binding.detailsAccommodationFileValue.setOnClickListener(this);
+        binding.detailsTransportFileValue.setOnClickListener(this);
+        //todo: onclick download file accommodation & transport, show tags list & see all/see less, finish button & edit button
     }
 
 
@@ -138,7 +147,47 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             case R.id.details_arrow_button:
                 back();
                 break;
+            case R.id.details_accommodation_file_value:
+                downloadFile(accommodation.getFile());
+                break;
+            case R.id.details_transport_file_value:
+                downloadFile(transport.getFile());
+                break;
         }
+    }
+
+
+    //FILES----------------------------------------------------------------------------------------
+
+
+    private void downloadFile(String url) {
+        if (getContext() != null) {
+            String file = readFilenameFromUrl(url);
+            if (file != null) {
+                DownloadManager downloadManager = (DownloadManager) getContext()
+                        .getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri = Uri.parse(url);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalFilesDir(getContext(), DIRECTORY_DOWNLOADS, file);
+                if (downloadManager != null)
+                    downloadManager.enqueue(request);
+                else
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_download_file),
+                            Snackbar.LENGTH_LONG);
+            } else
+                showSnackBar(getResources().getString(R.string.messages_error_failed_read_file),
+                        Snackbar.LENGTH_LONG);
+        }
+    }
+
+
+    private String readFilenameFromUrl(String url) {
+        Matcher matcher = Pattern.compile("%2..*%2F(.*?)\\?alt").matcher(url);
+        String file = null;
+        if (matcher.find())
+            file = matcher.group(1);
+        return file;
     }
 
 

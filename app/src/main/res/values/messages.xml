@@ -68,5 +68,7 @@
     <string name="messages_error_failed_add_destination">Failed to add destination address, please try again later</string>
     <string name="messages_error_failed_load_travel">ERROR: Failed to load travel, please try again later</string>
     <string name="messages_error_failed_add_new_day">"ERROR: Failed to add new day, please try again later"</string>
+    <string name="messages_error_failed_download_file">ERROR: Failed to download file, please try again later</string>
+    <string name="messages_error_failed_read_file">ERROR: Failed to read file</string>
 
 </resources>
