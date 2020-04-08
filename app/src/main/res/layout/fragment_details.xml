@@ -36,7 +36,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_regular">
+                android:padding="@dimen/padding_small">
 
                 <ImageView
                     android:id="@+id/details_arrow_button"
@@ -63,516 +63,526 @@
                     android:textSize="@dimen/text_bigger"
                     android:textColor="@color/black"/>
 
-                <TextView
-                    android:id="@+id/details_travel_name"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/details_content_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_height="0dp"
                     app:layout_constraintTop_toBottomOf="@+id/details_arrow_button"
-                    android:layout_marginTop="@dimen/margin_regular"
-                    android:fontFamily="@font/raleway_bold"
-                    android:textSize="@dimen/text_medium"
-                    android:text="@{travel.name}"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"/>
-
-                <ImageView
-                    android:id="@+id/details_travel_image"
-                    android:layout_width="@dimen/travel_image_half_w"
-                    android:layout_height="@dimen/travel_image_half_h"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_travel_name"
-                    android:layout_marginTop="@dimen/margin_regular"
-                    app:travelUrl="@{travel.image}"
-                    android:contentDescription="@string/details_travel_image"/>
-
-                <LinearLayout
-                    android:id="@+id/details_destination_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_travel_image"
-                    android:layout_marginTop="@dimen/margin_regular"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:padding="@dimen/padding_regular">
 
                     <TextView
-                        android:id="@+id/details_destination_title"
-                        android:layout_width="0dp"
+                        android:id="@+id/details_travel_name"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_detination_title"
-                        android:drawableStart="@drawable/ic_location"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:fontFamily="@font/raleway_bold"
+                        android:textSize="@dimen/text_medium"
+                        android:text="@{travel.name}"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"/>
 
-                    <TextView
-                        android:id="@+id/details_destination_value"
-                        android:layout_width="0dp"
+                    <ImageView
+                        android:id="@+id/details_travel_image"
+                        android:layout_width="@dimen/travel_image_half_w"
+                        android:layout_height="@dimen/travel_image_half_h"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_travel_name"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        app:travelUrl="@{travel.image}"
+                        android:contentDescription="@string/details_travel_image"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_destination_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{destination.name + ',' + ' ' + destination.address}"
-                        android:textColor="@color/darker_gray"
-                        android:visibility="@{destination != null ? View.VISIBLE : View.INVISIBLE}"
-                        android:layout_weight="3"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_travel_image"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/details_destination_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_detination_title"
+                            android:drawableStart="@drawable/ic_location"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
 
-                <View
-                    android:id="@+id/details_destination_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_destination_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
+                        <TextView
+                            android:id="@+id/details_destination_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{destination.name + ',' + ' ' + destination.address}"
+                            android:textColor="@color/darker_gray"
+                            android:visibility="@{destination != null ? View.VISIBLE : View.INVISIBLE}"
+                            android:layout_weight="3"/>
 
-                <LinearLayout
-                    android:id="@+id/details_departure_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_destination_separator"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/details_departure_title"
-                        android:layout_width="0dp"
+                    <View
+                        android:id="@+id/details_destination_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_destination_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_departure_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_departure_title"
-                        android:drawableStart="@drawable/ic_calendar"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_destination_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/details_departure_value"
-                        android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/details_departure_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_departure_title"
+                            android:drawableStart="@drawable/ic_calendar"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/details_departure_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{travel.getDateTimeString(travel.datetimeFrom)}"
+                            android:textColor="@color/darker_gray"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/details_departure_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_departure_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_arrival_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{travel.getDateTimeString(travel.datetimeFrom)}"
-                        android:textColor="@color/darker_gray"
-                        android:layout_weight="3"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_departure_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/details_arrival_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_arrival_title"
+                            android:drawableStart="@drawable/ic_calendar"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
 
-                <View
-                    android:id="@+id/details_departure_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_departure_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
+                        <TextView
+                            android:id="@+id/details_arrival_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{travel.getDateTimeString(travel.datetimeTo)}"
+                            android:textColor="@color/darker_gray"
+                            android:layout_weight="3"/>
 
-                <LinearLayout
-                    android:id="@+id/details_arrival_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_departure_separator"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/details_arrival_title"
-                        android:layout_width="0dp"
+                    <View
+                        android:id="@+id/details_arrival_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_arrival_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_budget_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_arrival_title"
-                        android:drawableStart="@drawable/ic_calendar"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_arrival_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/details_arrival_value"
-                        android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/details_budget_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_budget_title"
+                            android:drawableStart="@drawable/ic_money"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/details_budget_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{travel.budget.toString()}"
+                            android:textColor="@color/darker_gray"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/details_budget_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_budget_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_accommodation_type_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{travel.getDateTimeString(travel.datetimeTo)}"
-                        android:textColor="@color/darker_gray"
-                        android:layout_weight="3"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_budget_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/details_accommodation_type_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_accommodation_title"
+                            android:drawableStart="@drawable/ic_accommodation"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="4"/>
 
-                <View
-                    android:id="@+id/details_arrival_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_arrival_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
+                        <TextView
+                            android:id="@+id/details_accommodation_type_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{accommodation.type.substring(0, 1).toUpperCase() + accommodation.type.substring(1)}"
+                            android:textColor="@color/darker_gray"
+                            android:visibility="@{accommodation != null ? View.VISIBLE : View.INVISIBLE}"
+                            android:layout_weight="3"/>
 
-                <LinearLayout
-                    android:id="@+id/details_budget_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_arrival_separator"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/details_budget_title"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/details_accommodation_file_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_budget_title"
-                        android:drawableStart="@drawable/ic_money"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_accommodation_type_container"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="@{accommodation.file != null ? View.VISIBLE : View.GONE}">
 
-                    <TextView
-                        android:id="@+id/details_budget_value"
-                        android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/details_accommodation_file_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_accommodation_transport_file_title"
+                            android:drawableStart="@drawable/ic_file_download"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/details_accommodation_file_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_bold"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@string/details_accommodation_transport_download_file"
+                            android:textColor="@color/main_blue"
+                            android:background="?android:attr/selectableItemBackground"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/details_accommodation_contact_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{travel.budget.toString()}"
-                        android:textColor="@color/darker_gray"
-                        android:layout_weight="3"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_accommodation_file_container"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="@{accommodation != null &amp;&amp; !accommodation.contactEmpty ? View.VISIBLE : View.GONE}">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/details_accommodation_contact_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_accommodation_transport_contact_title"
+                            android:drawableStart="@drawable/ic_email"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
 
-                <View
-                    android:id="@+id/details_budget_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_budget_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
+                        <TextView
+                            android:id="@+id/details_accommodation_contact_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{accommodation.contact}"
+                            android:textColor="@color/darker_gray"
+                            android:textIsSelectable="true"
+                            android:layout_weight="3"/>
 
-                <LinearLayout
-                    android:id="@+id/details_accommodation_type_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_budget_separator"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/details_accommodation_type_title"
-                        android:layout_width="0dp"
+                    <View
+                        android:id="@+id/details_accommodation_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_accommodation_contact_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/details_transport_type_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_accommodation_title"
-                        android:drawableStart="@drawable/ic_accommodation"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="1"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_accommodation_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/details_accommodation_type_value"
-                        android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/details_transport_type_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_transport_title"
+                            android:drawableStart="@drawable/ic_transport"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/details_transport_type_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{transport.type.substring(0, 1).toUpperCase() + transport.type.substring(1)}"
+                            android:textColor="@color/darker_gray"
+                            android:visibility="@{transport != null ? View.VISIBLE : View.INVISIBLE}"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/details_transport_file_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{accommodation.type.substring(0, 1).toUpperCase() + accommodation.type.substring(1)}"
-                        android:textColor="@color/darker_gray"
-                        android:visibility="@{accommodation != null ? View.VISIBLE : View.INVISIBLE}"
-                        android:layout_weight="1"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_transport_type_container"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="@{transport.file != null ? View.VISIBLE : View.GONE}">
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/details_transport_file_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_accommodation_transport_file_title"
+                            android:drawableStart="@drawable/ic_file_download"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
 
-                <LinearLayout
-                    android:id="@+id/details_accommodation_file_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_type_container"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="@{accommodation.file != null ? View.VISIBLE : View.GONE}">
+                        <TextView
+                            android:id="@+id/details_transport_file_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_bold"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@string/details_accommodation_transport_download_file"
+                            android:textColor="@color/main_blue"
+                            android:background="?android:attr/selectableItemBackground"/>
 
-                    <TextView
-                        android:id="@+id/details_accommodation_file_title"
-                        android:layout_width="0dp"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/details_transport_contact_container"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_accommodation_transport_file_title"
-                        android:drawableStart="@drawable/ic_file_download"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_transport_file_container"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="@{transport != null &amp;&amp; !transport.contactEmpty ? View.VISIBLE : View.GONE}">
+
+                        <TextView
+                            android:id="@+id/details_transport_contact_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/details_accommodation_transport_contact_title"
+                            android:drawableStart="@drawable/ic_email"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/details_transport_contact_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{transport.contact}"
+                            android:textColor="@color/darker_gray"
+                            android:textIsSelectable="true"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/details_transport_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_transport_contact_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <com.greenfrvr.hashtagview.HashtagView
+                        android:id="@+id/details_tags_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/details_hashtag_view_width"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:layout_marginStart="@dimen/margin_regular"
+                        android:layout_marginEnd="@dimen/margin_regular"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_transport_separator"
+                        app:tagTextGravity="center"
+                        app:tagMargin="@dimen/margin_smaller"
+                        app:rowMargin="@dimen/margin_smaller"
+                        app:tagPaddingBottom="@dimen/padding_tiny"
+                        app:tagPaddingLeft="@dimen/padding_tiny"
+                        app:tagPaddingTop="@dimen/padding_tiny"
+                        app:tagPaddingRight="@dimen/padding_tiny"
+                        app:tagBackground="@drawable/oval_background_hashtag"
+                        app:tagForeground="?android:attr/selectableItemBackground"
+                        app:tagTextSize="@dimen/text_small"
+                        app:tagTextColor="@color/dark_gray"/>
 
                     <TextView
-                        android:id="@+id/details_accommodation_file_value"
+                        android:id="@+id/details_tags_see_all_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_tags_view"
+                        android:background="?android:attr/selectableItemBackground"
                         android:fontFamily="@font/raleway_bold"
                         android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@string/details_accommodation_transport_download_file"
                         android:textColor="@color/main_blue"
-                        android:background="?android:attr/selectableItemBackground"/>
+                        android:layout_gravity="center"
+                        android:text="@string/details_see_all_tags"
+                        android:visibility="@{travel != null &amp;&amp; travel.tagsLength > 55 ? View.VISIBLE : View.GONE}"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/details_accommodation_contact_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_file_container"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="@{accommodation != null &amp;&amp; !accommodation.contactEmpty ? View.VISIBLE : View.GONE}">
-
-                    <TextView
-                        android:id="@+id/details_accommodation_contact_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_accommodation_transport_contact_title"
-                        android:drawableStart="@drawable/ic_email"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
-
-                    <TextView
-                        android:id="@+id/details_accommodation_contact_value"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{accommodation.contact}"
-                        android:textColor="@color/darker_gray"
-                        android:textIsSelectable="true"
-                        android:layout_weight="3"/>
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/details_accommodation_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_contact_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
-
-                <LinearLayout
-                    android:id="@+id/details_transport_type_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_accommodation_separator"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/details_transport_type_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_transport_title"
-                        android:drawableStart="@drawable/ic_transport"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:id="@+id/details_transport_type_value"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{transport.type.substring(0, 1).toUpperCase() + transport.type.substring(1)}"
-                        android:textColor="@color/darker_gray"
-                        android:visibility="@{transport != null ? View.VISIBLE : View.INVISIBLE}"
-                        android:layout_weight="1"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/details_transport_file_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_transport_type_container"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="@{transport.file != null ? View.VISIBLE : View.GONE}">
-
-                    <TextView
-                        android:id="@+id/details_transport_file_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_accommodation_transport_file_title"
-                        android:drawableStart="@drawable/ic_file_download"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
-
-                    <TextView
-                        android:id="@+id/details_transport_file_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_bold"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@string/details_accommodation_transport_download_file"
-                        android:textColor="@color/main_blue"
-                        android:background="?android:attr/selectableItemBackground"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/details_transport_contact_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_transport_file_container"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="@{transport != null &amp;&amp; !transport.contactEmpty ? View.VISIBLE : View.GONE}">
-
-                    <TextView
-                        android:id="@+id/details_transport_contact_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/raleway_medium"
-                        android:textSize="@dimen/text_small"
-                        android:text="@string/details_accommodation_transport_contact_title"
-                        android:drawableStart="@drawable/ic_email"
-                        android:drawablePadding="@dimen/padding_tiniest"
-                        android:textColor="@color/black"
-                        android:gravity="center_vertical"
-                        android:layout_weight="2"/>
-
-                    <TextView
-                        android:id="@+id/details_transport_contact_value"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:fontFamily="@font/raleway_regular"
-                        android:textSize="@dimen/text_small"
-                        android:textAlignment="textEnd"
-                        android:text="@{transport.contact}"
-                        android:textColor="@color/darker_gray"
-                        android:textIsSelectable="true"
-                        android:layout_weight="3"/>
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/details_transport_separator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_transport_contact_container"
-                    android:layout_marginTop="@dimen/margin_smaller"
-                    android:background="@color/gray"/>
-
-                <com.greenfrvr.hashtagview.HashtagView
-                    android:id="@+id/details_tags_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/details_hashtag_view_width"
-                    android:layout_marginTop="@dimen/margin_regular"
-                    android:layout_marginStart="@dimen/margin_regular"
-                    android:layout_marginEnd="@dimen/margin_regular"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_transport_separator"
-                    app:tagTextGravity="center"
-                    app:tagMargin="@dimen/margin_smaller"
-                    app:rowMargin="@dimen/margin_smaller"
-                    app:tagPaddingBottom="@dimen/padding_tiny"
-                    app:tagPaddingLeft="@dimen/padding_tiny"
-                    app:tagPaddingTop="@dimen/padding_tiny"
-                    app:tagPaddingRight="@dimen/padding_tiny"
-                    app:tagBackground="@drawable/oval_background_hashtag"
-                    app:tagForeground="?android:attr/selectableItemBackground"
-                    app:tagTextSize="@dimen/text_small"
-                    app:tagTextColor="@color/dark_gray"/>
-
-                <TextView
-                    android:id="@+id/details_tags_see_all_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/details_tags_view"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:fontFamily="@font/raleway_bold"
-                    android:textSize="@dimen/text_small"
-                    android:textColor="@color/main_blue"
-                    android:layout_gravity="center"
-                    android:text="@string/details_see_all_tags"
-                    android:visibility="@{travel != null &amp;&amp; travel.tagsLength > 55 ? View.VISIBLE : View.GONE}"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
