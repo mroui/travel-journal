@@ -41,6 +41,9 @@ public interface Constants {
     String DB_PACKING_LIST = "packingList";
     String DB_DAYS = "days";
     String DB_RATE = "rate";
+    String DB_NAME = "name";
+    String DB_TAGS = "tags";
+    String DB_IMAGE = "image";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
@@ -103,6 +106,7 @@ public interface Constants {
 
     String BUNDLE_DESTINATION = "DESTINATION";
     String BUNDLE_TRAVEL = "TRAVEL";
+    String BUNDLE_USER = "USER";
 
     int USER_IMG_H = 100;
     int USER_IMG_W = 100;
