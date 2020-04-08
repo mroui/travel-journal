@@ -582,6 +582,34 @@
                         android:text="@string/details_see_all_tags"
                         android:visibility="@{travel != null &amp;&amp; travel.tagsLength > 55 ? View.VISIBLE : View.GONE}"/>
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/details_edit_details_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_tags_see_all_button"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:padding="@dimen/padding_small"
+                        android:text="@string/details_edit_minor_details"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/raleway_bold"
+                        app:backgroundTint="@color/main_blue"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/details_end_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/details_edit_details_button"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:padding="@dimen/padding_small"
+                        android:text="@string/details_end_travel"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/raleway_bold"
+                        app:backgroundTint="@color/main_blue"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

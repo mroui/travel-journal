@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -12,24 +13,32 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
+import com.hootsuite.nachos.NachoTextView;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogEditTravelDetailsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentDetailsBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.models.Travel;
+import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +54,9 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     private Address destination;
     private Reservation accommodation;
     private Reservation transport;
+
+    private Dialog editDialog;
+    private DialogEditTravelDetailsBinding dialogBinding;
 
 
     public static DetailsFragment newInstance(Travel travel, Address destination) {
@@ -157,7 +169,8 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.detailsAccommodationFileValue.setOnClickListener(this);
         binding.detailsTransportFileValue.setOnClickListener(this);
         binding.detailsTagsSeeAllButton.setOnClickListener(this);
-        //todo: finish button & edit button
+        binding.detailsEditDetailsButton.setOnClickListener(this);
+        binding.detailsEndButton.setOnClickListener(this);
     }
 
 
@@ -176,11 +189,17 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             case R.id.details_tags_see_all_button:
                 seeAllTags();
                 break;
+            case R.id.details_edit_details_button:
+                showEditDetailsDialog();
+                break;
+            case R.id.details_end_button:
+                endTravel();
+                break;
         }
     }
 
 
-    //FILES----------------------------------------------------------------------------------------
+    //DETAILS---------------------------------------------------------------------------------------
 
 
     private void downloadFile(String url) {
@@ -214,9 +233,6 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    //OTHERS----------------------------------------------------------------------------------------
-
-
     private void seeAllTags() {
         ConstraintLayout.LayoutParams constraintLayout = (ConstraintLayout.LayoutParams)
                 binding.detailsTagsView.getLayoutParams();
@@ -234,6 +250,108 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.detailsTagsSeeAllButton.setText(seeAllLessText);
         binding.detailsTagsView.setLayoutParams(constraintLayout);
     }
+
+
+    //EDIT------------------------------------------------------------------------------------------
+
+
+    private void showEditDetailsDialog() {
+        if (getContext() != null && getActivity() != null) {
+            editDialog = new Dialog(getContext());
+            editDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            editDialog.setCancelable(false);
+            editDialog.setContentView(R.layout.dialog_edit_travel_details);
+
+            dialogBinding = DialogEditTravelDetailsBinding.inflate(LayoutInflater.from(getContext()));
+            editDialog.setContentView(dialogBinding.getRoot());
+
+            dialogBinding.dialogEditTravelDetailsNameTextInput.setText(travel.getName());
+            loadTravelImage(travel.getImage());
+            setTagsView();
+            setDialogListeners();
+
+            editDialog.show();
+        }
+    }
+
+
+    private void loadTravelImage(String image) {
+        if (getContext() != null && image != null) {
+            Glide.with(getContext())
+                    .load(image)
+                    .fitCenter()
+                    .placeholder(R.drawable.no_image)
+                    .centerCrop()
+                    .into(dialogBinding.dialogEditTravelDetailsImageButton);
+            dialogBinding.dialogEditTravelDetailsImageFileContainer.setVisibility(View.VISIBLE);
+            dialogBinding.dialogEditTravelDetailsImageFileName.setText(readFilenameFromUrl(image));
+        }
+    }
+
+
+    private void setTagsView() {
+        if (getContext() != null) {
+            HashtagAdapter adapter = new HashtagAdapter(
+                    getContext(),
+                    new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.preferences)))
+            );
+            dialogBinding.dialogEditTravelDetailsTagsTextInput.setAdapter(adapter);
+            dialogBinding.dialogEditTravelDetailsTagsTextInput.setThreshold(1);
+            dialogBinding.dialogEditTravelDetailsTagsTextInput.setText(travel.getTags());
+        }
+    }
+
+
+    private void setDialogListeners() {
+        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnClickListener(
+                view -> dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE)
+        );
+        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnFocusChangeListener(
+                (view, focus) -> dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE)
+        );
+        dialogBinding.dialogEditTravelDetailsButtonNegative.setOnClickListener(
+                v -> editDialog.dismiss()
+        );
+        dialogBinding.dialogEditTravelDetailsButtonPositive.setOnClickListener(v -> validateEditDetails());
+    }
+
+
+    private void validateEditDetails() {
+        boolean isNameValid = new FormHandler(getContext()).validateLength(
+                dialogBinding.dialogEditTravelDetailsNameTextInput,
+                dialogBinding.dialogEditTravelDetailsNameTextLayout,
+                8
+        );
+        dialogBinding.dialogEditTravelDetailsTagsTextInput.setText(
+                getUniqueTags(dialogBinding.dialogEditTravelDetailsTagsTextInput)
+        );
+        boolean isTagsValid = dialogBinding.dialogEditTravelDetailsTagsTextInput.getChipValues().size() >= 3;
+
+        if (isNameValid && isTagsValid) {
+            //todo: update travel
+            editDialog.dismiss();
+        } else if (!isTagsValid) {
+            dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.VISIBLE);
+            dialogBinding.dialogEditTravelDetailsContentContainer.fullScroll(View.FOCUS_DOWN);
+        }
+    }
+
+
+    private List<String> getUniqueTags(NachoTextView tagsInput) {
+        return new ArrayList<>(new LinkedHashSet<>(tagsInput.getChipValues()));
+    }
+
+
+    //END-------------------------------------------------------------------------------------------
+
+
+    private void endTravel() {
+        //todo: end travel, save to file, set sharing option, remove unnecessary data like days from
+        //todo: databse, etc, add travel description
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
 
 
     private void back() {
@@ -263,6 +381,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        dialogBinding = null;
     }
 
 }
