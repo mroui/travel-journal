@@ -568,11 +568,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/details_tags_view"
                     android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/raleway_bold"
-                    android:textSize="@dimen/text_regular"
+                    android:textSize="@dimen/text_small"
                     android:textColor="@color/main_blue"
                     android:layout_gravity="center"
-                    android:text="@string/details_travel_tags_see_all"
-                    android:visibility="@{travel != null &amp;&amp; travel.tags.size() > 55 ? View.VISIBLE : View.GONE}"/>
+                    android:text="@string/details_see_all_tags"
+                    android:visibility="@{travel != null &amp;&amp; travel.tagsLength > 55 ? View.VISIBLE : View.GONE}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

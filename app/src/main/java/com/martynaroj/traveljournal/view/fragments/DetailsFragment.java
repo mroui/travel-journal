@@ -2,13 +2,19 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -117,6 +123,19 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.setDestination(destination);
         binding.setAccommodation(accommodation);
         binding.setTransport(transport);
+        initTags();
+    }
+
+
+    private void initTags() {
+        if (travel != null) {
+            binding.detailsTagsView.setData(travel.getTags(), item -> {
+                SpannableString spannableString = new SpannableString(item);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")),
+                        0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return spannableString;
+            });
+        }
     }
 
 
@@ -137,7 +156,8 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.detailsArrowButton.setOnClickListener(this);
         binding.detailsAccommodationFileValue.setOnClickListener(this);
         binding.detailsTransportFileValue.setOnClickListener(this);
-        //todo: onclick download file accommodation & transport, show tags list & see all/see less, finish button & edit button
+        binding.detailsTagsSeeAllButton.setOnClickListener(this);
+        //todo: finish button & edit button
     }
 
 
@@ -152,6 +172,9 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.details_transport_file_value:
                 downloadFile(transport.getFile());
+                break;
+            case R.id.details_tags_see_all_button:
+                seeAllTags();
                 break;
         }
     }
@@ -192,6 +215,25 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void seeAllTags() {
+        ConstraintLayout.LayoutParams constraintLayout = (ConstraintLayout.LayoutParams)
+                binding.detailsTagsView.getLayoutParams();
+        String seeAllLessText;
+        if (binding.detailsTagsView.getLayoutParams().height == ConstraintLayout.LayoutParams.WRAP_CONTENT) {
+            constraintLayout.height = Constants.TAGS_VIEW_HEIGHT;
+            seeAllLessText = getResources().getString(R.string.details_see_all_tags);
+        } else {
+            constraintLayout.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+            seeAllLessText = getResources().getString(R.string.details_see_less_tags);
+        }
+        binding.detailsTagsSeeAllButton.setPaintFlags(
+                binding.detailsTagsSeeAllButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG
+        );
+        binding.detailsTagsSeeAllButton.setText(seeAllLessText);
+        binding.detailsTagsView.setLayoutParams(constraintLayout);
+    }
 
 
     private void back() {

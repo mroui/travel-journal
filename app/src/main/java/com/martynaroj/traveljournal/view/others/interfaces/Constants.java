@@ -9,7 +9,9 @@ public interface Constants {
     int RC_EXTERNAL_STORAGE_FILE = 8002;
     int RC_ACCESS_FINE_LOCATION = 7001;
     int RC_BROADCAST = 6001;
+
     int PREFERENCES_VIEW_HEIGHT = 303;
+    int TAGS_VIEW_HEIGHT = 303;
 
     String SUCCESS = "SUCCESS";
     String ERROR = "ERROR";
