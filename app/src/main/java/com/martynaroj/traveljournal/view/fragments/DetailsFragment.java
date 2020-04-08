@@ -429,6 +429,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
 
     private void updateTravel(String image) {
+        travel.setImage(image);
         travelViewModel.updateTravel(travel.getId(), new HashMap<String, Object>() {{
             put(Constants.DB_NAME, travel.getName());
             put(Constants.DB_IMAGE, image);
