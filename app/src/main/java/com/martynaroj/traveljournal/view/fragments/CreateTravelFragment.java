@@ -819,15 +819,18 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travelId;
 
         if (imageUri != null)
-            prepareFileToSave(Constants.IMAGE, null, imageUri, path);
+            prepareFileToSave(Constants.IMAGE, null, imageUri, path,
+                    Constants.TRAVEL_IMG_H, Constants.TRAVEL_IMG_W);
 
         if (transportFileUri != null)
-            prepareFileToSave(Constants.TRANSPORT, transportId, transportFileUri, path);
+            prepareFileToSave(Constants.TRANSPORT, transportId, transportFileUri, path,
+                    Constants.RESERVATION_IMG_H, Constants.RESERVATIONS_IMG_W);
         else
             createReservation(Constants.TRANSPORT, transportId, null);
 
         if (accommodationFileUri != null)
-            prepareFileToSave(Constants.ACCOMMODATION, accommodationId, accommodationFileUri, path);
+            prepareFileToSave(Constants.ACCOMMODATION, accommodationId, accommodationFileUri, path,
+                    Constants.RESERVATION_IMG_H, Constants.RESERVATIONS_IMG_W);
         else
             createReservation(Constants.ACCOMMODATION, accommodationId, null);
     }
@@ -862,7 +865,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    private void prepareFileToSave(String kind, String reservationId, Uri uri, String path) {
+    private void prepareFileToSave(String kind, String reservationId, Uri uri, String path,
+                                   Integer maxHeight, Integer maxWidth) {
         if (uri.getPath() != null && getContext() != null) {
             String fileName = getFileName(uri);
             if (fileName != null) {
@@ -870,7 +874,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 if (Objects.equals(fileExtension.trim(), Constants.PDF_EXT))
                     addFile(kind, reservationId, uri, null, kind + Constants.PDF_EXT, path);
                 else {
-                    byte[] thumb = FileCompressor.compressToByte(getContext(), uri);
+                    byte[] thumb = FileCompressor.compressToByte(getContext(), uri, maxHeight, maxWidth);
                     if (thumb != null)
                         addFile(kind, reservationId, null, thumb, kind + Constants.JPG_EXT, path);
                     else {

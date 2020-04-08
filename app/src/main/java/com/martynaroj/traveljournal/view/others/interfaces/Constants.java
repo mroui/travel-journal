@@ -101,4 +101,11 @@ public interface Constants {
     String BUNDLE_DESTINATION = "DESTINATION";
     String BUNDLE_TRAVEL = "TRAVEL";
 
+    int USER_IMG_H = 100;
+    int USER_IMG_W = 100;
+    int TRAVEL_IMG_H = 200;
+    int TRAVEL_IMG_W = 300;
+    int RESERVATION_IMG_H = 400;
+    int RESERVATIONS_IMG_W = 400;
+
 }

@@ -599,7 +599,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void savePhotoToStorage(Map<String, Object> changes) {
         if (newImageUri.getPath() != null && getContext() != null) {
-            byte [] thumb = FileCompressor.compressToByte(getContext(), newImageUri);
+            byte [] thumb = FileCompressor.compressToByte(getContext(), newImageUri,
+                    Constants.USER_IMG_H, Constants.USER_IMG_W);
             storageViewModel.saveImageToStorage(thumb, user.getUid() + ".jpg", user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
                 if (status.contains(Constants.ERROR)) {
