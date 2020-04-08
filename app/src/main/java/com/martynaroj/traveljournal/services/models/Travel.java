@@ -312,6 +312,18 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
+    public int getTagsLength() {
+        int count = 0;
+        if (this.tags != null) {
+            for (String string : this.tags) {
+                count += string.length();
+            }
+        }
+        return count;
+    }
+
+
     @BindingAdapter("travelUrl")
     public static void loadImage(ImageView v, String imgUrl){
         Glide.with(v.getContext())
