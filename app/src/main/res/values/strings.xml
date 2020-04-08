@@ -259,6 +259,7 @@
         It\'s <b>optional</b> but better to have one than not, right?
     </string>
     <string name="create_travel_stage_2_upload_image">Upload image</string>
+    <string name="create_travel_stage_2_upload_image_file_remove">Remove image</string>
     <string name="create_travel_stage_3_title">Date and time</string>
     <string name="create_travel_stage_3_desc_1">First of all, choose departure
         date.\nIt\'s also good to plan approximate time, for example time on travel ticket

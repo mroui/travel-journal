@@ -86,6 +86,7 @@ public interface Constants {
 
     String TRANSPORT_FILE = "TRANSPORT_FILE";
     String ACCOMMODATION_FILE = "ACCOMMODATION_FILE";
+    String TRAVEL_IMAGE_FILE = "TRAVEL_IMAGE_FILE";
 
     String IMAGE = "image";
     String ACCOMMODATION = "accommodation";

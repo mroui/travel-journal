@@ -241,6 +241,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         binding.createTravelNextButton.setOnClickListener(this);
         binding.createTravelPreviousButton.setOnClickListener(this);
         binding.createTravelStage2UploadImageButton.setOnClickListener(this);
+        binding.createTravelStage2UploadImageFileRemoveButton.setOnClickListener(this);
         binding.createTravelStage3DateFrom.setOnClickListener(view -> {
             binding.createTravelStage3Error.setVisibility(View.GONE);
             showDatePickerDialog(binding.createTravelStage3DateFrom);
@@ -343,6 +344,9 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 break;
             case R.id.create_travel_stage_2_upload_image_button:
                 checkPermissionsToSelectImage();
+                break;
+            case R.id.create_travel_stage_2_upload_image_file_remove_button:
+                removeFile(Constants.TRAVEL_IMAGE_FILE);
                 break;
             case R.id.create_travel_stage_5_transport_upload_file_button:
             case R.id.create_travel_stage_6_accommodation_upload_file_button:
@@ -544,8 +548,12 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private void loadImage() {
         if (getContext() != null)
             Glide.with(getContext())
-                    .load(imageUri).centerCrop()
+                    .load(imageUri)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_add_a_photo_gray)
                     .into(binding.createTravelStage2UploadImageButton);
+        binding.createTravelStage2UploadImageFileContainer.setVisibility(View.VISIBLE);
+        binding.createTravelStage2UploadImageFileName.setText(getFileName(imageUri));
     }
 
 
@@ -562,12 +570,20 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void removeFile(String type) {
-        if (type.equals(Constants.TRANSPORT_FILE)) {
-            transportFileUri = null;
-            binding.createTravelStage5TransportFileContainer.setVisibility(View.GONE);
-        } else if (type.equals(Constants.ACCOMMODATION_FILE)) {
-            accommodationFileUri = null;
-            binding.createTravelStage6AccommodationFileContainer.setVisibility(View.GONE);
+        switch (type) {
+            case Constants.TRANSPORT_FILE:
+                transportFileUri = null;
+                binding.createTravelStage5TransportFileContainer.setVisibility(View.GONE);
+                break;
+            case Constants.ACCOMMODATION_FILE:
+                accommodationFileUri = null;
+                binding.createTravelStage6AccommodationFileContainer.setVisibility(View.GONE);
+                break;
+            case Constants.TRAVEL_IMAGE_FILE:
+                imageUri = null;
+                binding.createTravelStage2UploadImageButton.setImageResource(R.drawable.ic_add_a_photo_gray);
+                binding.createTravelStage2UploadImageFileContainer.setVisibility(View.GONE);
+                break;
         }
     }
 

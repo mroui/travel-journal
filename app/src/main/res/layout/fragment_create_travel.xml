@@ -224,6 +224,39 @@
                             android:contentDescription="@string/create_travel_stage_2_upload_image"
                             tools:ignore="UnusedAttribute"/>
 
+                        <LinearLayout
+                            android:id="@+id/create_travel_stage_2_upload_image_file_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_tiny"
+                            android:layout_marginHorizontal="@dimen/margin_tiny"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/create_travel_stage_2_upload_image_file_name"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/raleway_bold"
+                                android:textSize="@dimen/text_smaller"
+                                android:textColor="@color/main_green"
+                                android:textAlignment="viewEnd"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:layout_weight="7"/>
+
+                            <ImageView
+                                android:id="@+id/create_travel_stage_2_upload_image_file_remove_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_remove"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:contentDescription="@string/create_travel_stage_2_upload_image_file_remove"
+                                android:layout_weight="1"/>
+
+                        </LinearLayout>
+
                         <TextView
                             android:id="@+id/create_travel_stage_2_desc"
                             android:layout_width="wrap_content"
@@ -646,6 +679,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_remove"
+                                android:background="?android:attr/selectableItemBackground"
                                 android:contentDescription="@string/create_travel_stage_5_file_remove"
                                 android:layout_weight="1"/>
 
@@ -761,7 +795,8 @@
                             android:text="@string/messages_accommodation_select"
                             android:textSize="@dimen/text_small"
                             android:textColor="@color/error"
-                            android:visibility="gone"/>
+                            android:visibility="gone"
+                            tools:ignore="TooManyViews"/>
 
                         <TextView
                             android:id="@+id/create_travel_stage_6_accommodation_upload_file_desc"
@@ -792,8 +827,7 @@
                             android:layout_marginHorizontal="@dimen/margin_tiny"
                             android:orientation="horizontal"
                             android:gravity="center"
-                            android:visibility="gone"
-                            tools:ignore="TooManyViews">
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/create_travel_stage_6_accommodation_file_name"
@@ -812,6 +846,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_remove"
+                                android:background="?android:attr/selectableItemBackground"
                                 android:contentDescription="@string/create_travel_stage_6_file_remove"
                                 android:layout_weight="1"/>
 
