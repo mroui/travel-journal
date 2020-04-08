@@ -36,7 +36,6 @@
 
     <string name="details_title">Details</string>
     <string name="details_travel_image">Travel image</string>
-    <string name="details_travel_tags_see_all">See all tags</string>
     <string name="details_detination_title">Destination</string>
     <string name="details_departure_title">Departure</string>
     <string name="details_arrival_title">Arrival</string>
@@ -44,8 +43,10 @@
     <string name="details_accommodation_title">Accommodation</string>
     <string name="details_accommodation_transport_contact_title">Contact</string>
     <string name="details_accommodation_transport_file_title">File</string>
-    <string name="details_accommodation_transport_download_file">Download file</string>
+    <string name="details_accommodation_transport_download_file"><u>Download file</u></string>
     <string name="details_transport_title">Transport</string>
+    <string name="details_see_all_tags"><u>+ See all tags</u></string>
+    <string name="details_see_less_tags"><u>- See less tags</u></string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
