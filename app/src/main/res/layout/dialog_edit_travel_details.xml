@@ -33,6 +33,7 @@
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/padding_smaller"
+        android:paddingHorizontal="@dimen/padding_smaller"
         android:layout_weight="1">
 
         <LinearLayout
@@ -112,7 +113,8 @@
                 android:layout_marginTop="@dimen/margin_tiny"
                 android:orientation="horizontal"
                 android:gravity="center"
-                tools:ignore="UseCompoundDrawables">
+                tools:ignore="UseCompoundDrawables"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/dialog_edit_travel_details_image_file_name"
