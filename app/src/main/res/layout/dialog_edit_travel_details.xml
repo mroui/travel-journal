@@ -100,7 +100,7 @@
                 android:layout_width="@dimen/travel_image_half_w"
                 android:layout_height="@dimen/travel_image_half_h"
                 android:backgroundTint="@color/dirty_white"
-                android:src="@drawable/ic_add_a_photo_gray"
+                android:src="@drawable/no_image"
                 android:contentDescription="@string/create_travel_stage_2_upload_image"
                 tools:ignore="UnusedAttribute"
                 android:layout_gravity="center"/>

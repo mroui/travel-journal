@@ -1,11 +1,15 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,7 +20,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -30,10 +37,13 @@ import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +52,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.app.Activity.RESULT_OK;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class DetailsFragment extends BaseFragment implements View.OnClickListener {
@@ -57,6 +68,8 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private Dialog editDialog;
     private DialogEditTravelDetailsBinding dialogBinding;
+
+    private Uri newImageUri;
 
 
     public static DetailsFragment newInstance(Travel travel, Address destination) {
@@ -192,10 +205,37 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             case R.id.details_edit_details_button:
                 showEditDetailsDialog();
                 break;
+            case R.id.dialog_edit_travel_details_image_button:
+                checkPermissionsToSelectImage();
+                break;
+            case R.id.dialog_edit_travel_details_tags_text_input:
+                dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE);
+                break;
+            case R.id.dialog_edit_travel_details_button_positive:
+                validateEditDetails();
+                break;
+            case R.id.dialog_edit_travel_details_button_negative:
+                editDialog.dismiss();
+                break;
+            case R.id.dialog_edit_travel_details_image_file_remove_button:
+                removeImage();
+                break;
             case R.id.details_end_button:
                 endTravel();
                 break;
         }
+    }
+
+
+    private void setEditDialogListeners() {
+        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnClickListener(this);
+        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnFocusChangeListener(
+                (view, focus) -> dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE)
+        );
+        dialogBinding.dialogEditTravelDetailsImageButton.setOnClickListener(this);
+        dialogBinding.dialogEditTravelDetailsImageFileRemoveButton.setOnClickListener(this);
+        dialogBinding.dialogEditTravelDetailsButtonNegative.setOnClickListener(this);
+        dialogBinding.dialogEditTravelDetailsButtonPositive.setOnClickListener(this);
     }
 
 
@@ -266,16 +306,16 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             editDialog.setContentView(dialogBinding.getRoot());
 
             dialogBinding.dialogEditTravelDetailsNameTextInput.setText(travel.getName());
-            loadTravelImage(travel.getImage());
+            loadTravelImage(travel.getImage(), readFilenameFromUrl(travel.getImage()));
             setTagsView();
-            setDialogListeners();
+            setEditDialogListeners();
 
             editDialog.show();
         }
     }
 
 
-    private void loadTravelImage(String image) {
+    private void loadTravelImage(String image, String fileName) {
         if (getContext() != null && image != null) {
             Glide.with(getContext())
                     .load(image)
@@ -284,8 +324,9 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                     .centerCrop()
                     .into(dialogBinding.dialogEditTravelDetailsImageButton);
             dialogBinding.dialogEditTravelDetailsImageFileContainer.setVisibility(View.VISIBLE);
-            dialogBinding.dialogEditTravelDetailsImageFileName.setText(readFilenameFromUrl(image));
-        }
+            dialogBinding.dialogEditTravelDetailsImageFileName.setText(fileName);
+        } else
+            dialogBinding.dialogEditTravelDetailsImageFileContainer.setVisibility(View.GONE);
     }
 
 
@@ -299,20 +340,6 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             dialogBinding.dialogEditTravelDetailsTagsTextInput.setThreshold(1);
             dialogBinding.dialogEditTravelDetailsTagsTextInput.setText(travel.getTags());
         }
-    }
-
-
-    private void setDialogListeners() {
-        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnClickListener(
-                view -> dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE)
-        );
-        dialogBinding.dialogEditTravelDetailsTagsTextInput.setOnFocusChangeListener(
-                (view, focus) -> dialogBinding.dialogEditTravelDetailsTagsError.setVisibility(View.GONE)
-        );
-        dialogBinding.dialogEditTravelDetailsButtonNegative.setOnClickListener(
-                v -> editDialog.dismiss()
-        );
-        dialogBinding.dialogEditTravelDetailsButtonPositive.setOnClickListener(v -> validateEditDetails());
     }
 
 
@@ -339,6 +366,53 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private List<String> getUniqueTags(NachoTextView tagsInput) {
         return new ArrayList<>(new LinkedHashSet<>(tagsInput.getChipValues()));
+    }
+
+
+    private void removeImage() {
+        dialogBinding.dialogEditTravelDetailsImageFileContainer.setVisibility(View.GONE);
+        dialogBinding.dialogEditTravelDetailsImageButton.setImageResource(R.drawable.no_image);
+    }
+
+
+    private void selectImage() {
+        if (getActivity() != null && getContext() != null) {
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(3, 2)
+                    .start(getContext(), this);
+        }
+    }
+
+
+    private void checkPermissionsToSelectImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (!isReadStoragePermissionsGranted())
+                requestReadStoragePermissions();
+            else
+                selectImage();
+        else
+            selectImage();
+    }
+
+
+    private boolean isReadStoragePermissionsGranted() {
+        if (getContext() != null)
+            return ContextCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        else
+            return false;
+    }
+
+
+    private void requestReadStoragePermissions() {
+        if (getActivity() != null) {
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    Constants.RC_EXTERNAL_STORAGE_IMG
+            );
+        }
     }
 
 
@@ -374,6 +448,21 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK && result != null) {
+                newImageUri = result.getUri();
+                loadTravelImage(newImageUri.toString(), FileUriUtils.getFileName(getContext(), newImageUri));
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
+                showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
+        } else
+            showSnackBar(getResources().getString(R.string.messages_error_no_file_selected), Snackbar.LENGTH_SHORT);
     }
 
 
