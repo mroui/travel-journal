@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,21 @@ import androidx.annotation.NonNull;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Expense;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BudgetExpensesAdapter extends ArrayAdapter<Expense> {
 
     private Context context;
+    private final List<Expense> list;
 
-    public BudgetExpensesAdapter(List<Expense> listData, Context context) {
-        super(context, R.layout.item_budget_expense, listData);
+
+    public BudgetExpensesAdapter(List<Expense> list, Context context) {
+        super(context, R.layout.item_budget_expense, list);
         this.context = context;
+        this.list = list;
     }
+
 
     @SuppressLint({"SetTextI18n", "InflateParams"})
     @NonNull
@@ -49,6 +55,15 @@ public class BudgetExpensesAdapter extends ArrayAdapter<Expense> {
                 );
         }
         return view;
+    }
+
+
+    public List<Expense> getTodayList() {
+        List<Expense> todayList = new ArrayList<>();
+        for (Expense e : list)
+            if (DateUtils.isToday(e.getDate()))
+                todayList.add(e);
+        return todayList;
     }
 
 }
