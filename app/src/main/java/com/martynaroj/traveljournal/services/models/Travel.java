@@ -302,7 +302,7 @@ public class Travel extends BaseObservable implements Serializable {
     private String getTimeString(long time) {
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(time);
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm aa");
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
         return format.format(date.getTime());
     }
 

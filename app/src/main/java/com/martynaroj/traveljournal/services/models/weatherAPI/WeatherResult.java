@@ -100,7 +100,7 @@ public class WeatherResult extends BaseObservable implements Serializable {
 
     @SuppressLint("SimpleDateFormat")
     public String getTimeString(Integer time) {
-        return new SimpleDateFormat("hh:mm aa").format(new Date(
+        return new SimpleDateFormat("hh:mm a").format(new Date(
                 (time + (this.timezone - (TimeZone.getDefault().getOffset(new Date().getTime()) / 1000L))
                 ) * 1000L));
     }
