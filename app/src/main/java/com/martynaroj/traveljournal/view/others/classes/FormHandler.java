@@ -43,7 +43,13 @@ public class FormHandler {
             layout.setError(context.getResources().getString(R.string.messages_invalid_email));
             input.requestFocus();
             return false;
-        } else
+        } else if (input.getInputType() ==
+                (InputType.TYPE_NUMBER_FLAG_DECIMAL + InputType.TYPE_CLASS_NUMBER)
+                && Double.valueOf(input.getText().toString()).equals(0D)) {
+            layout.setError(context.getResources().getString(R.string.messages_value_zero));
+            input.requestFocus();
+            return false;
+        }else
             layout.setError(null);
         return true;
     }
