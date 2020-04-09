@@ -17,30 +17,36 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.io.Serializable;
+import java.util.List;
+
 public class BudgetFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentBudgetBinding binding;
     private UserViewModel userViewModel;
     private Travel travel;
     private Day today;
+    private List<Day> days;
 
 
-    public static BudgetFragment newInstance(Travel travel, Day day) {
+    public static BudgetFragment newInstance(Travel travel, Day day, List<Day> days) {
         BudgetFragment fragment = new BudgetFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.BUNDLE_TRAVEL, travel);
         args.putSerializable(Constants.BUNDLE_DAY, day);
+        args.putSerializable(Constants.BUNDLE_DAYS, (Serializable) days);
         fragment.setArguments(args);
         return fragment;
     }
 
-
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             travel = (Travel) getArguments().getSerializable(Constants.BUNDLE_TRAVEL);
             today = (Day) getArguments().getSerializable(Constants.BUNDLE_DAY);
+            days = (List<Day>) getArguments().getSerializable(Constants.BUNDLE_DAYS);
         }
     }
 
@@ -51,6 +57,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
         View view = binding.getRoot();
 
         initViewModels();
+        initContentData();
         setListeners();
         observeUserChanges();
 
@@ -65,6 +72,11 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
+    }
+
+
+    private void initContentData() {
+        binding.setTravel(travel);
     }
 
 
