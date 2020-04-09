@@ -47,4 +47,10 @@ public class Expense extends Note implements Serializable {
         notifyPropertyChanged(BR.amount);
     }
 
+
+    @Exclude
+    public String getAmountString() {
+        return (amount > 0 ? "+" : "") + new DecimalFormat("#.00").format(amount);
+    }
+
 }

@@ -52,4 +52,11 @@ public class Note extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.description);
     }
 
+
+    @SuppressLint("SimpleDateFormat")
+    @Exclude
+    public String getDateTimeString() {
+        return new SimpleDateFormat("dd.MM.yyyy, hh:mm a").format(new Date(date));
+    }
+
 }
