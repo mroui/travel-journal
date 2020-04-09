@@ -55,4 +55,7 @@
 
     <color name="error">#FF9494</color>
 
+    <color name="red">#CC0000</color>
+    <color name="green">#4BB543</color>
+
 </resources>
