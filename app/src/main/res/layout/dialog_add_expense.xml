@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_small">
+
+    <TextView
+        android:id="@+id/dialog_add_expense_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_add_expense_title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"/>
+
+    <TextView
+        android:id="@+id/dialog_add_expense_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/padding_small"
+        android:fontFamily="@font/raleway_regular"
+        android:textAlignment="textStart"
+        android:text="@string/dialog_add_expense_desc"
+        android:textSize="@dimen/text_regular"
+        android:textColor="@color/gray"/>
+
+    <ScrollView
+        android:id="@+id/dialog_add_expense_content_container"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/padding_smaller"
+        android:paddingHorizontal="@dimen/padding_smaller"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialog_add_expense_category_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextSpinnerPink"
+                app:hintEnabled="false"
+                app:errorEnabled="true"
+                app:errorIconDrawable="@null">
+                <com.google.android.material.textview.MaterialAutoCompleteTextView
+                    android:id="@+id/dialog_add_expense_category_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_smaller"
+                    android:textSize="@dimen/text_small"
+                    android:fontFamily="@font/raleway_regular"
+                    android:background="@color/dirty_white"
+                    android:hint="@string/dialog_add_expense_category"
+                    android:textColorHint="@color/gray"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/dialog_add_expense_amount_char"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_regular"
+                    android:thumb="@drawable/switch_thumb_pink"
+                    app:trackTint="@color/white"
+                    app:showText="true"
+                    android:textOn="@string/plus"
+                    android:textOff="@string/minus"
+                    app:switchTextAppearance="@style/SwitchText"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dialog_add_expense_amount_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextInput"
+                    app:boxStrokeColor="@color/main_pink"
+                    app:hintEnabled="false"
+                    app:errorEnabled="false"
+                    app:errorIconDrawable="@null">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_add_expense_amount_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:inputType="numberDecimal"
+                        android:textAlignment="center"
+                        android:text="@string/dialog_add_expense_default_amount"
+                        android:maxLength="10"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_add_expense_button_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:text="@string/dialog_button_cancel"
+            android:textColor="@color/main_pink"
+            app:rippleColor="@color/pink_bg_light"
+            android:fontFamily="@font/raleway_bold"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_add_expense_button_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:text="@string/dialog_button_add"
+            android:textColor="@color/main_pink"
+            app:rippleColor="@color/pink_bg_light"
+            android:fontFamily="@font/raleway_bold"/>
+
+    </LinearLayout>
+
+</LinearLayout>
