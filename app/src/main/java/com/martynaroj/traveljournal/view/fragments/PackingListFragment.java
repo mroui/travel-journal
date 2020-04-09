@@ -266,6 +266,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
         if (!adapter.getGroupNamesList().contains(categoryName))
             adapter.addGroup(newCategory);
         adapter.addItem(newCategory, newItem);
+        updatePackingList();
     }
 
 
