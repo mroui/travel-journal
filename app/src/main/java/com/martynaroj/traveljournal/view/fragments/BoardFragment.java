@@ -84,6 +84,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
         observeUserChanges();
         observeTravelChanges();
+        observeTodayChanges();
 
         setListeners();
 
@@ -154,6 +155,11 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             initContentData();
             checkPackingList();
         });
+    }
+
+
+    private void observeTodayChanges() {
+        dayViewModel.getToday().observe(getViewLifecycleOwner(), today -> this.today = today);
     }
 
 

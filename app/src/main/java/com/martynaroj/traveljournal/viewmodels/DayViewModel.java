@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.respositories.DayRepository;
@@ -18,10 +19,12 @@ public class DayViewModel extends AndroidViewModel {
     private DayRepository dayRepository;
     private LiveData<List<Day>> daysLiveData;
     private LiveData<Status> statusLiveData;
+    private MutableLiveData<Day> today;
 
     public DayViewModel(@NonNull Application application) {
         super(application);
         dayRepository = new DayRepository(application.getApplicationContext());
+        today = new MutableLiveData<>();
     }
 
     public String generateId() {
@@ -46,6 +49,14 @@ public class DayViewModel extends AndroidViewModel {
 
     public void updateDay(String id, Map<String, Object> changes) {
         dayRepository.updateDay(id, changes);
+    }
+
+    public void setToday(Day day) {
+        this.today.setValue(day);
+    }
+
+    public LiveData<Day> getToday() {
+        return today;
     }
 
 }
