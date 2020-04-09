@@ -1,23 +1,24 @@
 package com.martynaroj.traveljournal.services.models;
 
-import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.firebase.firestore.Exclude;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
-public class Cost extends BaseObservable implements Serializable {
+public class Expense extends Note implements Serializable {
 
     private String category;
     private Double amount;
 
-
-    public Cost() {
+    public Expense() {
     }
 
 
-    public Cost(String category, Double amount) {
+    public Expense(String category, Double amount) {
+        super();
         this.category = category;
         this.amount = amount;
     }

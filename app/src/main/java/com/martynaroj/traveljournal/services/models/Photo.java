@@ -15,8 +15,8 @@ public class Photo extends Note implements Serializable {
     }
 
 
-    public Photo(long date, String src, String description) {
-        super(date, description);
+    public Photo(String src, String description) {
+        super(description);
         this.src = src;
     }
 

@@ -1,10 +1,16 @@
 package com.martynaroj.traveljournal.services.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Note extends BaseObservable implements Serializable {
 
@@ -13,11 +19,12 @@ public class Note extends BaseObservable implements Serializable {
 
 
     Note() {
+        this.date = System.currentTimeMillis();
     }
 
 
-    Note(long date, String description) {
-        this.date = date;
+    Note(String description) {
+        this();
         this.description = description;
     }
 

@@ -15,8 +15,8 @@ public class Place extends Note implements Serializable {
     }
 
 
-    public Place(long date, String description, String address, Integer rate) {
-        super(date, description);
+    public Place(String description, String address, Integer rate) {
+        super(description);
         this.address = address;
         this.rate = rate;
     }

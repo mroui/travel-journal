@@ -19,14 +19,14 @@ public class Day extends BaseObservable implements Serializable {
     private List<Photo> photos;
     private List<Note> notes;
     private List<Place> places;
-    private List<Cost> costs;
+    private List<Expense> expenses;
 
 
     private Day() {
         photos = new ArrayList<>();
         notes = new ArrayList<>();
         places = new ArrayList<>();
-        costs = new ArrayList<>();
+        expenses = new ArrayList<>();
         rate = Emoji.NORMAL.ordinal();
     }
 
@@ -111,14 +111,14 @@ public class Day extends BaseObservable implements Serializable {
 
 
     @Bindable
-    public List<Cost> getCosts() {
-        return costs;
+    public List<Expense> getExpenses() {
+        return expenses;
     }
 
 
-    public void setCosts(List<Cost> costs) {
-        this.costs = costs;
-        notifyPropertyChanged(BR.costs);
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+        notifyPropertyChanged(BR.expenses);
     }
 
 
