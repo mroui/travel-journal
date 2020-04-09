@@ -28,7 +28,8 @@
             android:value="@string/google_api_key"/>
         <activity android:name=".view.SplashActivity"
             android:theme="@style/SplashScreen"
-            tools:ignore="InnerclassSeparator">
+            android:screenOrientation="sensorPortrait"
+            tools:ignore="InnerclassSeparator,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -36,7 +37,8 @@
         </activity>
         <activity
             android:name=".view.MainActivity"
-            tools:ignore="InnerclassSeparator" />
+            android:screenOrientation="sensorPortrait"
+            tools:ignore="InnerclassSeparator,LockedOrientationActivity"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
