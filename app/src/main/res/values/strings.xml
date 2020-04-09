@@ -61,6 +61,7 @@
     <string name="dialog_edit_travel_details_tags_hint">Beach, europe, culture, landscape…</string>
 
     <string name="budget_title">Manage budget</string>
+    <string name="budget_expenses_no_results">No expenses found.</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
@@ -352,5 +353,4 @@
     <string name="dialog_rate_day_emoji_lucky">EMOJI LUCKY</string>
     <string name="dialog_rate_day_emoji_shock">EMOJI SHOCK</string>
     <string name="dialog_rate_day_emoji_bored">EMOJI BORED</string>
-
 </resources>
