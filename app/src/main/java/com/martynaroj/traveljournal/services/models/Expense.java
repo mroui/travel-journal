@@ -3,15 +3,20 @@ package com.martynaroj.traveljournal.services.models;
 import androidx.databinding.Bindable;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
+@IgnoreExtraProperties
 public class Expense extends Note implements Serializable, Comparable<Expense> {
 
     private String category;
     private Double amount;
+    @Exclude
+    private String description;
+
 
     public Expense() {
     }
@@ -51,6 +56,13 @@ public class Expense extends Note implements Serializable, Comparable<Expense> {
     @Exclude
     public String getAmountString() {
         return (amount > 0 ? "+" : "") + new DecimalFormat("#.00").format(amount);
+    }
+
+
+    @Override
+    @Exclude
+    public String getDescription() {
+        return super.getDescription();
     }
 
 
