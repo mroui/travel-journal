@@ -6,11 +6,11 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="travel"
-            type="com.martynaroj.traveljournal.services.models.Travel"/>
+            name="budget"
+            type="String"/>
         <variable
-            name="expensesList"
-            type="java.util.List" />
+            name="isListEmpty"
+            type="Boolean" />
     </data>
 
     <FrameLayout
@@ -60,7 +60,7 @@
                 android:layout_marginTop="@dimen/margin_regular"
                 android:fontFamily="@font/roboto_light"
                 android:textSize="@dimen/text_large"
-                android:text="@{travel.budget.toString()}"
+                android:text="@{budget}"
                 android:textColor="@color/black"/>
 
             <ListView
@@ -71,7 +71,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="@dimen/margin_regular"/>
+                android:layout_marginTop="@dimen/margin_regular"
+                android:divider="@color/white"
+                android:dividerHeight="4dp"/>
 
             <TextView
                 android:id="@+id/budget_expenses_list_message"
@@ -86,7 +88,7 @@
                 android:text="@string/budget_expenses_no_results"
                 android:textAlignment="center"
                 android:fontFamily="@font/raleway_medium"
-                android:visibility="@{expensesList == null || expensesList.size() == 0 ? View.VISIBLE : View.INVISIBLE}"/>
+                android:visibility="@{isListEmpty ? View.VISIBLE : View.INVISIBLE}"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/budget_add_floating_button"

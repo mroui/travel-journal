@@ -12,12 +12,16 @@ import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentBudgetBinding;
 import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Expense;
 import com.martynaroj.traveljournal.services.models.Travel;
+import com.martynaroj.traveljournal.view.adapters.BudgetExpensesAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BudgetFragment extends BaseFragment implements View.OnClickListener {
@@ -27,6 +31,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     private Travel travel;
     private Day today;
     private List<Day> days;
+    private List<Expense> expenses;
 
 
     public static BudgetFragment newInstance(Travel travel, Day day, List<Day> days) {
@@ -76,7 +81,23 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
 
 
     private void initContentData() {
-        binding.setTravel(travel);
+        if (getContext() != null) {
+            expenses = getAllDaysExpensesList();
+            initListAdapter();
+            setBindingData();
+        }
+    }
+
+
+    private void initListAdapter() {
+        BudgetExpensesAdapter adapter = new BudgetExpensesAdapter(expenses, getContext());
+        binding.budgetExpensesList.setAdapter(adapter);
+    }
+
+
+    private void setBindingData() {
+        binding.setBudget(new DecimalFormat("#.00").format(getRemainingBudget()));
+        binding.setIsListEmpty(expenses.size() == 0);
     }
 
 
@@ -105,6 +126,25 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
                 back();
                 break;
         }
+    }
+
+
+    //CALCULATIONS----------------------------------------------------------------------------------
+
+
+    private List<Expense> getAllDaysExpensesList() {
+        List<Expense> list = new ArrayList<>();
+        for (Day day : days)
+            list.addAll(day.getExpenses());
+        return list;
+    }
+
+
+    private Double getRemainingBudget() {
+        Double amount = travel.getBudget();
+        for (Expense expense : expenses)
+            amount += expense.getAmount();
+        return amount;
     }
 
 
