@@ -8,7 +8,7 @@ import com.martynaroj.traveljournal.BR;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
-public class Expense extends Note implements Serializable {
+public class Expense extends Note implements Serializable, Comparable<Expense> {
 
     private String category;
     private Double amount;
@@ -51,6 +51,12 @@ public class Expense extends Note implements Serializable {
     @Exclude
     public String getAmountString() {
         return (amount > 0 ? "+" : "") + new DecimalFormat("#.00").format(amount);
+    }
+
+
+    @Override
+    public int compareTo(Expense e) {
+        return Long.compare(getDate(), e.getDate());
     }
 
 }
