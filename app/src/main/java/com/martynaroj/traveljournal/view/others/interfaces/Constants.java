@@ -44,6 +44,7 @@ public interface Constants {
     String DB_NAME = "name";
     String DB_TAGS = "tags";
     String DB_IMAGE = "image";
+    String DB_EXPENSES = "expenses";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
