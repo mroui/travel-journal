@@ -60,6 +60,8 @@
     <string name="dialog_edit_travel_details_tags_title">TAGS</string>
     <string name="dialog_edit_travel_details_tags_hint">Beach, europe, culture, landscape…</string>
 
+    <string name="budget_title">Manage budget</string>
+
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
     <string name="map_nearby_places">Nearby places</string>

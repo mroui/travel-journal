@@ -107,6 +107,7 @@ public interface Constants {
     String BUNDLE_DESTINATION = "DESTINATION";
     String BUNDLE_TRAVEL = "TRAVEL";
     String BUNDLE_USER = "USER";
+    String BUNDLE_DAY = "DAY";
 
     int USER_IMG_H = 100;
     int USER_IMG_W = 100;
