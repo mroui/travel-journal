@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -139,6 +140,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     private void setListeners() {
         binding.budgetArrowButton.setOnClickListener(this);
         binding.budgetAddFloatingButton.setOnClickListener(this);
+        setOnListScrollListener();
     }
 
 
@@ -152,6 +154,23 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
                 showAddExpenseDialog();
                 break;
         }
+    }
+
+
+    private void setOnListScrollListener() {
+        binding.budgetExpensesList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE)
+                    binding.budgetAddFloatingButton.show();
+                else
+                    binding.budgetAddFloatingButton.hide();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int i, int i1, int i2) {
+            }
+        });
     }
 
 
