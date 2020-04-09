@@ -63,6 +63,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -71,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_regular"
                     android:thumb="@drawable/switch_thumb_pink"
-                    app:trackTint="@color/white"
+                    app:trackTint="@color/light_gray"
                     app:showText="true"
                     android:textOn="@string/plus"
                     android:textOff="@string/minus"
