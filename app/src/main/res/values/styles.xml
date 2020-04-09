@@ -53,9 +53,14 @@
         <item name="backgroundTint">@color/light_gray</item>
     </style>
 
-    <style name="EditTextSpinner" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+    <style name="EditTextSpinnerRed" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="colorAccent">@color/main_red</item>
         <item name="colorPrimary">@color/main_red</item>
+    </style>
+
+    <style name="EditTextSpinnerPink" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="colorAccent">@color/main_pink</item>
+        <item name="colorPrimary">@color/main_pink</item>
     </style>
 
     <style name="RedTextButton" parent="Widget.MaterialComponents.Button.TextButton">
