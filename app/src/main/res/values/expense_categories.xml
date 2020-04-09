@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="expense_categories">
+        <item name="accommodation">Accommodation</item>
+        <item name="food">Food</item>
+        <item name="souvenirs">Souvenirs</item>
+        <item name="tourist_attractions">Tourist Attractions</item>
+        <item name="transport">Transport</item>
+        <item name="others">Others</item>
+    </string-array>
+</resources>
