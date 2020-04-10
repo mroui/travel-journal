@@ -20,11 +20,13 @@ public class DayViewModel extends AndroidViewModel {
     private LiveData<List<Day>> daysLiveData;
     private LiveData<Status> statusLiveData;
     private MutableLiveData<Day> today;
+    private MutableLiveData<List<Day>> days;
 
     public DayViewModel(@NonNull Application application) {
         super(application);
         dayRepository = new DayRepository(application.getApplicationContext());
         today = new MutableLiveData<>();
+        days = new MutableLiveData<>();
     }
 
     public String generateId() {
@@ -57,6 +59,14 @@ public class DayViewModel extends AndroidViewModel {
 
     public LiveData<Day> getToday() {
         return today;
+    }
+
+    public void setDays(List<Day> days) {
+        this.days.setValue(days);
+    }
+
+    public LiveData<List<Day>> getDays() {
+        return days;
     }
 
 }
