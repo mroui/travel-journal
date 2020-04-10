@@ -4,13 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_tiny"
     app:cardCornerRadius="@dimen/corner_radius_small">
 
     <LinearLayout
         android:id="@+id/note_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_user_height"
+        android:layout_height="wrap_content"
         android:focusable="true"
         android:clickable="true"
         android:background="?android:attr/selectableItemBackground"
@@ -21,17 +20,17 @@
             android:id="@+id/note_item_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_regular"
-            android:textColor="@color/black"
-            android:fontFamily="@font/raleway_medium"/>
+            android:textSize="@dimen/text_smaller"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/roboto_light"/>
 
         <TextView
             android:id="@+id/note_item_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_tiny"
-            android:textSize="@dimen/text_smaller"
-            android:textColor="@color/dark_gray"
+            android:layout_marginTop="@dimen/margin_smaller"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
             android:fontFamily="@font/raleway_regular"/>
 
     </LinearLayout>
