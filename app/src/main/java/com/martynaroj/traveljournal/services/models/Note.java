@@ -73,7 +73,8 @@ public class Note extends BaseObservable implements Serializable, Comparable<Not
             if (obj == null || getClass() != obj.getClass())
                 return false;
             Note n = (Note) obj;
-            return (date == n.getDate());
+            return (date == n.getDate()
+                    && description.equals(n.getDescription()));
         } catch (Exception ex) {
             return false;
         }

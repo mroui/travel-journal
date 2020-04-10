@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.services.models;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.Bindable;
 
 import com.google.firebase.firestore.Exclude;
@@ -65,4 +66,18 @@ public class Expense extends Note implements Serializable {
         return super.getDescription();
     }
 
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            Expense e = (Expense) obj;
+            return (getDate() == e.getDate()
+                    && category.equals(e.category)
+                    && amount.equals(e.getAmount()));
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 }
