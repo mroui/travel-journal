@@ -24,7 +24,7 @@ public class Note extends BaseObservable implements Serializable, Comparable<Not
     }
 
 
-    Note(String description) {
+    public Note(String description) {
         this();
         this.description = description;
     }
