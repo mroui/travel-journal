@@ -66,6 +66,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
         return fragment;
     }
 
+
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,17 +105,17 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
 
 
     private void initContentData() {
-        if (getContext() != null) {
-            expenses = getAllDaysExpensesList();
-            initListAdapter();
-            setBindingData();
-        }
+        expenses = getAllDaysExpensesList();
+        initListAdapter();
+        setBindingData();
     }
 
 
     private void initListAdapter() {
-        adapter = new BudgetExpensesAdapter(expenses, getContext());
-        binding.budgetExpensesList.setAdapter(adapter);
+        if (getContext() != null) {
+            adapter = new BudgetExpensesAdapter(expenses, getContext());
+            binding.budgetExpensesList.setAdapter(adapter);
+        }
     }
 
 
