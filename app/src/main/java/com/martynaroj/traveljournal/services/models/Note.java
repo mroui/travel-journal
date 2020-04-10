@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Note extends BaseObservable implements Serializable {
+public class Note extends BaseObservable implements Serializable, Comparable<Note>  {
 
     private long date;
     private String description;
@@ -57,6 +57,12 @@ public class Note extends BaseObservable implements Serializable {
     @Exclude
     public String getDateTimeString() {
         return new SimpleDateFormat("dd.MM.yyyy, hh:mm a").format(new Date(date));
+    }
+
+
+    @Override
+    public int compareTo(Note n) {
+        return Long.compare(getDate(), n.getDate());
     }
 
 }

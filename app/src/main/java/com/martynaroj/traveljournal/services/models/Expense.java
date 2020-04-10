@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 
 @IgnoreExtraProperties
-public class Expense extends Note implements Serializable, Comparable<Expense> {
+public class Expense extends Note implements Serializable {
 
     private String category;
     private Double amount;
@@ -63,12 +63,6 @@ public class Expense extends Note implements Serializable, Comparable<Expense> {
     @Exclude
     public String getDescription() {
         return super.getDescription();
-    }
-
-
-    @Override
-    public int compareTo(Expense e) {
-        return Long.compare(getDate(), e.getDate());
     }
 
 }
