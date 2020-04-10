@@ -297,6 +297,7 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
             buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
             buttonPositive.setOnClickListener(v -> {
                 adapter.removeItem(isGroup, groupIndex, itemIndex);
+                updatePackingList();
                 dialog.dismiss();
             });
             buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
