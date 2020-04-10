@@ -12,13 +12,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Note;
 import com.martynaroj.traveljournal.view.adapters.NoteAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -26,6 +30,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class NotesFragment extends BaseFragment implements View.OnClickListener {
@@ -90,7 +95,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private void initContentData() {
         notes = getAllDaysNotesList();
         initListAdapter();
-        binding.setIsListEmpty(notes.size() == 0);
+        setBindingData();
     }
 
 
@@ -100,6 +105,11 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             binding.notesListRecyclerView.setAdapter(adapter);
             setOnItemClickListener();
         }
+    }
+
+
+    private void setBindingData() {
+        binding.setIsListEmpty(notes.size() == 0);
     }
 
 
@@ -130,7 +140,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
                 back();
                 break;
             case R.id.notes_add_floating_button:
-                //todo: add
+                showAddNoteDialog();
                 break;
         }
     }
@@ -154,7 +164,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    //LIST------------------------------------------------------------------------------------------
+    //NOTES / LIST----------------------------------------------------------------------------------
 
 
     private List<Note> getAllDaysNotesList() {
@@ -164,6 +174,18 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         Collections.sort(list);
         Collections.reverse(list);
         return list;
+    }
+
+
+    private void addNote(String text) {
+        adapter.add(new Note(text), 0);
+        notes = adapter.getList();
+        dayViewModel.updateDay(today.getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_NOTES, adapter.getTodayList());
+        }});
+        today.setNotes(adapter.getTodayList());
+        dayViewModel.setToday(today);
+        setBindingData();
     }
 
 
@@ -188,7 +210,32 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    private void showAddNoteDialog() {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            DialogAddNoteBinding binding = DialogAddNoteBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogAddExpenseButtonPositive.setOnClickListener(view -> {
+                if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
+                        && binding.dialogAddNoteInput.getText() != null) {
+                    addNote(binding.dialogAddNoteInput.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+            binding.dialogAddExpenseButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            dialog.show();
+        }
+    }
+
+
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private boolean validateInput(TextInputEditText input, TextInputLayout layout) {
+        return new FormHandler(getContext()).validateInput(input, layout);
+    }
 
 
     private void back() {
