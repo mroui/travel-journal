@@ -73,6 +73,8 @@
     <string name="dialog_add_note_title">Add note</string>
     <string name="dialog_add_note_desc">It can both a journal page and a daily diary,
     quick note.\nWhatever you think of!</string>
+    <string name="dialog_remove_note_title">Remove note</string>
+    <string name="dialog_remove_note_desc">Are you sure you want to remove this note?</string>
 
     <string name="dialog_add_expense_title">Add expense</string>
     <string name="dialog_add_expense_desc">Choose or create a category, enter amount and

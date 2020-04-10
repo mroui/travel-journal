@@ -58,15 +58,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     }
 
 
-    public void add(Note note, int position) {
-        notes.add(position, note);
-        notifyItemInserted(position);
+    public void add(Note note) {
+        notes.add(0, note);
+        notifyItemInserted(0);
+        notifyItemRangeChanged(0, notes.size());
     }
 
 
     public void remove(int position) {
         notes.remove(position);
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, notes.size());
     }
 
 

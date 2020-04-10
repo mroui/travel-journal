@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -23,12 +25,14 @@ import com.martynaroj.traveljournal.services.models.Note;
 import com.martynaroj.traveljournal.view.adapters.NoteAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -160,7 +164,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void setOnItemClickListener() {
-        adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Note) object));
+        adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Note) object, position));
     }
 
 
@@ -178,7 +182,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void addNote(String text) {
-        adapter.add(new Note(text), 0);
+        adapter.add(new Note(text));
         notes = adapter.getList();
         dayViewModel.updateDay(today.getId(), new HashMap<String, Object>() {{
             put(Constants.DB_NOTES, adapter.getTodayList());
@@ -189,10 +193,38 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    private void removeNote(Note note, int noteIndex) {
+        adapter.remove(noteIndex);
+        notes = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(note);
+        if (dayIndex != null) {
+            days.get(dayIndex).getNotes().remove(note);
+            dayViewModel.updateDay(days.get(dayIndex).getId(), new HashMap<String, Object>() {{
+                put(Constants.DB_NOTES, days.get(dayIndex).getNotes());
+            }});
+            dayViewModel.setDays(days);
+        }
+        setBindingData();
+    }
+
+
+    private Integer getDayIndexOfNote(Note note) {
+        Calendar cNote = Calendar.getInstance(), cDay = Calendar.getInstance();
+        cNote.setTimeInMillis(note.getDate());
+        for (int i = 0; i < days.size(); i++) {
+            cDay.setTimeInMillis(days.get(i).getDate());
+            if (cNote.get(Calendar.DAY_OF_YEAR) == cDay.get(Calendar.DAY_OF_YEAR) &&
+                    cNote.get(Calendar.YEAR) == cDay.get(Calendar.YEAR))
+                return i;
+        }
+        return null;
+    }
+
+
     //DIALOG----------------------------------------------------------------------------------------
 
 
-    private void showOptionsDialog(Note note) {
+    private void showOptionsDialog(Note note, int index) {
         if (getContext() != null) {
             Dialog dialog = new Dialog(getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -201,9 +233,11 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             dialog.setContentView(binding.getRoot());
             binding.dialogOptionsEdit.setOnClickListener(view -> {
                 //todo: edit
+                dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
-                //todo: remove
+                showRemoveNoteDialog(note, index);
+                dialog.dismiss();
             });
             dialog.show();
         }
@@ -225,6 +259,41 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
                 }
             });
             binding.dialogAddExpenseButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            dialog.show();
+        }
+    }
+
+
+    private void showRemoveNoteDialog(Note note, int index) {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogCustomTitle.setText(getResources().getString(R.string.dialog_remove_note_title));
+            binding.dialogCustomDesc.setText(getResources().getString(R.string.dialog_remove_note_desc));
+            binding.dialogCustomButtonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    binding.dialogCustomButtonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.red_bg_lighter)
+            );
+            binding.dialogCustomButtonPositive.setTextColor(getResources().getColor(R.color.main_red));
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                removeNote(note, index);
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    binding.dialogCustomButtonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.red_bg_lighter)
+            );
+            binding.dialogCustomButtonNegative.setTextColor(getResources().getColor(R.color.main_red));
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
+
             dialog.show();
         }
     }
