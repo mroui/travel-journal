@@ -9,16 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.martynaroj.traveljournal.databinding.ItemNoteBinding;
 import com.martynaroj.traveljournal.services.models.Note;
-import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
+import com.martynaroj.traveljournal.view.interfaces.OnItemLongClickListener;
 
 import java.util.List;
-import java.util.Objects;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
 
     private Context context;
     private List<Note> notes;
-    private OnItemClickListener listener;
+    private OnItemLongClickListener listener;
 
 
     public NoteAdapter(Context context, List<Note> notes) {
@@ -45,15 +44,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
         final Note note = getItem(position);
         holder.binding.noteItemDate.setText(note.getDateTimeString());
         holder.binding.noteItemDesc.setText(note.getDescription());
-        holder.binding.noteItem.setOnClickListener(view -> listener.onItemClick(
-                Objects.requireNonNull(note),
-                position,
-                holder.binding.noteItem));
+        holder.binding.noteItem.setOnLongClickListener(view -> {
+            listener.onItemLongClick(note, position, view);
+            return true;
+        });
     }
 
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.listener = onItemClickListener;
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.listener = onItemLongClickListener;
     }
 
 
