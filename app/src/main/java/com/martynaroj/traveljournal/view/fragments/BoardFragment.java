@@ -262,7 +262,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 emojiOnClick(Emoji.BORED, view, R.drawable.ic_emoji_bored_color);
                 break;
             case R.id.board_travel_grid_add_note_card:
-                //todo add note
+                changeFragment(NotesFragment.newInstance(today));
                 break;
             case R.id.board_travel_grid_add_photo_card:
                 //todo add photo
@@ -288,7 +288,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void checkPackingList() {
         if (this.travel != null && !this.travel.isPacking() && travel.getPackingList() == null
-        && (packingDialog == null || !packingDialog.isShowing())) {
+                && (packingDialog == null || !packingDialog.isShowing())) {
             showPackingDialog();
         }
     }
@@ -491,7 +491,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void addNewDay() {
         String id = dayViewModel.generateId();
-        today = new Day(id,  Calendar.getInstance().getTimeInMillis());
+        today = new Day(id, Calendar.getInstance().getTimeInMillis());
         dayViewModel.addDay(today);
         dayViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
             if (status != null && !status.equals(Status.ERROR)) {

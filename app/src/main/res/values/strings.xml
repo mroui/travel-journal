@@ -63,6 +63,9 @@
     <string name="budget_title">Manage budget</string>
     <string name="budget_expenses_no_results">No expenses found.</string>
 
+    <string name="notes_title">Notes</string>
+    <string name="notes_no_results">No notes found.\nAdd a new one by click +</string>
+
     <string name="dialog_add_expense_title">Add expense</string>
     <string name="dialog_add_expense_desc">Choose or create a category, enter amount and
         choose if it\'s income or expenditure</string>
