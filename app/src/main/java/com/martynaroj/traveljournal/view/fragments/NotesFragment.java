@@ -1,9 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Note;
@@ -115,6 +118,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void setListeners() {
         binding.notesArrowButton.setOnClickListener(this);
+        binding.notesAddFloatingButton.setOnClickListener(this);
         setOnListScrollListener();
     }
 
@@ -124,6 +128,9 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.notes_arrow_button:
                 back();
+                break;
+            case R.id.notes_add_floating_button:
+                //todo: add
                 break;
         }
     }
@@ -143,10 +150,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void setOnItemClickListener() {
-        adapter.setOnItemLongClickListener((object, position, view) -> {
-            //todo: on long click
-            showSnackBar(position+"", Snackbar.LENGTH_SHORT);
-        });
+        adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Note) object));
     }
 
 
@@ -160,6 +164,27 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         Collections.sort(list);
         Collections.reverse(list);
         return list;
+    }
+
+
+    //DIALOG----------------------------------------------------------------------------------------
+
+
+    private void showOptionsDialog(Note note) {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            DialogNotesOptionsBinding binding = DialogNotesOptionsBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogOptionsEdit.setOnClickListener(view -> {
+                //todo: edit
+            });
+            binding.dialogOptionsRemove.setOnClickListener(view -> {
+                //todo: remove
+            });
+            dialog.show();
+        }
     }
 
 
