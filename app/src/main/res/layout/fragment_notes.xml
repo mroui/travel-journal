@@ -47,23 +47,16 @@
                 android:textSize="@dimen/text_bigger"
                 android:textColor="@color/black"/>
 
-            <ScrollView
-                android:id="@+id/notes_list_scroll"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notes_list_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/notes_arrow_button"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="@dimen/margin_regular">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/notes_list_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-            </ScrollView>
+                android:layout_marginTop="@dimen/margin_regular"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
             <TextView
                 android:id="@+id/notes_list_message"
