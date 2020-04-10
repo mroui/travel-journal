@@ -1,14 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -23,12 +20,11 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentWeatherBinding;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.martynaroj.traveljournal.viewmodels.WeatherViewModel;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class WeatherFragment extends BaseFragment implements View.OnClickListener {
 
@@ -92,13 +88,10 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
 
     private void initLocation() {
-        if (getContext() != null && ContextCompat.checkSelfPermission(getContext(),
-                ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (RequestPermissionsHandler.isFineLocationGranted(getContext()))
             detectLocation();
-        } else if (getActivity() != null) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constants.RC_ACCESS_FINE_LOCATION);
-        }
+        else
+            RequestPermissionsHandler.requestFineLocation(this);
     }
 
 
@@ -224,10 +217,8 @@ public class WeatherFragment extends BaseFragment implements View.OnClickListene
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == Constants.RC_ACCESS_FINE_LOCATION && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (RequestPermissionsHandler.isOnResultGranted(requestCode, grantResults))
             detectLocation();
         else
             getCurrentWeather(Constants.LAT_LNG_LONDON);

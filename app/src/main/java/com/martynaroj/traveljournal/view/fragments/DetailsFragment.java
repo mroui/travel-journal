@@ -1,15 +1,12 @@
 package com.martynaroj.traveljournal.view.fragments;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -24,8 +21,6 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +38,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
@@ -444,48 +440,28 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
 
     private void selectImage() {
-        if (getActivity() != null && getContext() != null)
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
-                    .setAspectRatio(3, 2)
-                    .start(getContext(), this);
+        if (getContext() != null)
+            CropImage.activity().setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(3, 2).start(getContext(), this);
     }
 
 
     private void checkPermissionsToSelectImage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (!isReadStoragePermissionsGranted())
-                requestReadStoragePermissions();
-            else
-                selectImage();
-        else
+        if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
             selectImage();
-    }
-
-
-    private boolean isReadStoragePermissionsGranted() {
-        if (getContext() != null)
-            return ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         else
-            return false;
-    }
-
-
-    private void requestReadStoragePermissions() {
-        if (getActivity() != null) {
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Constants.RC_EXTERNAL_STORAGE_IMG
-            );
-        }
+            RequestPermissionsHandler.requestReadStorage(getActivity());
     }
 
 
     private void prepareImageToSave() {
         if (newImageUri.getPath() != null && getContext() != null) {
-            byte[] thumb = FileCompressor.compressToByte(getContext(), newImageUri, Constants.TRAVEL_IMG_H, Constants.TRAVEL_IMG_W);
+            byte[] thumb = FileCompressor.compressToByte(
+                    getContext(),
+                    newImageUri,
+                    Constants.TRAVEL_IMG_H,
+                    Constants.TRAVEL_IMG_W
+            );
             if (thumb != null)
                 uploadImage(thumb);
             else

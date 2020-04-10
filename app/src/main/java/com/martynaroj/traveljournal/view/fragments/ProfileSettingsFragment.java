@@ -1,12 +1,9 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -18,8 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -43,6 +38,7 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.AuthViewModel;
@@ -59,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileSettingsFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
@@ -520,27 +515,17 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void changeProfilePhoto() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity() != null && getContext() != null)
-            if (ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(
-                        getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Constants.RC_EXTERNAL_STORAGE_IMG
-                );
-            else
-                selectImage();
-        else
+        if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
             selectImage();
+        else
+            RequestPermissionsHandler.requestReadStorage(getActivity());
     }
 
 
     private void selectImage() {
         if (getActivity() != null && getContext() != null) {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
-                    .setAspectRatio(1, 1)
-                    .start(getContext(), this);
+            CropImage.activity().setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(1, 1).start(getContext(), this);
         }
     }
 
@@ -706,25 +691,22 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void detectLocation() {
-        if (getContext() != null) {
-            if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                startProgressBar();
-                addressViewModel.detectAddress(placesClient, request);
-                addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
-                    if (response != null) {
-                        Place place = response.getPlaceLikelihoods().get(0).getPlace();
-                        double lat = place.getLatLng() != null ? place.getLatLng().latitude : 0;
-                        double lon = place.getLatLng() != null ? place.getLatLng().longitude : 0;
-                        newLocation = new Address(place.getName(), place.getAddress(), lat, lon);
-                        autocompleteFragment.setText(newLocation.getAddress());
-                    } else
-                        showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
-                    stopProgressBar();
-                });
-            } else if (getActivity() != null)
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.RC_ACCESS_FINE_LOCATION);
-        }
+        if (RequestPermissionsHandler.isFineLocationGranted(getContext())) {
+            startProgressBar();
+            addressViewModel.detectAddress(placesClient, request);
+            addressViewModel.getDetectedAddress().observe(getViewLifecycleOwner(), response -> {
+                if (response != null) {
+                    Place place = response.getPlaceLikelihoods().get(0).getPlace();
+                    double lat = place.getLatLng() != null ? place.getLatLng().latitude : 0;
+                    double lon = place.getLatLng() != null ? place.getLatLng().longitude : 0;
+                    newLocation = new Address(place.getName(), place.getAddress(), lat, lon);
+                    autocompleteFragment.setText(newLocation.getAddress());
+                } else
+                    showSnackBar(getResources().getString(R.string.messages_error_localize), Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            });
+        } else
+            RequestPermissionsHandler.requestFineLocation(this);
     }
 
 

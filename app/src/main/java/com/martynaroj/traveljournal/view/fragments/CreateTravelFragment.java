@@ -1,13 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -24,8 +22,6 @@ import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -55,6 +51,7 @@ import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -478,52 +475,25 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void checkPermissionsToSelectImage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (!isReadStoragePermissionsGranted())
-                requestReadStoragePermissions();
-            else
-                selectImage();
-        else
+        if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
             selectImage();
+        else
+            RequestPermissionsHandler.requestReadStorage(getActivity());
     }
+
 
     private void checkPermissionsToSelectFile() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            if (!isReadStoragePermissionsGranted())
-                requestReadStoragePermissions();
-            else
-                selectFile();
-        else
+        if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
             selectFile();
-    }
-
-
-    private boolean isReadStoragePermissionsGranted() {
-        if (getContext() != null)
-            return ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         else
-            return false;
-    }
-
-
-    private void requestReadStoragePermissions() {
-        if (getActivity() != null) {
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Constants.RC_EXTERNAL_STORAGE_IMG
-            );
-        }
+            RequestPermissionsHandler.requestReadStorage(getActivity());
     }
 
 
     private void selectImage() {
-        if (getActivity() != null && getContext() != null) {
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
-                    .setAspectRatio(3, 2)
-                    .start(getContext(), this);
+        if (getContext() != null) {
+            CropImage.activity().setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                    .setAspectRatio(3, 2).start(getContext(), this);
         }
     }
 
@@ -554,7 +524,6 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         binding.createTravelStage2UploadImageFileContainer.setVisibility(View.VISIBLE);
         binding.createTravelStage2UploadImageFileName.setText(FileUriUtils.getFileName(getContext(), imageUri));
     }
-
 
 
     @SuppressLint("SetTextI18n")

@@ -1,8 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
-import android.Manifest;
 import android.app.Dialog;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -37,7 +34,7 @@ import com.martynaroj.traveljournal.services.models.placesAPI.Place;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
-import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.MarkerViewModel;
 import com.martynaroj.traveljournal.viewmodels.PlaceViewModel;
@@ -47,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback {
 
@@ -180,12 +175,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
 
     private void initLocation() {
-        if (getContext() != null && ContextCompat.checkSelfPermission(getContext(),
-                ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (RequestPermissionsHandler.isFineLocationGranted(getContext()))
             detectLocation();
-        else if (getActivity() != null)
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constants.RC_ACCESS_FINE_LOCATION);
+        else
+            RequestPermissionsHandler.requestFineLocation(this);
     }
 
 
@@ -490,12 +483,10 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == Constants.RC_ACCESS_FINE_LOCATION && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (RequestPermissionsHandler.isOnResultGranted(requestCode, grantResults))
             detectLocation();
-        } else {
+        else
             binding.mapNearbyPlacesButton.setEnabled(false);
-        }
     }
 
 
