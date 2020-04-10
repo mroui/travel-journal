@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.adapters;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,6 +12,7 @@ import com.martynaroj.traveljournal.databinding.ItemNoteBinding;
 import com.martynaroj.traveljournal.services.models.Note;
 import com.martynaroj.traveljournal.view.interfaces.OnItemLongClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
@@ -56,10 +58,29 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     }
 
 
+    public void add(Note note, int position) {
+        notes.add(position, note);
+        notifyItemInserted(position);
+    }
+
+
     public void remove(int position) {
         notes.remove(position);
         notifyItemRemoved(position);
-        notifyDataSetChanged();
+    }
+
+
+    public List<Note> getList() {
+        return notes;
+    }
+
+
+    public List<Note> getTodayList() {
+        List<Note> todayList = new ArrayList<>();
+        for (Note e : notes)
+            if (DateUtils.isToday(e.getDate()))
+                todayList.add(e);
+        return todayList;
     }
 
 
