@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Expense;
+import com.martynaroj.traveljournal.view.interfaces.OnItemLongClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class BudgetExpensesAdapter extends ArrayAdapter<Expense> {
 
     private Context context;
     private final List<Expense> list;
+    private OnItemLongClickListener listener;
 
 
     public BudgetExpensesAdapter(List<Expense> list, Context context) {
@@ -53,8 +55,22 @@ public class BudgetExpensesAdapter extends ArrayAdapter<Expense> {
                 ((TextView) view.findViewById(R.id.expense_amount)).setTextColor(
                         context.getResources().getColor(R.color.red)
                 );
+            view.findViewById(R.id.expense_item).setOnLongClickListener(v -> {
+                listener.onItemLongClick(expense, position, v);
+                return true;
+            });
         }
         return view;
+    }
+
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.listener = onItemLongClickListener;
+    }
+
+
+    public List<Expense> getList() {
+        return list;
     }
 
 
