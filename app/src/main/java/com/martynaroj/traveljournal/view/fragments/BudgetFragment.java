@@ -1,6 +1,8 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddExpenseBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentBudgetBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Expense;
@@ -28,6 +31,7 @@ import com.martynaroj.traveljournal.view.adapters.BudgetExpensesAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -35,6 +39,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -142,6 +147,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
         binding.budgetArrowButton.setOnClickListener(this);
         binding.budgetAddFloatingButton.setOnClickListener(this);
         setOnListScrollListener();
+        setOnItemLongClickListener();
     }
 
 
@@ -175,6 +181,12 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    private void setOnItemLongClickListener() {
+        if (adapter != null)
+            adapter.setOnItemLongClickListener((object, position, view) -> showRemoveDialog((Expense) object));
+    }
+
+
     //CALCULATIONS----------------------------------------------------------------------------------
 
 
@@ -196,6 +208,19 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    private Integer getDayIndexOfExpense(Expense expense) {
+        Calendar cExpense = Calendar.getInstance(), cDay = Calendar.getInstance();
+        cExpense.setTimeInMillis(expense.getDate());
+        for (int i = 0; i < days.size(); i++) {
+            cDay.setTimeInMillis(days.get(i).getDate());
+            if (cExpense.get(Calendar.DAY_OF_YEAR) == cDay.get(Calendar.DAY_OF_YEAR) &&
+                    cExpense.get(Calendar.YEAR) == cDay.get(Calendar.YEAR))
+                return i;
+        }
+        return null;
+    }
+
+
     //ADDING / DIALOG-------------------------------------------------------------------------------
 
 
@@ -204,10 +229,8 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
             addDialog = new Dialog(getContext());
             addDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             addDialog.setCancelable(true);
-            addDialog.setContentView(R.layout.dialog_add_expense);
             if (addDialog.getWindow() != null)
                 addDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
             dialogBinding = DialogAddExpenseBinding.inflate(LayoutInflater.from(getContext()));
             addDialog.setContentView(dialogBinding.getRoot());
 
@@ -235,7 +258,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
             });
             dialogBinding.dialogAddExpenseButtonPositive.setOnClickListener(v -> {
                 if (validateInput(dialogBinding.dialogAddExpenseCategoryInput, dialogBinding.dialogAddExpenseCategoryLayout)
-                && validateInput(dialogBinding.dialogAddExpenseAmountInput, dialogBinding.dialogAddExpenseAmountLayout)) {
+                        && validateInput(dialogBinding.dialogAddExpenseAmountInput, dialogBinding.dialogAddExpenseAmountLayout)) {
                     addExpense();
                     addDialog.dismiss();
                 }
@@ -247,11 +270,11 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
 
     private void addExpense() {
         adapter.insert(createNewExpense(), 0);
+        expenses = adapter.getList();
         dayViewModel.updateDay(today.getId(), new HashMap<String, Object>() {{
             put(Constants.DB_EXPENSES, adapter.getTodayList());
         }});
-        expenses = adapter.getTodayList();
-        today.setExpenses(expenses);
+        today.setExpenses(adapter.getTodayList());
         dayViewModel.setToday(today);
         setBindingData();
     }
@@ -264,6 +287,57 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
                 dialogBinding.dialogAddExpenseAmountInput.getText()).toString());
         amount *= isPositive ? 1 : -1;
         return new Expense(category, amount);
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void showRemoveDialog(Expense expense) {
+        if (getContext() != null && getActivity() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogCustomTitle.setText(getResources().getString(R.string.dialog_expense_remove_title));
+            binding.dialogCustomDesc.setText(getResources().getString(R.string.dialog_expense_remove_desc));
+            binding.dialogCustomButtonPositive.setText(getResources().getString(R.string.dialog_button_yes));
+            RippleDrawable.setRippleEffectButton(
+                    binding.dialogCustomButtonPositive,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.pink_bg_light)
+            );
+            binding.dialogCustomButtonPositive.setTextColor(getResources().getColor(R.color.main_pink));
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                removeExpense(expense);
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setText(getResources().getString(R.string.dialog_button_no));
+            RippleDrawable.setRippleEffectButton(
+                    binding.dialogCustomButtonNegative,
+                    Color.TRANSPARENT,
+                    getResources().getColor(R.color.pink_bg_light)
+            );
+            binding.dialogCustomButtonNegative.setTextColor(getResources().getColor(R.color.main_pink));
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
+
+            dialog.show();
+        }
+    }
+
+
+    private void removeExpense(Expense expense) {
+        adapter.remove(expense);
+        expenses = adapter.getList();
+        Integer index = getDayIndexOfExpense(expense);
+        if (index != null) {
+            days.get(index).getExpenses().remove(expense);
+            dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
+                put(Constants.DB_EXPENSES, days.get(index).getExpenses());
+            }});
+            dayViewModel.setDays(days);
+        }
+        setBindingData();
     }
 
 

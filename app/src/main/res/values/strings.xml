@@ -62,6 +62,8 @@
 
     <string name="budget_title">Manage budget</string>
     <string name="budget_expenses_no_results">No expenses found.\nAdd a new one by click +</string>
+    <string name="dialog_expense_remove_title">Remove expense</string>
+    <string name="dialog_expense_remove_desc">Are you sure you want to remove this expense?</string>
 
     <string name="notes_title">Notes</string>
     <string name="notes_no_results">No notes found.\nAdd a new one by click +</string>
