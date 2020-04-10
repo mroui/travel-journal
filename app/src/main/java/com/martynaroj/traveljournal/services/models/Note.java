@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.services.models;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -63,6 +64,19 @@ public class Note extends BaseObservable implements Serializable, Comparable<Not
     @Override
     public int compareTo(Note n) {
         return Long.compare(getDate(), n.getDate());
+    }
+
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        try {
+            if (obj == null || getClass() != obj.getClass())
+                return false;
+            Note n = (Note) obj;
+            return (date == n.getDate());
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
 }
