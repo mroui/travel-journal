@@ -7,15 +7,23 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Note;
+import com.martynaroj.traveljournal.view.adapters.NoteAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NotesFragment extends BaseFragment implements View.OnClickListener {
 
@@ -24,22 +32,30 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private DayViewModel dayViewModel;
 
     private Day today;
+    private List<Day> days;
+    private List<Note> notes;
+
+    private NoteAdapter adapter;
 
 
-    public static NotesFragment newInstance(Day day) {
+    public static NotesFragment newInstance(Day day, List<Day> days) {
         NotesFragment fragment = new NotesFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.BUNDLE_DAY, day);
+        args.putSerializable(Constants.BUNDLE_DAYS, (Serializable) days);
         fragment.setArguments(args);
         return fragment;
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
+        if (getArguments() != null) {
             today = (Day) getArguments().getSerializable(Constants.BUNDLE_DAY);
+            days = (List<Day>) getArguments().getSerializable(Constants.BUNDLE_DAYS);
+        }
     }
 
 
@@ -69,13 +85,18 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void initContentData() {
+        notes = getAllDaysNotesList();
         initListAdapter();
-        binding.setIsListEmpty(true);
+        binding.setIsListEmpty(notes.size() == 0);
     }
 
 
     private void initListAdapter() {
-        //
+        if (getContext() != null) {
+            adapter = new NoteAdapter(getContext(), notes);
+            binding.notesListRecyclerView.setAdapter(adapter);
+            setOnItemClickListener();
+        }
     }
 
 
@@ -94,6 +115,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void setListeners() {
         binding.notesArrowButton.setOnClickListener(this);
+        setOnListScrollListener();
     }
 
 
@@ -104,6 +126,40 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
                 back();
                 break;
         }
+    }
+
+
+    private void setOnListScrollListener() {
+        binding.notesListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    binding.notesAddFloatingButton.show();
+                else
+                    binding.notesAddFloatingButton.hide();
+            }
+        });
+    }
+
+
+    private void setOnItemClickListener() {
+        adapter.setOnItemLongClickListener((object, position, view) -> {
+            //todo: on long click
+            showSnackBar(position+"", Snackbar.LENGTH_SHORT);
+        });
+    }
+
+
+    //LIST------------------------------------------------------------------------------------------
+
+
+    private List<Note> getAllDaysNotesList() {
+        List<Note> list = new ArrayList<>();
+        for (Day day : days)
+            list.addAll(day.getNotes());
+        Collections.sort(list);
+        Collections.reverse(list);
+        return list;
     }
 
 

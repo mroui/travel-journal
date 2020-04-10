@@ -262,7 +262,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 emojiOnClick(Emoji.BORED, view, R.drawable.ic_emoji_bored_color);
                 break;
             case R.id.board_travel_grid_add_note_card:
-                changeFragment(NotesFragment.newInstance(today));
+                changeFragment(NotesFragment.newInstance(today, days));
                 break;
             case R.id.board_travel_grid_add_photo_card:
                 //todo add photo
