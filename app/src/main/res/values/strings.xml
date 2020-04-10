@@ -61,7 +61,7 @@
     <string name="dialog_edit_travel_details_tags_hint">Beach, europe, culture, landscape…</string>
 
     <string name="budget_title">Manage budget</string>
-    <string name="budget_expenses_no_results">No expenses found.</string>
+    <string name="budget_expenses_no_results">No expenses found.\nAdd a new one by click +</string>
 
     <string name="notes_title">Notes</string>
     <string name="notes_no_results">No notes found.\nAdd a new one by click +</string>
