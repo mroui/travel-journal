@@ -251,14 +251,14 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             dialog.setCancelable(true);
             DialogAddNoteBinding binding = DialogAddNoteBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
-            binding.dialogAddExpenseButtonPositive.setOnClickListener(view -> {
+            binding.dialogAddNoteButtonPositive.setOnClickListener(view -> {
                 if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
                         && binding.dialogAddNoteInput.getText() != null) {
                     addNote(binding.dialogAddNoteInput.getText().toString());
                     dialog.dismiss();
                 }
             });
-            binding.dialogAddExpenseButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            binding.dialogAddNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
     }

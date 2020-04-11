@@ -79,7 +79,7 @@
         android:gravity="end">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/dialog_add_expense_button_negative"
+            android:id="@+id/dialog_add_note_button_negative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
@@ -90,7 +90,7 @@
             android:fontFamily="@font/raleway_bold"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/dialog_add_expense_button_positive"
+            android:id="@+id/dialog_add_note_button_positive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
