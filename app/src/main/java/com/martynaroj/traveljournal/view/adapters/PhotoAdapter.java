@@ -3,6 +3,7 @@ package com.martynaroj.traveljournal.view.adapters;
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -47,7 +48,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoHolder>
     public void onBindViewHolder(@NonNull PhotoAdapter.PhotoHolder holder, int position) {
         final Photo photo = getItem(position);
         holder.binding.photoItemDate.setText(photo.getDateTimeString());
-        holder.binding.photoItemDesc.setText(photo.getDescription());
+        if (photo.getDescription().isEmpty())
+            holder.binding.photoItemDesc.setVisibility(View.GONE);
+        else
+            holder.binding.photoItemDesc.setText(photo.getDescription());
         Glide.with(context).load(photo.getSrc()).fitCenter()
                 .placeholder(R.drawable.no_image).centerCrop()
                 .into(holder.binding.photoItemPhoto);
