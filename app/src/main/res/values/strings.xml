@@ -87,6 +87,10 @@
     <string name="photos_title">Photos</string>
     <string name="photos_no_results">No photos found.\nAdd a new one by click +</string>
     <string name="photo">Photo</string>
+    <string name="dialog_add_photo_title">Add photo</string>
+    <string name="dialog_add_photo_desc">Add photo from your journey.\nIt\'s <b>optional</b>, but you
+        can describe the photo, what\'s in it or how you spent the day</string>
+    <string name="dialog_add_note_photo">Add photo</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>

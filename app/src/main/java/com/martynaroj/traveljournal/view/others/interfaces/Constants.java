@@ -46,6 +46,7 @@ public interface Constants {
     String DB_IMAGE = "image";
     String DB_EXPENSES = "expenses";
     String DB_NOTES = "notes";
+    String DB_PHOTOS = "photos";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
@@ -98,6 +99,7 @@ public interface Constants {
     String TRANSPORT = "transport";
 
     String STORAGE_TRAVELS = "travels";
+    String STORAGE_DAYS = "days";
 
     String PDF_EXT = ".pdf";
     String JPG_EXT = ".jpg";
