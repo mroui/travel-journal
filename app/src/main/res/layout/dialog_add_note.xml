@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="@dimen/padding_small">
 
@@ -40,13 +40,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/dialog_add_note_photo"
+            <LinearLayout
+                android:id="@+id/dialog_add_note_photo_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_smaller"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/photo"/>
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/dialog_add_note_photo"
+                    android:layout_width="@dimen/travel_image_w"
+                    android:layout_height="@dimen/travel_image_h"
+                    android:backgroundTint="@color/dirty_white"
+                    android:src="@drawable/ic_add_a_photo_gray"
+                    android:contentDescription="@string/dialog_add_note_photo"
+                    tools:ignore="UnusedAttribute"/>
+
+                <TextView
+                    android:id="@+id/dialog_add_note_photo_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_tiny"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text="@string/messages_error_no_photo_uploaded"
+                    android:textColor="@color/error"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dialog_add_note_input_layout"

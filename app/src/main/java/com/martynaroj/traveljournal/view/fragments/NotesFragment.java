@@ -22,6 +22,7 @@ import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Note;
+import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.NoteAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
@@ -42,6 +43,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private FragmentNotesBinding binding;
 
     private UserViewModel userViewModel;
+    User user;
     DayViewModel dayViewModel;
     Day today;
     List<Day> days;
@@ -119,6 +121,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            this.user = user;
             if (user == null) {
                 showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
                 back();
@@ -264,7 +267,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogAddNoteBinding binding = DialogAddNoteBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
-            binding.dialogAddNotePhoto.setVisibility(View.GONE);
+            binding.dialogAddNotePhotoContainer.setVisibility(View.GONE);
             binding.dialogAddNoteButtonPositive.setOnClickListener(view -> {
                 if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
                         && binding.dialogAddNoteInput.getText() != null) {
@@ -335,7 +338,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void showSnackBar(String message, int duration) {
+    void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
