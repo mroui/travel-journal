@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_small">
+
+    <TextView
+        android:id="@+id/dialog_edit_note_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/dialog_edit_note_title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"/>
+
+    <TextView
+        android:id="@+id/dialog_edit_note_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/padding_small"
+        android:fontFamily="@font/raleway_regular"
+        android:textAlignment="textStart"
+        android:text="@string/dialog_edit_note_desc"
+        android:textSize="@dimen/text_regular"
+        android:textColor="@color/gray"/>
+
+    <ScrollView
+        android:id="@+id/dialog_edit_note_content_container"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/padding_smaller"
+        android:paddingHorizontal="@dimen/padding_smaller"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialog_edit_note_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/dialog_input_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialog_add_note_desc"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/TextInput"
+                app:boxStrokeColor="@color/main_red"
+                app:hintEnabled="false"
+                app:counterEnabled="true"
+                app:counterMaxLength="1000"
+                app:errorEnabled="true"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dialog_edit_note_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:fontFamily="@font/raleway_regular"
+                    android:lines="8"
+                    android:maxLength="1000"
+                    android:textSize="@dimen/text_small"
+                    android:textCursorDrawable="@null"
+                    android:inputType="textMultiLine"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_edit_note_button_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:text="@string/dialog_button_cancel"
+            android:textColor="@color/main_red"
+            app:rippleColor="@color/red_bg_light"
+            android:fontFamily="@font/raleway_bold"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_edit_note_button_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:text="@string/dialog_button_ok"
+            android:textColor="@color/main_red"
+            app:rippleColor="@color/red_bg_light"
+            android:fontFamily="@font/raleway_bold"/>
+
+    </LinearLayout>
+
+</LinearLayout>
