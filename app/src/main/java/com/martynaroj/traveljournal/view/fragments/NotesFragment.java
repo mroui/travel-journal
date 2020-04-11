@@ -185,6 +185,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private void addNote(String text) {
         adapter.add(new Note(text));
         notes = adapter.getList();
+        binding.notesListRecyclerView.scrollToPosition(0);
         dayViewModel.updateDay(today.getId(), new HashMap<String, Object>() {{
             put(Constants.DB_NOTES, adapter.getTodayList());
         }});
