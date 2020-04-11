@@ -3,27 +3,25 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogAddPackingItemBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPackingListBinding;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
@@ -31,8 +29,8 @@ import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
-import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -275,40 +273,24 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     @SuppressLint("SetTextI18n")
     private void showRemoveDialog(boolean isGroup, int groupIndex, int itemIndex, String name) {
-        if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_packing_list_remove_title));
-            message.setText(getResources().getString(R.string.dialog_packing_list_remove_desc) + " " + name + "?");
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            RippleDrawable.setRippleEffectButton(
-                    buttonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_packing_list_remove_title,
+                    binding.dialogCustomDesc, R.string.dialog_packing_list_remove_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_yellow, R.color.yellow_bg_lighter);
+            binding.dialogCustomDesc.setText(
+                    getResources().getString(R.string.dialog_packing_list_remove_desc) + " " + name + "?"
             );
-            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonPositive.setOnClickListener(v -> {
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 adapter.removeItem(isGroup, groupIndex, itemIndex);
                 updatePackingList();
                 dialog.dismiss();
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            RippleDrawable.setRippleEffectButton(
-                    buttonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
-            );
-            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
@@ -316,71 +298,43 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     @SuppressLint("SetTextI18n")
     private void showFinishDialog() {
-        if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_packing_list_finish_title));
-            message.setText(getResources().getString(R.string.dialog_packing_list_finish_desc));
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            RippleDrawable.setRippleEffectButton(
-                    buttonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.blue_bg_light)
-            );
-            buttonPositive.setTextColor(getResources().getColor(R.color.main_blue));
-            buttonPositive.setOnClickListener(v -> {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_packing_list_finish_title,
+                    binding.dialogCustomDesc, R.string.dialog_packing_list_finish_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_blue, R.color.blue_bg_light);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 finishPacking();
                 dialog.dismiss();
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            RippleDrawable.setRippleEffectButton(
-                    buttonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.blue_bg_light)
-            );
-            buttonNegative.setTextColor(getResources().getColor(R.color.main_blue));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
 
     private void showAddDialog() {
         if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_add_packing_item);
-
-            TextInputLayout nameLayout = dialog.findViewById(R.id.dialog_add_packing_item_name_input_layout);
-            TextInputEditText nameInput = dialog.findViewById(R.id.dialog_add_packing_item_name_input);
-            TextInputLayout categoryLayout = dialog.findViewById(R.id.dialog_add_packing_item_category_input_layout);
-            MaterialAutoCompleteTextView categoryInput = dialog.findViewById(R.id.dialog_add_packing_item_category_input);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_add_packing_item_add_button);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_add_packing_item_cancel_button);
-
-            categoryInput.setThreshold(1);
-            categoryInput.setAdapter(new ArrayAdapter<>(
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogAddPackingItemBinding binding = DialogAddPackingItemBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogAddPackingItemCategoryInput.setThreshold(1);
+            binding.dialogAddPackingItemCategoryInput.setAdapter(new ArrayAdapter<>(
                     getContext(),
                     android.R.layout.simple_spinner_dropdown_item,
                     adapter.getGroupNamesList())
             );
-            buttonPositive.setOnClickListener(v -> {
-                if (validateInput(nameInput, nameLayout) && validateInput(categoryInput, categoryLayout)) {
-                    addItem(nameInput, categoryInput);
+            binding.dialogAddPackingItemAddButton.setOnClickListener(v -> {
+                if (validateInput(binding.dialogAddPackingItemNameInput, binding.dialogAddPackingItemNameInputLayout)
+                        && validateInput(binding.dialogAddPackingItemCategoryInput, binding.dialogAddPackingItemCategoryInputLayout)) {
+                    addItem(binding.dialogAddPackingItemNameInput, binding.dialogAddPackingItemCategoryInput);
                     dialog.dismiss();
                 }
             });
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogAddPackingItemCancelButton.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }

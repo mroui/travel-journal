@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,11 +27,13 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogNearbyPlacesBinding;
 import com.martynaroj.traveljournal.databinding.FragmentMapBinding;
 import com.martynaroj.traveljournal.services.models.placesAPI.Place;
 import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.MarkerViewModel;
@@ -424,24 +424,20 @@ public class MapFragment extends BaseFragment implements View.OnClickListener, O
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_list_item_single_choice, types);
 
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_nearby_places);
-
-            ListView list = dialog.findViewById(R.id.dialog_nearby_places_list);
-            list.setAdapter(adapter);
-            list.setItemChecked(0, true);
-
-            dialog.findViewById(R.id.dialog_nearby_places_cancel_button).setOnClickListener(v -> dialog.dismiss());
-            dialog.findViewById(R.id.dialog_nearby_places_clear_button).setOnClickListener(v -> {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogNearbyPlacesBinding binding = DialogNearbyPlacesBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogNearbyPlacesList.setAdapter(adapter);
+            binding.dialogNearbyPlacesList.setItemChecked(0, true);
+            binding.dialogNearbyPlacesCancelButton.setOnClickListener(v -> dialog.dismiss());
+            binding.dialogNearbyPlacesClearButton.setOnClickListener(v -> {
                 dialog.dismiss();
                 areNearbyPlacesShown = false;
                 clearMap();
             });
-            dialog.findViewById(R.id.dialog_nearby_places_search_button).setOnClickListener(v -> {
-                dialog.findViewById(R.id.dialog_nearby_places_clear_button).callOnClick();
-                String type = adapter.getItem(list.getCheckedItemPosition());
+            binding.dialogNearbyPlacesSearchButton.setOnClickListener(v -> {
+                binding.dialogNearbyPlacesClearButton.callOnClick();
+                String type = adapter.getItem(binding.dialogNearbyPlacesList.getCheckedItemPosition());
                 if (type != null) searchNearbyPlaces(getPlaceTypeKey(type));
                 areNearbyPlacesShown = true;
             });

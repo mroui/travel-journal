@@ -2,14 +2,11 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
@@ -25,9 +22,9 @@ import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Expense;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.adapters.BudgetExpensesAdapter;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
-import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
@@ -194,16 +191,10 @@ public class BudgetFragment extends NotesFragment {
 
     private void showAddExpenseDialog() {
         if (getContext() != null && getActivity() != null) {
-            addDialog = new Dialog(getContext());
-            addDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            addDialog.setCancelable(true);
-            if (addDialog.getWindow() != null)
-                addDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            addDialog = DialogHandler.createDialog(getContext(), true);
             dialogBinding = DialogAddExpenseBinding.inflate(LayoutInflater.from(getContext()));
             addDialog.setContentView(dialogBinding.getRoot());
-
             setAddDialogContentData();
-
             addDialog.show();
         }
     }
@@ -260,35 +251,20 @@ public class BudgetFragment extends NotesFragment {
 
     @SuppressLint("SetTextI18n")
     private void showRemoveDialog(Expense expense) {
-        if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
-
-            binding.dialogCustomTitle.setText(getResources().getString(R.string.dialog_expense_remove_title));
-            binding.dialogCustomDesc.setText(getResources().getString(R.string.dialog_expense_remove_desc));
-            binding.dialogCustomButtonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            RippleDrawable.setRippleEffectButton(
-                    binding.dialogCustomButtonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.pink_bg_light)
-            );
-            binding.dialogCustomButtonPositive.setTextColor(getResources().getColor(R.color.main_pink));
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_expense_remove_title,
+                    binding.dialogCustomDesc, R.string.dialog_expense_remove_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_pink, R.color.pink_bg_light);
             binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 removeExpense(expense);
                 dialog.dismiss();
             });
-            binding.dialogCustomButtonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            RippleDrawable.setRippleEffectButton(
-                    binding.dialogCustomButtonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.pink_bg_light)
-            );
-            binding.dialogCustomButtonNegative.setTextColor(getResources().getColor(R.color.main_pink));
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
-
             dialog.show();
         }
     }

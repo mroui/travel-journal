@@ -6,20 +6,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentFriendsListBinding;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.UserAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
@@ -173,27 +172,23 @@ public class FriendsListFragment extends BaseFragment {
 
     @SuppressLint("SetTextI18n")
     private void showDeleteDialog(User user, int position) {
-        if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_remove_friends_title));
-            message.setText(getResources().getString(R.string.dialog_remove_friends_desc) + " " + user.getUsername() + "?");
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
-            buttonPositive.setOnClickListener(v -> {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_remove_friends_title,
+                    binding.dialogCustomDesc, R.string.dialog_remove_friends_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_blue, R.color.blue_bg_lighter);
+            binding.dialogCustomDesc.setText(getResources().getString(
+                    R.string.dialog_remove_friends_desc) + " " + user.getUsername() + "?"
+            );
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
                 removeFriend(user, position);
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }

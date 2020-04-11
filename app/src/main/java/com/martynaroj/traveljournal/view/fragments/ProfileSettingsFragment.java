@@ -10,8 +10,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +21,12 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentProfileSettingsBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.User;
@@ -36,6 +34,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
@@ -258,7 +257,8 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 if (!areAnyChanges()) {
                     hideKeyboard();
                     back();
-                } else showUnsavedChangesDialog();
+                } else
+                    showUnsavedChangesDialog();
                 return;
             case R.id.profile_settings_personal_picture_section:
                 changeProfilePhoto();
@@ -295,27 +295,20 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void showUnsavedChangesDialog() {
         if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_unsaved_changes_title));
-            message.setText(getResources().getString(R.string.dialog_unsaved_changes_desc));
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            buttonPositive.setOnClickListener(v -> {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_unsaved_changes_title,
+                    binding.dialogCustomDesc, R.string.dialog_unsaved_changes_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_blue, R.color.blue_bg_lighter);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 hideKeyboard();
                 dialog.dismiss();
                 back();
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
@@ -323,23 +316,20 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void showCreditsDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_credits_title));
-            message.setText(Html.fromHtml(getResources().getString(R.string.profile_settings_credits_list)));
-            message.setMovementMethod(LinkMovementMethod.getInstance());
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_ok));
-            buttonPositive.setOnClickListener(v -> dialog.dismiss());
-            buttonNegative.setVisibility(View.GONE);
-
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_credits_title,
+                    binding.dialogCustomDesc, R.string.profile_settings_credits_list,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_ok,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_cancel,
+                    R.color.main_blue, R.color.blue_bg_lighter);
+            binding.dialogCustomDesc.setText(Html.fromHtml(
+                    getResources().getString(R.string.profile_settings_credits_list))
+            );
+            binding.dialogCustomDesc.setMovementMethod(LinkMovementMethod.getInstance());
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> dialog.dismiss());
+            binding.dialogCustomButtonNegative.setVisibility(View.GONE);
             dialog.show();
         }
     }
@@ -584,7 +574,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void savePhotoToStorage(Map<String, Object> changes) {
         if (newImageUri.getPath() != null && getContext() != null) {
-            byte [] thumb = FileCompressor.compressToByte(getContext(), newImageUri,
+            byte[] thumb = FileCompressor.compressToByte(getContext(), newImageUri,
                     Constants.USER_IMG_H, Constants.USER_IMG_W);
             storageViewModel.saveImageToStorage(thumb, user.getUid() + ".jpg", user.getUid());
             storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {

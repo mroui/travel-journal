@@ -1,18 +1,13 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.TextViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -26,11 +21,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogAddMarkerBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPlanToVisitBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Marker;
@@ -39,6 +34,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.MarkerInfoAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
@@ -321,15 +317,13 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     private void showAddMarkerDialog(int color) {
         if (getContext() != null) {
             if (user != null) {
-                Dialog dialog = new Dialog(getContext());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(true);
-                dialog.setContentView(R.layout.dialog_add_marker);
-                dialog.findViewById(R.id.dialog_add_marker_color).setBackgroundColor(color);
-                dialog.findViewById(R.id.dialog_add_marker_cancel_button).setOnClickListener(v -> dialog.dismiss());
-                dialog.findViewById(R.id.dialog_add_marker_add_button).setOnClickListener(v -> {
-                    String description = Objects.requireNonNull(((TextInputEditText) dialog
-                            .findViewById(R.id.dialog_add_marker_input)).getText()).toString();
+                Dialog dialog = DialogHandler.createDialog(getContext(), true);
+                DialogAddMarkerBinding binding = DialogAddMarkerBinding.inflate(LayoutInflater.from(getContext()));
+                dialog.setContentView(binding.getRoot());
+                binding.dialogAddMarkerColor.setBackgroundColor(color);
+                binding.dialogAddMarkerCancelButton.setOnClickListener(v -> dialog.dismiss());
+                binding.dialogAddMarkerAddButton.setOnClickListener(v -> {
+                    String description = Objects.requireNonNull(binding.dialogAddMarkerInput.getText()).toString();
                     dialog.dismiss();
                     addMarker(description, convertStringToHsv(Integer.toHexString(color)));
                 });
@@ -342,33 +336,20 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
     private void showRemoveMarkerDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_remove_marker_title));
-            message.setText(getResources().getString(R.string.dialog_remove_marker_desc));
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_remove));
-            buttonPositive.setRippleColor(ColorStateList
-                    .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
-            TextViewCompat.setTextAppearance(buttonPositive, R.style.YellowTextButton);
-            buttonPositive.setOnClickListener(v -> {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_remove_marker_title,
+                    binding.dialogCustomDesc, R.string.dialog_remove_marker_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_yellow, R.color.yellow_bg_lighter);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
                 if (clickedMarker != null)
                     removeMarker();
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_cancel));
-            buttonNegative.setRippleColor(ColorStateList
-                    .valueOf(ContextCompat.getColor(getContext(), R.color.yellow_bg_lighter)));
-            TextViewCompat.setTextAppearance(buttonNegative, R.style.YellowTextButton);
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }

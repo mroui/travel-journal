@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -18,10 +16,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogRateDayBinding;
 import com.martynaroj.traveljournal.databinding.FragmentBoardBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -30,7 +29,7 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
-import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -305,26 +304,15 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void showPackingDialog() {
         if (getContext() != null && getActivity() != null) {
-            packingDialog = new Dialog(getContext());
-            packingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            packingDialog.setCancelable(false);
-            packingDialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = packingDialog.findViewById(R.id.dialog_custom_title);
-            TextView message = packingDialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = packingDialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = packingDialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_packing_title));
-            message.setText(getResources().getString(R.string.dialog_packing_desc));
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            RippleDrawable.setRippleEffectButton(
-                    buttonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
-            );
-            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonPositive.setOnClickListener(v -> {
+            packingDialog = DialogHandler.createDialog(getContext(), false);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            packingDialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_packing_title,
+                    binding.dialogCustomDesc, R.string.dialog_packing_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_yellow, R.color.yellow_bg_lighter);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 packingDialog.dismiss();
                 this.travel.setPackingList(getBasicPackingList());
                 updateTravel(new HashMap<String, Object>() {{
@@ -333,21 +321,13 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 }});
                 changeFragment(PackingListFragment.newInstance(this.travel));
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            RippleDrawable.setRippleEffectButton(
-                    buttonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
-            );
-            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonNegative.setOnClickListener(v -> {
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> {
                 packingDialog.dismiss();
                 this.travel.setPackingList(new ArrayList<>());
                 updateTravel(new HashMap<String, Object>() {{
                     put(Constants.DB_PACKING_LIST, new ArrayList<>());
                 }});
             });
-
             packingDialog.show();
         }
     }
@@ -355,24 +335,21 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
     private void showRateDialog() {
         if (getContext() != null && getActivity() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_rate_day);
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogRateDayBinding binding = DialogRateDayBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
 
-            emojiHappy = dialog.findViewById(R.id.dialog_rate_day_emoji_happy);
-            emojiNormal = dialog.findViewById(R.id.dialog_rate_day_emoji_normal);
-            emojiSad = dialog.findViewById(R.id.dialog_rate_day_emoji_sad);
-            emojiLucky = dialog.findViewById(R.id.dialog_rate_day_emoji_lucky);
-            emojiShocked = dialog.findViewById(R.id.dialog_rate_day_emoji_shocked);
-            emojiBored = dialog.findViewById(R.id.dialog_rate_day_emoji_bored);
+            emojiHappy = binding.dialogRateDayEmojiHappy;
+            emojiNormal = binding.dialogRateDayEmojiNormal;
+            emojiSad = binding.dialogRateDayEmojiSad;
+            emojiLucky = binding.dialogRateDayEmojiLucky;
+            emojiShocked = binding.dialogRateDayEmojiShocked;
+            emojiBored = binding.dialogRateDayEmojiBored;
             setDefaultEmoji();
             setEmojiListener();
 
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_rate_day_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_rate_day_button_negative);
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-            buttonPositive.setOnClickListener(v -> {
+            binding.dialogRateDayButtonNegative.setOnClickListener(v -> dialog.dismiss());
+            binding.dialogRateDayButtonPositive.setOnClickListener(v -> {
                 today.setRate(rate.ordinal());
                 updateDay(new HashMap<String, Object>() {{
                     put(Constants.DB_RATE, rate.ordinal());

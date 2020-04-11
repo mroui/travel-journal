@@ -1,12 +1,10 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,8 +24,8 @@ import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Note;
 import com.martynaroj.traveljournal.view.adapters.NoteAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
-import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -245,9 +243,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void showOptionsDialog(Note note, int index) {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogNotesOptionsBinding binding = DialogNotesOptionsBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             binding.dialogOptionsEdit.setOnClickListener(view -> {
@@ -265,11 +261,10 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void showAddNoteDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogAddNoteBinding binding = DialogAddNoteBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
+            binding.dialogAddNotePhoto.setVisibility(View.GONE);
             binding.dialogAddNoteButtonPositive.setOnClickListener(view -> {
                 if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
                         && binding.dialogAddNoteInput.getText() != null) {
@@ -285,34 +280,21 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void showRemoveNoteDialog(Note note, int index) {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
-
-            binding.dialogCustomTitle.setText(getResources().getString(R.string.dialog_remove_note_title));
-            binding.dialogCustomDesc.setText(getResources().getString(R.string.dialog_remove_note_desc));
-            binding.dialogCustomButtonPositive.setText(getResources().getString(R.string.dialog_button_yes));
-            RippleDrawable.setRippleEffectButton(
-                    binding.dialogCustomButtonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.red_bg_lighter)
+            DialogHandler.initContent(
+                    getContext(), binding.dialogCustomTitle, R.string.dialog_remove_note_title,
+                    binding.dialogCustomDesc, R.string.dialog_remove_note_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_red, R.color.red_bg_lighter
             );
-            binding.dialogCustomButtonPositive.setTextColor(getResources().getColor(R.color.main_red));
             binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 removeNote(note, index);
                 dialog.dismiss();
             });
-            binding.dialogCustomButtonNegative.setText(getResources().getString(R.string.dialog_button_no));
-            RippleDrawable.setRippleEffectButton(
-                    binding.dialogCustomButtonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.red_bg_lighter)
-            );
-            binding.dialogCustomButtonNegative.setTextColor(getResources().getColor(R.color.main_red));
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
-
             dialog.show();
         }
     }
@@ -320,9 +302,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private void showEditNoteDialog(Note note, int index) {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogEditNoteBinding binding = DialogEditNoteBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             binding.dialogEditNoteInput.setText(note.getDescription());

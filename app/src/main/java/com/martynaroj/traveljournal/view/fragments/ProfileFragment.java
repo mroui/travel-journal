@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,16 +20,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogNotificationsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Notification;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.NotificationAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
@@ -319,19 +320,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void showNotificationsDialog(List<Notification> notifications) {
         if (getContext() != null) {
-            notificationsDialog = new Dialog(getContext());
-            notificationsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            notificationsDialog.setCancelable(true);
-            notificationsDialog.setContentView(R.layout.dialog_notifications);
-            notificationsDialog.findViewById(R.id.dialog_notifications_ok_button).setOnClickListener(v -> notificationsDialog.dismiss());
-
+            notificationsDialog = DialogHandler.createDialog(getContext(), true);
+            DialogNotificationsBinding binding = DialogNotificationsBinding.inflate(LayoutInflater.from(getContext()));
+            notificationsDialog.setContentView(binding.getRoot());
+            binding.dialogNotificationsOkButton.setOnClickListener(v -> notificationsDialog.dismiss());
             if (!notifications.isEmpty()) {
-                notificationsDialog.findViewById(R.id.dialog_notifications_no_results).setVisibility(View.INVISIBLE);
+                binding.dialogNotificationsNoResults.setVisibility(View.INVISIBLE);
                 setNotificationsList(notifications);
-            } else {
-                notificationsDialog.findViewById(R.id.dialog_notifications_recycler_view).setVisibility(View.INVISIBLE);
-            }
-
+            } else
+                binding.dialogNotificationsRecyclerView.setVisibility(View.INVISIBLE);
             notificationsDialog.show();
         }
     }
@@ -339,22 +336,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void showContactDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_my_email_title));
-            message.setText(user.getEmail());
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_ok));
-            buttonPositive.setOnClickListener(v -> dialog.dismiss());
-            buttonNegative.setVisibility(View.GONE);
-
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_my_email_title,
+                    binding.dialogCustomDesc, R.string.dialog_alarm_perms_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_ok,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_cancel,
+                    R.color.main_blue, R.color.blue_bg_lighter);
+            binding.dialogCustomDesc.setText(user.getEmail());
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> dialog.dismiss());
+            binding.dialogCustomButtonNegative.setVisibility(View.GONE);
             dialog.show();
         }
     }

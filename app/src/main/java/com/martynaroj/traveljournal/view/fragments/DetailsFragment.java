@@ -15,8 +15,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +33,7 @@ import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
 import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
@@ -325,18 +324,11 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
 
     private void showEditDetailsDialog() {
-        if (getContext() != null && getActivity() != null) {
-            editDialog = new Dialog(getContext());
-            editDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            editDialog.setCancelable(true);
-            editDialog.setContentView(R.layout.dialog_edit_travel_details);
-            if (editDialog.getWindow() != null)
-                editDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
+        if (getContext() != null) {
+            editDialog = DialogHandler.createDialog(getContext(), true);
             dialogBinding = DialogEditTravelDetailsBinding.inflate(LayoutInflater.from(getContext()));
             editDialog.setContentView(dialogBinding.getRoot());
             setEditDialogContentData();
-
             editDialog.show();
         }
     }

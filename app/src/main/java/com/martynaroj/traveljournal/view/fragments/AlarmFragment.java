@@ -6,29 +6,27 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogAlarmBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentAlarmBinding;
 import com.martynaroj.traveljournal.services.others.NotificationBroadcast;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
-import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
@@ -256,33 +254,24 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void showSetAlarmDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_alarm);
-
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_alarm_buttom_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_alarm_button_negative);
-            TimePicker timePicker = dialog.findViewById(R.id.dialog_alarm_time_picker);
-            DatePicker datePicker = dialog.findViewById(R.id.dialog_alarm_date_picker);
-            TextView errorMessage = dialog.findViewById(R.id.dialog_alarm_error);
-
-            int color = getResources().getColor(R.color.light_gray);
-            PickerColorize.colorizeDatePicker(datePicker, color);
-            PickerColorize.colorizeTimePicker(timePicker, color);
-
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogAlarmBinding binding = DialogAlarmBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            PickerColorize.colorizeDatePicker(binding.dialogAlarmDatePicker, getResources().getColor(R.color.light_gray));
+            PickerColorize.colorizeTimePicker(binding.dialogAlarmTimePicker, getResources().getColor(R.color.light_gray));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                datePicker.setOnDateChangedListener(
-                        (datePicker1, i, i1, i2) -> errorMessage.setVisibility(View.GONE)
+                binding.dialogAlarmDatePicker.setOnDateChangedListener(
+                        (datePicker1, i, i1, i2) -> binding.dialogAlarmError.setVisibility(View.GONE)
                 );
-                timePicker.setOnTimeChangedListener(
-                        (timePicker1, i, i1) -> errorMessage.setVisibility(View.GONE)
+                binding.dialogAlarmTimePicker.setOnTimeChangedListener(
+                        (timePicker1, i, i1) -> binding.dialogAlarmError.setVisibility(View.GONE)
                 );
             }
-            datePicker.setMinDate(new Date().getTime() - 1000);
-            buttonPositive.setOnClickListener(v -> setAlarm(dialog, datePicker, timePicker));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogAlarmDatePicker.setMinDate(new Date().getTime() - 1000);
+            binding.dialogAlarmButtomPositive.setOnClickListener(v ->
+                    setAlarm(dialog, binding.dialogAlarmDatePicker, binding.dialogAlarmTimePicker)
+            );
+            binding.dialogAlarmButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
@@ -290,39 +279,20 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener 
 
     private void showPermissionsDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-            dialog.setContentView(R.layout.dialog_custom);
-
-            TextView title = dialog.findViewById(R.id.dialog_custom_title);
-            TextView message = dialog.findViewById(R.id.dialog_custom_desc);
-            MaterialButton buttonPositive = dialog.findViewById(R.id.dialog_custom_button_positive);
-            MaterialButton buttonNegative = dialog.findViewById(R.id.dialog_custom_button_negative);
-
-            title.setText(getResources().getString(R.string.dialog_alarm_perms_title));
-            message.setText(getResources().getString(R.string.dialog_alarm_perms_desc));
-            buttonPositive.setText(getResources().getString(R.string.dialog_button_settings));
-            RippleDrawable.setRippleEffectButton(
-                    buttonPositive,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
-            );
-            buttonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonPositive.setOnClickListener(v -> {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_alarm_perms_title,
+                    binding.dialogCustomDesc, R.string.dialog_alarm_perms_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_settings,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no_thanks,
+                    R.color.main_violet, R.color.violet_bg_light);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
                 dialog.dismiss();
                 saveShownAlarmDialog();
                 openSettings();
             });
-            buttonNegative.setText(getResources().getString(R.string.dialog_button_no_thanks));
-            RippleDrawable.setRippleEffectButton(
-                    buttonNegative,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.yellow_bg_lighter)
-            );
-            buttonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
-            buttonNegative.setOnClickListener(v -> dialog.dismiss());
-
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
