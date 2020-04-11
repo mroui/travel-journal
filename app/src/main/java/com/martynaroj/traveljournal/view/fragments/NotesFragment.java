@@ -152,7 +152,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void setOnListScrollListener(RecyclerView recyclerView, FloatingActionButton button) {
+    void setOnListScrollListener(RecyclerView recyclerView, FloatingActionButton button) {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
