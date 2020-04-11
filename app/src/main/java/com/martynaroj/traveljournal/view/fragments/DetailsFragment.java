@@ -237,6 +237,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                 validateEditDetails();
                 break;
             case R.id.dialog_edit_travel_details_button_negative:
+                newImageUri = null;
                 editDialog.dismiss();
                 break;
             case R.id.dialog_edit_travel_details_image_file_remove_button:
@@ -283,11 +284,9 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                 if (downloadManager != null)
                     downloadManager.enqueue(request);
                 else
-                    showSnackBar(getResources().getString(R.string.messages_error_failed_download_file),
-                            Snackbar.LENGTH_LONG);
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_download_file), Snackbar.LENGTH_LONG);
             } else
-                showSnackBar(getResources().getString(R.string.messages_error_failed_read_file),
-                        Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_failed_read_file), Snackbar.LENGTH_LONG);
         }
     }
 
@@ -328,6 +327,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             editDialog = DialogHandler.createDialog(getContext(), true);
             dialogBinding = DialogEditTravelDetailsBinding.inflate(LayoutInflater.from(getContext()));
             editDialog.setContentView(dialogBinding.getRoot());
+            editDialog.setOnCancelListener(dialogInterface -> newImageUri = null);
             setEditDialogContentData();
             editDialog.show();
         }
