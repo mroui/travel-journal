@@ -273,7 +273,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 changeFragment(NotesFragment.newInstance(today, days));
                 break;
             case R.id.board_travel_grid_add_photo_card:
-                changeFragment(PhotosFragment.newInstance(today, days));
+                changeFragment(PhotosFragment.newInstance(travel, today, days));
                 break;
             case R.id.board_travel_grid_add_place_card:
                 //todo add place
