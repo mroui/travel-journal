@@ -40,14 +40,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/dialog_add_note_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_smaller"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/photo"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dialog_add_note_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_smaller"
                 android:minWidth="@dimen/dialog_input_width"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_add_note_desc"
-                app:layout_constraintEnd_toEndOf="parent"
                 style="@style/TextInput"
                 app:boxStrokeColor="@color/main_red"
                 app:hintEnabled="false"
