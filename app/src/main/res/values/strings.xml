@@ -64,6 +64,11 @@
     <string name="budget_expenses_no_results">No expenses found.\nAdd a new one by click +</string>
     <string name="dialog_expense_remove_title">Remove expense</string>
     <string name="dialog_expense_remove_desc">Are you sure you want to remove this expense?</string>
+    <string name="dialog_add_expense_title">Add expense</string>
+    <string name="dialog_add_expense_desc">Choose or create a category, enter amount and
+        choose if it\'s income or expenditure</string>
+    <string name="dialog_add_expense_category">Category</string>
+    <string name="dialog_add_expense_default_amount">0.0</string>
 
     <string name="notes_title">Notes</string>
     <string name="notes_no_results">No notes found.\nAdd a new one by click +</string>
@@ -79,11 +84,8 @@
     <string name="dialog_edit_note_desc">It can both a journal page and a daily diary,
     quick note.\nWhatever you think of!</string>
 
-    <string name="dialog_add_expense_title">Add expense</string>
-    <string name="dialog_add_expense_desc">Choose or create a category, enter amount and
-        choose if it\'s income or expenditure</string>
-    <string name="dialog_add_expense_category">Category</string>
-    <string name="dialog_add_expense_default_amount">0.0</string>
+    <string name="photos_title">Photos</string>
+    <string name="photos_no_results">No photos found.\nAdd a new one by click +</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
