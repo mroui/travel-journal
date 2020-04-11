@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -41,13 +42,13 @@ import java.util.List;
 public class NotesFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentNotesBinding binding;
+
     private UserViewModel userViewModel;
-    private DayViewModel dayViewModel;
+    DayViewModel dayViewModel;
+    Day today;
+    List<Day> days;
 
-    private Day today;
-    private List<Day> days;
     private List<Note> notes;
-
     private NoteAdapter adapter;
 
 
@@ -89,7 +90,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initViewModels() {
+    void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             dayViewModel = new ViewModelProvider(getActivity()).get(DayViewModel.class);
@@ -118,7 +119,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void observeUserChanges() {
+    void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user == null) {
                 showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
@@ -134,7 +135,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private void setListeners() {
         binding.notesArrowButton.setOnClickListener(this);
         binding.notesAddFloatingButton.setOnClickListener(this);
-        setOnListScrollListener();
+        setOnListScrollListener(binding.notesListRecyclerView, binding.notesAddFloatingButton);
     }
 
 
@@ -151,14 +152,14 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void setOnListScrollListener() {
-        binding.notesListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    private void setOnListScrollListener(RecyclerView recyclerView, FloatingActionButton button) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    binding.notesAddFloatingButton.show();
+                    button.show();
                 else
-                    binding.notesAddFloatingButton.hide();
+                    button.hide();
             }
         });
     }
@@ -343,12 +344,12 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     //OTHERS----------------------------------------------------------------------------------------
 
 
-    private boolean validateInput(TextInputEditText input, TextInputLayout layout) {
+    boolean validateInput(TextInputEditText input, TextInputLayout layout) {
         return new FormHandler(getContext()).validateInput(input, layout);
     }
 
 
-    private void back() {
+    void back() {
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
     }
