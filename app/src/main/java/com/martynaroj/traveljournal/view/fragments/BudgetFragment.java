@@ -14,10 +14,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.martynaroj.traveljournal.R;
@@ -28,13 +25,10 @@ import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Expense;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.adapters.BudgetExpensesAdapter;
-import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.FormHandler;
 import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
-import com.martynaroj.traveljournal.viewmodels.DayViewModel;
-import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -45,15 +39,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class BudgetFragment extends BaseFragment implements View.OnClickListener {
+public class BudgetFragment extends NotesFragment {
 
     private FragmentBudgetBinding binding;
-    private UserViewModel userViewModel;
-    private DayViewModel dayViewModel;
 
     private Travel travel;
-    private Day today;
-    private List<Day> days;
     private List<Expense> expenses;
     private BudgetExpensesAdapter adapter;
 
@@ -72,14 +62,11 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             travel = (Travel) getArguments().getSerializable(Constants.BUNDLE_TRAVEL);
-            today = (Day) getArguments().getSerializable(Constants.BUNDLE_DAY);
-            days = (List<Day>) getArguments().getSerializable(Constants.BUNDLE_DAYS);
         }
     }
 
@@ -101,14 +88,6 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initViewModels() {
-        if (getActivity() != null) {
-            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-            dayViewModel = new ViewModelProvider(getActivity()).get(DayViewModel.class);
-        }
-    }
-
-
     private void initContentData() {
         expenses = getAllDaysExpensesList();
         initListAdapter();
@@ -127,16 +106,6 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     private void setBindingData() {
         binding.setBudget(new DecimalFormat("#.00").format(getRemainingBudget()));
         binding.setIsListEmpty(expenses.size() == 0);
-    }
-
-
-    private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) {
-                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                back();
-            }
-        });
     }
 
 
@@ -182,8 +151,7 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
 
 
     private void setOnItemLongClickListener() {
-        if (adapter != null)
-            adapter.setOnItemLongClickListener((object, position, view) -> showRemoveDialog((Expense) object));
+        adapter.setOnItemLongClickListener((object, position, view) -> showRemoveDialog((Expense) object));
     }
 
 
@@ -344,24 +312,8 @@ public class BudgetFragment extends BaseFragment implements View.OnClickListener
     //OTHERS----------------------------------------------------------------------------------------
 
 
-    private boolean validateInput(TextInputEditText input, TextInputLayout layout) {
-        return new FormHandler(getContext()).validateInput(input, layout);
-    }
-
-
     private boolean validateInput(MaterialAutoCompleteTextView input, TextInputLayout layout) {
         return new FormHandler(getContext()).validateInput(input, layout);
-    }
-
-
-    private void back() {
-        if (getParentFragmentManager().getBackStackEntryCount() > 0)
-            getParentFragmentManager().popBackStack();
-    }
-
-
-    private void showSnackBar(String message, int duration) {
-        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
     }
 
 
