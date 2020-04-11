@@ -86,6 +86,7 @@
 
     <string name="photos_title">Photos</string>
     <string name="photos_no_results">No photos found.\nAdd a new one by click +</string>
+    <string name="photo">Photo</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>

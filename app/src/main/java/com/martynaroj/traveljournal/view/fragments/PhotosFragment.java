@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentPhotosBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Photo;
+import com.martynaroj.traveljournal.view.adapters.PhotoAdapter;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
@@ -23,6 +23,7 @@ public class PhotosFragment extends NotesFragment {
 
     private FragmentPhotosBinding binding;
     private List<Photo> photos;
+    private PhotoAdapter adapter;
 
 
     public static PhotosFragment newInstance(Day day, List<Day> days) {
@@ -60,6 +61,22 @@ public class PhotosFragment extends NotesFragment {
 
     private void initContentData() {
         photos = getAllDaysPhotosList();
+        initListAdapter();
+        setBindingData();
+    }
+
+
+    private void initListAdapter() {
+        if (getContext() != null) {
+            adapter = new PhotoAdapter(getContext(), photos);
+            binding.photosListRecyclerView.setAdapter(adapter);
+            setOnItemClickListener();
+        }
+    }
+
+
+    private void setBindingData() {
+        binding.setIsListEmpty(photos.size() == 0);
     }
 
 
@@ -68,7 +85,7 @@ public class PhotosFragment extends NotesFragment {
 
     private void setListeners() {
         binding.photosArrowButton.setOnClickListener(this);
-        setOnListScrollListener();
+        setOnListScrollListener(binding.photosListRecyclerView, binding.photosAddFloatingButton);
     }
 
 
@@ -82,15 +99,9 @@ public class PhotosFragment extends NotesFragment {
     }
 
 
-    private void setOnListScrollListener() {
-        binding.photosListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    binding.photosAddFloatingButton.show();
-                else
-                    binding.photosAddFloatingButton.hide();
-            }
+    private void setOnItemClickListener() {
+        adapter.setOnItemLongClickListener((object, position, view) -> {
+            //todo: show options
         });
     }
 

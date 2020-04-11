@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_tiny"
+    app:cardCornerRadius="@dimen/corner_radius_small">
+
+    <LinearLayout
+        android:id="@+id/photo_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/ripple_note_item"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/photo_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_smaller"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/roboto_light"/>
+
+        <ImageView
+            android:id="@+id/photo_item_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_smaller"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/photo"/>
+
+        <TextView
+            android:id="@+id/photo_item_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_smaller"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/black"
+            android:fontFamily="@font/raleway_regular"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
