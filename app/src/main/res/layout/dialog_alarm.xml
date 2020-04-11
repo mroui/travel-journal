@@ -123,7 +123,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_tiny"
         style="@style/TextInput"
-        app:boxStrokeColor="@color/yellow_bg_light"
+        app:boxStrokeColor="@color/violet_bg_light"
         app:hintEnabled="false"
         app:errorEnabled="false"
         app:errorIconDrawable="@null">
