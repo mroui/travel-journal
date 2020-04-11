@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogEditNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -199,11 +200,27 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         Integer dayIndex = getDayIndexOfNote(note);
         if (dayIndex != null) {
             days.get(dayIndex).getNotes().remove(note);
-            dayViewModel.updateDay(days.get(dayIndex).getId(), new HashMap<String, Object>() {{
-                put(Constants.DB_NOTES, days.get(dayIndex).getNotes());
-            }});
-            dayViewModel.setDays(days);
+            updateDay(dayIndex);
         }
+    }
+
+
+    private void editNote(Note note, int noteIndex) {
+        adapter.edit(noteIndex, note);
+        notes = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(note);
+        if (dayIndex != null) {
+            days.get(dayIndex).getNotes().set(days.get(dayIndex).getNotes().indexOf(note), note);
+            updateDay(dayIndex);
+        }
+    }
+
+
+    private void updateDay(int index) {
+        dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_NOTES, days.get(index).getNotes());
+        }});
+        dayViewModel.setDays(days);
         setBindingData();
     }
 
@@ -232,7 +249,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             DialogNotesOptionsBinding binding = DialogNotesOptionsBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             binding.dialogOptionsEdit.setOnClickListener(view -> {
-                //todo: edit
+                showEditNoteDialog(note, index);
                 dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
@@ -294,6 +311,29 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             binding.dialogCustomButtonNegative.setTextColor(getResources().getColor(R.color.main_red));
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
 
+            dialog.show();
+        }
+    }
+
+
+    private void showEditNoteDialog(Note note, int index) {
+        if (getContext() != null) {
+            Dialog dialog = new Dialog(getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            DialogEditNoteBinding binding = DialogEditNoteBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogEditNoteInput.setText(note.getDescription());
+            binding.dialogEditNoteInput.setSelection(note.getDescription().length());
+            binding.dialogEditNoteButtonPositive.setOnClickListener(view -> {
+                if (validateInput(binding.dialogEditNoteInput, binding.dialogEditNoteInputLayout)
+                        && binding.dialogEditNoteInput.getText() != null) {
+                    note.setDescription(binding.dialogEditNoteInput.getText().toString());
+                    editNote(note, index);
+                    dialog.dismiss();
+                }
+            });
+            binding.dialogEditNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
     }
