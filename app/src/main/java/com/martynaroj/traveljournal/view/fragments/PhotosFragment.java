@@ -85,7 +85,7 @@ public class PhotosFragment extends NotesFragment {
         initViewModels();
         initContentData();
         setListeners();
-        observeUserChanges();
+        observeUserChanges(view);
 
         return view;
     }
@@ -189,7 +189,8 @@ public class PhotosFragment extends NotesFragment {
             if (thumb != null)
                 uploadImage(thumb);
             else
-                showSnackBar(getResources().getString(R.string.messages_error_failed_load_file), Snackbar.LENGTH_LONG);
+                showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_error_failed_load_file),
+                        Snackbar.LENGTH_LONG);
         }
     }
 
@@ -202,7 +203,7 @@ public class PhotosFragment extends NotesFragment {
             if (status != null && !status.contains(getResources().getString(R.string.messages_error)))
                 addPhoto(status);
             else
-                showSnackBar(status, Snackbar.LENGTH_LONG);
+                showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_LONG);
             stopProgressBar();
         });
     }
@@ -325,9 +326,10 @@ public class PhotosFragment extends NotesFragment {
                 newImageUri = result.getUri();
                 loadImage();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE && result != null)
-                showSnackBar(result.getError().getMessage(), Snackbar.LENGTH_LONG);
+                showSnackBar(binding.getRoot(), result.getError().getMessage(), Snackbar.LENGTH_LONG);
         } else
-            showSnackBar(getResources().getString(R.string.messages_error_no_file_selected), Snackbar.LENGTH_SHORT);
+            showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_error_no_file_selected),
+                    Snackbar.LENGTH_SHORT);
     }
 
 

@@ -81,7 +81,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         initViewModels();
         initContentData();
         setListeners();
-        observeUserChanges();
+        observeUserChanges(view);
 
         return view;
     }
@@ -119,11 +119,12 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    void observeUserChanges() {
+    void observeUserChanges(View view) {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
             if (user == null) {
-                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
+                showSnackBar(view, getResources().getString(R.string.messages_not_logged_user),
+                        Snackbar.LENGTH_LONG);
                 back();
             }
         });
@@ -338,8 +339,8 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    void showSnackBar(String message, int duration) {
-        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    void showSnackBar(View view, String message, int duration) {
+        getSnackBarInteractions().showSnackBar(view, getActivity(), message, duration);
     }
 
 

@@ -76,7 +76,7 @@ public class BudgetFragment extends NotesFragment {
         initViewModels();
         initContentData();
         setListeners();
-        observeUserChanges();
+        observeUserChanges(view);
 
         return view;
     }
