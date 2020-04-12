@@ -91,6 +91,9 @@
     <string name="dialog_add_photo_desc">Add photo from your journey.\nIt\'s <b>optional</b>, but you
         can describe the photo, what\'s in it or how you spent the day</string>
     <string name="dialog_add_note_photo">Add photo</string>
+    <string name="dialog_edit_photo_title">Edit photo note</string>
+    <string name="dialog_edit_photo_desc">It\'s still possible to edit photo note. You can also leave
+    it empty - note is <b>optional</b></string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>

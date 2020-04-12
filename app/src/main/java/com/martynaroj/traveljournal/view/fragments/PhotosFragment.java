@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
+import com.martynaroj.traveljournal.databinding.DialogEditNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPhotosBinding;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -230,6 +231,26 @@ public class PhotosFragment extends NotesFragment {
     }
 
 
+    private void editPhotoNote(Photo photo, int photoIndex) {
+        adapter.edit(photoIndex, photo);
+        photos = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(photo);
+        if (dayIndex != null) {
+            days.get(dayIndex).getPhotos().set(days.get(dayIndex).getPhotos().indexOf(photo), photo);
+            updateDay(dayIndex);
+        }
+    }
+
+
+    private void updateDay(int index) {
+        dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_PHOTOS, days.get(index).getPhotos());
+        }});
+        dayViewModel.setDays(days);
+        setBindingData();
+    }
+
+
     //DIALOG----------------------------------------------------------------------------------------
 
 
@@ -280,13 +301,45 @@ public class PhotosFragment extends NotesFragment {
                     Color.TRANSPARENT, getResources().getColor(R.color.green_bg_light));
 
             binding.dialogOptionsEdit.setOnClickListener(view -> {
-                //todo: edit
+                showEditPhotoNoteDialog(photo, index);
                 dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
                 //todo: remove
                 dialog.dismiss();
             });
+            dialog.show();
+        }
+    }
+
+
+    private void showEditPhotoNoteDialog(Photo photo, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogEditNoteBinding binding = DialogEditNoteBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogEditNoteTitle.setText(getResources().getString(R.string.dialog_edit_photo_title));
+            binding.dialogEditNoteDesc.setText(getResources().getString(R.string.dialog_edit_photo_desc));
+            binding.dialogEditNoteInput.setText(photo.getDescription());
+            binding.dialogEditNoteInput.setSelection(photo.getDescription().length());
+
+            binding.dialogEditNoteInputLayout.setBoxStrokeColor(getResources().getColor(R.color.main_green));
+            binding.dialogEditNoteButtonPositive.setTextColor(getResources().getColor(R.color.main_green));
+            binding.dialogEditNoteButtonNegative.setTextColor(getResources().getColor(R.color.main_green));
+            RippleDrawable.setRippleEffectButton(binding.dialogEditNoteButtonPositive,
+                    Color.TRANSPARENT, getResources().getColor(R.color.green_bg_light));
+            RippleDrawable.setRippleEffectButton(binding.dialogEditNoteButtonNegative,
+                    Color.TRANSPARENT, getResources().getColor(R.color.green_bg_light));
+
+            binding.dialogEditNoteButtonPositive.setOnClickListener(view -> {
+                String desc = binding.dialogEditNoteInput.getText() != null ?
+                        binding.dialogEditNoteInput.getText().toString() : "";
+                photo.setDescription(desc);
+                editPhotoNote(photo, index);
+                dialog.dismiss();
+            });
+            binding.dialogEditNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
     }
