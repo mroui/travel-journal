@@ -94,6 +94,8 @@
     <string name="dialog_edit_photo_title">Edit photo note</string>
     <string name="dialog_edit_photo_desc">It\'s still possible to edit photo note. You can also leave
     it empty - note is <b>optional</b></string>
+    <string name="dialog_remove_photo_title">Remove photo</string>
+    <string name="dialog_remove_photo_desc">Are you sure you want to remove this photo?</string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>

@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogEditNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPhotosBinding;
@@ -29,6 +30,7 @@ import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.adapters.PhotoAdapter;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FileCompressor;
+import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -242,6 +244,25 @@ public class PhotosFragment extends NotesFragment {
     }
 
 
+    private void removePhoto(Photo photo, int photoIndex) {
+        adapter.remove(photoIndex);
+        photos = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(photo);
+        if (dayIndex != null) {
+            days.get(dayIndex).getPhotos().remove(photo);
+            updateDay(dayIndex);
+            removePhotoFromStorage(photo.getSrc());
+        }
+    }
+
+
+    private void removePhotoFromStorage(String src) {
+        String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travel.getId() + "/"
+                + Constants.STORAGE_DAYS + "/" + FileUriUtils.getFileName(getContext(), Uri.parse(src));
+        storageViewModel.removeFileFromStorage(path);
+    }
+
+
     private void updateDay(int index) {
         dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
             put(Constants.DB_PHOTOS, days.get(index).getPhotos());
@@ -305,7 +326,7 @@ public class PhotosFragment extends NotesFragment {
                 dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
-                //todo: remove
+                showRemovePhotoDialog(photo, index);
                 dialog.dismiss();
             });
             dialog.show();
@@ -340,6 +361,28 @@ public class PhotosFragment extends NotesFragment {
                 dialog.dismiss();
             });
             binding.dialogEditNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            dialog.show();
+        }
+    }
+
+
+    private void showRemovePhotoDialog(Photo photo, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(
+                    getContext(), binding.dialogCustomTitle, R.string.dialog_remove_photo_title,
+                    binding.dialogCustomDesc, R.string.dialog_remove_photo_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_green, R.color.green_bg_light
+            );
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                removePhoto(photo, index);
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
