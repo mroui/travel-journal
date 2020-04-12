@@ -97,6 +97,9 @@
     <string name="dialog_remove_photo_title">Remove photo</string>
     <string name="dialog_remove_photo_desc">Are you sure you want to remove this photo?</string>
 
+    <string name="places_title">Visited places</string>
+    <string name="places_no_results">No places found.\nAdd a new one by click +</string>
+
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
     <string name="map_nearby_places">Nearby places</string>
