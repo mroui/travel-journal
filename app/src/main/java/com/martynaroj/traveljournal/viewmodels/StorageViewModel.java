@@ -31,4 +31,8 @@ public class StorageViewModel extends AndroidViewModel {
         statusLiveData = storageRepository.saveFileToStorage(uri, name, path);
     }
 
+    public void removeFileFromStorage(String reference) {
+        storageRepository.remove(reference);
+    }
+
 }

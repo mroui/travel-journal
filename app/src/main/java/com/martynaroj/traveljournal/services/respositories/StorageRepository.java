@@ -56,4 +56,10 @@ public class StorageRepository {
         return statusData;
     }
 
+
+    public void remove(String reference) {
+        StorageReference fileRef = storageReference.child(reference);
+        fileRef.delete();
+    }
+
 }
