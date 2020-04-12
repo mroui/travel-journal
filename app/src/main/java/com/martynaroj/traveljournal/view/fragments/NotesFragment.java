@@ -229,7 +229,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private Integer getDayIndexOfNote(Note note) {
+    Integer getDayIndexOfNote(Note note) {
         Calendar cNote = Calendar.getInstance(), cDay = Calendar.getInstance();
         cNote.setTimeInMillis(note.getDate());
         for (int i = 0; i < days.size(); i++) {

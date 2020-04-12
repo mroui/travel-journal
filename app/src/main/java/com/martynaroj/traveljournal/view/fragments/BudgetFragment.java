@@ -30,7 +30,6 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -173,19 +172,6 @@ public class BudgetFragment extends NotesFragment {
     }
 
 
-    private Integer getDayIndexOfExpense(Expense expense) {
-        Calendar cExpense = Calendar.getInstance(), cDay = Calendar.getInstance();
-        cExpense.setTimeInMillis(expense.getDate());
-        for (int i = 0; i < days.size(); i++) {
-            cDay.setTimeInMillis(days.get(i).getDate());
-            if (cExpense.get(Calendar.DAY_OF_YEAR) == cDay.get(Calendar.DAY_OF_YEAR) &&
-                    cExpense.get(Calendar.YEAR) == cDay.get(Calendar.YEAR))
-                return i;
-        }
-        return null;
-    }
-
-
     //ADDING / DIALOG-------------------------------------------------------------------------------
 
 
@@ -273,7 +259,7 @@ public class BudgetFragment extends NotesFragment {
     private void removeExpense(Expense expense) {
         adapter.remove(expense);
         expenses = adapter.getList();
-        Integer index = getDayIndexOfExpense(expense);
+        Integer index = getDayIndexOfNote(expense);
         if (index != null) {
             days.get(index).getExpenses().remove(expense);
             dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
