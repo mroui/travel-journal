@@ -158,10 +158,12 @@ public class PhotosFragment extends NotesFragment {
 
     private List<Photo> getAllDaysPhotosList() {
         List<Photo> list = new ArrayList<>();
-        for (Day day : days)
-            list.addAll(day.getPhotos());
-        Collections.sort(list);
-        Collections.reverse(list);
+        if (days != null) {
+            for (Day day : days)
+                list.addAll(day.getPhotos());
+            Collections.sort(list);
+            Collections.reverse(list);
+        }
         return list;
     }
 

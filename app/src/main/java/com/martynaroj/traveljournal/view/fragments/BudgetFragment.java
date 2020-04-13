@@ -156,10 +156,12 @@ public class BudgetFragment extends NotesFragment {
 
     private List<Expense> getAllDaysExpensesList() {
         List<Expense> list = new ArrayList<>();
-        for (Day day : days)
-            list.addAll(day.getExpenses());
-        Collections.sort(list);
-        Collections.reverse(list);
+        if (days != null) {
+            for (Day day : days)
+                list.addAll(day.getExpenses());
+            Collections.sort(list);
+            Collections.reverse(list);
+        }
         return list;
     }
 

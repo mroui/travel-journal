@@ -178,10 +178,12 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     private List<Note> getAllDaysNotesList() {
         List<Note> list = new ArrayList<>();
-        for (Day day : days)
-            list.addAll(day.getNotes());
-        Collections.sort(list);
-        Collections.reverse(list);
+        if (days != null) {
+            for (Day day : days)
+                list.addAll(day.getNotes());
+            Collections.sort(list);
+            Collections.reverse(list);
+        }
         return list;
     }
 
