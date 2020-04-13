@@ -290,6 +290,7 @@ public class PhotosFragment extends NotesFragment {
             imageButton = binding.dialogAddNotePhoto;
             imageDescription = binding.dialogAddNoteInput;
             imageError = binding.dialogAddNotePhotoError;
+            binding.dialogAddNotePlaceContainer.setVisibility(View.GONE);
 
             dialog.setOnCancelListener(dialogInterface -> newImageUri = null);
             binding.dialogAddNotePhoto.setOnClickListener(view -> checkPermissionsToSelectImage());

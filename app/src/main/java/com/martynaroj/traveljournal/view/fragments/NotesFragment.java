@@ -269,6 +269,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
             DialogAddNoteBinding binding = DialogAddNoteBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             binding.dialogAddNotePhotoContainer.setVisibility(View.GONE);
+            binding.dialogAddNotePlaceContainer.setVisibility(View.GONE);
             binding.dialogAddNoteButtonPositive.setOnClickListener(view -> {
                 if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
                         && binding.dialogAddNoteInput.getText() != null) {
