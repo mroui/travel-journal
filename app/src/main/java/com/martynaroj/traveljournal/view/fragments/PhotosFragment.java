@@ -292,18 +292,22 @@ public class PhotosFragment extends NotesFragment {
             imageError = binding.dialogAddNotePhotoError;
             binding.dialogAddNotePlaceContainer.setVisibility(View.GONE);
 
-            dialog.setOnCancelListener(dialogInterface -> newImageUri = null);
             binding.dialogAddNotePhoto.setOnClickListener(view -> checkPermissionsToSelectImage());
             binding.dialogAddNoteButtonPositive.setOnClickListener(view -> {
                 if (validateImage()) {
                     prepareImageToSave();
-                    dialog.dismiss();
+                    dismissAddDialog(dialog);
                 }
             });
             binding.dialogAddNoteButtonNegative.setOnClickListener(view -> {
-                dialog.dismiss();
                 newImageUri = null;
+                dismissAddDialog(dialog);
             });
+            dialog.setOnCancelListener(dialogInterface -> {
+                newImageUri = null;
+                removeAutoCompleteFragment();
+            });
+            dialog.setOnDismissListener(dialogInterface -> removeAutoCompleteFragment());
             dialog.show();
         }
     }

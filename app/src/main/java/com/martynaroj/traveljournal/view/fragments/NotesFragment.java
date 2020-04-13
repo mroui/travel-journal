@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -274,10 +275,12 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
                 if (validateInput(binding.dialogAddNoteInput, binding.dialogAddNoteInputLayout)
                         && binding.dialogAddNoteInput.getText() != null) {
                     addNote(binding.dialogAddNoteInput.getText().toString());
-                    dialog.dismiss();
+                    dismissAddDialog(dialog);
                 }
             });
-            binding.dialogAddNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            binding.dialogAddNoteButtonNegative.setOnClickListener(view -> dismissAddDialog(dialog));
+            dialog.setOnDismissListener(dialogInterface -> removeAutoCompleteFragment());
+            dialog.setOnCancelListener(dialogInterface -> removeAutoCompleteFragment());
             dialog.show();
         }
     }
@@ -326,6 +329,12 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    void dismissAddDialog(Dialog dialog) {
+        removeAutoCompleteFragment();
+        dialog.dismiss();
+    }
+
+
     //OTHERS----------------------------------------------------------------------------------------
 
 
@@ -342,6 +351,16 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
 
     void showSnackBar(View view, String message, int duration) {
         getSnackBarInteractions().showSnackBar(view, getActivity(), message, duration);
+    }
+
+
+    void removeAutoCompleteFragment() {
+        if (getActivity() != null) {
+            Fragment fragment = (getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.dialog_add_note_place_search_fragment));
+            if (fragment != null)
+                getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
 
