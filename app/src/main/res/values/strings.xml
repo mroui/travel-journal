@@ -110,6 +110,9 @@
     <string name="dialog_add_note_place_emoji_bored">EMOJI BORED</string>
     <string name="dialog_remove_place_title">Remove place</string>
     <string name="dialog_remove_place_desc">Are you sure you want to remove this place?</string>
+    <string name="dialog_edit_place_title">Edit place note</string>
+    <string name="dialog_edit_place_desc">It\'s still possible to edit place note. You can also leave
+    it empty - note is <b>optional</b></string>
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>

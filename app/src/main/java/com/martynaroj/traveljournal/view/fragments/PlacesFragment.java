@@ -15,6 +15,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogEditNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPlacesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -212,6 +213,17 @@ public class PlacesFragment extends NotesFragment {
     }
 
 
+    private void editPlaceNote(Place place, int placeIndex) {
+        adapter.edit(placeIndex, place);
+        places = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(place);
+        if (dayIndex != null) {
+            days.get(dayIndex).getPlaces().set(days.get(dayIndex).getPlaces().indexOf(place), place);
+            updateDay(dayIndex);
+        }
+    }
+
+
     private void updateDay(int index) {
         dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
             put(Constants.DB_PLACES, days.get(index).getPlaces());
@@ -275,14 +287,45 @@ public class PlacesFragment extends NotesFragment {
                     Color.TRANSPARENT, getResources().getColor(R.color.yellow_bg_lighter));
 
             binding.dialogOptionsEdit.setOnClickListener(view -> {
-                //todo edit
-                //showEditPhotoNoteDialog(place, index);
+                showEditPlaceNoteDialog(place, index);
                 dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
                 showRemovePlaceDialog(place, index);
                 dialog.dismiss();
             });
+            dialog.show();
+        }
+    }
+
+
+    private void showEditPlaceNoteDialog(Place place, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogEditNoteBinding binding = DialogEditNoteBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogEditNoteTitle.setText(getResources().getString(R.string.dialog_edit_place_title));
+            binding.dialogEditNoteDesc.setText(getResources().getString(R.string.dialog_edit_place_desc));
+            binding.dialogEditNoteInput.setText(place.getDescription());
+            binding.dialogEditNoteInput.setSelection(place.getDescription().length());
+
+            binding.dialogEditNoteInputLayout.setBoxStrokeColor(getResources().getColor(R.color.main_yellow));
+            binding.dialogEditNoteButtonPositive.setTextColor(getResources().getColor(R.color.main_yellow));
+            binding.dialogEditNoteButtonNegative.setTextColor(getResources().getColor(R.color.main_yellow));
+            RippleDrawable.setRippleEffectButton(binding.dialogEditNoteButtonPositive,
+                    Color.TRANSPARENT, getResources().getColor(R.color.yellow_bg_lighter));
+            RippleDrawable.setRippleEffectButton(binding.dialogEditNoteButtonNegative,
+                    Color.TRANSPARENT, getResources().getColor(R.color.yellow_bg_lighter));
+
+            binding.dialogEditNoteButtonPositive.setOnClickListener(view -> {
+                String desc = binding.dialogEditNoteInput.getText() != null ?
+                        binding.dialogEditNoteInput.getText().toString() : "";
+                place.setDescription(desc);
+                editPlaceNote(place, index);
+                dialog.dismiss();
+            });
+            binding.dialogEditNoteButtonNegative.setOnClickListener(view -> dialog.dismiss());
             dialog.show();
         }
     }
