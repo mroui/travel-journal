@@ -14,6 +14,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPlacesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -200,6 +201,26 @@ public class PlacesFragment extends NotesFragment {
     }
 
 
+    private void removePlace(Place place, int placeIndex) {
+        adapter.remove(placeIndex);
+        places = adapter.getList();
+        Integer dayIndex = getDayIndexOfNote(place);
+        if (dayIndex != null) {
+            days.get(dayIndex).getPlaces().remove(place);
+            updateDay(dayIndex);
+        }
+    }
+
+
+    private void updateDay(int index) {
+        dayViewModel.updateDay(days.get(index).getId(), new HashMap<String, Object>() {{
+            put(Constants.DB_PLACES, days.get(index).getPlaces());
+        }});
+        dayViewModel.setDays(days);
+        setBindingData();
+    }
+
+
     //DIALOG----------------------------------------------------------------------------------------
 
 
@@ -259,10 +280,31 @@ public class PlacesFragment extends NotesFragment {
                 dialog.dismiss();
             });
             binding.dialogOptionsRemove.setOnClickListener(view -> {
-                //todo remove
-                //showRemovePhotoDialog(place, index);
+                showRemovePlaceDialog(place, index);
                 dialog.dismiss();
             });
+            dialog.show();
+        }
+    }
+
+
+    private void showRemovePlaceDialog(Place place, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(
+                    getContext(), binding.dialogCustomTitle, R.string.dialog_remove_place_title,
+                    binding.dialogCustomDesc, R.string.dialog_remove_place_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_yellow, R.color.yellow_bg_lighter
+            );
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                removePlace(place, index);
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
         }
     }
