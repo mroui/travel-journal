@@ -22,8 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:gravity="center"
             tools:ignore="UseCompoundDrawables">
 
             <TextView
@@ -33,7 +31,6 @@
                 android:textSize="@dimen/text_smaller"
                 android:textColor="@color/dark_gray"
                 android:fontFamily="@font/roboto_light"
-                android:layout_gravity="center"
                 android:layout_weight="1"/>
 
             <ImageView
@@ -41,7 +38,6 @@
                 android:layout_width="@dimen/default_icon_size"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:layout_gravity="center"
                 android:contentDescription="@string/photo"/>
 
         </LinearLayout>
