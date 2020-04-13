@@ -109,7 +109,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
         if (getContext() != null) {
             adapter = new NoteAdapter(getContext(), notes);
             binding.notesListRecyclerView.setAdapter(adapter);
-            setOnItemClickListener();
+            setOnItemLongClickListener();
         }
     }
 
@@ -167,7 +167,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void setOnItemClickListener() {
+    private void setOnItemLongClickListener() {
         adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Note) object, position));
     }
 

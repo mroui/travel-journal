@@ -115,7 +115,7 @@ public class PhotosFragment extends NotesFragment {
         if (getContext() != null) {
             adapter = new PhotoAdapter(getContext(), photos);
             binding.photosListRecyclerView.setAdapter(adapter);
-            setOnItemClickListener();
+            setOnItemLongClickListener();
         }
     }
 
@@ -148,7 +148,7 @@ public class PhotosFragment extends NotesFragment {
     }
 
 
-    private void setOnItemClickListener() {
+    private void setOnItemLongClickListener() {
         adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Photo) object, position));
     }
 
