@@ -12,7 +12,7 @@ import com.martynaroj.traveljournal.databinding.FragmentPlacesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Place;
 import com.martynaroj.traveljournal.services.models.Travel;
-import com.martynaroj.traveljournal.view.adapters.PhotoAdapter;
+import com.martynaroj.traveljournal.view.adapters.PlaceAdapter;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
@@ -25,7 +25,7 @@ public class PlacesFragment extends NotesFragment {
     private FragmentPlacesBinding binding;
     private Travel travel;
     private List<Place> places;
-    private PhotoAdapter adapter;
+    private PlaceAdapter adapter;
 
 
     public static PlacesFragment newInstance(Travel travel, Day day, List<Day> days) {
@@ -74,7 +74,9 @@ public class PlacesFragment extends NotesFragment {
 
     private void initListAdapter() {
         if (getContext() != null) {
-            //
+            adapter = new PlaceAdapter(getContext(), places);
+            binding.placesListRecyclerView.setAdapter(adapter);
+            setOnItemLongClickListener();
         }
     }
 
@@ -103,6 +105,13 @@ public class PlacesFragment extends NotesFragment {
             case R.id.places_add_floating_button:
                 break;
         }
+    }
+
+
+    private void setOnItemLongClickListener() {
+        adapter.setOnItemLongClickListener((object, position, view) -> {
+            //todo show options + edit + remove
+        });
     }
 
 
