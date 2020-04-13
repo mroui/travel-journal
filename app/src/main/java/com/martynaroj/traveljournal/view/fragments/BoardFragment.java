@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -30,7 +29,7 @@ import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
-import com.martynaroj.traveljournal.view.others.enums.Emoji;
+import com.martynaroj.traveljournal.view.others.classes.EmojiHandler;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
@@ -60,9 +59,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private Address destination;
     private WeatherResult weatherResult;
     private Dialog packingDialog;
-
-    private ImageView emojiHappy, emojiNormal, emojiSad, emojiLucky, emojiShocked, emojiBored;
-    private Emoji rate;
+    private EmojiHandler emojiHandler;
 
     private List<Day> days;
     private Day today;
@@ -251,24 +248,6 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             case R.id.board_floating_rate_button:
                 showRateDialog();
                 break;
-            case R.id.dialog_rate_day_emoji_happy:
-                emojiOnClick(Emoji.HAPPY, view, R.drawable.ic_emoji_happy_color);
-                break;
-            case R.id.dialog_rate_day_emoji_normal:
-                emojiOnClick(Emoji.NORMAL, view, R.drawable.ic_emoji_normal_color);
-                break;
-            case R.id.dialog_rate_day_emoji_sad:
-                emojiOnClick(Emoji.SAD, view, R.drawable.ic_emoji_sad_color);
-                break;
-            case R.id.dialog_rate_day_emoji_lucky:
-                emojiOnClick(Emoji.LUCKY, view, R.drawable.ic_emoji_lucky_color);
-                break;
-            case R.id.dialog_rate_day_emoji_shocked:
-                emojiOnClick(Emoji.SHOCKED, view, R.drawable.ic_emoji_shocked_color);
-                break;
-            case R.id.dialog_rate_day_emoji_bored:
-                emojiOnClick(Emoji.BORED, view, R.drawable.ic_emoji_bored_color);
-                break;
             case R.id.board_travel_grid_add_note_card:
                 changeFragment(NotesFragment.newInstance(today, days));
                 break;
@@ -338,79 +317,16 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogRateDayBinding binding = DialogRateDayBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
-
-            emojiHappy = binding.dialogRateDayEmojiHappy;
-            emojiNormal = binding.dialogRateDayEmojiNormal;
-            emojiSad = binding.dialogRateDayEmojiSad;
-            emojiLucky = binding.dialogRateDayEmojiLucky;
-            emojiShocked = binding.dialogRateDayEmojiShocked;
-            emojiBored = binding.dialogRateDayEmojiBored;
-            setDefaultEmoji();
-            setEmojiListener();
-
+            emojiHandler = new EmojiHandler(binding, today.getRate());
             binding.dialogRateDayButtonNegative.setOnClickListener(v -> dialog.dismiss());
             binding.dialogRateDayButtonPositive.setOnClickListener(v -> {
-                today.setRate(rate.ordinal());
+                today.setRate(emojiHandler.getSelectedEmoji().ordinal());
                 updateDay(new HashMap<String, Object>() {{
-                    put(Constants.DB_RATE, rate.ordinal());
+                    put(Constants.DB_RATE, emojiHandler.getSelectedEmoji().ordinal());
                 }});
                 dialog.dismiss();
             });
             dialog.show();
-        }
-    }
-
-
-    //EMOJI-----------------------------------------------------------------------------------------
-
-
-    private void setEmojiListener() {
-        emojiHappy.setOnClickListener(this);
-        emojiNormal.setOnClickListener(this);
-        emojiSad.setOnClickListener(this);
-        emojiLucky.setOnClickListener(this);
-        emojiShocked.setOnClickListener(this);
-        emojiBored.setOnClickListener(this);
-    }
-
-
-    private void emojiOnClick(Emoji rate, View view, int resource) {
-        this.rate = rate;
-        clearEmoji();
-        ((ImageView) view).setImageResource(resource);
-    }
-
-
-    private void clearEmoji() {
-        emojiHappy.setImageResource(R.drawable.ic_emoji_happy);
-        emojiNormal.setImageResource(R.drawable.ic_emoji_normal);
-        emojiSad.setImageResource(R.drawable.ic_emoji_sad);
-        emojiLucky.setImageResource(R.drawable.ic_emoji_lucky);
-        emojiShocked.setImageResource(R.drawable.ic_emoji_shocked);
-        emojiBored.setImageResource(R.drawable.ic_emoji_bored);
-    }
-
-
-    private void setDefaultEmoji() {
-        switch (Emoji.values()[today.getRate()]) {
-            case HAPPY:
-                emojiOnClick(Emoji.HAPPY, emojiHappy, R.drawable.ic_emoji_happy_color);
-                break;
-            case NORMAL:
-                emojiOnClick(Emoji.NORMAL, emojiNormal, R.drawable.ic_emoji_normal_color);
-                break;
-            case SAD:
-                emojiOnClick(Emoji.SAD, emojiSad, R.drawable.ic_emoji_sad_color);
-                break;
-            case LUCKY:
-                emojiOnClick(Emoji.LUCKY, emojiLucky, R.drawable.ic_emoji_lucky_color);
-                break;
-            case SHOCKED:
-                emojiOnClick(Emoji.SHOCKED, emojiShocked, R.drawable.ic_emoji_shocked_color);
-                break;
-            case BORED:
-                emojiOnClick(Emoji.BORED, emojiBored, R.drawable.ic_emoji_bored_color);
-                break;
         }
     }
 
