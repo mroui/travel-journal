@@ -1,6 +1,7 @@
 package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
+import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPlacesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Place;
@@ -21,6 +23,7 @@ import com.martynaroj.traveljournal.services.others.GooglePlaces;
 import com.martynaroj.traveljournal.view.adapters.PlaceAdapter;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.EmojiHandler;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
@@ -138,9 +141,7 @@ public class PlacesFragment extends NotesFragment {
 
 
     private void setOnItemLongClickListener() {
-        adapter.setOnItemLongClickListener((object, position, view) -> {
-            //todo show options + edit + remove
-        });
+        adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Place) object, position));
     }
 
 
@@ -234,6 +235,34 @@ public class PlacesFragment extends NotesFragment {
                 place = null;
             });
 
+            dialog.show();
+        }
+    }
+
+
+    private void showOptionsDialog(Place place, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogNotesOptionsBinding binding = DialogNotesOptionsBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogOptionsEdit.setTextColor(getResources().getColor(R.color.main_yellow));
+            binding.dialogOptionsRemove.setTextColor(getResources().getColor(R.color.main_yellow));
+            RippleDrawable.setRippleEffectButton(binding.dialogOptionsEdit,
+                    Color.TRANSPARENT, getResources().getColor(R.color.yellow_bg_lighter));
+            RippleDrawable.setRippleEffectButton(binding.dialogOptionsRemove,
+                    Color.TRANSPARENT, getResources().getColor(R.color.yellow_bg_lighter));
+
+            binding.dialogOptionsEdit.setOnClickListener(view -> {
+                //todo edit
+                //showEditPhotoNoteDialog(place, index);
+                dialog.dismiss();
+            });
+            binding.dialogOptionsRemove.setOnClickListener(view -> {
+                //todo remove
+                //showRemovePhotoDialog(place, index);
+                dialog.dismiss();
+            });
             dialog.show();
         }
     }
