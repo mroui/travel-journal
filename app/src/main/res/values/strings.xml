@@ -99,6 +99,16 @@
 
     <string name="places_title">Visited places</string>
     <string name="places_no_results">No places found.\nAdd a new one by click +</string>
+    <string name="dialog_add_place_title">Add place</string>
+    <string name="dialog_add_place_desc">Search and add visited place.\nRate and <b>optionally</b>
+        describe it - what did you see, how was the place or anything what you want</string>
+    <string name="dialog_add_note_place_emoji_happy">EMOJI HAPPY</string>
+    <string name="dialog_add_note_place_emoji_normal">EMOJI NORMAL</string>
+    <string name="dialog_add_note_place_emoji_sad">EMOJI SAD</string>
+    <string name="dialog_add_note_place_emoji_lucky">EMOJI LUCKY</string>
+    <string name="dialog_add_note_place_emoji_shocked">EMOJI SHOCKED</string>
+    <string name="dialog_add_note_place_emoji_bored">EMOJI BORED</string>
+
 
     <string name="map_title">Map</string>
     <string name="map_show_saved_places">Show saved places</string>
