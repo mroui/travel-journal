@@ -31,6 +31,7 @@
 
     <dimen name="text_settings_title">18sp</dimen>
 
+    <dimen name="regular_icon_size">48dp</dimen>
     <dimen name="icon_size">36dp</dimen>
     <dimen name="small_icon_size">12dp</dimen>
     <dimen name="badge_size">15dp</dimen>
