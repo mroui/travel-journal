@@ -259,7 +259,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 changeFragment(PlacesFragment.newInstance(travel, today, days));
                 break;
             case R.id.board_travel_grid_details_card:
-                if (endTravelSnackbar.isShown()) endTravelSnackbar.dismiss();
+                if (endTravelSnackbar != null && endTravelSnackbar.isShown())
+                    endTravelSnackbar.dismiss();
                 changeFragment(DetailsFragment.newInstance(user, travel, destination));
                 break;
             case R.id.board_travel_grid_manage_budget_card:
