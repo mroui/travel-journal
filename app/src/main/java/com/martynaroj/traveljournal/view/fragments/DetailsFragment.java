@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.hootsuite.nachos.NachoTextView;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogEditTravelDetailsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentDetailsBinding;
 import com.martynaroj.traveljournal.services.models.Address;
@@ -244,7 +245,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                 removeImage();
                 break;
             case R.id.details_end_button:
-                endTravel();
+                showEndTravelDialog();
                 break;
         }
     }
@@ -479,9 +480,23 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     //END-------------------------------------------------------------------------------------------
 
 
-    private void endTravel() {
-        //todo: end travel, save to file, set sharing option, remove unnecessary data like days from
-        //todo: databse, etc, add travel description
+    private void showEndTravelDialog() {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            DialogHandler.initContent(getContext(), binding.dialogCustomTitle, R.string.dialog_end_travel_title,
+                    binding.dialogCustomDesc, R.string.dialog_end_travel_desc,
+                    binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                    binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                    R.color.main_blue, R.color.blue_bg_light);
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                //todo open end travel fragment
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+        }
     }
 
 

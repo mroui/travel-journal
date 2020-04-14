@@ -408,4 +408,8 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
 
+    <string name="dialog_end_travel_title">End travel</string>
+    <string name="dialog_end_travel_desc">You can still edit minor information in details section.\nAre
+        you sure you want to end your joruney now?</string>
+
 </resources>
