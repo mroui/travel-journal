@@ -18,6 +18,9 @@
         <variable
             name="transport"
             type="com.martynaroj.traveljournal.services.models.Reservation"/>
+        <variable
+            name="budget"
+            type="String" />
     </data>
 
         <FrameLayout
@@ -273,7 +276,7 @@
                             android:fontFamily="@font/raleway_regular"
                             android:textSize="@dimen/text_small"
                             android:textAlignment="textEnd"
-                            android:text="@{travel.budget.toString()}"
+                            android:text="@{budget}"
                             android:textColor="@color/darker_gray"
                             android:layout_weight="3"/>
 

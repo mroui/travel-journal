@@ -162,6 +162,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.setDestination(destination);
         binding.setAccommodation(accommodation);
         binding.setTransport(transport);
+        binding.setBudget(new DecimalFormat("#.00").format(travel.getBudget()));
         initTags();
     }
 
