@@ -60,6 +60,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private WeatherResult weatherResult;
     private Dialog packingDialog;
     private EmojiHandler emojiHandler;
+    private Snackbar endTravelSnackbar;
 
     private List<Day> days;
     private Day today;
@@ -258,6 +259,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                 changeFragment(PlacesFragment.newInstance(travel, today, days));
                 break;
             case R.id.board_travel_grid_details_card:
+                if (endTravelSnackbar.isShown()) endTravelSnackbar.dismiss();
                 changeFragment(DetailsFragment.newInstance(user, travel, destination));
                 break;
             case R.id.board_travel_grid_manage_budget_card:
@@ -331,6 +333,21 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
+    private void showEndTravelSnackbar() {
+        if (getChildFragmentManager().getBackStackEntryCount() == 0) {
+            endTravelSnackbar = Snackbar.make(binding.getRoot(),
+                    getResources().getString(R.string.messages_end_travel_snackbar),
+                    Snackbar.LENGTH_INDEFINITE);
+            endTravelSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
+                    view -> {
+                        endTravelSnackbar.dismiss();
+                        changeFragment(DetailsFragment.newInstance(user, travel, destination));
+                    });
+            endTravelSnackbar.show();
+        }
+    }
+
+
     //DATABASE--------------------------------------------------------------------------------------
 
 
@@ -387,7 +404,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
                     travel.getDays().add(null);
                 addNewDay();
             }
-        }
+        } else if (whichDay == 0)
+            showEndTravelSnackbar();
     }
 
 
