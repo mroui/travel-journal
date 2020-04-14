@@ -9,36 +9,142 @@
     android:layout_width="match_parent"
     android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <ScrollView
         android:layout_height="match_parent"
-        android:padding="@dimen/padding_regular">
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        tools:ignore="UselessParent">
 
-        <ImageView
-            android:id="@+id/end_travel_arrow_button"
-            android:layout_width="@dimen/icon_size"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:background="?android:attr/selectableItemBackground"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/back_arrow" />
+            android:padding="@dimen/padding_regular">
 
-        <TextView
-            android:id="@+id/end_travel_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/end_travel_arrow_button"
-            app:layout_constraintTop_toBottomOf="@+id/end_travel_arrow_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/robotoslab_medium"
-            android:text="@string/end_travel_title"
-            android:textSize="@dimen/text_bigger"
-            android:textColor="@color/black"/>
+            <ImageView
+                android:id="@+id/end_travel_arrow_button"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="?android:attr/selectableItemBackground"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back_arrow" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/end_travel_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/end_travel_arrow_button"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_arrow_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/robotoslab_medium"
+                android:text="@string/end_travel_title"
+                android:textSize="@dimen/text_bigger"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/end_travel_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_arrow_button"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:fontFamily="@font/roboto_light"
+                android:textAlignment="center"
+                android:text="@string/end_travel_desc"
+                android:textSize="@dimen/text_regular"
+                android:textColor="@color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/end_travel_description_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_desc"
+                android:layout_marginTop="@dimen/margin_small"
+                android:fontFamily="@font/roboto_light"
+                android:textAlignment="textStart"
+                android:text="@string/end_travel_description_desc"
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/dark_gray"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/end_travel_description_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_description_desc"
+                android:layout_marginTop="@dimen/margin_smaller"
+                style="@style/TextInput"
+                app:hintEnabled="false"
+                app:counterEnabled="true"
+                app:counterMaxLength="1000"
+                app:errorEnabled="true"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/end_travel_description_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:fontFamily="@font/raleway_regular"
+                    android:lines="8"
+                    android:maxLength="1000"
+                    android:textSize="@dimen/text_small"
+                    android:textCursorDrawable="@null"
+                    android:inputType="textMultiLine"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/end_travel_privacy_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_description_input_layout"
+                android:layout_marginTop="@dimen/margin_small"
+                android:fontFamily="@font/roboto_light"
+                android:textAlignment="textStart"
+                android:text="@string/end_travel_privacy_desc"
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/dark_gray"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/end_travel_privacy_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/end_travel_privacy_desc"
+                android:layout_marginHorizontal="@dimen/margin_bigger"
+                android:layout_marginTop="@dimen/margin_smaller"
+                android:fontFamily="@font/raleway_medium"
+                android:textSize="@dimen/text_smaller"
+                app:ms_background_color="@color/dirty_white"
+                app:ms_arrow_tint="@color/main_blue"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/end_travel_privacy_finish_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/end_travel_privacy_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/margin_regular"
+                android:layout_marginHorizontal="@dimen/margin_regular"
+                android:padding="@dimen/padding_small"
+                android:text="@string/end_travel_privacy_finish_button"
+                android:textColor="@color/white"
+                android:fontFamily="@font/raleway_bold"
+                app:backgroundTint="@color/main_blue"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </FrameLayout>
