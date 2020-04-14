@@ -410,6 +410,7 @@
 
     <string name="dialog_end_travel_title">End travel</string>
     <string name="dialog_end_travel_desc">You can still edit minor information in details section.\nAre
-        you sure you want to end your joruney now?</string>
+        you sure you want to end your journey now?</string>
+    <string name="end_travel_title">End travel</string>
 
 </resources>

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -47,6 +48,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -492,7 +494,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                     binding.dialogCustomButtonNegative, R.string.dialog_button_no,
                     R.color.main_blue, R.color.blue_bg_light);
             binding.dialogCustomButtonPositive.setOnClickListener(v -> {
-                //todo open end travel fragment
+                changeFragment(EndTravelFragment.newInstance(this.user, this.travel));
                 dialog.dismiss();
             });
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
@@ -506,6 +508,11 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private List<String> getUniqueTags(NachoTextView tagsInput) {
         return new ArrayList<>(new LinkedHashSet<>(tagsInput.getChipValues()));
+    }
+
+
+    private void changeFragment(Fragment next) {
+        getNavigationInteractions().changeFragment(this, next, true);
     }
 
 
