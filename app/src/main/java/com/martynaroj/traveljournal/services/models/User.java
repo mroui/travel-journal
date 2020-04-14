@@ -8,6 +8,7 @@ import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.Exclude;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
@@ -238,6 +239,8 @@ public class User extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.travels);
     }
 
+
+    @Exclude
     @SuppressWarnings("ConstantConditions")
     @Bindable
     public int getPrivacyEmail() {
@@ -247,6 +250,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     @SuppressWarnings("ConstantConditions")
     @Bindable
     private int getPrivacyLocation() {
@@ -256,6 +260,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     @SuppressWarnings("ConstantConditions")
     @Bindable
     private int getPrivacyPreferences() {
