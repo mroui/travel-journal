@@ -2,7 +2,6 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
 import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -58,6 +57,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class DetailsFragment extends BaseFragment implements View.OnClickListener {
@@ -279,15 +279,15 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         if (getContext() != null) {
             String file = readFilenameFromUrl(url);
             if (file != null) {
-                DownloadManager downloadManager = (DownloadManager) getContext()
-                        .getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
                 Uri uri = Uri.parse(url);
                 DownloadManager.Request request = new DownloadManager.Request(uri);
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 request.setDestinationInExternalFilesDir(getContext(), DIRECTORY_DOWNLOADS, file);
-                if (downloadManager != null)
+                if (downloadManager != null) {
                     downloadManager.enqueue(request);
-                else
+                    showSnackBar(getResources().getString(R.string.messages_downloading_file), Snackbar.LENGTH_SHORT);
+                } else
                     showSnackBar(getResources().getString(R.string.messages_error_failed_download_file), Snackbar.LENGTH_LONG);
             } else
                 showSnackBar(getResources().getString(R.string.messages_error_failed_read_file), Snackbar.LENGTH_LONG);
