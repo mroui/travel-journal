@@ -129,7 +129,7 @@
                 app:ms_arrow_tint="@color/main_blue"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/end_travel_privacy_finish_button"
+                android:id="@+id/end_travel_finish_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/end_travel_privacy_spinner"

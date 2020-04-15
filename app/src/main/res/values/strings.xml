@@ -418,7 +418,7 @@
     <string name="end_travel_description_desc">Describe your trip in a short way, for example: what have you seen,
         where have you been or your thoughts.</string>
     <string name="end_travel_privacy_desc">Choose who will have access to created document.</string>
-    <string name="end_travel_privacy_finish_button"><![CDATA[Finish & create document]]></string>
+    <string name="end_travel_privacy_finish_button">Finish &amp; create document</string>
 
 
 </resources>
