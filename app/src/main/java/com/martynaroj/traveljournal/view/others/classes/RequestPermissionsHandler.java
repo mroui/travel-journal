@@ -22,7 +22,18 @@ public abstract class RequestPermissionsHandler {
             ActivityCompat.requestPermissions(
                     activity,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Constants.RC_EXTERNAL_STORAGE_IMG
+                    Constants.RC_EXTERNAL_STORAGE_FILE
+            );
+        }
+    }
+
+
+    public static void requestWriteStorage(Activity activity) {
+        if (activity != null) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    Constants.RC_EXTERNAL_STORAGE_FILE
             );
         }
     }
@@ -40,6 +51,18 @@ public abstract class RequestPermissionsHandler {
         if (context != null)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED;
+            else
+                return true;
+        else
+            return false;
+    }
+
+
+    public static boolean isWriteStorageGranted(Context context) {
+        if (context != null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                return ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED;
             else
                 return true;
