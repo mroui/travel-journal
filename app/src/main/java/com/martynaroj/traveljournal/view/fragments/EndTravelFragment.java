@@ -18,6 +18,8 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
+import com.martynaroj.traveljournal.view.others.classes.PDFCreator;
+import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
@@ -56,6 +58,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         View view = binding.getRoot();
 
         initViewModels();
+        initContentData();
         setListeners();
         observeUserChanges();
 
@@ -70,6 +73,11 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
         }
+    }
+
+
+    private void initContentData() {
+        binding.endTravelPrivacySpinner.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
     }
 
 
@@ -90,6 +98,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private void setListeners() {
         binding.endTravelArrowButton.setOnClickListener(this);
+        binding.endTravelFinishButton.setOnClickListener(this);
     }
 
 
@@ -99,8 +108,12 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             case R.id.end_travel_arrow_button:
                 showBackDialog();
                 break;
+            case R.id.end_travel_finish_button:
+                finishTravel();
+                break;
         }
     }
+
 
     //DIALOGS---------------------------------------------------------------------------------------
 
@@ -121,6 +134,33 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             });
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
             dialog.show();
+        }
+    }
+
+
+    //FINISH----------------------------------------------------------------------------------------
+
+
+    private boolean readWritePermissionsGranted() {
+        if(RequestPermissionsHandler.isWriteStorageGranted(getContext())) {
+            if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
+                return true;
+            else {
+                RequestPermissionsHandler.requestReadStorage(getActivity());
+                return false;
+            }
+        } else {
+            RequestPermissionsHandler.requestWriteStorage(getActivity());
+            return false;
+        }
+    }
+
+
+    private void finishTravel() {
+        if (readWritePermissionsGranted() && getActivity() != null && getContext() != null) {
+            PDFCreator pdfCreator = new PDFCreator(getContext());
+            pdfCreator.init("test");
+            showSnackBar(binding.getRoot(), pdfCreator.tryToSave(), Snackbar.LENGTH_SHORT);
         }
     }
 
