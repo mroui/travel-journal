@@ -121,4 +121,7 @@ public interface Constants {
     int RESERVATION_IMG_H = 400;
     int RESERVATIONS_IMG_W = 400;
 
+    int PAGE_A4_WIDTH = 595;
+    int PAGE_A4_HEIGHT = 842;
+
 }
