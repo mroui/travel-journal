@@ -312,6 +312,11 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    public String getDateRangeString() {
+        return getDateString(datetimeFrom) + " - " + getDateString(datetimeTo);
+    }
+
+
     @Exclude
     public int getTagsLength() {
         int count = 0;
