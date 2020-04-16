@@ -37,6 +37,7 @@ public class Travel extends BaseObservable implements Serializable {
     private List<PackingCategory> packingList;
     private boolean packing;
     private List<String> days;
+    private String description;
 
 
     public Travel() {
@@ -211,6 +212,7 @@ public class Travel extends BaseObservable implements Serializable {
         return packingList;
     }
 
+
     public void setPackingList(List<PackingCategory> packingList) {
         this.packingList = packingList;
         notifyPropertyChanged(BR.packingList);
@@ -226,6 +228,18 @@ public class Travel extends BaseObservable implements Serializable {
     public void setPacking(boolean packing) {
         this.packing = packing;
         notifyPropertyChanged(BR.packing);
+    }
+
+
+    @Bindable
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+        notifyPropertyChanged(BR.description);
     }
 
 

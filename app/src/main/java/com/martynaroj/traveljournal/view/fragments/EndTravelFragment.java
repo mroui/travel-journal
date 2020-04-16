@@ -153,6 +153,14 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     //FINISH----------------------------------------------------------------------------------------
 
 
+    private void finishTravel() {
+        if (readWritePermissionsGranted()) {
+            setTravelDescription();
+            createPDF();
+        }
+    }
+
+
     private boolean readWritePermissionsGranted() {
         if(RequestPermissionsHandler.isWriteStorageGranted(getContext())) {
             if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
@@ -168,8 +176,15 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     }
 
 
-    private void finishTravel() {
-        if (readWritePermissionsGranted() && getActivity() != null && getContext() != null) {
+    private void setTravelDescription() {
+        String desc = binding.endTravelDescriptionInput.getText() != null
+                ? binding.endTravelDescriptionInput.getText().toString() : "";
+        travel.setDescription(desc);
+    }
+
+
+    private void createPDF() {
+        if (getContext() != null) {
             PDFCreator pdfCreator = new PDFCreator(getContext(), user, travel, destination, days);
             pdfCreator.init();
             showSnackBar(binding.getRoot(), pdfCreator.tryToSave(), Snackbar.LENGTH_SHORT);
