@@ -3,9 +3,9 @@ package com.martynaroj.traveljournal.view.others.classes;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -30,9 +30,7 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -63,6 +61,7 @@ public class PDFCreator {
     private static int TSIZE_BIG = 12;
     private static int TSIZE_NORMAL = 10;
     private static int TSIZE_SMALL = 8;
+    private static int TSIZE_TINY = 4;
 
     private static Typeface FONT_NORMAL;
     private static Typeface FONT_BOLD;
@@ -70,6 +69,8 @@ public class PDFCreator {
     private static Layout.Alignment ALIGN_CENTER = Layout.Alignment.ALIGN_CENTER;
     private static Layout.Alignment ALIGN_LEFT = Layout.Alignment.ALIGN_NORMAL;
     private static Layout.Alignment ALIGN_RIGHT = Layout.Alignment.ALIGN_OPPOSITE;
+
+    private static int IMAGE_H = 200, IMAGE_W = 300;
 
 
     public PDFCreator(Context context, User user, Travel travel, Address destination, List<Day> days) {
@@ -124,11 +125,18 @@ public class PDFCreator {
     private void createTitlePage() {
         addNewPage();
         drawText( travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_RIGHT);
+        drawNewLines(1);
         drawText("Author: " + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_LEFT);
         drawNewLines(1);
         drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
         drawNewLines(1);
         drawBitmap(travel.getImage());
+        drawNewLines(1);
+        drawText(destination.getName(), TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL, ALIGN_CENTER);
+        drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL, ALIGN_CENTER);
+        drawNewLines(1);
+        drawText(travel.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_CENTER);
+        drawSignature();
         document.finishPage(page);
     }
 
@@ -149,6 +157,29 @@ public class PDFCreator {
     }
 
 
+    private void drawBitmap(String url) {
+        if (url != null && !url.trim().isEmpty()) {
+            try {
+                Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
+                Bitmap resizedBitmap = resizeBitmap(bitmap);
+                canvas.drawBitmap(resizedBitmap, (CANVAS_W - resizedBitmap.getWidth()) / 2f, 0, null);
+                moveCanvas(resizedBitmap.getHeight());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void drawSignature() {
+        Calendar date = Calendar.getInstance();
+        StaticLayout textLayout = getTextLayout("Created with Travel Journal, " + date.get(Calendar.YEAR),
+                getTextPaint(TSIZE_TINY, COLOR_GRAY, FONT_NORMAL), ALIGN_CENTER);
+        canvas.translate(0, remainHeight + MARGIN/2f);
+        textLayout.draw(canvas);
+    }
+
+
     private void drawNewLines(int amount) {
         StringBuilder text = new StringBuilder(" ");
         for (int i = 0; i < amount - 1; i++)
@@ -156,19 +187,6 @@ public class PDFCreator {
         StaticLayout textLayout = getTextLayout(text.toString(),
                 getTextPaint(TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL), ALIGN_LEFT);
         moveCanvas(textLayout.getHeight());
-    }
-
-
-    private void drawBitmap(String url) {
-        if (url != null && !url.trim().isEmpty()) {
-            try {
-                Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
-                canvas.drawBitmap(bitmap, (CANVAS_W - bitmap.getWidth()) / 2f, 0, null);
-                moveCanvas(bitmap.getHeight());
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 
@@ -193,17 +211,10 @@ public class PDFCreator {
     //OTHERS----------------------------------------------------------------------------------------
 
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            return null;
-        }
+    private Bitmap resizeBitmap(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.setScale((float) IMAGE_W / bitmap.getWidth(), (float) IMAGE_H / bitmap.getHeight());
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
     }
 
 
