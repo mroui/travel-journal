@@ -2,8 +2,11 @@ package com.martynaroj.traveljournal.view.others.classes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +16,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.martynaroj.traveljournal.BuildConfig;
 import com.martynaroj.traveljournal.R;
@@ -20,12 +24,17 @@ import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.others.BitmapLoadAsyncTask;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class PDFCreator {
 
@@ -48,17 +57,19 @@ public class PDFCreator {
     private static int CANVAS_H = Constants.PAGE_A4_HEIGHT - (2 * MARGIN);
 
     private static int COLOR_BLACK = Color.BLACK;
-    private static int COLOR_DARKGRAY = Color.DKGRAY;
+    private static int COLOR_DKGRAY = Color.DKGRAY;
     private static int COLOR_GRAY = Color.GRAY;
 
-    private static int TSIZE_BIG = 16;
-    private static int TSIZE_MEDIUM = 12;
-    private static int TSIZE_NORMAL = 8;
-    private static int TSIZE_SMALL = 4;
+    private static int TSIZE_BIG = 12;
+    private static int TSIZE_NORMAL = 10;
+    private static int TSIZE_SMALL = 8;
 
     private static Typeface FONT_NORMAL;
     private static Typeface FONT_BOLD;
 
+    private static Layout.Alignment ALIGN_CENTER = Layout.Alignment.ALIGN_CENTER;
+    private static Layout.Alignment ALIGN_LEFT = Layout.Alignment.ALIGN_NORMAL;
+    private static Layout.Alignment ALIGN_RIGHT = Layout.Alignment.ALIGN_OPPOSITE;
 
 
     public PDFCreator(Context context, User user, Travel travel, Address destination, List<Day> days) {
@@ -112,21 +123,26 @@ public class PDFCreator {
 
     private void createTitlePage() {
         addNewPage();
-        drawText("testtest", TSIZE_NORMAL, COLOR_BLACK);
+        drawText( travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_RIGHT);
+        drawText("Author: " + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_LEFT);
+        drawNewLines(1);
+        drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
+        drawNewLines(1);
+        drawBitmap(travel.getImage());
         document.finishPage(page);
     }
 
 
-    private void drawText(String text, int size, int color) {
-        TextPaint textPaint = getTextPaint(size, color);
-        StaticLayout textLayout = getTextLayout(text, textPaint, Layout.Alignment.ALIGN_NORMAL);
+    private void drawText(String text, int size, int color, Typeface typeface, Layout.Alignment alignment) {
+        TextPaint textPaint = getTextPaint(size, color, typeface);
+        StaticLayout textLayout = getTextLayout(text, textPaint, alignment);
         if (textLayout.getHeight() > remainHeight) {
             int index = measureIndexToSubstring(textLayout.getHeight(), textLayout);
-            textLayout = getTextLayout(text.substring(0, index), textPaint, Layout.Alignment.ALIGN_NORMAL);
+            textLayout = getTextLayout(text.substring(0, index), textPaint, alignment);
             textLayout.draw(canvas);
             document.finishPage(page);
             addNewPage();
-            textLayout = getTextLayout(text.substring(index), textPaint, Layout.Alignment.ALIGN_NORMAL);
+            textLayout = getTextLayout(text.substring(index), textPaint, alignment);
         }
         textLayout.draw(canvas);
         moveCanvas(textLayout.getHeight());
@@ -137,9 +153,22 @@ public class PDFCreator {
         StringBuilder text = new StringBuilder(" ");
         for (int i = 0; i < amount - 1; i++)
             text.append("\n");
-        StaticLayout textLayout = getTextLayout(text.toString(), getTextPaint(TSIZE_NORMAL, COLOR_BLACK),
-                Layout.Alignment.ALIGN_NORMAL);
+        StaticLayout textLayout = getTextLayout(text.toString(),
+                getTextPaint(TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL), ALIGN_LEFT);
         moveCanvas(textLayout.getHeight());
+    }
+
+
+    private void drawBitmap(String url) {
+        if (url != null && !url.trim().isEmpty()) {
+            try {
+                Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
+                canvas.drawBitmap(bitmap, (CANVAS_W - bitmap.getWidth()) / 2f, 0, null);
+                moveCanvas(bitmap.getHeight());
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -147,14 +176,14 @@ public class PDFCreator {
 
 
     private StaticLayout getTextLayout(String text, TextPaint textPaint, Layout.Alignment alignment) {
-        return new StaticLayout(text, textPaint, CANVAS_W, alignment,
-                1, 0, false);
+        return new StaticLayout(text, textPaint, CANVAS_W, alignment, 1, 0, false);
     }
 
 
-    private TextPaint getTextPaint(int size, int color) {
+    private TextPaint getTextPaint(int size, int color, Typeface typeface) {
         TextPaint textPaint = new TextPaint();
         textPaint.setAntiAlias(true);
+        textPaint.setTypeface(typeface);
         textPaint.setTextSize(size * context.getResources().getDisplayMetrics().density);
         textPaint.setColor(color);
         return textPaint;
@@ -162,6 +191,25 @@ public class PDFCreator {
 
 
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    private String getFilenameFormat(String text) {
+        return text.replaceAll("\\s+", "_").replaceAll("[{}$&+,:;=\\\\?@#|/'<>.^*()%!-]", "");
+    }
 
 
     private void addNewPage() {
