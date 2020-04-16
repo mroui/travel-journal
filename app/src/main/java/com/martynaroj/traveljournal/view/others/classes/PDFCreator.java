@@ -16,11 +16,16 @@ import androidx.core.content.FileProvider;
 
 import com.martynaroj.traveljournal.BuildConfig;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Travel;
+import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class PDFCreator {
 
@@ -33,7 +38,12 @@ public class PDFCreator {
     private Canvas canvas;
     private int remainHeight;
 
-    private static int MARGIN = 24;
+    private User user;
+    private Travel travel;
+    private Address destination;
+    private List<Day> days;
+
+    private static int MARGIN = 64;
     private static int CANVAS_W = Constants.PAGE_A4_WIDTH - (2 * MARGIN);
     private static int CANVAS_H = Constants.PAGE_A4_HEIGHT - (2 * MARGIN);
 
@@ -46,24 +56,32 @@ public class PDFCreator {
     private static int TSIZE_NORMAL = 8;
     private static int TSIZE_SMALL = 4;
 
-    private static Layout.Alignment A_CENTER = Layout.Alignment.ALIGN_CENTER;
-    private static Layout.Alignment A_LEFT = Layout.Alignment.ALIGN_NORMAL;
-    private static Layout.Alignment A_RIGHT = Layout.Alignment.ALIGN_OPPOSITE;
+    private static Typeface FONT_NORMAL;
+    private static Typeface FONT_BOLD;
 
 
-    public PDFCreator(Context context) {
+
+    public PDFCreator(Context context, User user, Travel travel, Address destination, List<Day> days) {
         this.context = context;
+        this.user = user;
+        this.travel = travel;
+        this.destination = destination;
+        this.days = days;
+        FONT_NORMAL = ResourcesCompat.getFont(context.getApplicationContext(), R.font.raleway_regular);
+        FONT_BOLD = ResourcesCompat.getFont(context.getApplicationContext(), R.font.raleway_bold);
     }
 
 
     //MAIN==========--------------------------------------------------------------------------------
 
 
-    public void init(String filename) {
-        file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename + Constants.PDF_EXT);
+    public void init() {
+        file = new File(context.getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS),
+                getFilenameFormat(travel.getName()) + Constants.PDF_EXT
+        );
         document = new PdfDocument();
-        pageInfo = new PdfDocument.PageInfo.Builder(
-                Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT, 1).create();
+        pageInfo = new PdfDocument.PageInfo.Builder(Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT, 1).create();
         createTitlePage();
     }
 

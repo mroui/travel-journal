@@ -261,7 +261,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             case R.id.board_travel_grid_details_card:
                 if (endTravelSnackbar != null && endTravelSnackbar.isShown())
                     endTravelSnackbar.dismiss();
-                changeFragment(DetailsFragment.newInstance(user, travel, destination));
+                changeFragment(DetailsFragment.newInstance(user, travel, destination, days));
                 break;
             case R.id.board_travel_grid_manage_budget_card:
                 changeFragment(BudgetFragment.newInstance(travel, today, days));
@@ -342,7 +342,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             endTravelSnackbar.setAction(getResources().getString(R.string.dialog_button_ok),
                     view -> {
                         endTravelSnackbar.dismiss();
-                        changeFragment(DetailsFragment.newInstance(user, travel, destination));
+                        changeFragment(DetailsFragment.newInstance(user, travel, destination, days));
                     });
             endTravelSnackbar.show();
         }

@@ -13,6 +13,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentEndTravelBinding;
+import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
@@ -23,6 +25,9 @@ import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandle
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.io.Serializable;
+import java.util.List;
+
 public class EndTravelFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentEndTravelBinding binding;
@@ -30,24 +35,31 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private User user;
     private Travel travel;
+    private Address destination;
+    private List<Day> days;
 
 
-    public static EndTravelFragment newInstance(User user, Travel travel) {
+    public static EndTravelFragment newInstance(User user, Travel travel, Address destination, List<Day> days) {
         EndTravelFragment fragment = new EndTravelFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Constants.BUNDLE_TRAVEL, travel);
         args.putSerializable(Constants.BUNDLE_USER, user);
+        args.putSerializable(Constants.BUNDLE_TRAVEL, travel);
+        args.putSerializable(Constants.BUNDLE_DESTINATION, destination);
+        args.putSerializable(Constants.BUNDLE_DAYS, (Serializable) days);
         fragment.setArguments(args);
         return fragment;
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            travel = (Travel) getArguments().getSerializable(Constants.BUNDLE_TRAVEL);
             user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
+            travel = (Travel) getArguments().getSerializable(Constants.BUNDLE_TRAVEL);
+            destination = (Address) getArguments().getSerializable(Constants.BUNDLE_DESTINATION);
+            days = (List<Day>) getArguments().getSerializable(Constants.BUNDLE_DAYS);
         }
     }
 
@@ -158,9 +170,10 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private void finishTravel() {
         if (readWritePermissionsGranted() && getActivity() != null && getContext() != null) {
-            PDFCreator pdfCreator = new PDFCreator(getContext());
-            pdfCreator.init("test");
+            PDFCreator pdfCreator = new PDFCreator(getContext(), user, travel, destination, days);
+            pdfCreator.init();
             showSnackBar(binding.getRoot(), pdfCreator.tryToSave(), Snackbar.LENGTH_SHORT);
+            pdfCreator.openFile();
         }
     }
 

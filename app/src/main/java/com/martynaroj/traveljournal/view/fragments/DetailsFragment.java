@@ -29,6 +29,7 @@ import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogEditTravelDetailsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentDetailsBinding;
 import com.martynaroj.traveljournal.services.models.Address;
+import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
@@ -47,6 +48,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,11 +70,12 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     private TravelViewModel travelViewModel;
     private StorageViewModel storageViewModel;
 
+    private User user;
     private Travel travel;
     private Address destination;
     private Reservation accommodation;
     private Reservation transport;
-    private User user;
+    private List<Day> days;
 
     private Dialog editDialog;
     private DialogEditTravelDetailsBinding dialogBinding;
@@ -81,17 +84,19 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
     private boolean changedImage;
 
 
-    public static DetailsFragment newInstance(User user, Travel travel, Address destination) {
+    public static DetailsFragment newInstance(User user, Travel travel, Address destination, List<Day> days) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.BUNDLE_USER, user);
         args.putSerializable(Constants.BUNDLE_TRAVEL, travel);
         args.putSerializable(Constants.BUNDLE_DESTINATION, destination);
+        args.putSerializable(Constants.BUNDLE_DAYS, (Serializable) days);
         fragment.setArguments(args);
         return fragment;
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +104,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
             user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
             travel = (Travel) getArguments().getSerializable(Constants.BUNDLE_TRAVEL);
             destination = (Address) getArguments().getSerializable(Constants.BUNDLE_DESTINATION);
+            days = (List<Day>) getArguments().getSerializable(Constants.BUNDLE_DAYS);
         }
     }
 
@@ -494,7 +500,7 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                     binding.dialogCustomButtonNegative, R.string.dialog_button_no,
                     R.color.main_blue, R.color.blue_bg_light);
             binding.dialogCustomButtonPositive.setOnClickListener(v -> {
-                changeFragment(EndTravelFragment.newInstance(this.user, this.travel));
+                changeFragment(EndTravelFragment.newInstance(this.user, this.travel, this.destination, this.days));
                 dialog.dismiss();
             });
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
