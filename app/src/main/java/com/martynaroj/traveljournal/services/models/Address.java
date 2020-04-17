@@ -88,4 +88,8 @@ public class Address extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.longitude);
     }
 
+    public String getLatLonString() {
+        return getLatitude() + ", " + getLongitude();
+    }
+
 }
