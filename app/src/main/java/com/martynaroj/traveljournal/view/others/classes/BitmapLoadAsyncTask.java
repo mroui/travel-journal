@@ -1,4 +1,4 @@
-package com.martynaroj.traveljournal.view.others;
+package com.martynaroj.traveljournal.view.others.classes;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

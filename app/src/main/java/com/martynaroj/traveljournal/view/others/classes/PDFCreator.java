@@ -33,7 +33,6 @@ import com.martynaroj.traveljournal.services.models.Photo;
 import com.martynaroj.traveljournal.services.models.Place;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.view.others.BitmapLoadAsyncTask;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
