@@ -243,43 +243,36 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
-    public long whatDay() {
-        Calendar now = Calendar.getInstance();
-        Calendar startDate = Calendar.getInstance();
-        Calendar endDate = Calendar.getInstance();
+    public long whatDay(long date1, long date2) {
+        Calendar cdate1 = Calendar.getInstance();
+        Calendar cdate2 = Calendar.getInstance();
+        cdate1.setTimeInMillis(date1);
+        cdate2.setTimeInMillis(date2);
 
-        startDate.setTimeInMillis(datetimeFrom);
-        startDate.set(
-                startDate.get(Calendar.YEAR),
-                startDate.get(Calendar.MONTH),
-                startDate.get(Calendar.DAY_OF_MONTH),
+        cdate1.set(
+                cdate1.get(Calendar.YEAR),
+                cdate1.get(Calendar.MONTH),
+                cdate1.get(Calendar.DAY_OF_MONTH),
                 0, 0, 0
         );
-        startDate.set(Calendar.MILLISECOND, 0);
+        cdate1.set(Calendar.MILLISECOND, 0);
 
-        now.set(
-                now.get(Calendar.YEAR),
-                now.get(Calendar.MONTH),
-                now.get(Calendar.DAY_OF_MONTH),
+        cdate2.set(
+                cdate2.get(Calendar.YEAR),
+                cdate2.get(Calendar.MONTH),
+                cdate2.get(Calendar.DAY_OF_MONTH),
                 0, 0, 0
         );
-        now.set(Calendar.MILLISECOND, 0);
+        cdate2.set(Calendar.MILLISECOND, 0);
 
-        endDate.setTimeInMillis(datetimeTo);
-        endDate.set(
-                endDate.get(Calendar.YEAR),
-                endDate.get(Calendar.MONTH),
-                endDate.get(Calendar.DAY_OF_MONTH),
-                0, 0, 0
-        );
-        endDate.set(Calendar.MILLISECOND, 0);
+        long difference = cdate2.getTimeInMillis() - cdate1.getTimeInMillis();
+        return TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS) + 1;
+    }
 
-        long differenceFrom = now.getTimeInMillis() - startDate.getTimeInMillis();
-        long daysFrom = TimeUnit.DAYS.convert(differenceFrom, TimeUnit.MILLISECONDS) + 1;
 
-        long differenceTo = endDate.getTimeInMillis() - now.getTimeInMillis();
-        long daysTo = TimeUnit.DAYS.convert(differenceTo, TimeUnit.MILLISECONDS) + 1;
-
+    public long whatDayToday() {
+        long daysFrom = whatDay(datetimeFrom, Calendar.getInstance().getTimeInMillis());
+        long daysTo = whatDay(Calendar.getInstance().getTimeInMillis(), datetimeTo);
         if (daysFrom < 1)
             return com.martynaroj.traveljournal.view.others.enums.Travel.BEFORE.value;
         else if (daysTo < 1)
@@ -291,7 +284,7 @@ public class Travel extends BaseObservable implements Serializable {
 
     @Exclude
     public String getDaysRemainsString() {
-        long days = whatDay();
+        long days = whatDayToday();
         if (days >= 1)
             return days + Constants.DAY;
         else if (days == com.martynaroj.traveljournal.view.others.enums.Travel.BEFORE.value) {

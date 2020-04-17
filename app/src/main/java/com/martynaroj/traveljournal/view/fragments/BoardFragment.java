@@ -396,7 +396,7 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void checkDays() {
-        long whichDay = travel.whatDay();
+        long whichDay = travel.whatDayToday();
         if (whichDay >= 1) {
             if (travel.getDays().size() == whichDay) {
                 getToday(travel.getDays().get((int) whichDay - 1));
