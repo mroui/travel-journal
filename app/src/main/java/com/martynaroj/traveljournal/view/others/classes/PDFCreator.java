@@ -19,14 +19,19 @@ import android.text.TextPaint;
 
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.martynaroj.traveljournal.BuildConfig;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Note;
+import com.martynaroj.traveljournal.services.models.Photo;
+import com.martynaroj.traveljournal.services.models.Place;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.BitmapLoadAsyncTask;
+import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.File;
@@ -75,6 +80,7 @@ public class PDFCreator {
     private static Layout.Alignment ALIGN_RIGHT = Layout.Alignment.ALIGN_OPPOSITE;
 
     private static int IMAGE_H = 200, IMAGE_W = 300;
+    private static int ICON_H = 36, ICON_W = 36;
 
 
     public PDFCreator(Context context, User user, Travel travel, Address destination, List<Day> days) {
@@ -98,7 +104,8 @@ public class PDFCreator {
         );
         document = new PdfDocument();
         pageInfo = new PdfDocument.PageInfo.Builder(Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT, 1).create();
-        createTitlePage();
+        drawTitlePage();
+        createContent();
     }
 
 
@@ -123,25 +130,49 @@ public class PDFCreator {
     }
 
 
-    //DRAWING---------------------------------------------------------------------------------------
+    //CREATE MAIN CONTENT---------------------------------------------------------------------------
 
 
-    private void createTitlePage() {
-        addNewPage();
-        drawText( travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
-        drawText("@" + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
-        drawNewLines(2);
-        drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
-        drawNewLines(1);
-        drawBitmap(travel.getImage());
-        drawNewLines(1);
-        drawText(destination.getName(), TSIZE_MEDIUM, COLOR_DKGRAY, FONT_BOLD, ALIGN_CENTER);
-        drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
-        drawText(destination.getLatLonString(), TSIZE_SMALL, COLOR_LTGRAY, FONT_BOLD, ALIGN_CENTER);
-        drawNewLines(1);
-        drawText(travel.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_CENTER);
-        document.finishPage(page);
+    private void createContent() {
+        if (days != null && !days.isEmpty()) {
+            for (Day day : days) {
+                createDayContent(day);
+            }
+        }
     }
+
+
+    private void createDayContent(Day day) {
+        long whatDay = travel.whatDay(travel.getDatetimeFrom(), day.getDate());
+        List<Note> allNotes = day.getAllSortedNotes();
+        if (!allNotes.isEmpty()) {
+            addNewPage();
+            drawText("DAY " + whatDay, TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
+            drawText(day.getDateString(), TSIZE_MEDIUM, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
+            drawNewLines(1);
+            drawEmojiRate(Emoji.values()[day.getRate()], (CANVAS_W - ICON_W) / 2);
+            drawNewLines(2);
+            for (Note note : allNotes) {
+                createNoteContent(note);
+            }
+            document.finishPage(page);
+        }
+    }
+
+
+    private void createNoteContent(Note note) {
+        drawText(note.getTimeString(), TSIZE_NORMAL, COLOR_LTGRAY, FONT_BOLD, ALIGN_LEFT);
+        if (note instanceof Photo) {
+
+        } else if (note instanceof Place) {
+
+        } else {
+
+        }
+    }
+
+
+    //DRAWING---------------------------------------------------------------------------------------
 
 
     private void drawText(String text, int size, int color, Typeface typeface, Layout.Alignment alignment) {
@@ -160,20 +191,30 @@ public class PDFCreator {
     }
 
 
-    private void drawBitmap(String url) {
+    private void drawUrlBitmap(String url, int left, int width, int height) {
         if (url != null && !url.trim().isEmpty()) {
             try {
                 Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
-                Bitmap resizedBitmap = resizeBitmap(bitmap);
+                Bitmap resizedBitmap = resizeBitmap(bitmap, width, height);
                 if (resizedBitmap.getHeight() > remainHeight) {
                     document.finishPage(page);
                     addNewPage();
                 }
-                canvas.drawBitmap(resizedBitmap, (CANVAS_W - resizedBitmap.getWidth()) / 2f, 0, null);
+                canvas.drawBitmap(resizedBitmap, left, 0, null);
                 moveCanvas(resizedBitmap.getHeight());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    private void drawDrawableVectorBitmap(int id, int left, int width, int height) {
+        VectorDrawableCompat vector = VectorDrawableCompat.create(context.getResources(), id, null);
+        if (vector != null) {
+            vector.setBounds(left, 0, width + left, height);
+            vector.draw(canvas);
+            moveCanvas(height);
         }
     }
 
@@ -188,10 +229,28 @@ public class PDFCreator {
     }
 
 
+    private void drawTitlePage() {
+        addNewPage();
+        drawText(travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
+        drawText("@" + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
+        drawNewLines(2);
+        drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
+        drawNewLines(1);
+        drawUrlBitmap(travel.getImage(), (CANVAS_W - IMAGE_W) / 2, IMAGE_W, IMAGE_H);
+        drawNewLines(1);
+        drawText(destination.getName(), TSIZE_MEDIUM, COLOR_DKGRAY, FONT_BOLD, ALIGN_CENTER);
+        drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
+        drawText(destination.getLatLonString(), TSIZE_SMALL, COLOR_LTGRAY, FONT_BOLD, ALIGN_CENTER);
+        drawNewLines(1);
+        drawText(travel.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_CENTER);
+        document.finishPage(page);
+    }
+
+
     private void drawBackground() {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pdf_background);
-        Rect src = new Rect(0,0,bitmap.getWidth(), bitmap.getHeight());
-        Rect dest = new Rect(0,0, Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT);
+        Rect src = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        Rect dest = new Rect(0, 0, Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT);
         canvas.drawBitmap(bitmap, src, dest, null);
     }
 
@@ -200,9 +259,35 @@ public class PDFCreator {
         Calendar date = Calendar.getInstance();
         StaticLayout textLayout = getTextLayout("Created with Travel Journal, " + date.get(Calendar.YEAR),
                 getTextPaint(TSIZE_TINY, COLOR_GRAY, FONT_NORMAL), ALIGN_CENTER);
-        canvas.translate(0, CANVAS_H + (MARGIN/2f));
+        canvas.translate(0, CANVAS_H + (MARGIN / 2f));
         textLayout.draw(canvas);
-        canvas.translate(0, -(CANVAS_H + (MARGIN/2f)));
+        canvas.translate(0, -(CANVAS_H + (MARGIN / 2f)));
+    }
+
+
+    private void drawEmojiRate(Emoji value, int left) {
+        int id = 0;
+        switch (value) {
+            case HAPPY:
+                id = R.drawable.ic_emoji_happy_color;
+                break;
+            case BORED:
+                id = R.drawable.ic_emoji_bored_color;
+                break;
+            case SAD:
+                id = R.drawable.ic_emoji_sad_color;
+                break;
+            case LUCKY:
+                id = R.drawable.ic_emoji_lucky_color;
+                break;
+            case NORMAL:
+                id = R.drawable.ic_emoji_normal_color;
+                break;
+            case SHOCKED:
+                id = R.drawable.ic_emoji_shocked_color;
+                break;
+        }
+        drawDrawableVectorBitmap(id, left, ICON_W, ICON_H);
     }
 
 
@@ -224,9 +309,9 @@ public class PDFCreator {
     }
 
 
-    private Bitmap resizeBitmap(Bitmap bitmap) {
+    private Bitmap resizeBitmap(Bitmap bitmap, float width, float height) {
         Matrix matrix = new Matrix();
-        matrix.setScale((float) IMAGE_W / bitmap.getWidth(), (float) IMAGE_H / bitmap.getHeight());
+        matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
     }
 
