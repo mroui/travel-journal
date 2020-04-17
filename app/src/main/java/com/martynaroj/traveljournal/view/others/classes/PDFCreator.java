@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
@@ -17,8 +18,10 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.martynaroj.traveljournal.BuildConfig;
@@ -210,11 +213,21 @@ public class PDFCreator {
 
 
     private void drawDrawableVectorBitmap(int id, int left, int width, int height) {
-        VectorDrawableCompat vector = VectorDrawableCompat.create(context.getResources(), id, null);
-        if (vector != null) {
-            vector.setBounds(left, 0, width + left, height);
-            vector.draw(canvas);
-            moveCanvas(height);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Drawable drawable = ContextCompat.getDrawable(context, id);
+            if (drawable != null) {
+                drawable = (DrawableCompat.wrap(drawable)).mutate();
+                drawable.setBounds(left, 0, width + left, height);
+                drawable.draw(canvas);
+                moveCanvas(height);
+            }
+        } else {
+            VectorDrawableCompat vector = VectorDrawableCompat.create(context.getResources(), id, null);
+            if (vector != null) {
+                vector.setBounds(left, 0, width + left, height);
+                vector.draw(canvas);
+                moveCanvas(height);
+            }
         }
     }
 
