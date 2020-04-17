@@ -152,9 +152,9 @@ public class PDFCreator {
             addNewPage();
             drawText("DAY " + whatDay, TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
             drawText(day.getDateString(), TSIZE_MEDIUM, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
-            drawNewLines(1);
+            drawNewLines(1, TSIZE_TINY);
             drawEmojiRate(Emoji.values()[day.getRate()], (CANVAS_W - ICON_W) / 2);
-            drawNewLines(2);
+            drawNewLines(2, TSIZE_BIG);
             for (Note note : allNotes) {
                 createNoteContent(note);
             }
@@ -164,14 +164,23 @@ public class PDFCreator {
 
 
     private void createNoteContent(Note note) {
-        drawText(note.getTimeString(), TSIZE_NORMAL, COLOR_LTGRAY, FONT_BOLD, ALIGN_LEFT);
+        drawText(note.getTimeString(), TSIZE_NORMAL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
+        drawNewLines(1, TSIZE_TINY);
         if (note instanceof Photo) {
-
+            drawUrlBitmap(((Photo) note).getSrc(), 0, IMAGE_W, IMAGE_H);
+            drawNewLines(1, TSIZE_TINY);
+            drawText(note.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_LEFT);
         } else if (note instanceof Place) {
-
+            drawText(((Place) note).getAddress().replace("&", ", "), TSIZE_NORMAL,
+                    COLOR_BLACK, FONT_BOLD, ALIGN_LEFT);
+            drawNewLines(1, TSIZE_TINY);
+            drawText(note.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_LEFT);
+            drawNewLines(1, TSIZE_TINY);
+            drawEmojiRate(Emoji.values()[((Place) note).getRate()], 0);
         } else {
-
+            drawText(note.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_LEFT);
         }
+        drawNewLines(2, TSIZE_BIG);
     }
 
 
@@ -232,12 +241,12 @@ public class PDFCreator {
     }
 
 
-    private void drawNewLines(int amount) {
+    private void drawNewLines(int amount, int size) {
         StringBuilder text = new StringBuilder(" ");
         for (int i = 0; i < amount - 1; i++)
             text.append("\n");
         StaticLayout textLayout = getTextLayout(text.toString(),
-                getTextPaint(TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL), ALIGN_LEFT);
+                getTextPaint(size, COLOR_BLACK, FONT_NORMAL), ALIGN_LEFT);
         moveCanvas(textLayout.getHeight());
     }
 
@@ -246,15 +255,15 @@ public class PDFCreator {
         addNewPage();
         drawText(travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
         drawText("@" + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
-        drawNewLines(2);
+        drawNewLines(2, TSIZE_NORMAL);
         drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
-        drawNewLines(1);
+        drawNewLines(1, TSIZE_NORMAL);
         drawUrlBitmap(travel.getImage(), (CANVAS_W - IMAGE_W) / 2, IMAGE_W, IMAGE_H);
-        drawNewLines(1);
+        drawNewLines(1, TSIZE_NORMAL);
         drawText(destination.getName(), TSIZE_MEDIUM, COLOR_DKGRAY, FONT_BOLD, ALIGN_CENTER);
         drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
         drawText(destination.getLatLonString(), TSIZE_SMALL, COLOR_LTGRAY, FONT_BOLD, ALIGN_CENTER);
-        drawNewLines(1);
+        drawNewLines(1, TSIZE_NORMAL);
         drawText(travel.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_CENTER);
         document.finishPage(page);
     }
