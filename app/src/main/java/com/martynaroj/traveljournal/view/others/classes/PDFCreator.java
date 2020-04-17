@@ -165,6 +165,10 @@ public class PDFCreator {
             try {
                 Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
                 Bitmap resizedBitmap = resizeBitmap(bitmap);
+                if (resizedBitmap.getHeight() > remainHeight) {
+                    document.finishPage(page);
+                    addNewPage();
+                }
                 canvas.drawBitmap(resizedBitmap, (CANVAS_W - resizedBitmap.getWidth()) / 2f, 0, null);
                 moveCanvas(resizedBitmap.getHeight());
             } catch (ExecutionException | InterruptedException e) {
