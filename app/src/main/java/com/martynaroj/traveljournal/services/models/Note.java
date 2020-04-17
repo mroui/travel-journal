@@ -61,6 +61,13 @@ public class Note extends BaseObservable implements Serializable, Comparable<Not
     }
 
 
+    @SuppressLint("SimpleDateFormat")
+    @Exclude
+    public String getTimeString() {
+        return new SimpleDateFormat("hh:mm a").format(new Date(date));
+    }
+
+
     @Override
     public int compareTo(Note n) {
         return Long.compare(getDate(), n.getDate());
