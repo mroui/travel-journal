@@ -169,10 +169,12 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
 
     private void finishTravel() {
+        startProgressBar();
         if (readWritePermissionsGranted()) {
             setTravelDescription();
             createPDF();
         }
+        stopProgressBar();
     }
 
 
@@ -213,6 +215,18 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private void showSnackBar(View view, String message, int duration) {
         getSnackBarInteractions().showSnackBar(view, getActivity(), message, duration);
+    }
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(), binding.endTravelProgressbarLayout,
+                binding.endTravelProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.endTravelProgressbarLayout,
+                binding.endTravelProgressbar);
     }
 
 
