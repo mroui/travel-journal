@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.services.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.Nullable;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -8,7 +10,10 @@ import androidx.databinding.library.baseAdapters.BR;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class Day extends BaseObservable implements Serializable {
@@ -119,6 +124,24 @@ public class Day extends BaseObservable implements Serializable {
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
         notifyPropertyChanged(BR.expenses);
+    }
+
+
+    public List<Note> getAllSortedNotes() {
+        List<Note> allNote = new ArrayList<>();
+        allNote.addAll(places);
+        allNote.addAll(photos);
+        allNote.addAll(notes);
+        Collections.sort(allNote);
+        return allNote;
+    }
+
+
+    public String getDateString() {
+        Calendar cdate = Calendar.getInstance();
+        cdate.setTimeInMillis(date);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return format.format(cdate.getTime());
     }
 
 
