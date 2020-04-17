@@ -3,9 +3,11 @@ package com.martynaroj.traveljournal.view.others.classes;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -50,17 +52,19 @@ public class PDFCreator {
     private Address destination;
     private List<Day> days;
 
-    private static int MARGIN = 64;
+    private static int MARGIN = 48;
     private static int CANVAS_W = Constants.PAGE_A4_WIDTH - (2 * MARGIN);
     private static int CANVAS_H = Constants.PAGE_A4_HEIGHT - (2 * MARGIN);
 
     private static int COLOR_BLACK = Color.BLACK;
     private static int COLOR_DKGRAY = Color.DKGRAY;
     private static int COLOR_GRAY = Color.GRAY;
+    private static int COLOR_LTGRAY = Color.LTGRAY;
 
     private static int TSIZE_BIG = 12;
-    private static int TSIZE_NORMAL = 10;
-    private static int TSIZE_SMALL = 8;
+    private static int TSIZE_MEDIUM = 10;
+    private static int TSIZE_NORMAL = 8;
+    private static int TSIZE_SMALL = 6;
     private static int TSIZE_TINY = 4;
 
     private static Typeface FONT_NORMAL;
@@ -124,19 +128,18 @@ public class PDFCreator {
 
     private void createTitlePage() {
         addNewPage();
-        drawText( travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_RIGHT);
-        drawNewLines(1);
-        drawText("Author: " + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_NORMAL, ALIGN_LEFT);
-        drawNewLines(1);
+        drawText( travel.getDateRangeString(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
+        drawText("@" + user.getUsername(), TSIZE_SMALL, COLOR_GRAY, FONT_BOLD, ALIGN_LEFT);
+        drawNewLines(2);
         drawText(travel.getName(), TSIZE_BIG, COLOR_BLACK, FONT_BOLD, ALIGN_CENTER);
         drawNewLines(1);
         drawBitmap(travel.getImage());
         drawNewLines(1);
-        drawText(destination.getName(), TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL, ALIGN_CENTER);
-        drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL, ALIGN_CENTER);
+        drawText(destination.getName(), TSIZE_MEDIUM, COLOR_DKGRAY, FONT_BOLD, ALIGN_CENTER);
+        drawText(destination.getAddress(), TSIZE_NORMAL, COLOR_GRAY, FONT_BOLD, ALIGN_CENTER);
+        drawText(destination.getLatLonString(), TSIZE_SMALL, COLOR_LTGRAY, FONT_BOLD, ALIGN_CENTER);
         drawNewLines(1);
         drawText(travel.getDescription(), TSIZE_NORMAL, COLOR_DKGRAY, FONT_NORMAL, ALIGN_CENTER);
-        drawSignature();
         document.finishPage(page);
     }
 
@@ -171,15 +174,6 @@ public class PDFCreator {
     }
 
 
-    private void drawSignature() {
-        Calendar date = Calendar.getInstance();
-        StaticLayout textLayout = getTextLayout("Created with Travel Journal, " + date.get(Calendar.YEAR),
-                getTextPaint(TSIZE_TINY, COLOR_GRAY, FONT_NORMAL), ALIGN_CENTER);
-        canvas.translate(0, remainHeight + MARGIN/2f);
-        textLayout.draw(canvas);
-    }
-
-
     private void drawNewLines(int amount) {
         StringBuilder text = new StringBuilder(" ");
         for (int i = 0; i < amount - 1; i++)
@@ -187,6 +181,24 @@ public class PDFCreator {
         StaticLayout textLayout = getTextLayout(text.toString(),
                 getTextPaint(TSIZE_NORMAL, COLOR_BLACK, FONT_NORMAL), ALIGN_LEFT);
         moveCanvas(textLayout.getHeight());
+    }
+
+
+    private void drawBackground() {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pdf_background);
+        Rect src = new Rect(0,0,bitmap.getWidth(), bitmap.getHeight());
+        Rect dest = new Rect(0,0, Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT);
+        canvas.drawBitmap(bitmap, src, dest, null);
+    }
+
+
+    private void drawSignature() {
+        Calendar date = Calendar.getInstance();
+        StaticLayout textLayout = getTextLayout("Created with Travel Journal, " + date.get(Calendar.YEAR),
+                getTextPaint(TSIZE_TINY, COLOR_GRAY, FONT_NORMAL), ALIGN_CENTER);
+        canvas.translate(0, CANVAS_H + (MARGIN/2f));
+        textLayout.draw(canvas);
+        canvas.translate(0, -(CANVAS_H + (MARGIN/2f)));
     }
 
 
@@ -208,9 +220,6 @@ public class PDFCreator {
     }
 
 
-    //OTHERS----------------------------------------------------------------------------------------
-
-
     private Bitmap resizeBitmap(Bitmap bitmap) {
         Matrix matrix = new Matrix();
         matrix.setScale((float) IMAGE_W / bitmap.getWidth(), (float) IMAGE_H / bitmap.getHeight());
@@ -218,22 +227,27 @@ public class PDFCreator {
     }
 
 
-    private String getFilenameFormat(String text) {
-        return text.replaceAll("\\s+", "_").replaceAll("[{}$&+,:;=\\\\?@#|/'<>.^*()%!-]", "");
-    }
-
-
     private void addNewPage() {
         page = document.startPage(pageInfo);
         canvas = page.getCanvas();
-        canvas.translate(MARGIN, MARGIN);
         remainHeight = CANVAS_H;
+        drawBackground();
+        canvas.translate(MARGIN, MARGIN);
+        drawSignature();
     }
 
 
     private void moveCanvas(int height) {
         remainHeight -= height;
         canvas.translate(0, height);
+    }
+
+
+    //OTHERS----------------------------------------------------------------------------------------
+
+
+    private String getFilenameFormat(String text) {
+        return text.replaceAll("\\s+", "_").replaceAll("[{}$&+,:;=\\\\?@#|/'<>.^*()%!-]", "");
     }
 
 
