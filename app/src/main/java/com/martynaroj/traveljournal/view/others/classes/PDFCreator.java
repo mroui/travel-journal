@@ -1,7 +1,7 @@
 package com.martynaroj.traveljournal.view.others.classes;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,20 +11,17 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfDocument;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
-import com.martynaroj.traveljournal.BuildConfig;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
@@ -33,19 +30,22 @@ import com.martynaroj.traveljournal.services.models.Photo;
 import com.martynaroj.traveljournal.services.models.Place;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.interfaces.PdfCreatorListener;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-public class PDFCreator {
+public class PDFCreator extends AsyncTask<Void, Void, Void> {
 
+    @SuppressLint("StaticFieldLeak")
     private Context context;
+    private PdfCreatorListener listener;
 
     private File file;
     private PdfDocument document;
@@ -85,54 +85,29 @@ public class PDFCreator {
     private static int ICON_H = 36, ICON_W = 36;
 
 
-    public PDFCreator(Context context, User user, Travel travel, Address destination, List<Day> days) {
+    public PDFCreator(Context context, File file, User user, Travel travel, Address destination, List<Day> days,
+                      PdfCreatorListener listener) {
         this.context = context;
+        this.file = file;
         this.user = user;
         this.travel = travel;
         this.destination = destination;
         this.days = days;
+        this.listener = listener;
         FONT_NORMAL = ResourcesCompat.getFont(context.getApplicationContext(), R.font.raleway_regular);
         FONT_BOLD = ResourcesCompat.getFont(context.getApplicationContext(), R.font.raleway_bold);
     }
 
 
-    //MAIN==========--------------------------------------------------------------------------------
+    //MAIN------------------------------------------------------------------------------------------
 
 
     public void init() {
-        file = new File(context.getExternalFilesDir(
-                Environment.DIRECTORY_DOWNLOADS),
-                getFilenameFormat(travel.getName()) + Constants.PDF_EXT
-        );
         document = new PdfDocument();
         pageInfo = new PdfDocument.PageInfo.Builder(Constants.PAGE_A4_WIDTH, Constants.PAGE_A4_HEIGHT, 1).create();
         drawTitlePage();
         createContent();
     }
-
-
-    public String tryToSave() {
-        try {
-            document.writeTo(new FileOutputStream(file));
-            document.close();
-            return context.getResources().getString(R.string.messages_file_saved_path) + " " + file.getPath();
-        } catch (IOException e) {
-            document.close();
-            return context.getResources().getString(R.string.messages_error_failed_save_file);
-        }
-    }
-
-
-    public void openFile() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(getFileUri(), "application/pdf");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        if (intent.resolveActivity(context.getPackageManager()) != null)
-            context.startActivity(intent);
-    }
-
-
-    //CREATE MAIN CONTENT---------------------------------------------------------------------------
 
 
     private void createContent() {
@@ -183,6 +158,18 @@ public class PDFCreator {
     }
 
 
+    private String tryToSave() {
+        try {
+            document.writeTo(new FileOutputStream(file));
+            document.close();
+            return context.getResources().getString(R.string.messages_file_saved_path) + " " + file.getPath();
+        } catch (IOException e) {
+            document.close();
+            return context.getResources().getString(R.string.messages_error_failed_save_file);
+        }
+    }
+
+
     //DRAWING---------------------------------------------------------------------------------------
 
 
@@ -205,15 +192,16 @@ public class PDFCreator {
     private void drawUrlBitmap(String url, int left, int width, int height) {
         if (url != null && !url.trim().isEmpty()) {
             try {
-                Bitmap bitmap = new BitmapLoadAsyncTask(url).execute().get();
+                Bitmap bitmap = BitmapFactory.decodeStream(new URL(url).openStream());
                 Bitmap resizedBitmap = resizeBitmap(bitmap, width, height);
                 if (resizedBitmap.getHeight() > remainHeight) {
                     document.finishPage(page);
                     addNewPage();
                 }
                 canvas.drawBitmap(resizedBitmap, left, 0, null);
+                resizedBitmap.recycle();
                 moveCanvas(resizedBitmap.getHeight());
-            } catch (ExecutionException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -356,11 +344,6 @@ public class PDFCreator {
     //OTHERS----------------------------------------------------------------------------------------
 
 
-    private String getFilenameFormat(String text) {
-        return text.replaceAll("\\s+", "_").replaceAll("[{}$&+,:;=\\\\?@#|/'<>.^*()%!-]", "");
-    }
-
-
     private int measureIndexToSubstring(double textHeight, StaticLayout textLayout) {
         double lineHeight = textHeight / textLayout.getLineCount();
         int howMuchLines = (int) Math.floor(remainHeight / lineHeight);
@@ -368,11 +351,16 @@ public class PDFCreator {
     }
 
 
-    private Uri getFileUri() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
-        else
-            return Uri.fromFile(file);
+    @Override
+    protected Void doInBackground(Void... voids) {
+        init();
+        return null;
     }
 
+
+    @Override
+    protected void onPostExecute(Void status) {
+        listener.onFinish(tryToSave());
+    }
+    
 }

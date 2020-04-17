@@ -2,16 +2,22 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.martynaroj.traveljournal.BuildConfig;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentEndTravelBinding;
@@ -22,18 +28,21 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
-import com.martynaroj.traveljournal.view.others.classes.PDFCreator;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.PdfCreatorViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class EndTravelFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentEndTravelBinding binding;
     private UserViewModel userViewModel;
+    private PdfCreatorViewModel pdfCreatorViewModel;
 
     private User user;
     private Travel travel;
@@ -86,6 +95,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            pdfCreatorViewModel = new ViewModelProvider(getActivity()).get(PdfCreatorViewModel.class);
         }
     }
 
@@ -169,12 +179,10 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
 
     private void finishTravel() {
-        startProgressBar();
         if (readWritePermissionsGranted()) {
             setTravelDescription();
             createPDF();
         }
-        stopProgressBar();
     }
 
 
@@ -202,11 +210,51 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private void createPDF() {
         if (getContext() != null) {
-            PDFCreator pdfCreator = new PDFCreator(getContext(), user, travel, destination, days);
-            pdfCreator.init();
-            showSnackBar(binding.getRoot(), pdfCreator.tryToSave(), Snackbar.LENGTH_SHORT);
-            pdfCreator.openFile();
+            startProgressBar();
+            File file = createFile();
+            pdfCreatorViewModel.createPDF(file, user, travel, destination, days);
+            pdfCreatorViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
+                if (status != null) {
+                    showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_SHORT);
+                    if (!status.contains(getResources().getString(R.string.messages_error)))
+                        openFile(file);
+                }
+                stopProgressBar();
+            });
         }
+    }
+
+
+    //FILE------------------------------------------------------------------------------------------
+
+
+    private File createFile() {
+        return new File(Objects.requireNonNull(getContext()).getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS),
+                getFilenameFormat(travel.getName()) + Constants.PDF_EXT
+        );
+    }
+
+
+    private void openFile(File file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(getFileUri(file), "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (getContext() != null && intent.resolveActivity(getContext().getPackageManager()) != null)
+            getContext().startActivity(intent);
+    }
+
+
+    private String getFilenameFormat(String text) {
+        return text.replaceAll("\\s+", "_").replaceAll("[{}$&+,:;=\\\\?@#|/'<>.^*()%!-]", "");
+    }
+
+
+    private Uri getFileUri(File file) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && getContext() != null)
+            return FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+        else
+            return Uri.fromFile(file);
     }
 
 
