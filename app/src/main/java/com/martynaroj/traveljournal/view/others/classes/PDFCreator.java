@@ -160,7 +160,10 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
 
     private String tryToSave() {
         try {
-            document.writeTo(new FileOutputStream(file));
+            FileOutputStream outputStream = new FileOutputStream(file);
+            document.writeTo(outputStream);
+            outputStream.flush();
+            outputStream.close();
             document.close();
             return context.getResources().getString(R.string.messages_file_saved_path) + " " + file.getPath();
         } catch (IOException e) {
@@ -362,5 +365,5 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void status) {
         listener.onFinish(tryToSave());
     }
-    
+
 }
