@@ -1,8 +1,10 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -111,6 +113,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private void setListeners() {
         binding.endTravelArrowButton.setOnClickListener(this);
         binding.endTravelFinishButton.setOnClickListener(this);
+        setOnInputTouchListener();
     }
 
 
@@ -124,6 +127,18 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
                 finishTravel();
                 break;
         }
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setOnInputTouchListener() {
+        binding.endTravelDescriptionInput.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                v.getParent().requestDisallowInterceptTouchEvent(false);
+            }
+            return false;
+        });
     }
 
 
