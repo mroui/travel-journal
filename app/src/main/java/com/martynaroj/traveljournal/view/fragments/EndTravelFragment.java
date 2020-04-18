@@ -24,6 +24,7 @@ import com.martynaroj.traveljournal.databinding.FragmentEndTravelBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.services.models.Photo;
 import com.martynaroj.traveljournal.services.models.Reservation;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
@@ -35,6 +36,7 @@ import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandle
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.PdfCreatorViewModel;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
@@ -59,6 +61,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private TravelViewModel travelViewModel;
     private ReservationViewModel reservationViewModel;
     private AddressViewModel addressViewModel;
+    private DayViewModel dayViewModel;
 
     private User user;
     private Travel travel;
@@ -125,6 +128,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
             reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            dayViewModel = new ViewModelProvider(getActivity()).get(DayViewModel.class);
         }
     }
 
@@ -327,21 +331,30 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             userViewModel.setUser(user);
             if (user != null && user.getActiveTravelId().equals(""))
                  travelViewModel.setTravel(null);
+            showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_travel_ended_success),
+                    Snackbar.LENGTH_LONG);
         });
     }
 
 
     private void removeUnnecessaryTravelData() {
-        String mainPath = user.getUid() + "/" + Constants.STORAGE_TRAVELS + travel.getId() + "/";
-        storageViewModel.removeFileFromStorage(mainPath + Constants.STORAGE_DAYS);
+        String mainPath = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travel.getId() + "/";
+        for (Day day : days)
+            for (Photo photo : day.getPhotos())
+                storageViewModel.removeFileFromStorage(mainPath + Constants.STORAGE_DAYS + "/"
+                        + FileUriUtils.getFileName(getContext(), Uri.parse(photo.getSrc())));
         if (transport.getFile() != null && !transport.getFile().trim().isEmpty())
             storageViewModel.removeFileFromStorage(mainPath +
                     FileUriUtils.getFileName(getContext(), Uri.parse(transport.getFile())));
         if (accommodation.getFile() != null && !accommodation.getFile().trim().isEmpty())
             storageViewModel.removeFileFromStorage(mainPath +
                     FileUriUtils.getFileName(getContext(), Uri.parse(accommodation.getFile())));
-
-        //todo remove days, accommodation, transport, travel, address
+        addressViewModel.removeAddress(destination.getId());
+        reservationViewModel.removeReservation(accommodation.getId());
+        reservationViewModel.removeReservation(transport.getId());
+        travelViewModel.removeTravel(travel.getId());
+        for(Day day : days)
+            dayViewModel.removeDay(day.getId());
     }
 
 

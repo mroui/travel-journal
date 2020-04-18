@@ -419,5 +419,6 @@
         where have you been or your thoughts.</string>
     <string name="end_travel_privacy_desc">Choose who will have access to created document.</string>
     <string name="end_travel_privacy_finish_button">Finish &amp; create document</string>
+    <string name="messages_travel_ended_success">Your journey has ended, hope you had great time!</string>
 
 </resources>
