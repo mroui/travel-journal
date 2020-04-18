@@ -200,7 +200,7 @@ public class CurrencyFragment extends BaseFragment implements View.OnClickListen
 
     private String calculateAmount(Double rate) {
         Double result = rate * Double.parseDouble(Objects.requireNonNull(binding.currencyAmountInput.getText()).toString());
-        return new DecimalFormat("#.##").format(result);
+        return new DecimalFormat("0.00").format(result);
     }
 
 

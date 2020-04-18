@@ -56,7 +56,7 @@ public class Expense extends Note implements Serializable {
 
     @Exclude
     public String getAmountString() {
-        return (amount > 0 ? "+" : "") + new DecimalFormat("#.00").format(amount);
+        return (amount > 0 ? "+" : "") + new DecimalFormat("0.00").format(amount);
     }
 
 

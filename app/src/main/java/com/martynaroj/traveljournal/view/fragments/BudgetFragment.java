@@ -100,7 +100,7 @@ public class BudgetFragment extends NotesFragment {
 
 
     private void setBindingData() {
-        binding.setBudget(new DecimalFormat("#.00").format(getRemainingBudget()));
+        binding.setBudget(new DecimalFormat("0.00").format(getRemainingBudget()));
         binding.setIsListEmpty(expenses.size() == 0);
     }
 
