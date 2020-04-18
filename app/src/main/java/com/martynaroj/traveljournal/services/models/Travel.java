@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
@@ -21,6 +22,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@IgnoreExtraProperties
 public class Travel extends BaseObservable implements Serializable {
 
     private String id;
@@ -243,6 +245,7 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public long whatDay(long date1, long date2) {
         Calendar cdate1 = Calendar.getInstance();
         Calendar cdate2 = Calendar.getInstance();
@@ -270,6 +273,7 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public long whatDayToday() {
         long daysFrom = whatDay(datetimeFrom, Calendar.getInstance().getTimeInMillis());
         long daysTo = whatDay(Calendar.getInstance().getTimeInMillis(), datetimeTo);
@@ -296,6 +300,7 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     @SuppressLint("SimpleDateFormat")
     private String getDateString(long time) {
         Calendar date = Calendar.getInstance();
@@ -305,6 +310,7 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     @SuppressLint("SimpleDateFormat")
     private String getTimeString(long time) {
         Calendar date = Calendar.getInstance();
@@ -314,11 +320,13 @@ public class Travel extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public String getDateTimeString(long time) {
         return getDateString(time) + ", " + getTimeString(time);
     }
 
 
+    @Exclude
     public String getDateRangeString() {
         return getDateString(datetimeFrom) + " - " + getDateString(datetimeTo);
     }

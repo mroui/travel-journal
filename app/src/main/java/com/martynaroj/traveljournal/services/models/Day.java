@@ -7,6 +7,8 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.view.others.enums.Emoji;
 
 import java.io.Serializable;
@@ -16,6 +18,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class Day extends BaseObservable implements Serializable {
 
     private String id;
@@ -127,6 +130,7 @@ public class Day extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public List<Note> getAllSortedNotes() {
         List<Note> allNote = new ArrayList<>();
         allNote.addAll(places);
@@ -137,6 +141,7 @@ public class Day extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public String getDateString() {
         Calendar cdate = Calendar.getInstance();
         cdate.setTimeInMillis(date);

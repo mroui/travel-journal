@@ -3,10 +3,13 @@ package com.martynaroj.traveljournal.services.models;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
 
+@IgnoreExtraProperties
 public class Address extends BaseObservable implements Serializable {
 
     private String id;
@@ -88,6 +91,7 @@ public class Address extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.longitude);
     }
 
+    @Exclude
     public String getLatLonString() {
         return getLatitude() + ", " + getLongitude();
     }
