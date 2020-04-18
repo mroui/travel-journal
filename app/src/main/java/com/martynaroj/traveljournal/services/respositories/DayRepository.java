@@ -77,4 +77,10 @@ public class DayRepository {
     }
 
 
+    public void removeDay(String id) {
+        DocumentReference dayRef = daysRef.document(id);
+        dayRef.delete();
+    }
+
+
 }

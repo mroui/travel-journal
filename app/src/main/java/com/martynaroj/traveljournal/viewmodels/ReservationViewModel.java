@@ -43,4 +43,8 @@ public class ReservationViewModel extends AndroidViewModel {
         return reservationsLiveData;
     }
 
+    public void removeReservation(String id) {
+        reservationRepository.removeReservation(id);
+    }
+
 }

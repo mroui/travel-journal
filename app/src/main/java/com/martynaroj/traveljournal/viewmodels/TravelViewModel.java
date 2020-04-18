@@ -59,5 +59,9 @@ public class TravelViewModel extends AndroidViewModel {
         return travel;
     }
 
+    public void removeTravel(String id) {
+        travelRepository.removeTravel(id);
+    }
+
 
 }

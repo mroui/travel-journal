@@ -52,4 +52,8 @@ public class AddressViewModel extends AndroidViewModel {
         detectedAddressLiveData = addressRepository.detectAddress(placesClient, request);
     }
 
+    public void removeAddress(String id) {
+        addressRepository.removeAddress(id);
+    }
+
 }

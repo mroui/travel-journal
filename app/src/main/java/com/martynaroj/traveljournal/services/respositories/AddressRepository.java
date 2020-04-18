@@ -84,4 +84,10 @@ public class AddressRepository {
         return detectedAddress;
     }
 
+
+    public void removeAddress(String id) {
+        DocumentReference addressRef = addressesRef.document(id);
+        addressRef.delete();
+    }
+
 }

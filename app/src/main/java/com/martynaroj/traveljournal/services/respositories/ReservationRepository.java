@@ -69,4 +69,10 @@ public class ReservationRepository {
         return reservationsData;
     }
 
+
+    public void removeReservation(String id) {
+        DocumentReference reservationRef = reservationsRef.document(id);
+        reservationRef.delete();
+    }
+
 }

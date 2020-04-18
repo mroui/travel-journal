@@ -69,4 +69,8 @@ public class DayViewModel extends AndroidViewModel {
         return days;
     }
 
+    public void removeDay(String id) {
+        dayRepository.removeDay(id);
+    }
+
 }

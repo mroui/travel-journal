@@ -71,4 +71,10 @@ public class TravelRepository {
         return travelData;
     }
 
+
+    public void removeTravel(String id) {
+        DocumentReference travelRef = travelsRef.document(id);
+        travelRef.delete();
+    }
+
 }
