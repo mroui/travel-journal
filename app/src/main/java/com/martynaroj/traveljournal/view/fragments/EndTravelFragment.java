@@ -23,19 +23,24 @@ import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentEndTravelBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
+import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.PdfCreatorViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
+import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +50,8 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private UserViewModel userViewModel;
     private PdfCreatorViewModel pdfCreatorViewModel;
     private StorageViewModel storageViewModel;
+    private ItineraryViewModel itineraryViewModel;
+    private TravelViewModel travelViewModel;
 
     private User user;
     private Travel travel;
@@ -86,6 +93,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         initContentData();
         setListeners();
         observeUserChanges();
+        observeTravelChanges();
 
         return view;
     }
@@ -99,6 +107,8 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             pdfCreatorViewModel = new ViewModelProvider(getActivity()).get(PdfCreatorViewModel.class);
             storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
+            itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
+            travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
         }
     }
 
@@ -116,6 +126,15 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
                         Snackbar.LENGTH_LONG);
                 back();
             }
+        });
+    }
+
+
+    private void observeTravelChanges() {
+        travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
+            this.travel = travel;
+            if (travel == null)
+                back();
         });
     }
 
@@ -190,7 +209,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
 
     private boolean readWritePermissionsGranted() {
-        if(RequestPermissionsHandler.isWriteStorageGranted(getContext())) {
+        if (RequestPermissionsHandler.isWriteStorageGranted(getContext())) {
             if (RequestPermissionsHandler.isReadStorageGranted(getContext()))
                 return true;
             else {
@@ -218,12 +237,15 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             pdfCreatorViewModel.createPDF(file, user, travel, destination, days);
             pdfCreatorViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
                 if (status != null) {
-                    if (!status.contains(getResources().getString(R.string.messages_error)))
+                    if (!status.contains(getResources().getString(R.string.messages_error))) {
                         openFile(file);
-                    showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_SHORT);
-                    saveFileToStorage(file);
+                        showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_SHORT);
+                        saveFileToStorage(file);
+                    } else {
+                        showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_LONG);
+                        stopProgressBar();
+                    }
                 }
-                stopProgressBar();
             });
         }
     }

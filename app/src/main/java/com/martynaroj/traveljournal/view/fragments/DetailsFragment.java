@@ -170,7 +170,10 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
         binding.setDestination(destination);
         binding.setAccommodation(accommodation);
         binding.setTransport(transport);
-        binding.setBudget(new DecimalFormat("#.00").format(travel.getBudget()));
+        if (travel != null)
+            binding.setBudget(new DecimalFormat("#.00").format(travel.getBudget()));
+        else
+            binding.setBudget(null);
         initTags();
     }
 
@@ -200,6 +203,8 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
     private void observeTravelChanges() {
         travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
+            if (travel == null)
+                back();
             this.travel = travel;
             initContentData();
         });

@@ -141,8 +141,6 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
             initContentData();
             if (user != null && user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
                 loadTravel(user.getActiveTravelId());
-            else
-                travelViewModel.setTravel(null);
         });
     }
 
@@ -151,7 +149,8 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
         travelViewModel.getTravel().observe(getViewLifecycleOwner(), travel -> {
             this.travel = travel;
             initContentData();
-            checkPackingList();
+            if (travel != null)
+                checkPackingList();
         });
     }
 
@@ -396,17 +395,19 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void checkDays() {
-        long whichDay = travel.whatDayToday();
-        if (whichDay >= 1) {
-            if (travel.getDays().size() == whichDay) {
-                getToday(travel.getDays().get((int) whichDay - 1));
-            } else {
-                while (travel.getDays().size() != whichDay - 1)
-                    travel.getDays().add(null);
-                addNewDay();
-            }
-        } else if (whichDay == 0)
-            showEndTravelSnackbar();
+        if (travel != null) {
+            long whichDay = travel.whatDayToday();
+            if (whichDay >= 1) {
+                if (travel.getDays().size() == whichDay) {
+                    getToday(travel.getDays().get((int) whichDay - 1));
+                } else {
+                    while (travel.getDays().size() != whichDay - 1)
+                        travel.getDays().add(null);
+                    addNewDay();
+                }
+            } else if (whichDay == 0)
+                showEndTravelSnackbar();
+        }
     }
 
 
