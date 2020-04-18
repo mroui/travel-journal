@@ -24,6 +24,7 @@ public interface Constants {
     String TRAVELS = "Travels";
     String RESERVATIONS = "Reservations";
     String DAYS = "Days";
+    String ITINERARIES = "Itineraries";
 
     String DB_UID = "uid";
     String DB_PHOTO = "photo";
@@ -47,6 +48,7 @@ public interface Constants {
     String DB_NOTES = "notes";
     String DB_PHOTOS = "photos";
     String DB_PLACES = "places";
+    String DB_TRAVELS = "travels";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";

@@ -78,5 +78,6 @@
     <string name="messages_error_failed_download_file">ERROR: Failed to download file, please try again later</string>
     <string name="messages_error_failed_read_file">ERROR: Failed to read file</string>
     <string name="messages_error_failed_save_file">ERROR: Failed to save file, try again later</string>
+    <string name="messages_error_failed_add_itinerary">Failed to add itinerary, please try again later.</string>
 
 </resources>
