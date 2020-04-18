@@ -505,7 +505,8 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
                     binding.dialogCustomButtonNegative, R.string.dialog_button_no,
                     R.color.main_blue, R.color.blue_bg_light);
             binding.dialogCustomButtonPositive.setOnClickListener(v -> {
-                changeFragment(EndTravelFragment.newInstance(this.user, this.travel, this.destination, this.days));
+                changeFragment(EndTravelFragment.newInstance(this.user, this.travel, this.destination,
+                        this.transport, this.accommodation, this.days));
                 dialog.dismiss();
             });
             binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
