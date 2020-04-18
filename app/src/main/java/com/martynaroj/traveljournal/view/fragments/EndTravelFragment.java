@@ -31,6 +31,7 @@ import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.PdfCreatorViewModel;
+import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.File;
@@ -43,6 +44,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private FragmentEndTravelBinding binding;
     private UserViewModel userViewModel;
     private PdfCreatorViewModel pdfCreatorViewModel;
+    private StorageViewModel storageViewModel;
 
     private User user;
     private Travel travel;
@@ -96,6 +98,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             pdfCreatorViewModel = new ViewModelProvider(getActivity()).get(PdfCreatorViewModel.class);
+            storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
         }
     }
 
@@ -215,13 +218,33 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             pdfCreatorViewModel.createPDF(file, user, travel, destination, days);
             pdfCreatorViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
                 if (status != null) {
-                    showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_SHORT);
                     if (!status.contains(getResources().getString(R.string.messages_error)))
                         openFile(file);
+                    showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_SHORT);
+                    saveFileToStorage(file);
                 }
                 stopProgressBar();
             });
         }
+    }
+
+
+    private void saveFileToStorage(File file) {
+        String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travel.getId();
+        storageViewModel.saveFileToStorage(getFileUri(file), file.getName(), path);
+        storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
+            if (status != null && !status.contains(getResources().getString(R.string.messages_error))) {
+                createItinerary();
+            } else {
+                showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_LONG);
+                stopProgressBar();
+            }
+        });
+    }
+
+
+    private void createItinerary() {
+        
     }
 
 
