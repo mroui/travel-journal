@@ -255,18 +255,62 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         String path = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + travel.getId();
         storageViewModel.saveFileToStorage(getFileUri(file), file.getName(), path);
         storageViewModel.getStorageStatus().observe(getViewLifecycleOwner(), status -> {
-            if (status != null && !status.contains(getResources().getString(R.string.messages_error))) {
-                createItinerary();
-            } else {
-                showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_LONG);
+            if (status != null) {
+                if (!status.contains(getResources().getString(R.string.messages_error)))
+                    addItinerary(createItinerary(status));
+                else {
+                    showSnackBar(binding.getRoot(), status, Snackbar.LENGTH_LONG);
+                    stopProgressBar();
+                }
+            }
+        });
+    }
+
+
+    private Itinerary createItinerary(String createdFileUrl) {
+        int filePrivacy = binding.endTravelPrivacySpinner.getSelectedIndex();
+        return new Itinerary(
+                travel.getId(),
+                user.getUid(),
+                travel.getName(),
+                travel.getImage(),
+                travel.getDatetimeFrom(),
+                travel.getDatetimeTo(),
+                destination.getName() + "&" + destination.getAddress(),
+                travel.getDescription(),
+                travel.getTags(),
+                createdFileUrl,
+                filePrivacy
+        );
+    }
+
+
+    private void addItinerary(Itinerary itinerary) {
+        itineraryViewModel.addItinerary(itinerary);
+        itineraryViewModel.getStatusData().observe(getViewLifecycleOwner(), status -> {
+            if (status != null) {
+                if (status.equals(Status.SUCCESS))
+                    updateUser(itinerary.getId());
+                else
+                    showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_error_failed_add_itinerary),
+                            Snackbar.LENGTH_LONG);
                 stopProgressBar();
             }
         });
     }
 
 
-    private void createItinerary() {
-        
+    private void updateUser(String itineraryId) {
+        user.getTravels().add(itineraryId);
+        userViewModel.updateUser(user, new HashMap<String, Object>() {{
+            put(Constants.DB_TRAVELS, user.getTravels());
+            put(Constants.DB_ACTIVE_TRAVEL_ID, "");
+        }});
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            userViewModel.setUser(user);
+            if (user != null && user.getActiveTravelId().equals(""))
+                 travelViewModel.setTravel(null);
+        });
     }
 
 
