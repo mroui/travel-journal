@@ -57,9 +57,11 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
 
 
     public void changeList(List<Itinerary> itineraries) {
-        this.itineraries = itineraries;
-        notifyItemRangeChanged(0, this.itineraries.size());
-        notifyDataSetChanged();
+        if (itineraries != null) {
+            this.itineraries = itineraries;
+            notifyItemRangeChanged(0, this.itineraries.size());
+            notifyDataSetChanged();
+        }
     }
 
 
