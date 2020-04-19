@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.view.fragments;
 
 import android.app.Dialog;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,12 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
+import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
+import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     private FragmentTravelsListBinding binding;
     private UserViewModel userViewModel;
     private ItineraryViewModel itineraryViewModel;
+    private StorageViewModel storageViewModel;
 
     private User user, loggedUser;
     private List<Itinerary> itineraries, savedItineraries;
@@ -83,6 +87,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
+            storageViewModel = new ViewModelProvider(getActivity()).get(StorageViewModel.class);
         }
     }
 
@@ -259,7 +264,10 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
     private void removeItinerary(Itinerary itinerary) {
         itineraryViewModel.removeItinerary(itinerary.getId());
-        //todo remove storage
+        String mainPath = user.getUid() + "/" + Constants.STORAGE_TRAVELS + "/" + itinerary.getId() + "/";
+        if (itinerary.getImage() != null)
+            storageViewModel.removeFileFromStorage(mainPath + FileUriUtils.getFileName(getContext(), Uri.parse(itinerary.getImage())));
+        storageViewModel.removeFileFromStorage(mainPath + FileUriUtils.getFileName(getContext(), Uri.parse(itinerary.getFile())));
     }
 
 
