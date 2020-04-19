@@ -81,10 +81,9 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
     private void initContentData() {
         loadUserTravels();
-        if(loggedUser.equals(user)) {
-            loadSavedTravels();
+        if (loggedUser.equals(user))
             binding.travelsListButtonsContainer.setVisibility(View.VISIBLE);
-        } else
+        else
             binding.travelsListButtonsContainer.setVisibility(View.GONE);
     }
 
@@ -128,17 +127,20 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
                 initListAdapter();
                 setBindingData(this.itineraries);
             }
-            stopProgressBar();
+            if (user.equals(loggedUser))
+                loadSavedTravels();
+            else
+                stopProgressBar();
         });
     }
 
 
     private List<Itinerary> getProperList(List<Itinerary> itineraries) {
         if (user.equals(loggedUser)) {
-            return this.itineraries;
+            return itineraries;
         } else {
             List<Itinerary> list = new ArrayList<>();
-            for(Itinerary i : itineraries) {
+            for (Itinerary i : itineraries) {
                 switch (Privacy.values()[i.getPrivacy()]) {
                     case PUBLIC:
                         list.add(i);
@@ -157,7 +159,6 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void loadSavedTravels() {
-        startProgressBar();
         itineraryViewModel.getItinerariesListData(user.getSavedTravels());
         itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), itineraries -> {
             this.savedItineraries = itineraries;
