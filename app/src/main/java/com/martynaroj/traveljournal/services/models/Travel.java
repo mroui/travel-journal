@@ -246,7 +246,7 @@ public class Travel extends BaseObservable implements Serializable {
 
 
     @Exclude
-    public long whatDay(long date1, long date2) {
+    public static long whatDay(long date1, long date2) {
         Calendar cdate1 = Calendar.getInstance();
         Calendar cdate2 = Calendar.getInstance();
         cdate1.setTimeInMillis(date1);
