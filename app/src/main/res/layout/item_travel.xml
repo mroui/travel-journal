@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_tiny"
+    app:cardCornerRadius="@dimen/corner_radius_small">
+
+    <LinearLayout
+        android:id="@+id/travel_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/ripple_note_item"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="6">
+
+            <TextView
+                android:id="@+id/travel_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                android:textColor="@color/black"
+                android:fontFamily="@font/raleway_medium"/>
+
+            <TextView
+                android:id="@+id/travel_item_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_tiny"
+                android:textSize="@dimen/text_smaller"
+                android:textColor="@color/darker_gray"
+                android:fontFamily="@font/raleway_regular"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/travel_item_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_smaller"
+            android:textColor="@color/dark_gray"
+            android:fontFamily="@font/raleway_regular"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
