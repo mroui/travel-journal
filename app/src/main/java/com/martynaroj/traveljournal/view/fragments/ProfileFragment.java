@@ -380,7 +380,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 getContactInfo();
                 return;
             case R.id.profile_travels:
-                changeFragment(TravelsListFragment.newInstance());
+                changeFragment(TravelsListFragment.newInstance(loggedUser, user));
                 return;
             case R.id.profile_friends:
                 getFriendsInfo();

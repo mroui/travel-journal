@@ -14,9 +14,31 @@ import com.martynaroj.traveljournal.view.base.BaseFragment;
 public class TravelsListFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentTravelsListBinding binding;
+    private UserViewModel userViewModel;
+    private ItineraryViewModel itineraryViewModel;
+    private TravelAdapter adapter;
 
-    static TravelsListFragment newInstance() {
-        return new TravelsListFragment();
+    private User user, loggedUser;
+    private List<Itinerary> itineraries, savedItineraries;
+
+
+    public static TravelsListFragment newInstance(User loggedUser, User user) {
+        TravelsListFragment fragment = new TravelsListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Constants.BUNDLE_USER, user);
+        args.putSerializable(Constants.BUNDLE_LOGGED_USER, loggedUser);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
+            loggedUser = (User) getArguments().getSerializable(Constants.BUNDLE_LOGGED_USER);
+        }
     }
 
 
