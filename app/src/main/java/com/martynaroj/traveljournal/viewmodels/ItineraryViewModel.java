@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.respositories.ItineraryRepository;
@@ -14,10 +15,12 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     private ItineraryRepository itineraryRepository;
     private LiveData<Status> statusLiveData;
+    private final MutableLiveData<Itinerary> itinerary;
 
     public ItineraryViewModel(@NonNull Application application) {
         super(application);
         itineraryRepository = new ItineraryRepository(application.getApplicationContext());
+        itinerary = new MutableLiveData<>();
     }
 
     public void addItinerary(Itinerary itinerary) {
@@ -26,6 +29,14 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     public LiveData<Status> getStatusData() {
         return statusLiveData;
+    }
+
+    public void setItinerary(Itinerary itinerary) {
+        this.itinerary.setValue(itinerary);
+    }
+
+    public LiveData<Itinerary> getItinerary() {
+        return itinerary;
     }
 
 }
