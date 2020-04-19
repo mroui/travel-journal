@@ -50,4 +50,8 @@ public class ItineraryViewModel extends AndroidViewModel {
         return itinerariesLiveData;
     }
 
+    public void removeItinerary(String id) {
+        itineraryRepository.removeItinerary(id);
+    }
+
 }

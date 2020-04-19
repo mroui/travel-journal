@@ -65,4 +65,10 @@ public class ItineraryRepository {
         return itinerariesData;
     }
 
+
+    public void removeItinerary(String id) {
+        DocumentReference itineraryRef = itinerariesRef.document(id);
+        itineraryRef.delete();
+    }
+
 }
