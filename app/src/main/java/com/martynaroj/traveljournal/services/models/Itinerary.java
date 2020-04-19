@@ -6,6 +6,7 @@ import androidx.databinding.Bindable;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Itinerary extends BaseObservable implements Serializable {
@@ -23,8 +24,14 @@ public class Itinerary extends BaseObservable implements Serializable {
     private int privacy;
 
 
+    private Itinerary() {
+        tags = new ArrayList<>();
+    }
+
+
     public Itinerary(String id, String owner, String name, String image, long datetimeFrom, long datetimeTo,
                      String destination, String description, List<String> tags, String file, int privacy) {
+        this();
         this.id = id;
         this.owner = owner;
         this.name = name;
