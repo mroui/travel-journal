@@ -425,5 +425,10 @@
     <string name="messages_travel_ended_success">Your journey has ended, hope you had great time!</string>
 
     <string name="travel_title">Travel</string>
+    <string name="dialog_remove_my_travel_title">Remove travel</string>
+    <string name="dialog_remove_saved_travel_title">Remove saved travel</string>
+    <string name="dialog_remove_my_travel_desc">Are you sure you want to remove this travel?</string>
+    <string name="dialog_remove_saved_travel_desc">Are you sure you want to remove this saved travel?</string>
+    <string name="travels_list_edit_privacy">Edit privacy</string>
 
 </resources>

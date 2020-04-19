@@ -1,5 +1,7 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +12,22 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentTravelsListBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
+import com.martynaroj.traveljournal.view.others.classes.RippleDrawable;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TravelsListFragment extends BaseFragment implements View.OnClickListener {
@@ -32,6 +39,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     private User user, loggedUser;
     private List<Itinerary> itineraries, savedItineraries;
     private TravelAdapter adapter;
+    boolean mineTravelsTab;
 
 
     public static TravelsListFragment newInstance(User loggedUser, User user) {
@@ -85,6 +93,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             binding.travelsListButtonsContainer.setVisibility(View.VISIBLE);
         else
             binding.travelsListButtonsContainer.setVisibility(View.GONE);
+        mineTravelsTab = true;
     }
 
 
@@ -103,6 +112,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         if (getContext() != null && itineraries != null) {
             adapter = new TravelAdapter(getContext(), itineraries);
             binding.travelsListRecyclerView.setAdapter(adapter);
+            setOnAdapterListeners();
         }
     }
 
@@ -112,6 +122,41 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             binding.setIsListEmpty(list.size() == 0);
         else
             binding.setIsListEmpty(true);
+    }
+
+
+    //LISTENERS-------------------------------------------------------------------------------------
+
+
+    private void setListeners() {
+        binding.travelsListArrowButton.setOnClickListener(this);
+        binding.travelsListMyTravelsButton.setOnClickListener(this);
+        binding.travelsListSavedTravelsButton.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.travels_list_arrow_button:
+                back();
+                break;
+            case R.id.travels_list_my_travels_button:
+                showTravels(itineraries, true);
+                break;
+            case R.id.travels_list_saved_travels_button:
+                showTravels(savedItineraries, false);
+                break;
+        }
+    }
+
+
+    private void setOnAdapterListeners() {
+        adapter.setOnItemClickListener((object, position, view) -> {
+            //todo show travel fragment preview
+            showSnackBar("show preview", Snackbar.LENGTH_SHORT);
+        });
+        adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Itinerary)object, position));
     }
 
 
@@ -169,6 +214,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
     private void showTravels(List<Itinerary> list, boolean mine) {
         switchStyleButtons(mine);
+        mineTravelsTab = mine;
         adapter.changeList(list);
         setBindingData(list);
     }
@@ -191,28 +237,115 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    //LISTENERS-------------------------------------------------------------------------------------
+    //UPDATES---------------------------------------------------------------------------------------
 
 
-    private void setListeners() {
-        binding.travelsListArrowButton.setOnClickListener(this);
-        binding.travelsListMyTravelsButton.setOnClickListener(this);
-        binding.travelsListSavedTravelsButton.setOnClickListener(this);
+    private void removeTravel(Itinerary itinerary, int index) {
+        if (mineTravelsTab) {
+            adapter.remove(index);
+            itineraries = adapter.getList();
+            setBindingData(itineraries);
+            updateUser(true, user, Constants.DB_TRAVELS, itineraries);
+            updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId());
+            removeItinerary(itinerary);
+        } else {
+            adapter.remove(index);
+            savedItineraries = adapter.getList();
+            setBindingData(savedItineraries);
+            updateUser(false, user, Constants.DB_SAVED_TRAVELS, savedItineraries);
+        }
     }
 
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.travels_list_arrow_button:
-                back();
-                break;
-            case R.id.travels_list_my_travels_button:
-                showTravels(itineraries, true);
-                break;
-            case R.id.travels_list_saved_travels_button:
-                showTravels(savedItineraries, false);
-                break;
+    private void removeItinerary(Itinerary itinerary) {
+        itineraryViewModel.removeItinerary(itinerary.getId());
+        //todo remove storage
+    }
+
+
+    private void updateUser(boolean reload, User user, String key, Object value) {
+        userViewModel.updateUser(reload, user, new HashMap<String, Object>() {{
+            put(key, value);
+        }});
+    }
+
+
+    private void updateUsersSavedTravels(String key, String value) {
+        userViewModel.getUsersWhereArrayContains(key, value);
+        userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+            if (users != null)
+                for (User user : users) {
+                    user.getSavedTravels().remove(value);
+                    updateUser(false, user, key, user.getSavedTravels());
+                }
+        });
+    }
+
+
+    //DIALOG----------------------------------------------------------------------------------------
+
+
+    private void showOptionsDialog(Itinerary itinerary, int index) {
+        if (getContext() != null && user.equals(loggedUser)) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogOptionsBinding binding = DialogOptionsBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            binding.dialogOptionsEdit.setTextColor(getResources().getColor(R.color.main_blue));
+            binding.dialogOptionsEdit.setText(getResources().getString(R.string.travels_list_edit_privacy));
+            binding.dialogOptionsRemove.setTextColor(getResources().getColor(R.color.main_blue));
+            RippleDrawable.setRippleEffectButton(binding.dialogOptionsEdit,
+                    Color.TRANSPARENT, getResources().getColor(R.color.blue_bg_light));
+            RippleDrawable.setRippleEffectButton(binding.dialogOptionsRemove,
+                    Color.TRANSPARENT, getResources().getColor(R.color.blue_bg_light));
+
+            if (mineTravelsTab)
+                binding.dialogOptionsEdit.setOnClickListener(view -> {
+                    //todo show edit dialog
+                    showSnackBar("show edit dialog", Snackbar.LENGTH_SHORT);
+                    dialog.dismiss();
+                });
+            else
+                binding.dialogOptionsEdit.setVisibility(View.GONE);
+
+            binding.dialogOptionsRemove.setOnClickListener(view -> {
+                showRemoveDialog(itinerary, index);
+                dialog.dismiss();
+            });
+            dialog.show();
+        }
+    }
+
+
+    private void showRemoveDialog(Itinerary itinerary, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogCustomBinding binding = DialogCustomBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+
+            if (mineTravelsTab)
+                DialogHandler.initContent(
+                        getContext(), binding.dialogCustomTitle, R.string.dialog_remove_my_travel_title,
+                        binding.dialogCustomDesc, R.string.dialog_remove_my_travel_desc,
+                        binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                        binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                        R.color.main_blue, R.color.blue_bg_light
+                );
+            else
+                DialogHandler.initContent(
+                        getContext(), binding.dialogCustomTitle, R.string.dialog_remove_saved_travel_title,
+                        binding.dialogCustomDesc, R.string.dialog_remove_saved_travel_desc,
+                        binding.dialogCustomButtonPositive, R.string.dialog_button_yes,
+                        binding.dialogCustomButtonNegative, R.string.dialog_button_no,
+                        R.color.main_blue, R.color.blue_bg_light
+                );
+
+            binding.dialogCustomButtonPositive.setOnClickListener(v -> {
+                removeTravel(itinerary, index);
+                dialog.dismiss();
+            });
+            binding.dialogCustomButtonNegative.setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
         }
     }
 
