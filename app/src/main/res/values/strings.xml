@@ -263,6 +263,9 @@
     <string name="notifications_new_trip_request_message">start a new trip</string>
 
     <string name="travels_list_title">Travels</string>
+    <string name="travels_list_mine">Mine</string>
+    <string name="travels_list_saved">Saved</string>
+    <string name="travels_list_no_results">No travels found.</string>
 
     <string name="friends_list_title">Friends</string>
     <string name="friends_list_remove">REMOVE</string>
