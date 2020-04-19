@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@IgnoreExtraProperties
 public class User extends BaseObservable implements Serializable {
 
     private String uid;
@@ -284,28 +286,33 @@ public class User extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public boolean isEmailAvailableForUser (User loggedUser) {
         return (!isUserProfile(loggedUser) && this.getPrivacyEmail() == 0) || isUserProfile(loggedUser);
     }
 
 
+    @Exclude
     public boolean isLocationAvailableForUser (User loggedUser) {
         return ((!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0) || isUserProfile(loggedUser))
                 && this.location != null;
     }
 
 
+    @Exclude
     public boolean isPreferencesAvailableForUser (User loggedUser) {
         return ((!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser))
                 && this.preferences != null;
     }
 
 
+    @Exclude
     public boolean isUserProfile (User loggedUser) {
         return loggedUser != null && this.uid.equals(loggedUser.getUid());
     }
 
 
+    @Exclude
     public boolean hasFriend(User loggedUser) {
         return loggedUser != null && this.friends != null && this.friends.contains(loggedUser.uid);
     }
