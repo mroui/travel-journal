@@ -35,6 +35,7 @@ public class User extends BaseObservable implements Serializable {
     private List<String> markers;
     private String activeTravelId;
     private List<String> travels;
+    private List<String> savedTravels;
 
 
     public User() {
@@ -44,6 +45,7 @@ public class User extends BaseObservable implements Serializable {
         this.privacy = new HashMap<>();
         this.markers = new ArrayList<>();
         this.travels = new ArrayList<>();
+        this.savedTravels = new ArrayList<>();
     }
 
 
@@ -237,6 +239,18 @@ public class User extends BaseObservable implements Serializable {
     public void setTravels(List<String> travels) {
         this.travels = travels;
         notifyPropertyChanged(BR.travels);
+    }
+
+
+    @Bindable
+    public List<String> getSavedTravels() {
+        return savedTravels;
+    }
+
+
+    public void setSavedTravels(List<String> savedTravels) {
+        this.savedTravels = savedTravels;
+        notifyPropertyChanged(BR.savedTravels);
     }
 
 
