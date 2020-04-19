@@ -11,10 +11,13 @@ import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.respositories.ItineraryRepository;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
+import java.util.List;
+
 public class ItineraryViewModel extends AndroidViewModel {
 
     private ItineraryRepository itineraryRepository;
     private LiveData<Status> statusLiveData;
+    private LiveData<List<Itinerary>> itinerariesLiveData;
     private final MutableLiveData<Itinerary> itinerary;
 
     public ItineraryViewModel(@NonNull Application application) {
@@ -37,6 +40,14 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     public LiveData<Itinerary> getItinerary() {
         return itinerary;
+    }
+
+    public void getItinerariesListData(List<String> ids) {
+        itinerariesLiveData = itineraryRepository.getItineraries(ids);
+    }
+
+    public LiveData<List<Itinerary>> getItinerariesList() {
+        return itinerariesLiveData;
     }
 
 }
