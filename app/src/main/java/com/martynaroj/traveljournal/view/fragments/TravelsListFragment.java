@@ -15,10 +15,12 @@ import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TravelsListFragment extends BaseFragment implements View.OnClickListener {
@@ -121,13 +123,36 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         startProgressBar();
         itineraryViewModel.getItinerariesListData(user.getTravels());
         itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), itineraries -> {
-            this.itineraries = itineraries;
             if (itineraries != null) {
+                this.itineraries = getProperList(itineraries);
                 initListAdapter();
-                setBindingData(itineraries);
+                setBindingData(this.itineraries);
             }
             stopProgressBar();
         });
+    }
+
+
+    private List<Itinerary> getProperList(List<Itinerary> itineraries) {
+        if (user.equals(loggedUser)) {
+            return this.itineraries;
+        } else {
+            List<Itinerary> list = new ArrayList<>();
+            for(Itinerary i : itineraries) {
+                switch (Privacy.values()[i.getPrivacy()]) {
+                    case PUBLIC:
+                        list.add(i);
+                        break;
+                    case FRIENDS:
+                        if (user.getFriends().contains(loggedUser.getUid()))
+                            list.add(i);
+                        break;
+                    case ONLY_ME:
+                        break;
+                }
+            }
+            return list;
+        }
     }
 
 
