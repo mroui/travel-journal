@@ -20,14 +20,14 @@
             android:focusable="true">
 
             <ImageView
-                android:id="@+id/home_explore_item_image"
+                android:id="@+id/travel_view_flipper_item_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_travel_image_height"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/home_explore_item_travel_image"/>
 
             <TextView
-                android:id="@+id/home_explore_item_title"
+                android:id="@+id/travel_view_flipper_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
@@ -36,7 +36,7 @@
                 android:textColor="@color/black"/>
 
             <TextView
-                android:id="@+id/home_explore_item_desc"
+                android:id="@+id/travel_view_flipper_item_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_tiny"
