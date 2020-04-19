@@ -43,6 +43,20 @@ public class UserRepository {
     }
 
 
+    public MutableLiveData<List<User>> getUsersWhereArrayContains(String key, Object value) {
+        MutableLiveData<List<User>> usersData = new MutableLiveData<>();
+        usersRef.whereArrayContains(key, value).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    List<User> users = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments())
+                        users.add(documentSnapshot.toObject(User.class));
+                    usersData.setValue(users);
+            }
+        });
+        return usersData;
+    }
+
+
     public MutableLiveData<List<User>> getUsers(List<String> usersIds) {
         MutableLiveData<List<User>> usersData = new MutableLiveData<>();
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
