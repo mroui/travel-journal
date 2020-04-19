@@ -414,7 +414,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 ? new ArrayList<>(notification.getUserFrom().getFriends()) : new ArrayList<>();
         friendUserFriends.add(notification.getIdTo());
         changesFriendUser.put(Constants.DB_FRIENDS, friendUserFriends);
-        userViewModel.updateUser(notification.getUserFrom(), changesFriendUser);
+        userViewModel.updateUser(true, notification.getUserFrom(), changesFriendUser);
     }
 
 
@@ -479,7 +479,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void updateUser(Map<String, Object> changes, String messageSuccess, String messageError) {
-        userViewModel.updateUser(user, changes);
+        userViewModel.updateUser(true, user, changes);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;

@@ -33,9 +33,10 @@ public class UserViewModel extends AndroidViewModel {
         userLiveData = userRepository.getUserData(uid);
     }
 
-    public void updateUser(User user, Map<String, Object> map) {
+    public void updateUser(boolean reload, User user, Map<String, Object> map) {
         userRepository.updateUser(user, map);
-        getUserData(user.getUid());
+        if (reload)
+            getUserData(user.getUid());
     }
 
     public void setUser(User user) {
@@ -48,6 +49,10 @@ public class UserViewModel extends AndroidViewModel {
 
     public void getUsersListData(List<String> usersIds) {
         usersListLiveData = userRepository.getUsers(usersIds);
+    }
+
+    public void getUsersWhereArrayContains(String key, Object value) {
+        usersListLiveData = userRepository.getUsersWhereArrayContains(key, value);
     }
 
     public LiveData<List<User>> getUsersList() {

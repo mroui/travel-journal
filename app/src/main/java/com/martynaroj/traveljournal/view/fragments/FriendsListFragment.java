@@ -203,13 +203,13 @@ public class FriendsListFragment extends BaseFragment {
         Map<String, Object> changesFriendUser = new HashMap<>();
         friend.getFriends().remove(loggedUser.getUid());
         changesFriendUser.put(Constants.DB_FRIENDS, friend.getFriends());
-        userViewModel.updateUser(friend, changesFriendUser);
+        userViewModel.updateUser(true, friend, changesFriendUser);
 
         Map<String, Object> changesLoggedUser = new HashMap<>();
         loggedUser.getFriends().remove(friend.getUid());
         changesLoggedUser.put(Constants.DB_FRIENDS, loggedUser.getFriends());
 
-        userViewModel.updateUser(loggedUser, changesLoggedUser);
+        userViewModel.updateUser(true, loggedUser, changesLoggedUser);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;

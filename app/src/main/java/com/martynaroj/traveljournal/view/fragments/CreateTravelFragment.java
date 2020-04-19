@@ -693,7 +693,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
 
     private void addTravelToUser() {
-        userViewModel.updateUser(user, new HashMap<String, Object>() {{
+        userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
             put(Constants.DB_ACTIVE_TRAVEL_ID, travelId);
         }});
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), newUser -> {

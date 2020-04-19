@@ -322,7 +322,7 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
 
     private void updateUser(String itineraryId) {
         user.getTravels().add(itineraryId);
-        userViewModel.updateUser(user, new HashMap<String, Object>() {{
+        userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
             put(Constants.DB_TRAVELS, user.getTravels());
             put(Constants.DB_ACTIVE_TRAVEL_ID, "");
         }});

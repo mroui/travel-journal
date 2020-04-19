@@ -613,7 +613,7 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
     private void updateUser(Map<String, Object> changes) {
         startProgressBar();
-        userViewModel.updateUser(user, changes);
+        userViewModel.updateUser(true, user, changes);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 this.user = user;
