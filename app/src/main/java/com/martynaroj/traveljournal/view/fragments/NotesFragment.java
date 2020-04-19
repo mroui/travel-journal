@@ -19,7 +19,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddNoteBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogEditNoteBinding;
-import com.martynaroj.traveljournal.databinding.DialogNotesOptionsBinding;
+import com.martynaroj.traveljournal.databinding.DialogOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentNotesBinding;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Note;
@@ -251,7 +251,7 @@ public class NotesFragment extends BaseFragment implements View.OnClickListener 
     private void showOptionsDialog(Note note, int index) {
         if (getContext() != null) {
             Dialog dialog = DialogHandler.createDialog(getContext(), true);
-            DialogNotesOptionsBinding binding = DialogNotesOptionsBinding.inflate(LayoutInflater.from(getContext()));
+            DialogOptionsBinding binding = DialogOptionsBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             binding.dialogOptionsEdit.setOnClickListener(view -> {
                 showEditNoteDialog(note, index);
