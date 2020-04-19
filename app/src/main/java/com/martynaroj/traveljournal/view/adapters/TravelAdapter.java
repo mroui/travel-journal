@@ -12,6 +12,7 @@ import com.martynaroj.traveljournal.databinding.ItemTravelBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
+import com.martynaroj.traveljournal.view.interfaces.OnItemLongClickListener;
 
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
 
     private Context context;
     private List<Itinerary> itineraries;
-    private OnItemClickListener listener;
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
 
 
     public TravelAdapter(Context context, List<Itinerary> itineraries) {
@@ -48,11 +50,23 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
         holder.binding.travelItemName.setText(itinerary.getName());
         holder.binding.travelItemAddress.setText(itinerary.getDestination().replace("&", ", "));
         holder.binding.travelItemDays.setText(Travel.whatDay(itinerary.getDatetimeFrom(), itinerary.getDatetimeTo()) + " days");
+        holder.binding.travelItem.setOnClickListener(view -> {
+            onItemClickListener.onItemClick(itinerary, position, view);
+        });
+        holder.binding.travelItem.setOnLongClickListener(view -> {
+            onItemLongClickListener.onItemLongClick(itinerary, position, view);
+            return true;
+        });
     }
 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.listener = onItemClickListener;
+        this.onItemClickListener = onItemClickListener;
+    }
+
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
     }
 
 
@@ -62,6 +76,11 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
             notifyItemRangeChanged(0, this.itineraries.size());
             notifyDataSetChanged();
         }
+    }
+
+
+    public List<Itinerary> getList() {
+        return itineraries;
     }
 
 
