@@ -425,6 +425,12 @@
     <string name="messages_travel_ended_success">Your journey has ended, hope you had great time!</string>
 
     <string name="travel_title">Travel</string>
+    <string name="travel_image">Travel image</string>
+    <string name="travel_destination_title">Destination</string>
+    <string name="travel_date_title">Date</string>
+    <string name="travel_file_title">File</string>
+    <string name="travel_file_value"><u>Download file</u></string>
+    <string name="travel_owner_title">Owner</string>
     <string name="dialog_remove_my_travel_title">Remove travel</string>
     <string name="dialog_remove_saved_travel_title">Remove saved travel</string>
     <string name="dialog_remove_my_travel_desc">Are you sure you want to remove this travel?</string>
@@ -432,5 +438,7 @@
     <string name="travels_list_edit_privacy">Edit privacy</string>
     <string name="dialog_edit_privacy_title">Edit privacy</string>
     <string name="dialog_edit_privacy_desc">Who will have access to your travel?</string>
+    <string name="travel_tags_see_all_tags">+ See all tags</string>
+    <string name="travel_tags_see_less_tags">- See less tags</string>
 
 </resources>

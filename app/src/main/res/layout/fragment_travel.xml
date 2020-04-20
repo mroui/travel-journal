@@ -9,6 +9,9 @@
         <variable
             name="itinerary"
             type="com.martynaroj.traveljournal.services.models.Itinerary"/>
+        <variable
+            name="owner"
+            type="com.martynaroj.traveljournal.services.models.User" />
     </data>
 
     <FrameLayout
@@ -64,7 +67,272 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginTop="@dimen/margin_regular">
 
+                    <TextView
+                        android:id="@+id/travel_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:fontFamily="@font/raleway_bold"
+                        android:textSize="@dimen/text_medium"
+                        android:text="@{itinerary.name}"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"/>
 
+                    <ImageView
+                        android:id="@+id/travel_image"
+                        android:layout_width="@dimen/travel_image_half_w"
+                        android:layout_height="@dimen/travel_image_half_h"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_name"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        app:travelUrl="@{itinerary.image}"
+                        android:contentDescription="@string/travel_image"/>
+
+                    <LinearLayout
+                        android:id="@+id/travel_destination_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_image"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/travel_destination_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/travel_destination_title"
+                            android:drawableStart="@drawable/ic_location"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/travel_destination_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{itinerary.destinationString}"
+                            android:textColor="@color/darker_gray"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/travel_destination_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_destination_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/travel_date_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_destination_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/travel_date_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/travel_date_title"
+                            android:drawableStart="@drawable/ic_calendar"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/travel_date_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{itinerary.dateRangeString}"
+                            android:textColor="@color/darker_gray"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/travel_date_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_date_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/travel_file_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_date_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/travel_file_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:text="@string/travel_file_title"
+                            android:drawableStart="@drawable/ic_file_download"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:textColor="@color/black"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/travel_file_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_bold"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@string/travel_file_value"
+                            android:textColor="@color/main_blue"
+                            android:background="?android:attr/selectableItemBackground"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/travel_file_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_file_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/travel_owner_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_file_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/travel_owner_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/raleway_medium"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/black"
+                            android:text="@string/travel_owner_title"
+                            android:drawableStart="@drawable/ic_person_black"
+                            android:drawablePadding="@dimen/padding_tiniest"
+                            android:gravity="center_vertical"
+                            android:layout_weight="2"/>
+
+                        <TextView
+                            android:id="@+id/travel_owner_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:fontFamily="@font/raleway_regular"
+                            android:textSize="@dimen/text_small"
+                            android:textAlignment="textEnd"
+                            android:text="@{owner.username}"
+                            android:textColor="@color/darker_gray"
+                            android:textIsSelectable="true"
+                            android:layout_weight="3"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/travel_owner_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_owner_container"
+                        android:layout_marginTop="@dimen/margin_smaller"
+                        android:background="@color/light_gray"/>
+
+                    <TextView
+                        android:id="@+id/travel_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_owner_separator"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textAlignment="center"
+                        android:text="@{itinerary.description}"
+                        android:textColor="@color/darker_gray"/>
+
+                    <com.greenfrvr.hashtagview.HashtagView
+                        android:id="@+id/travel_tags_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/travel_tags_view_height"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_description"
+                        android:layout_marginTop="@dimen/margin_small"
+                        app:tagTextGravity="center"
+                        app:tagMargin="@dimen/margin_smaller"
+                        app:rowMargin="@dimen/margin_smaller"
+                        app:tagPaddingBottom="@dimen/padding_tiny"
+                        app:tagPaddingLeft="@dimen/padding_tiny"
+                        app:tagPaddingTop="@dimen/padding_tiny"
+                        app:tagPaddingRight="@dimen/padding_tiny"
+                        app:tagBackground="@drawable/oval_background_hashtag"
+                        app:tagForeground="?android:attr/selectableItemBackground"
+                        app:tagTextSize="@dimen/text_small"
+                        app:tagTextColor="@color/dark_gray"/>
+
+                    <TextView
+                        android:id="@+id/travel_tags_see_all_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/travel_tags_view"
+                        android:layout_marginTop="@dimen/margin_tiny"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:fontFamily="@font/raleway_bold"
+                        android:textSize="@dimen/text_regular"
+                        android:textColor="@color/main_blue"
+                        android:layout_gravity="center"
+                        android:text="@string/travel_tags_see_all_tags"
+                        android:visibility="@{itinerary != null &amp;&amp; itinerary.tagsLength > 55 ? View.VISIBLE : View.GONE}"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
