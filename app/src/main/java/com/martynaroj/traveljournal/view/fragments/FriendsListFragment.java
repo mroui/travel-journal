@@ -35,19 +35,26 @@ public class FriendsListFragment extends BaseFragment {
     private UserAdapter adapter;
 
 
-    static FriendsListFragment newInstance(User user) {
-        return new FriendsListFragment(user);
-    }
-
-
     public FriendsListFragment() {
         super();
     }
 
 
-    private FriendsListFragment(User user) {
-        super();
-        this.user = user;
+    public static FriendsListFragment newInstance(User user) {
+        FriendsListFragment fragment = new FriendsListFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Constants.BUNDLE_USER, user);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
+        }
     }
 
 
@@ -59,9 +66,7 @@ public class FriendsListFragment extends BaseFragment {
         initViewModels();
         setListeners();
 
-        initUser();
         initLoggedUser();
-
         initFriends();
 
         return view;
@@ -74,15 +79,6 @@ public class FriendsListFragment extends BaseFragment {
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-        }
-    }
-
-
-    private void initUser() {
-        if (user == null) {
-            if (getParentFragmentManager().getBackStackEntryCount() > 0) {
-                getParentFragmentManager().popBackStack();
-            }
         }
     }
 
@@ -110,8 +106,7 @@ public class FriendsListFragment extends BaseFragment {
             if (user.isUserProfile(loggedUser))
                 binding.friendsListTitle.setText("My " + getResources().getString(R.string.friends_list_title));
             else
-                binding.friendsListTitle.setText(user.getUsername() + "\'s\n" +
-                        getResources().getString(R.string.friends_list_title));
+                binding.friendsListTitle.setText(user.getUsername() + "\'s\n" + getResources().getString(R.string.friends_list_title));
         }
     }
 
@@ -122,9 +117,8 @@ public class FriendsListFragment extends BaseFragment {
             binding.friendsListMessage.setVisibility(View.INVISIBLE);
             userViewModel.getUsersListData(user.getFriends());
             userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
-                if (users != null) {
+                if (users != null)
                     initFriendsList(users);
-                }
                 stopProgressBar();
             });
         } else {
@@ -160,10 +154,7 @@ public class FriendsListFragment extends BaseFragment {
 
 
     private void setListeners() {
-        binding.friendsListArrowButton.setOnClickListener(view -> {
-            if (getParentFragmentManager().getBackStackEntryCount() > 0)
-                getParentFragmentManager().popBackStack();
-        });
+        binding.friendsListArrowButton.setOnClickListener(view -> back());
     }
 
 
@@ -209,6 +200,11 @@ public class FriendsListFragment extends BaseFragment {
         loggedUser.getFriends().remove(friend.getUid());
         changesLoggedUser.put(Constants.DB_FRIENDS, loggedUser.getFriends());
 
+        updateUser(changesLoggedUser, position);
+    }
+
+
+    private void updateUser(Map<String, Object> changesLoggedUser, int position) {
         userViewModel.updateUser(true, loggedUser, changesLoggedUser);
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
@@ -220,11 +216,9 @@ public class FriendsListFragment extends BaseFragment {
                     binding.friendsListRecyclerView.setVisibility(View.INVISIBLE);
                     binding.friendsListMessage.setVisibility(View.VISIBLE);
                 }
-                showSnackBar(getResources().getString(R.string.messages_remove_friend_success),
-                        Snackbar.LENGTH_SHORT);
+                showSnackBar(getResources().getString(R.string.messages_remove_friend_success), Snackbar.LENGTH_SHORT);
             } else
-                showSnackBar(getResources().getString(R.string.messages_error_failed_remove_friend),
-                        Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_error_failed_remove_friend), Snackbar.LENGTH_LONG);
             stopProgressBar();
         });
     }
@@ -233,11 +227,14 @@ public class FriendsListFragment extends BaseFragment {
     //OTHERS----------------------------------------------------------------------------------------
 
 
+    private void back() {
+        if (getParentFragmentManager().getBackStackEntryCount() > 0)
+            getParentFragmentManager().popBackStack();
+    }
+
+
     private void changeFragment(BaseFragment next) {
-        if (user.isUserProfile(loggedUser))
-            getNavigationInteractions().changeFragment(this, next, true);
-        else
-            getNavigationInteractions().changeFragment(getParentFragment(), next, true);
+        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 

@@ -12,11 +12,9 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.DialogNotificationsBinding;
+import com.martynaroj.traveljournal.databinding.DialogUpdateProfileBinding;
 import com.martynaroj.traveljournal.databinding.FragmentProfileBinding;
 import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Notification;
@@ -61,19 +60,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private Dialog notificationsDialog;
     private NotificationAdapter notificationAdapter;
 
-    public static ProfileFragment newInstance(User user) {
-        return new ProfileFragment(user);
-    }
-
 
     public ProfileFragment() {
         super();
     }
 
 
-    private ProfileFragment(User user) {
-        super();
-        this.user = user;
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Constants.BUNDLE_USER, user);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
+        }
     }
 
 
@@ -86,7 +93,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         initGeocoder();
         setListeners();
 
-        initUser();
+        initUser(this.user);
         observeUserChanges();
         initLoggedUser();
 
@@ -97,18 +104,30 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initUser() {
-        if (user != null) {
-            binding.setUser(user);
-            initPreferences();
-            initLocalization();
-        } else
-            back();
+    private void initViewModels() {
+        if (getActivity() != null) {
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
+            notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
+        }
     }
 
 
     private void initGeocoder() {
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
+    }
+
+
+    private void initUser(User user) {
+        if (user != null) {
+            this.user = user;
+            binding.setUser(user);
+            initPreferences();
+            initLocalization();
+        } else {
+            showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
+            back();
+        }
     }
 
 
@@ -121,10 +140,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (user != null) {
                     binding.setLoggedUser(user);
                     this.loggedUser = user;
-                    userViewModel.setUser(user);
                     checkProfile();
                 } else {
-                    showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
+                    showSnackBar(getResources().getString(R.string.messages_error_user_identity), Snackbar.LENGTH_LONG);
+                    back();
                 }
                 stopProgressBar();
             });
@@ -132,21 +151,29 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null && user.isUserProfile(this.user)) {
+                this.user = user;
+                initUser(user);
+            }
+        });
+    }
+
+
     private void initLocalization() {
-        if (user != null) {
-            if (user.getLocation() != null && !user.getLocation().equals("")) {
-                startProgressBar();
-                addressViewModel.getAddress(user.getLocation());
-                addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
-                    if (address != null) {
-                        getLocationCity(address);
-                    } else {
-                        binding.setLocation(null);
-                    }
-                    stopProgressBar();
-                });
-            } else stopProgressBar();
-        }
+        if (user != null && user.getLocation() != null && !user.getLocation().equals("")) {
+            startProgressBar();
+            addressViewModel.getAddress(user.getLocation());
+            addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
+                if (address != null)
+                    getLocationCity(address);
+                else
+                    binding.setLocation(null);
+                stopProgressBar();
+            });
+        } else
+            stopProgressBar();
     }
 
 
@@ -159,27 +186,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 return spannableString;
             });
         }
-    }
-
-
-    private void initViewModels() {
-        if (getActivity() != null) {
-            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-            addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
-            notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
-        }
-    }
-
-
-    private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null && user.isUserProfile(this.user)) {
-                this.user = user;
-                binding.setUser(user);
-                initPreferences();
-                initLocalization();
-            }
-        });
     }
 
 
@@ -232,11 +238,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             List<android.location.Address> addresses = geocoder
                     .getFromLocation(address.getLatitude(), address.getLongitude(), 1);
-            if (addresses != null && addresses.size() > 0) {
+            if (addresses != null && addresses.size() > 0)
                 binding.setLocation(addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName());
-            } else
+            else
                 binding.setLocation(null);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            showSnackBar(getResources().getString(R.string.messages_error_failed_locate), Snackbar.LENGTH_LONG);
         }
     }
 
@@ -247,28 +254,24 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 startProgressBar();
                 notificationViewModel.getNotificationsListData(user.getNotifications());
                 notificationViewModel.getNotificationsList().observe(getViewLifecycleOwner(), list -> {
-                    if (list != null) {
+                    if (list != null)
                         getNotificationsUsersFrom(list);
-                    }
                 });
-            } else {
+            } else
                 showNotificationsDialog(new ArrayList<>());
-            }
         }
     }
 
 
     private void getNotificationsUsersFrom(List<Notification> notifications) {
         List<String> usersIds = new ArrayList<>();
-        for (Notification notification : notifications) {
+        for (Notification notification : notifications)
             usersIds.add(notification.getIdFrom());
-        }
         userViewModel.getUsersListData(usersIds);
         userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
             if (users != null) {
-                for (int i = 0; i < notifications.size(); i++) {
+                for (int i = 0; i < notifications.size(); i++)
                     notifications.get(i).setUserFrom(users.get(i));
-                }
                 showNotificationsDialog(notifications);
                 stopProgressBar();
             }
@@ -287,13 +290,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void getFriendsInfo() {
         if (loggedUser != null && user != null) {
-            if (user.isUserProfile(loggedUser)) {
-                getNavigationInteractions().changeFragment(this, FriendsListFragment.newInstance(user), true);
-            } else if (user.hasFriend(loggedUser)) {
-                getNavigationInteractions().changeFragment(getParentFragment(), FriendsListFragment.newInstance(user), true);
-            } else {
+            if (user.isUserProfile(loggedUser) || user.hasFriend(loggedUser))
+                changeFragment(FriendsListFragment.newInstance(user));
+            else
                 checkRequestExists();
-            }
         }
     }
 
@@ -303,13 +303,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void openUpdateProfileDialog() {
         if (getContext() != null) {
-            Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
-            dialog.setContentView(R.layout.dialog_update_profile);
-            dialog.findViewById(R.id.dialog_update_profile_later_button).setOnClickListener(v -> dialog.dismiss());
-            dialog.findViewById(R.id.dialog_update_profile_now_button).setOnClickListener(v -> {
-                openSettings();
+            Dialog dialog = DialogHandler.createDialog(getContext(), false);
+            DialogUpdateProfileBinding binding = DialogUpdateProfileBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogUpdateProfileLaterButton.setOnClickListener(v -> dialog.dismiss());
+            binding.dialogUpdateProfileNowButton.setOnClickListener(v -> {
+                changeFragment(ProfileSettingsFragment.newInstance(user));
                 saveToPreferences();
                 dialog.dismiss();
             });
@@ -389,7 +388,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 seeAllPreferences();
                 return;
             case R.id.profile_settings_button:
-                openSettings();
+                changeFragment(ProfileSettingsFragment.newInstance(user));
                 return;
             case R.id.profile_sign_out_button:
                 signOut();
@@ -436,16 +435,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             for (String id : user.getNotifications()) {
                 notificationViewModel.getNotificationData(id);
                 notificationViewModel.getNotification().observe(getViewLifecycleOwner(), notification -> {
-                    if (notification != null && notification.getIdFrom().equals(loggedUser.getUid())) {
+                    if (notification != null && notification.getIdFrom().equals(loggedUser.getUid()))
                         exists.set(true);
-                    }
                     counter.getAndIncrement();
                     if (exists.get()) {
                         showSnackBar(getResources().getString(R.string.messages_error_friend_notification_exists), Snackbar.LENGTH_LONG);
                         disableView(binding.profileFriends);
-                    } else if (counter.get() == user.getNotifications().size()) {
+                    } else if (counter.get() == user.getNotifications().size())
                         sendFriendsRequest();
-                    }
                 });
             }
         } else {
@@ -511,15 +508,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void openSettings() {
-        Fragment settingsFragment = ProfileSettingsFragment.newInstance();
-        Bundle args = new Bundle();
-        args.putSerializable(Constants.USER, user);
-        settingsFragment.setArguments(args);
-        getNavigationInteractions().changeFragment(this, settingsFragment, true);
-    }
-
-
     private void seeAllPreferences() {
         ConstraintLayout.LayoutParams constraintLayout = (ConstraintLayout.LayoutParams) binding.profilePreferences.getLayoutParams();
         String seePreferences;
@@ -556,9 +544,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void saveToPreferences() {
-        if (getContext() != null) {
+        if (getContext() != null)
             SharedPreferencesUtils.setBoolean(getContext(), Constants.UPDATE_PROFILE_DIALOG, true);
-        }
     }
 
 

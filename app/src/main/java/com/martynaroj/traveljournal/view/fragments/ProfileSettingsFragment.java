@@ -73,8 +73,22 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
     private PlacesClient placesClient;
     private AddressViewModel addressViewModel;
 
-    static ProfileSettingsFragment newInstance() {
-        return new ProfileSettingsFragment();
+
+    public static ProfileSettingsFragment newInstance(User user) {
+        ProfileSettingsFragment fragment = new ProfileSettingsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(Constants.BUNDLE_USER, user);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
+        }
     }
 
 
@@ -136,15 +150,12 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
 
 
     private void initUser() {
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            user = (User) bundle.getSerializable(Constants.USER);
+        if (user != null) {
             binding.setUser(user);
             initLocation();
             initUserData();
-        } else {
+        } else
             getCurrentUser();
-        }
     }
 
 
