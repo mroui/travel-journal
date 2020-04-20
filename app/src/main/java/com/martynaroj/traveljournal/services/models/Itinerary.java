@@ -1,14 +1,21 @@
 package com.martynaroj.traveljournal.services.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+@IgnoreExtraProperties
 public class Itinerary extends BaseObservable implements Serializable {
 
     private String id;
@@ -175,6 +182,40 @@ public class Itinerary extends BaseObservable implements Serializable {
     public void setPrivacy(int privacy) {
         this.privacy = privacy;
         notifyPropertyChanged(BR.privacy);
+    }
+
+
+    @Exclude
+    public String getDestinationString() {
+        return destination.replace("&", ", ");
+    }
+
+
+    @Exclude
+    @SuppressLint("SimpleDateFormat")
+    private String getDateString(long time) {
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(time);
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        return format.format(date.getTime());
+    }
+
+
+    @Exclude
+    public String getDateRangeString() {
+        return getDateString(datetimeFrom) + " - " + getDateString(datetimeTo);
+    }
+
+
+    @Exclude
+    public int getTagsLength() {
+        int count = 0;
+        if (this.tags != null) {
+            for (String string : this.tags) {
+                count += string.length();
+            }
+        }
+        return count;
     }
 
 }
