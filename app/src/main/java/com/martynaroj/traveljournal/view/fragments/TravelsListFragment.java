@@ -158,10 +158,9 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void setOnAdapterListeners() {
-        adapter.setOnItemClickListener((object, position, view) -> {
-            //todo show travel fragment preview
-            showSnackBar("show preview", Snackbar.LENGTH_SHORT);
-        });
+        adapter.setOnItemClickListener((object, position, view) ->
+                changeFragment(TravelFragment.newInstance((Itinerary) object))
+        );
         adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Itinerary)object, position));
     }
 
@@ -430,6 +429,11 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     private void stopProgressBar() {
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.travelsListProgressbarLayout,
                 binding.travelsListProgressbar);
+    }
+
+
+    private void changeFragment(BaseFragment next) {
+        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
