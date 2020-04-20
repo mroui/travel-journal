@@ -430,5 +430,7 @@
     <string name="dialog_remove_my_travel_desc">Are you sure you want to remove this travel?</string>
     <string name="dialog_remove_saved_travel_desc">Are you sure you want to remove this saved travel?</string>
     <string name="travels_list_edit_privacy">Edit privacy</string>
+    <string name="dialog_edit_privacy_title">Edit privacy</string>
+    <string name="dialog_edit_privacy_desc">Who will have access to your travel?</string>
 
 </resources>
