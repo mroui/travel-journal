@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
+import com.martynaroj.traveljournal.databinding.DialogEditPrivacyBinding;
 import com.martynaroj.traveljournal.databinding.DialogOptionsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentTravelsListBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
@@ -275,6 +276,20 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         userViewModel.updateUser(reload, user, new HashMap<String, Object>() {{
             put(key, value);
         }});
+        updateUserLists();
+    }
+
+
+    private void updateUserLists() {
+        List<String> itineraries = new ArrayList<>();
+        for(Itinerary itinerary : this.itineraries)
+            itineraries.add(itinerary.getId());
+        user.setTravels(itineraries);
+        itineraries = new ArrayList<>();
+        for(Itinerary itinerary : this.savedItineraries)
+            itineraries.add(itinerary.getId());
+        user.setSavedTravels(itineraries);
+        userViewModel.setUser(user);
     }
 
 
