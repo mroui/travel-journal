@@ -374,24 +374,25 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.profile_notifications:
                 getNotifications();
-                return;
+                break;
             case R.id.profile_contact:
                 getContactInfo();
-                return;
+                break;
             case R.id.profile_travels:
                 changeFragment(TravelsListFragment.newInstance(loggedUser, user));
-                return;
+                break;
             case R.id.profile_friends:
                 getFriendsInfo();
-                return;
+                break;
             case R.id.profile_see_all_preferences:
                 seeAllPreferences();
-                return;
+                break;
             case R.id.profile_settings_button:
                 changeFragment(ProfileSettingsFragment.newInstance(user));
-                return;
+                break;
             case R.id.profile_sign_out_button:
                 signOut();
+                break;
         }
     }
 

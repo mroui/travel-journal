@@ -64,8 +64,10 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
 
     private void initViewModels() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        if (getActivity() != null) {
+            authViewModel = new ViewModelProvider(getActivity()).get(AuthViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+        }
     }
 
 

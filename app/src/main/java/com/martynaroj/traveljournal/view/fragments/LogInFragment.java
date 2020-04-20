@@ -80,8 +80,10 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void initViewModels() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        if (getActivity() != null) {
+            authViewModel = new ViewModelProvider(getActivity()).get(AuthViewModel.class);
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+        }
     }
 
 
@@ -166,6 +168,7 @@ public class LogInFragment extends BaseFragment implements View.OnClickListener 
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             stopProgressBar();
             showSnackBar(userData.getMessage(), Snackbar.LENGTH_SHORT);
+            userViewModel.setUser(user);
             getNavigationInteractions().changeNavigationBarItem(2, ProfileFragment.newInstance(user));
         });
     }

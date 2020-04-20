@@ -45,7 +45,8 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
 
 
     private void initAuthViewModel() {
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        if (getActivity() != null)
+            authViewModel = new ViewModelProvider(getActivity()).get(AuthViewModel.class);
     }
 
 
