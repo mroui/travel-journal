@@ -252,7 +252,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             itineraries = adapter.getList();
             setBindingData(itineraries);
             updateUser(true, user, Constants.DB_TRAVELS, itineraries);
-            updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId());
+            updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), true);
             removeItinerary(itinerary);
         } else {
             adapter.remove(index);
@@ -293,13 +293,15 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    private void updateUsersSavedTravels(String key, String value) {
+    private void updateUsersSavedTravels(String key, String value, boolean all) {
         userViewModel.getUsersWhereArrayContains(key, value);
         userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
             if (users != null)
                 for (User user : users) {
-                    user.getSavedTravels().remove(value);
-                    updateUser(false, user, key, user.getSavedTravels());
+                    if (all || !user.getFriends().contains(this.loggedUser.getUid())) {
+                        user.getSavedTravels().remove(value);
+                        updateUser(false, user, key, user.getSavedTravels());
+                    }
                 }
         });
     }
@@ -313,6 +315,17 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         adapter.edit(itinerary, index);
         itineraries = adapter.getList();
         updateUserLists();
+        switch (Privacy.values()[privacy]) {
+            case ONLY_ME:
+                updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), true);
+                break;
+            case FRIENDS:
+                updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), false);
+                break;
+            case PUBLIC:
+                break;
+        }
+        showSnackBar(getResources().getString(R.string.messages_edit_travel_privacy_success), Snackbar.LENGTH_SHORT);
     }
 
 
@@ -360,7 +373,6 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             dialogBinding.dialogEditPrivacyButtonNegative.setOnClickListener(view -> dialog.dismiss());
             dialogBinding.dialogEditPrivacyButtonPositive.setOnClickListener(view -> {
                 updatePrivacy(itinerary, index, dialogBinding.dialogEditPrivacySpinner.getSelectedIndex());
-                showSnackBar(getResources().getString(R.string.messages_edit_travel_privacy_success), Snackbar.LENGTH_SHORT);
                 dialog.dismiss();
             });
             dialog.show();
