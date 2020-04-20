@@ -91,6 +91,13 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
     }
 
 
+    public void edit(Itinerary itinerary, int position) {
+        itineraries.set(position, itinerary);
+        notifyItemChanged(position);
+        notifyItemRangeChanged(position, itineraries.size());
+    }
+
+
     @Override
     public int getItemCount() {
         return itineraries.size();
