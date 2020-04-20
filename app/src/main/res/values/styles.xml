@@ -35,6 +35,10 @@
     </style>
 
     <style name="BlueTextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/button_blue_enable_style</item>
+    </style>
+
+    <style name="BlueButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/main_blue</item>
         <item name="backgroundTint">@color/white</item>
     </style>
