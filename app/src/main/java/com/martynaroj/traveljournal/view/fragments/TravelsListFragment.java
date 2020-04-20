@@ -252,7 +252,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             itineraries = adapter.getList();
             setBindingData(itineraries);
             updateUser(true, user, Constants.DB_TRAVELS, itineraries);
-            updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), true);
+            updateUsersSavedTravels(itinerary.getId(), true);
             removeItinerary(itinerary);
         } else {
             adapter.remove(index);
@@ -293,14 +293,14 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    private void updateUsersSavedTravels(String key, String value, boolean all) {
-        userViewModel.getUsersWhereArrayContains(key, value);
+    private void updateUsersSavedTravels(String value, boolean all) {
+        userViewModel.getUsersWhereArrayContains(Constants.DB_SAVED_TRAVELS, value);
         userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
             if (users != null)
                 for (User user : users) {
                     if (all || !user.getFriends().contains(this.loggedUser.getUid())) {
                         user.getSavedTravels().remove(value);
-                        updateUser(false, user, key, user.getSavedTravels());
+                        updateUser(false, user, Constants.DB_SAVED_TRAVELS, user.getSavedTravels());
                     }
                 }
         });
@@ -317,10 +317,10 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         updateUserLists();
         switch (Privacy.values()[privacy]) {
             case ONLY_ME:
-                updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), true);
+                updateUsersSavedTravels(itinerary.getId(), true);
                 break;
             case FRIENDS:
-                updateUsersSavedTravels(Constants.DB_SAVED_TRAVELS, itinerary.getId(), false);
+                updateUsersSavedTravels(itinerary.getId(), false);
                 break;
             case PUBLIC:
                 break;
