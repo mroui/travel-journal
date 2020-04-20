@@ -16,6 +16,7 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItineraryRepository {
 
@@ -69,6 +70,12 @@ public class ItineraryRepository {
     public void removeItinerary(String id) {
         DocumentReference itineraryRef = itinerariesRef.document(id);
         itineraryRef.delete();
+    }
+
+
+    public void updateItinerary(Itinerary itinerary, Map<String, Object> map) {
+        DocumentReference itineraryRef = itinerariesRef.document(itinerary.getId());
+        itineraryRef.update(map);
     }
 
 }

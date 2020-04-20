@@ -12,6 +12,7 @@ import com.martynaroj.traveljournal.services.respositories.ItineraryRepository;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItineraryViewModel extends AndroidViewModel {
 
@@ -52,6 +53,10 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     public void removeItinerary(String id) {
         itineraryRepository.removeItinerary(id);
+    }
+
+    public void updateItinerary(Itinerary itinerary, Map<String, Object> map) {
+        itineraryRepository.updateItinerary(itinerary, map);
     }
 
 }
