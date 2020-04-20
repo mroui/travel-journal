@@ -159,7 +159,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
     private void setOnAdapterListeners() {
         adapter.setOnItemClickListener((object, position, view) ->
-                changeFragment(TravelFragment.newInstance((Itinerary) object))
+                changeFragment(TravelFragment.newInstance((Itinerary) object, loggedUser))
         );
         adapter.setOnItemLongClickListener((object, position, view) -> showOptionsDialog((Itinerary)object, position));
     }

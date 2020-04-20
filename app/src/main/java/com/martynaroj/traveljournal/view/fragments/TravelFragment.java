@@ -38,13 +38,14 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
     private ItineraryViewModel itineraryViewModel;
 
     private Itinerary itinerary;
-    private User owner;
+    private User owner, user;
 
 
-    public static TravelFragment newInstance(Itinerary itinerary) {
+    public static TravelFragment newInstance(Itinerary itinerary, User user) {
         TravelFragment fragment = new TravelFragment();
         Bundle args = new Bundle();
         args.putSerializable(Constants.BUNDLE_ITINERARY, itinerary);
+        args.putSerializable(Constants.BUNDLE_USER, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +56,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             itinerary = (Itinerary) getArguments().getSerializable(Constants.BUNDLE_ITINERARY);
+            user = (User) getArguments().getSerializable(Constants.BUNDLE_USER);
         }
     }
 
@@ -87,6 +89,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void initContentData() {
         binding.setItinerary(itinerary);
+        binding.setUser(user);
         initTags();
         loadOwner();
     }
