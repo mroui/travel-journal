@@ -1,21 +1,34 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.DownloadManager;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentTravelBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class TravelFragment extends BaseFragment implements View.OnClickListener {
 
@@ -25,6 +38,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
     private ItineraryViewModel itineraryViewModel;
 
     private Itinerary itinerary;
+    private User owner;
 
 
     public static TravelFragment newInstance(Itinerary itinerary) {
@@ -73,6 +87,32 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void initContentData() {
         binding.setItinerary(itinerary);
+        initTags();
+        loadOwner();
+    }
+
+
+    private void initTags() {
+        if (itinerary != null) {
+            binding.travelTagsView.setData(itinerary.getTags(), item -> {
+                SpannableString spannableString = new SpannableString(item);
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#000000")),
+                        0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return spannableString;
+            });
+        }
+    }
+
+
+    private void loadOwner() {
+        startProgressBar();
+        userViewModel.getUserData(itinerary.getOwner());
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
+            this.owner = user;
+            if (user != null)
+                binding.setOwner(user);
+            stopProgressBar();
+        });
     }
 
 
@@ -102,6 +142,8 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void setListeners() {
         binding.travelArrowButton.setOnClickListener(this);
+        binding.travelFileValue.setOnClickListener(this);
+        binding.travelTagsSeeAllButton.setOnClickListener(this);
     }
 
 
@@ -111,7 +153,52 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
             case R.id.travel_arrow_button:
                 back();
                 break;
+            case R.id.travel_file_value:
+                downloadFile();
+                break;
+            case R.id.travel_tags_see_all_button:
+                seeAllTags();
+                break;
         }
+    }
+
+
+    //MAIN-------------------------------------------------------------------------------------
+
+
+    private void downloadFile() {
+        if (getContext() != null) {
+            Uri uri = Uri.parse(itinerary.getFile());
+            String fileName = FileUriUtils.getFileName(getContext(), uri);
+            DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalFilesDir(getContext(), DIRECTORY_DOWNLOADS, fileName);
+            if (downloadManager != null) {
+                downloadManager.enqueue(request);
+                showSnackBar(getResources().getString(R.string.messages_downloading_file), Snackbar.LENGTH_SHORT);
+            } else
+                showSnackBar(getResources().getString(R.string.messages_error_failed_download_file), Snackbar.LENGTH_LONG);
+        }
+    }
+
+
+    private void seeAllTags() {
+        ConstraintLayout.LayoutParams constraintLayout = (ConstraintLayout.LayoutParams)
+                binding.travelTagsView.getLayoutParams();
+        String seeAllLessText;
+        if (binding.travelTagsView.getLayoutParams().height == ConstraintLayout.LayoutParams.WRAP_CONTENT) {
+            constraintLayout.height = Constants.TAGS_VIEW_HEIGHT;
+            seeAllLessText = getResources().getString(R.string.travel_tags_see_all_tags);
+        } else {
+            constraintLayout.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+            seeAllLessText = getResources().getString(R.string.travel_tags_see_less_tags);
+        }
+        binding.travelTagsSeeAllButton.setPaintFlags(
+                binding.travelTagsSeeAllButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG
+        );
+        binding.travelTagsSeeAllButton.setText(seeAllLessText);
+        binding.travelTagsView.setLayoutParams(constraintLayout);
     }
 
 
