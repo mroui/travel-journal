@@ -440,5 +440,7 @@
     <string name="dialog_edit_privacy_desc">Who will have access to your travel?</string>
     <string name="travel_tags_see_all_tags">+ See all tags</string>
     <string name="travel_tags_see_less_tags">- See less tags</string>
+    <string name="travel_save_travel">Save travel</string>
+    <string name="travel_saved_travel">Already saved travel</string>
 
 </resources>

@@ -27,6 +27,9 @@ import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
+import java.util.HashMap;
+import java.util.List;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
@@ -92,6 +95,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         binding.setUser(user);
         initTags();
         loadOwner();
+        disableSaveButton();
     }
 
 
@@ -124,7 +128,8 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
             if (user == null) {
                 showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
                 back();
-            }
+            } else
+                this.user = user;
         });
     }
 
@@ -147,6 +152,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         binding.travelArrowButton.setOnClickListener(this);
         binding.travelFileValue.setOnClickListener(this);
         binding.travelTagsSeeAllButton.setOnClickListener(this);
+        binding.travelSaveButton.setOnClickListener(this);
     }
 
 
@@ -161,6 +167,9 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.travel_tags_see_all_button:
                 seeAllTags();
+                break;
+            case R.id.travel_save_button:
+                saveTravel();
                 break;
         }
     }
@@ -205,7 +214,26 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    private void saveTravel() {
+        List<String> savedTravels = user.getSavedTravels();
+        savedTravels.add(itinerary.getId());
+        userViewModel.setUser(user);
+        userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
+            put(Constants.DB_SAVED_TRAVELS, savedTravels);
+        }});
+        showSnackBar(getResources().getString(R.string.messages_save_travel_success), Snackbar.LENGTH_SHORT);
+        binding.travelSaveButton.setText(getResources().getString(R.string.travel_saved_travel));
+        binding.travelSaveButton.setEnabled(false);
+    }
+
+
     //OTHERS----------------------------------------------------------------------------------------
+
+
+    private void disableSaveButton() {
+        if(user.getSavedTravels().contains(itinerary.getId()))
+            binding.travelSaveButton.setEnabled(false);
+    }
 
 
     private void showSnackBar(String message, int duration) {
@@ -222,6 +250,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
     private void stopProgressBar() {
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.travelProgressbarLayout,
                 binding.travelProgressbar);
+        disableSaveButton();
     }
 
 
