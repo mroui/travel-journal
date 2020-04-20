@@ -305,6 +305,17 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+    private void updatePrivacy(Itinerary itinerary, int index, int privacy) {
+        itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>() {{
+            put(Constants.DB_PRIVACY, privacy);
+        }});
+        itinerary.setPrivacy(privacy);
+        adapter.edit(itinerary, index);
+        itineraries = adapter.getList();
+        updateUserLists();
+    }
+
+
     //DIALOG----------------------------------------------------------------------------------------
 
 
@@ -324,8 +335,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
             if (mineTravelsTab)
                 binding.dialogOptionsEdit.setOnClickListener(view -> {
-                    //todo show edit dialog
-                    showSnackBar("show edit dialog", Snackbar.LENGTH_SHORT);
+                    showEditPrivacyDialog(itinerary, index);
                     dialog.dismiss();
                 });
             else
@@ -333,6 +343,24 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
             binding.dialogOptionsRemove.setOnClickListener(view -> {
                 showRemoveDialog(itinerary, index);
+                dialog.dismiss();
+            });
+            dialog.show();
+        }
+    }
+
+
+    private void showEditPrivacyDialog(Itinerary itinerary, int index) {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogEditPrivacyBinding dialogBinding = DialogEditPrivacyBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(dialogBinding.getRoot());
+            dialogBinding.dialogEditPrivacySpinner.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+            dialogBinding.dialogEditPrivacySpinner.setSelectedIndex(itinerary.getPrivacy());
+            dialogBinding.dialogEditPrivacyButtonNegative.setOnClickListener(view -> dialog.dismiss());
+            dialogBinding.dialogEditPrivacyButtonPositive.setOnClickListener(view -> {
+                updatePrivacy(itinerary, index, dialogBinding.dialogEditPrivacySpinner.getSelectedIndex());
+                showSnackBar(getResources().getString(R.string.messages_edit_travel_privacy_success), Snackbar.LENGTH_SHORT);
                 dialog.dismiss();
             });
             dialog.show();

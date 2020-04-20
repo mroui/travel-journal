@@ -38,6 +38,7 @@
     to finish.</string>
     <string name="messages_downloading_file">Downloading file…</string>
     <string name="messages_file_saved_path">File saved in</string>
+    <string name="messages_edit_travel_privacy_success">Editing of travel\'s privacy success!</string>
 
     <string name="messages_error">ERROR: </string>
     <string name="messages_error_failed_google_services">ERROR: Internal Google services problem, please try again later</string>
