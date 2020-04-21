@@ -93,7 +93,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         initGeocoder();
         setListeners();
 
-        initUser(this.user);
+        initUserData(this.user);
+        initUser();
         observeUserChanges();
         initLoggedUser();
 
@@ -118,7 +119,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-    private void initUser(User user) {
+    private void initUserData(User user) {
         if (user != null) {
             this.user = user;
             binding.setUser(user);
@@ -128,6 +129,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
             back();
         }
+    }
+
+
+    private void initUser() {
+        userViewModel.getUserData(user.getUid());
+        userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), this::initUserData);
     }
 
 
@@ -155,7 +162,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null && user.isUserProfile(this.user)) {
                 this.user = user;
-                initUser(user);
+                initUserData(user);
             }
         });
     }
