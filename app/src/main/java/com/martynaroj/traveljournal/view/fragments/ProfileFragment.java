@@ -271,18 +271,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
 
     private void getNotificationsUsersFrom(List<Notification> notifications) {
-        List<String> usersIds = new ArrayList<>();
-        for (Notification notification : notifications)
-            usersIds.add(notification.getIdFrom());
-        userViewModel.getUsersListData(usersIds);
-        userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
-            if (users != null) {
-                for (int i = 0; i < notifications.size(); i++)
-                    notifications.get(i).setUserFrom(users.get(i));
-                showNotificationsDialog(notifications);
-                stopProgressBar();
-            }
-        });
+        if (notifications != null && !notifications.isEmpty()) {
+            List<String> usersIds = new ArrayList<>();
+            for (Notification notification : notifications)
+                usersIds.add(notification.getIdFrom());
+            userViewModel.getUsersListData(usersIds);
+            userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+                if (users != null) {
+                    for (int i = 0; i < notifications.size(); i++)
+                        notifications.get(i).setUserFrom(users.get(i));
+                    showNotificationsDialog(notifications);
+                    stopProgressBar();
+                }
+            });
+        }
     }
 
 
@@ -461,8 +463,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void sendFriendsRequest() {
         startProgressBar();
-        notificationViewModel.sendNotification(loggedUser, user,
-                com.martynaroj.traveljournal.view.others.enums.Notification.FRIEND.ordinal());
+        notificationViewModel.sendNotification(new Notification(
+                notificationViewModel.generateId(), loggedUser.getUid(), user.getUid(),
+                com.martynaroj.traveljournal.view.others.enums.Notification.FRIEND.ordinal()
+        ));
         notificationViewModel.getNotificationResponse().observe(getViewLifecycleOwner(), status -> {
             if (status != null) {
                 if (!status.contains(Constants.ERROR)) {

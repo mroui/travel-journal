@@ -12,7 +12,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.services.models.Notification;
-import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
@@ -36,14 +35,17 @@ public class NotificationRepository {
     }
 
 
-    public MutableLiveData<String> sendNotification(User from, User to, Integer type) {
+    public String generateId() {
+        return notificationsRef.document().getId();
+    }
+
+
+    public MutableLiveData<String> sendNotification(Notification notification) {
         MutableLiveData<String> notificationResponse = new MutableLiveData<>();
-        Notification newNotification = new Notification(from.getUid(), to.getUid(), type);
-        DocumentReference notificationRef = notificationsRef.document();
-        newNotification.setId(notificationRef.getId());
-        notificationRef.set(newNotification).addOnCompleteListener(task -> {
+        DocumentReference notificationRef = notificationsRef.document(notification.getId());
+        notificationRef.set(notification).addOnCompleteListener(task -> {
             if (task.isSuccessful())
-                notificationResponse.setValue(newNotification.getId());
+                notificationResponse.setValue(notification.getId());
             else
                 notificationResponse.setValue(context.getResources().getString(R.string.messages_error_failed_add_notification));
         });

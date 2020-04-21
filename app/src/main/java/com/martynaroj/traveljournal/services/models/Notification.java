@@ -26,7 +26,8 @@ public class Notification  extends BaseObservable implements Serializable {
     public Notification() {
     }
 
-    public Notification(String idFrom, String idTo, Integer type) {
+    public Notification(String id, String idFrom, String idTo, Integer type) {
+        this.id = id;
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.type = type;

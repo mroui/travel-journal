@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.martynaroj.traveljournal.services.models.Notification;
-import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.respositories.NotificationRepository;
 
 import java.util.List;
@@ -24,8 +23,12 @@ public class NotificationViewModel extends AndroidViewModel {
         notificationRepository = new NotificationRepository(application.getApplicationContext());
     }
 
-    public void sendNotification(User from, User to, Integer type) {
-        notificationResponse = notificationRepository.sendNotification(from, to, type);
+    public String generateId() {
+        return notificationRepository.generateId();
+    }
+
+    public void sendNotification(Notification notification) {
+        notificationResponse = notificationRepository.sendNotification(notification);
     }
 
     public LiveData<String> getNotificationResponse() {
