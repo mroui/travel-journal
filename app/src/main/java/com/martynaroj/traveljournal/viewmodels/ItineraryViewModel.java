@@ -59,4 +59,8 @@ public class ItineraryViewModel extends AndroidViewModel {
         itineraryRepository.updateItinerary(itinerary, map);
     }
 
+    public void getLimitItinerariesOrderBy(int limit, String orderBy) {
+        itinerariesLiveData = itineraryRepository.getLimitItinerariesOrderBy(limit, orderBy);
+    }
+
 }

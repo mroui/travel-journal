@@ -2,6 +2,7 @@ package com.martynaroj.traveljournal.services.respositories;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
@@ -76,6 +77,20 @@ public class ItineraryRepository {
     public void updateItinerary(Itinerary itinerary, Map<String, Object> map) {
         DocumentReference itineraryRef = itinerariesRef.document(itinerary.getId());
         itineraryRef.update(map);
+    }
+
+
+    public LiveData<List<Itinerary>> getLimitItinerariesOrderBy(int limit, String orderBy) {
+        MutableLiveData<List<Itinerary>> itinerariesData = new MutableLiveData<>();
+        itinerariesRef.limit(limit).orderBy(orderBy).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Itinerary> itineraries = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : task.getResult())
+                    itineraries.add(documentSnapshot.toObject(Itinerary.class));
+                itinerariesData.setValue(itineraries);
+            }
+        });
+        return itinerariesData;
     }
 
 }
