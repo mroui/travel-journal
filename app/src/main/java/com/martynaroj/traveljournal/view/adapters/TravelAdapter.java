@@ -50,7 +50,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
         holder.binding.travelItemName.setText(itinerary.getName());
         holder.binding.travelItemAddress.setText(itinerary.getDestination().replace("&", ", "));
         holder.binding.travelItemDays.setText(Travel.whatDay(itinerary.getDatetimeFrom(), itinerary.getDatetimeTo()) + " days");
-        holder.binding.travelItemDate.setText(itinerary.getDateString(itinerary.getDatetimeFrom()));
+        holder.binding.travelItemDate.setText(itinerary.getDateString(itinerary.getCreatedDate()));
         holder.binding.travelItemPopularity.setText(itinerary.getPopularity()+"");
         holder.binding.travelItem.setOnClickListener(view -> {
             onItemClickListener.onItemClick(itinerary, position, view);

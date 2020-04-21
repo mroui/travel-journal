@@ -68,7 +68,6 @@
 
     <dimen name="item_user_height">80dp</dimen>
     <dimen name="item_travel_height">200dp</dimen>
-    <dimen name="item_travel_image_height">130dp</dimen>
     <dimen name="item_notification_height">240dp</dimen>
     <dimen name="item_notification_image_height">60dp</dimen>
 

@@ -14,7 +14,7 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.view.adapters.ExploreTravelsAdapter;
+import com.martynaroj.traveljournal.view.adapters.ViewFlipperTravelsAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
@@ -71,7 +71,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
 
     private void initExploreTravelsAdapter(List<Itinerary> itineraries) {
-        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), itineraries, true);
+        ViewFlipperTravelsAdapter adapter = new ViewFlipperTravelsAdapter(getContext(), itineraries, true);
         binding.homeExploreViewpager.setAdapter(adapter);
         binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
         adapter.setOnItemClickListener((object, position, view) -> {

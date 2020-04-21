@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,14 @@ import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 
 import java.util.List;
 
-public class ExploreTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
+public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
 
     private ItemViewFlipperTravelBinding binding;
     private List<Itinerary> itineraries;
     private OnItemClickListener listener;
 
 
-    public ExploreTravelsAdapter(Context context, List<Itinerary> list, boolean isInfinite) {
+    public ViewFlipperTravelsAdapter(Context context, List<Itinerary> list, boolean isInfinite) {
         super(context, list, isInfinite);
         itineraries = list;
     }
@@ -52,13 +53,17 @@ public class ExploreTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
         return view.equals(object);
     }
 
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void bindView(View convertView, int position, int viewType) {
         Glide.with(context).load(itineraries.get(position).getImage()).fitCenter()
                 .placeholder(R.drawable.no_image).centerCrop()
                 .into(binding.travelViewFlipperItemImage);
-        binding.travelViewFlipperItemTitle.setText(itineraries.get(position).getName());
-        binding.travelViewFlipperItemDesc.setText(itineraries.get(position).getDestination().replace("&", ", "));
+        binding.travelViewFlipperItemName.setText(itineraries.get(position).getName());
+        binding.travelViewFlipperItemAddress.setText(itineraries.get(position).getDestination().replace("&", ", "));
+        binding.travelViewFlipperItemDate.setText(itineraries.get(position).getDateString(itineraries.get(position).getCreatedDate()));
+        binding.travelViewFlipperItemPopularity.setText(itineraries.get(position).getPopularity()+"");
         binding.travelViewFlipperItem.setOnClickListener(v -> {
             listener.onItemClick(itineraries.get(position), position, binding.travelViewFlipperItem);
         });
