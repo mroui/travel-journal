@@ -29,10 +29,12 @@ public class Itinerary extends BaseObservable implements Serializable {
     private List<String> tags;
     private String file;
     private int privacy;
+    private long createdDate;
 
 
     private Itinerary() {
         tags = new ArrayList<>();
+        this.createdDate = System.currentTimeMillis();
     }
 
 
@@ -182,6 +184,12 @@ public class Itinerary extends BaseObservable implements Serializable {
     public void setPrivacy(int privacy) {
         this.privacy = privacy;
         notifyPropertyChanged(BR.privacy);
+    }
+
+
+    @Bindable
+    public long getCreatedDate() {
+        return createdDate;
     }
 
 
