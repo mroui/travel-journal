@@ -350,11 +350,13 @@ public class DetailsFragment extends BaseFragment implements View.OnClickListene
 
 
     private void setEditDialogContentData() {
-        if (travel.getImage() != null)
-            loadTravelImage(travel.getImage(), readFilenameFromUrl(travel.getImage()));
-        dialogBinding.dialogEditTravelDetailsNameTextInput.setText(travel.getName());
-        setTagsView();
-        setEditDialogListeners();
+        if (travel != null) {
+            if (travel.getImage() != null)
+                loadTravelImage(travel.getImage(), readFilenameFromUrl(travel.getImage()));
+            dialogBinding.dialogEditTravelDetailsNameTextInput.setText(travel.getName());
+            setTagsView();
+            setEditDialogListeners();
+        }
     }
 
 
