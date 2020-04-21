@@ -260,7 +260,8 @@
     <string name="notifications_discard">Discard</string>
     <string name="notifications_remove">REMOVE</string>
     <string name="notifications_friends_request_message">sent friends request</string>
-    <string name="notifications_new_trip_request_message">start a new trip</string>
+    <string name="notifications_new_trip_request_message">has just begun a journey!</string>
+    <string name="notifications_end_trip_request_message">has just ended a journey!</string>
 
     <string name="travels_list_title">Travels</string>
     <string name="travels_list_mine">Mine</string>

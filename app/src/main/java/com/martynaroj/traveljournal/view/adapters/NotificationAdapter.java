@@ -67,12 +67,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 position,
                 holder.binding.notificationItemDiscardButton));
 
-        if (notification.getType() == com.martynaroj.traveljournal.view.others.enums.Notification.FRIEND.ordinal()) {
-            holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_friends_request_message));
-        } else {
-            holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_new_trip_request_message));
-            holder.binding.notificationItemAcceptButton.setVisibility(View.GONE);
-            holder.binding.notificationItemDiscardButton.setText(context.getResources().getString(R.string.notifications_remove));
+        switch (com.martynaroj.traveljournal.view.others.enums.Notification.values()[notification.getType()]) {
+            case FRIEND:
+                holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_friends_request_message));
+                break;
+            case START_TRIP:
+                holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_new_trip_request_message));
+                holder.binding.notificationItemAcceptButton.setVisibility(View.INVISIBLE);
+                holder.binding.notificationItemDiscardButton.setText(context.getResources().getString(R.string.notifications_remove));
+                break;
+            case END_TRIP:
+                holder.binding.notificationItemMessage.setText(context.getResources().getString(R.string.notifications_end_trip_request_message));
+                holder.binding.notificationItemAcceptButton.setVisibility(View.INVISIBLE);
+                holder.binding.notificationItemDiscardButton.setText(context.getResources().getString(R.string.notifications_remove));
+                break;
         }
     }
 
