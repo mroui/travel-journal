@@ -41,6 +41,47 @@
                 android:textColor="@color/darker_gray"
                 android:fontFamily="@font/raleway_regular"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/middle_icon_size"
+                    android:layout_height="@dimen/middle_icon_size"
+                    android:layout_marginEnd="@dimen/margin_tiniest"
+                    android:src="@drawable/ic_alarm_gray"
+                    android:contentDescription="@string/travel_created_date"/>
+
+                <TextView
+                    android:id="@+id/travel_item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_regular"
+                    android:textSize="@dimen/text_smaller"
+                    android:textColor="@color/dark_gray"
+                    android:fontFamily="@font/raleway_regular"/>
+
+                <ImageView
+                    android:layout_width="@dimen/middle_icon_size"
+                    android:layout_height="@dimen/middle_icon_size"
+                    android:layout_marginEnd="@dimen/margin_tiniest"
+                    android:src="@drawable/ic_star_gray"
+                    android:contentDescription="@string/travel_popularity"/>
+
+                <TextView
+                    android:id="@+id/travel_item_popularity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_smaller"
+                    android:textColor="@color/dark_gray"
+                    android:fontFamily="@font/raleway_regular"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView

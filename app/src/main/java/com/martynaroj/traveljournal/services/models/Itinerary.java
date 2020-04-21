@@ -215,7 +215,7 @@ public class Itinerary extends BaseObservable implements Serializable {
 
     @Exclude
     @SuppressLint("SimpleDateFormat")
-    private String getDateString(long time) {
+    public String getDateString(long time) {
         Calendar date = Calendar.getInstance();
         date.setTimeInMillis(time);
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");

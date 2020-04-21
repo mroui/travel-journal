@@ -50,6 +50,8 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
         holder.binding.travelItemName.setText(itinerary.getName());
         holder.binding.travelItemAddress.setText(itinerary.getDestination().replace("&", ", "));
         holder.binding.travelItemDays.setText(Travel.whatDay(itinerary.getDatetimeFrom(), itinerary.getDatetimeTo()) + " days");
+        holder.binding.travelItemDate.setText(itinerary.getDateString(itinerary.getDatetimeFrom()));
+        holder.binding.travelItemPopularity.setText(itinerary.getPopularity()+"");
         holder.binding.travelItem.setOnClickListener(view -> {
             onItemClickListener.onItemClick(itinerary, position, view);
         });
@@ -84,7 +86,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
     }
 
 
-    public void remove (int position) {
+    public void remove(int position) {
         itineraries.remove(position);
         notifyItemRemoved(position);
         notifyDataSetChanged();
@@ -106,6 +108,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelHold
 
     static class TravelHolder extends RecyclerView.ViewHolder {
         private ItemTravelBinding binding;
+
         TravelHolder(ItemTravelBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
