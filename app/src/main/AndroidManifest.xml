@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
         android:theme="@style/NoActionBar"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         tools:ignore="AllowBackup">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
