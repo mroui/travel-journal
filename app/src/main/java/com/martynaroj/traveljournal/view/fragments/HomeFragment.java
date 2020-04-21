@@ -60,10 +60,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
 
     private void loadItineraries() {
+        startProgressBar();
         itineraryViewModel.getLimitItinerariesOrderBy(5, Constants.DB_POPULARITY);
         itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), list -> {
             if (list != null)
                 initExploreTravelsAdapter(list);
+            stopProgressBar();
         });
     }
 
@@ -118,6 +120,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void showSnackBar(String message, int duration) {
         getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
+    }
+
+
+    private void startProgressBar() {
+        getProgressBarInteractions().startProgressBar(binding.getRoot(),
+                binding.homeProgressbarLayout, binding.homeProgressbar);
+    }
+
+
+    private void stopProgressBar() {
+        getProgressBarInteractions().stopProgressBar(binding.getRoot(),
+                binding.homeProgressbarLayout, binding.homeProgressbar);
     }
 
 
