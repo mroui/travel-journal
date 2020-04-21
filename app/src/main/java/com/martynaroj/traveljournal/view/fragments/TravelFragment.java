@@ -231,6 +231,11 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
             put(Constants.DB_SAVED_TRAVELS, savedTravels);
         }});
+        itinerary.addPopularity();
+        binding.setItinerary(itinerary);
+        itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>(){{
+            put(Constants.DB_POPULARITY, itinerary.getPopularity());
+        }});
         showSnackBar(getResources().getString(R.string.messages_save_travel_success), Snackbar.LENGTH_SHORT);
         binding.travelSaveButton.setText(getResources().getString(R.string.travel_saved_travel));
         binding.travelSaveButton.setEnabled(false);

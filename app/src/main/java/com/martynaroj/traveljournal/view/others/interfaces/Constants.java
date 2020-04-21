@@ -51,6 +51,7 @@ public interface Constants {
     String DB_TRAVELS = "travels";
     String DB_SAVED_TRAVELS = "savedTravels";
     String DB_NOTIFICATIONS = "notifications";
+    String DB_POPULARITY = "popularity";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";

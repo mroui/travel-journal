@@ -258,6 +258,9 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             savedItineraries = adapter.getList();
             setBindingData(savedItineraries);
             updateUser(false, user, Constants.DB_SAVED_TRAVELS, savedItineraries);
+            itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>(){{
+                put(Constants.DB_POPULARITY, itinerary.getPopularity()-1);
+            }});
         }
     }
 
