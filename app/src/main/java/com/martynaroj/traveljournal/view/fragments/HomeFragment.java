@@ -8,16 +8,26 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
+import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.ExploreTravelsAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import java.util.List;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentHomeBinding binding;
+    private UserViewModel userViewModel;
+    private ItineraryViewModel itineraryViewModel;
+    private User user;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -29,8 +39,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        initViewModels();
+        loadItineraries();
         setListeners();
-        initExploreTravelsAdapter();
+        observeUserChanges();
 
         return view;
     }
@@ -39,18 +51,37 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initExploreTravelsAdapter() {
-        //todo adapter, when finish travel class
-//        List<Travel> travels = new ArrayList<>();
-//        travels.add(new Travel(R.drawable.default_avatar, "title1", "desc"));
-//        travels.add(new Travel(R.drawable.default_avatar, "title2", "desc"));
-//        travels.add(new Travel(R.drawable.default_avatar, "title3", "desc"));
-//        travels.add(new Travel(R.drawable.default_avatar, "title4", "desc"));
-//        travels.add(new Travel(R.drawable.default_avatar, "title5", "desc"));
+    private void initViewModels() {
+        if (getActivity() != null) {
+            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
+        }
+    }
 
-//        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), travels, true);
-//        binding.homeExploreViewpager.setAdapter(adapter);
-//        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+
+    private void loadItineraries() {
+        itineraryViewModel.getLimitItinerariesOrderBy(5, Constants.DB_POPULARITY);
+        itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), list -> {
+            if (list != null)
+                initExploreTravelsAdapter(list);
+        });
+    }
+
+
+    private void initExploreTravelsAdapter(List<Itinerary> itineraries) {
+        ExploreTravelsAdapter adapter = new ExploreTravelsAdapter(getContext(), itineraries, true);
+        binding.homeExploreViewpager.setAdapter(adapter);
+        binding.homeExploreViewpager.setPadding(75, 0, 75, 0);
+        adapter.setOnItemClickListener((object, position, view) -> {
+            changeFragment(TravelFragment.newInstance((Itinerary) object, user));
+        });
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            this.user = user;
+        });
     }
 
 
@@ -67,10 +98,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.home_search_friends_button:
-                if (isLoggedUser())
+                if (this.user != null)
                     changeFragment(SearchFriendsFragment.newInstance());
-                else
-                    showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
                 break;
             case R.id.home_explore_map_button:
                 changeFragment(PlanToVisitFragment.newInstance());
@@ -80,11 +109,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
 
     //OTHERS----------------------------------------------------------------------------------------
-
-
-    private boolean isLoggedUser() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
-    }
 
 
     private void changeFragment(Fragment next) {
