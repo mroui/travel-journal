@@ -443,5 +443,7 @@
     <string name="travel_tags_see_less_tags">- See less tags</string>
     <string name="travel_save_travel">Save travel</string>
     <string name="travel_saved_travel">Already saved travel</string>
+    <string name="travel_created_date">Created date</string>
+    <string name="travel_popularity">Popularity</string>
 
 </resources>
