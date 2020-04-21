@@ -8,33 +8,42 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.asksira.loopingviewpager.LoopingPagerAdapter;
-import com.martynaroj.traveljournal.databinding.ItemTravelBinding;
-import com.martynaroj.traveljournal.services.models.Travel;
+import com.bumptech.glide.Glide;
+import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.ItemViewFlipperTravelBinding;
+import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 
 import java.util.List;
 
-public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
+public class ExploreTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
 
-    private ItemTravelBinding binding;
-    private List<Travel> travels;
+    private ItemViewFlipperTravelBinding binding;
+    private List<Itinerary> itineraries;
+    private OnItemClickListener listener;
 
 
-    public ExploreTravelsAdapter(Context context, List<Travel> list, boolean isInfinite) {
+    public ExploreTravelsAdapter(Context context, List<Itinerary> list, boolean isInfinite) {
         super(context, list, isInfinite);
-        travels = list;
+        itineraries = list;
+    }
+
+
+    public void setOnItemClickListener(OnItemClickListener onItemLongClickListener) {
+        this.listener = onItemLongClickListener;
     }
 
 
     @Override
     protected View inflateView(int viewType, ViewGroup container, int listPosition) {
-        binding = ItemTravelBinding.inflate(LayoutInflater.from(context), container, false);
+        binding = ItemViewFlipperTravelBinding.inflate(LayoutInflater.from(context), container, false);
         return binding.getRoot();
     }
 
 
     @Override
     public int getCount() {
-        return travels.size();
+        return itineraries.size();
     }
 
 
@@ -45,10 +54,14 @@ public class ExploreTravelsAdapter extends LoopingPagerAdapter<Travel> {
 
     @Override
     protected void bindView(View convertView, int position, int viewType) {
-        //binding.homeExploreItemImage.setImageResource(travels.get(position).getImage());
-        //binding.homeExploreItemTitle.setText(travels.get(position).getName());
-        //binding.homeExploreItemDesc.setText(travels.get(position).getAddress());
-        //convertView.setOnClickListener(v -> Toast.makeText(context, travels.get(position).getName(), Toast.LENGTH_SHORT).show());
+        Glide.with(context).load(itineraries.get(position).getImage()).fitCenter()
+                .placeholder(R.drawable.no_image).centerCrop()
+                .into(binding.travelViewFlipperItemImage);
+        binding.travelViewFlipperItemTitle.setText(itineraries.get(position).getName());
+        binding.travelViewFlipperItemDesc.setText(itineraries.get(position).getDestination().replace("&", ", "));
+        binding.travelViewFlipperItem.setOnClickListener(v -> {
+            listener.onItemClick(itineraries.get(position), position, binding.travelViewFlipperItem);
+        });
     }
 
 

@@ -12,6 +12,7 @@
         app:cardCornerRadius="@dimen/corner_radius_small">
 
         <LinearLayout
+            android:id="@+id/travel_view_flipper_item"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_travel_height"
             android:orientation="vertical"
