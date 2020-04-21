@@ -264,16 +264,15 @@
 
                         <TextView
                             android:id="@+id/travel_owner_value"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_small"
-                            android:fontFamily="@font/raleway_regular"
+                            android:fontFamily="@font/raleway_bold"
                             android:textSize="@dimen/text_small"
                             android:textAlignment="textEnd"
                             android:text="@{owner.username}"
-                            android:textColor="@color/darker_gray"
-                            android:textIsSelectable="true"
-                            android:layout_weight="3"/>
+                            android:textColor="@color/main_blue"
+                            android:background="?android:attr/selectableItemBackground"/>
 
                     </LinearLayout>
 

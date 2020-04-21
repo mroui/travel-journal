@@ -96,6 +96,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         initTags();
         loadOwner();
         disableSaveButton();
+        setOwnerLinkUnderline();
     }
 
 
@@ -145,12 +146,18 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
     }
 
 
+    private void setOwnerLinkUnderline() {
+        binding.travelOwnerValue.setPaintFlags(binding.travelOwnerValue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    }
+
+
     //LISTENERS-------------------------------------------------------------------------------------
 
 
     private void setListeners() {
         binding.travelArrowButton.setOnClickListener(this);
         binding.travelFileValue.setOnClickListener(this);
+        binding.travelOwnerValue.setOnClickListener(this);
         binding.travelTagsSeeAllButton.setOnClickListener(this);
         binding.travelSaveButton.setOnClickListener(this);
     }
@@ -164,6 +171,9 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.travel_file_value:
                 downloadFile();
+                break;
+            case R.id.travel_owner_value:
+                changeFragment(ProfileFragment.newInstance(owner));
                 break;
             case R.id.travel_tags_see_all_button:
                 seeAllTags();
@@ -251,6 +261,11 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.travelProgressbarLayout,
                 binding.travelProgressbar);
         disableSaveButton();
+    }
+
+
+    private void changeFragment(BaseFragment next) {
+        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
