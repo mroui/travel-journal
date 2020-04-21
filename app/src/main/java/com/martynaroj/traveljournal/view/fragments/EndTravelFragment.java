@@ -33,11 +33,13 @@ import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.FileUriUtils;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
+import com.martynaroj.traveljournal.view.others.enums.Notification;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
 import com.martynaroj.traveljournal.viewmodels.DayViewModel;
 import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
+import com.martynaroj.traveljournal.viewmodels.NotificationViewModel;
 import com.martynaroj.traveljournal.viewmodels.PdfCreatorViewModel;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
@@ -46,6 +48,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -62,12 +65,14 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
     private ReservationViewModel reservationViewModel;
     private AddressViewModel addressViewModel;
     private DayViewModel dayViewModel;
+    private NotificationViewModel notificationViewModel;
 
     private User user;
     private Travel travel;
     private Address destination;
     private Reservation transport, accommodation;
     private List<Day> days;
+    private List<User> friends;
 
 
     public static EndTravelFragment newInstance(User user, Travel travel, Address destination,
@@ -129,12 +134,26 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
             reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             dayViewModel = new ViewModelProvider(getActivity()).get(DayViewModel.class);
+            notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         }
     }
 
 
     private void initContentData() {
+        loadUserFriends();
         binding.endTravelPrivacySpinner.setItems(Constants.PUBLIC, Constants.FRIENDS, Constants.ONLY_ME);
+    }
+
+
+    private void loadUserFriends() {
+        this.friends = new ArrayList<>();
+        if (user != null && user.getFriends() != null && !user.getFriends().isEmpty()) {
+            userViewModel.getUsersListData(user.getFriends());
+            userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+                if (users != null)
+                    this.friends = users;
+            });
+        }
     }
 
 
@@ -329,11 +348,27 @@ public class EndTravelFragment extends BaseFragment implements View.OnClickListe
         userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
             removeUnnecessaryTravelData();
             userViewModel.setUser(user);
+            sendNotifications(user);
             if (user != null && user.getActiveTravelId().equals(""))
-                 travelViewModel.setTravel(null);
-            showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_travel_ended_success),
-                    Snackbar.LENGTH_LONG);
+                travelViewModel.setTravel(null);
+            showSnackBar(binding.getRoot(), getResources().getString(R.string.messages_travel_ended_success), Snackbar.LENGTH_LONG);
         });
+    }
+
+
+    private void sendNotifications(User user) {
+        for (User friend : this.friends) {
+            String id = notificationViewModel.generateId();
+            notificationViewModel.sendNotification(
+                    new com.martynaroj.traveljournal.services.models.Notification(
+                            id, user.getUid(), friend.getUid(), Notification.END_TRIP.ordinal()
+                    ));
+            List<String> notifications = friend.getNotifications();
+            notifications.add(id);
+            userViewModel.updateUser(false, friend, new HashMap<String, Object>(){{
+                put(Constants.DB_NOTIFICATIONS, notifications);
+            }});
+        }
     }
 
 

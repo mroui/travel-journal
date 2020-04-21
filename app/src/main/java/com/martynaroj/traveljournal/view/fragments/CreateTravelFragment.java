@@ -52,8 +52,10 @@ import com.martynaroj.traveljournal.view.others.classes.InputTextWatcher;
 import com.martynaroj.traveljournal.view.others.classes.PickerColorize;
 import com.martynaroj.traveljournal.view.others.classes.RequestPermissionsHandler;
 import com.martynaroj.traveljournal.view.others.classes.SharedPreferencesUtils;
+import com.martynaroj.traveljournal.view.others.enums.Notification;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.AddressViewModel;
+import com.martynaroj.traveljournal.viewmodels.NotificationViewModel;
 import com.martynaroj.traveljournal.viewmodels.ReservationViewModel;
 import com.martynaroj.traveljournal.viewmodels.StorageViewModel;
 import com.martynaroj.traveljournal.viewmodels.TravelViewModel;
@@ -83,8 +85,10 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
     private TravelViewModel travelViewModel;
     private AddressViewModel addressViewModel;
     private ReservationViewModel reservationViewModel;
+    private NotificationViewModel notificationViewModel;
 
     private User user;
+    private List<User> friends;
 
     private long minDate, maxDate;
     private AutocompleteSupportFragment autocompleteFragment;
@@ -101,6 +105,8 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
 
     private MutableLiveData<Boolean> destinationLiveData, travelLiveData,
             reservationLiveData, changesLiveData;
+
+
 
     public CreateTravelFragment() {
     }
@@ -143,6 +149,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
             travelViewModel = new ViewModelProvider(getActivity()).get(TravelViewModel.class);
             addressViewModel = new ViewModelProvider(getActivity()).get(AddressViewModel.class);
             reservationViewModel = new ViewModelProvider(getActivity()).get(ReservationViewModel.class);
+            notificationViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         }
     }
 
@@ -163,6 +170,19 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 getResources().getStringArray(R.array.accommodation));
         fillTagsInput();
         generateIds();
+        loadUserFriends();
+    }
+
+
+    private void loadUserFriends() {
+        this.friends = new ArrayList<>();
+        if (user != null && user.getFriends() != null && !user.getFriends().isEmpty()) {
+            userViewModel.getUsersListData(user.getFriends());
+            userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
+                if (users != null)
+                    this.friends = users;
+            });
+        }
     }
 
 
@@ -677,6 +697,7 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
         setAlarm();
         createDestinationAddress();
         checkFilesToSave();
+        sendNotifications();
         observeFinishTravel();
     }
 
@@ -897,6 +918,22 @@ public class CreateTravelFragment extends BaseFragment implements View.OnClickLi
                 }
             }
         });
+    }
+
+
+    private void sendNotifications() {
+        for (User friend : this.friends) {
+            String id = notificationViewModel.generateId();
+            notificationViewModel.sendNotification(
+                    new com.martynaroj.traveljournal.services.models.Notification(
+                            id, user.getUid(), friend.getUid(), Notification.START_TRIP.ordinal()
+                    ));
+            List<String> notifications = friend.getNotifications();
+            notifications.add(id);
+            userViewModel.updateUser(false, friend, new HashMap<String, Object>(){{
+                put(Constants.DB_NOTIFICATIONS, notifications);
+            }});
+        }
     }
 
 

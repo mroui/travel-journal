@@ -50,6 +50,7 @@ public interface Constants {
     String DB_PLACES = "places";
     String DB_TRAVELS = "travels";
     String DB_SAVED_TRAVELS = "savedTravels";
+    String DB_NOTIFICATIONS = "notifications";
 
     String PUBLIC = "Public";
     String FRIENDS = "Friends";
