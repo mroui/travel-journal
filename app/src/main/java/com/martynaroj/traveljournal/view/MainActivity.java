@@ -13,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
@@ -29,6 +30,7 @@ import com.martynaroj.traveljournal.view.interfaces.ProgressBarListener;
 import com.martynaroj.traveljournal.view.interfaces.SnackbarListener;
 import com.martynaroj.traveljournal.view.others.classes.ViewPagerListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     private boolean backPressedOnce = false;
     private ActivityMainBinding binding;
 
+    private UserViewModel userViewModel;
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +54,18 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        initViewModels();
         initContentData();
         setListeners();
     }
 
 
     //INIT DATA-------------------------------------------------------------------------------------
+
+
+    private void initViewModels() {
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+    }
 
 
     private void initContentData() {
@@ -65,7 +76,9 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
 
     private User getUserFromIntent() {
-        return (User) getIntent().getSerializableExtra(Constants.USER);
+        this.user = (User) getIntent().getSerializableExtra(Constants.USER);
+        userViewModel.setUser(this.user);
+        return this.user;
     }
 
 
