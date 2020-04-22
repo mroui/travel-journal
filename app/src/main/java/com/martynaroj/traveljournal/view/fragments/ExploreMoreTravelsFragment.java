@@ -41,6 +41,9 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     private LinearLayoutManager layoutManager;
     private DocumentSnapshot lastDocument;
     private boolean isScrolling;
+    private String queryOrderBy;
+    private Query.Direction queryDirection;
+    private boolean noChangeOrderOption;
 
 
     public static ExploreMoreTravelsFragment newInstance(User user) {
@@ -88,6 +91,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void initContentData() {
         initSortingSpinner();
+        setQueryOrderDirection();
         loadList(true);
     }
 
@@ -100,9 +104,10 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
         adapter = new TravelAdapter(getContext(), list);
         binding.exploreMoreTravelsRecyclerView.setAdapter(adapter);
         binding.exploreMoreTravelsRecyclerView.setLayoutManager(layoutManager);
-        adapter.setOnItemClickListener((object, position, view) ->
-                changeFragment(TravelFragment.newInstance((Itinerary) object, user))
-        );
+        adapter.setOnItemClickListener((object, position, view) -> {
+            noChangeOrderOption = true;
+            changeFragment(TravelFragment.newInstance((Itinerary) object, user));
+        });
     }
 
 
@@ -138,7 +143,11 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void setListeners() {
         binding.exploreMoreTravelsArrowButton.setOnClickListener(this);
-        binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) -> loadList(true));
+        binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            noChangeOrderOption = false;
+            setQueryOrderDirection();
+            loadList(true);
+        });
         setOnScrollListener();
     }
 
@@ -184,7 +193,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
             initListAdapter();
             startProgressBar();
         }
-        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, getSelectedOrder(), getSelectedDirection());
+        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy, queryDirection);
         itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
             if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
                 for (DocumentSnapshot documentSnapshot : documentSnapshots) {
@@ -200,31 +209,31 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     }
 
 
-    private Query.Direction getSelectedDirection() {
-        Query.Direction direction = Query.Direction.DESCENDING;
-        if (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DATE_OLDEST
-                || Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DURATION_SHORTEST)
-            direction = Query.Direction.ASCENDING;
-        return direction;
-    }
-
-
-    private String getSelectedOrder() {
-        String result = "";
-        switch (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()]) {
-            case POPULARITY:
-                result = Constants.DB_POPULARITY;
-                break;
-            case DATE_LATEST:
-            case DATE_OLDEST:
-                result = Constants.DB_CREATED_DATE;
-                break;
-            case DURATION_LONGEST:
-            case DURATION_SHORTEST:
-                result = Constants.DB_DAYS_AMOUNT;
-                break;
+    private void setQueryOrderDirection() {
+        if (!noChangeOrderOption) {
+            switch (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()]) {
+                case POPULARITY:
+                    queryOrderBy = Constants.DB_POPULARITY;
+                    queryDirection = Query.Direction.DESCENDING;
+                    break;
+                case DATE_LATEST:
+                    queryOrderBy = Constants.DB_CREATED_DATE;
+                    queryDirection = Query.Direction.DESCENDING;
+                    break;
+                case DATE_OLDEST:
+                    queryOrderBy = Constants.DB_CREATED_DATE;
+                    queryDirection = Query.Direction.ASCENDING;
+                    break;
+                case DURATION_LONGEST:
+                    queryOrderBy = Constants.DB_DAYS_AMOUNT;
+                    queryDirection = Query.Direction.DESCENDING;
+                    break;
+                case DURATION_SHORTEST:
+                    queryOrderBy = Constants.DB_CREATED_DATE;
+                    queryDirection = Query.Direction.ASCENDING;
+                    break;
+            }
         }
-        return result;
     }
 
 
