@@ -88,20 +88,46 @@ public class ItineraryRepository {
         itinerariesRef.orderBy(orderBy, direction).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<Itinerary> itineraries = new ArrayList<>();
-                for (int i = 0; i<task.getResult().size(); i++) {
+                for (int i = 0; i < task.getResult().size(); i++) {
                     Itinerary itinerary = task.getResult().getDocuments().get(i).toObject(Itinerary.class);
                     if (itinerary != null
                             && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
-                            || ( itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
-                                && user.getFriends().contains(itinerary.getOwner()))))
+                            || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                            && user.getFriends().contains(itinerary.getOwner()))))
                         itineraries.add(itinerary);
-                    if(itineraries.size() == limit)
+                    if (itineraries.size() == limit)
                         break;
                 }
                 itinerariesData.setValue(itineraries);
             }
         });
         return itinerariesData;
+    }
+
+
+    public LiveData<List<DocumentSnapshot>> getItinerariesDocumentsListStartAt(
+            User user, int limit, DocumentSnapshot last, String orderBy, Query.Direction direction) {
+        MutableLiveData<List<DocumentSnapshot>> documentsData = new MutableLiveData<>();
+        Query query = itinerariesRef.orderBy(orderBy, direction);
+        if (last != null)
+            query.startAfter(last);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<DocumentSnapshot> documentsList = new ArrayList<>();
+                for (int i = 0; i < task.getResult().size(); i++) {
+                    Itinerary itinerary = task.getResult().getDocuments().get(i).toObject(Itinerary.class);
+                    if (itinerary != null
+                            && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
+                            || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                            && user.getFriends().contains(itinerary.getOwner()))))
+                        documentsList.add(task.getResult().getDocuments().get(i));
+                    if (documentsList.size() == limit)
+                        break;
+                }
+                documentsData.setValue(documentsList);
+            }
+        });
+        return documentsData;
     }
 
 }

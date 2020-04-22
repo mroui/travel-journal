@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
@@ -22,6 +23,7 @@ public class ItineraryViewModel extends AndroidViewModel {
     private LiveData<Status> statusLiveData;
     private LiveData<List<Itinerary>> itinerariesLiveData;
     private final MutableLiveData<Itinerary> itinerary;
+    private LiveData<List<DocumentSnapshot>> documentsLiveData;
 
     public ItineraryViewModel(@NonNull Application application) {
         super(application);
@@ -63,6 +65,15 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     public void getItinerariesOrderBy(User user, int limit, String order, Query.Direction direction) {
         itinerariesLiveData = itineraryRepository.getItinerariesOrderBy(user, limit, order, direction);
+    }
+
+    public void getDocumentsListStartAt(User user, DocumentSnapshot last, int limit, String orderBy,
+                                                   Query.Direction direction) {
+        documentsLiveData = itineraryRepository.getItinerariesDocumentsListStartAt(user, limit, last, orderBy, direction);
+    }
+
+    public LiveData<List<DocumentSnapshot>> getDocumentsData() {
+        return documentsLiveData;
     }
 
 }
