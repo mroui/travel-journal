@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,7 +28,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnClickListener{
+public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnClickListener {
 
     private FragmentExploreMoreTravelsBinding binding;
     private UserViewModel userViewModel;
@@ -33,7 +36,11 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private User user;
     private List<Itinerary> list;
+
+    private TravelAdapter adapter;
+    private LinearLayoutManager layoutManager;
     private DocumentSnapshot lastDocument;
+    private boolean isScrolling;
 
 
     public static ExploreMoreTravelsFragment newInstance(User user) {
@@ -80,17 +87,23 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
 
     private void initContentData() {
-        list = new ArrayList<>();
+        initListAdapter();
         initSortingSpinner();
         loadList(false);
     }
 
 
-    private void initSortingSpinner() {
-        List<String> options = new ArrayList<>();
-        for (Sort e : Sort.values())
-            options.add(e.getValue());
-        binding.exploreMoreTravelsSortSpinner.setItems(options);
+    private void initListAdapter() {
+        isScrolling = false;
+        layoutManager = new LinearLayoutManager(getContext());
+        list = new ArrayList<>();
+        lastDocument = null;
+        adapter = new TravelAdapter(getContext(), list);
+        binding.exploreMoreTravelsRecyclerView.setAdapter(adapter);
+        binding.exploreMoreTravelsRecyclerView.setLayoutManager(layoutManager);
+        adapter.setOnItemClickListener((object, position, view) ->
+                changeFragment(TravelFragment.newInstance((Itinerary) object, user))
+        );
     }
 
 
@@ -99,6 +112,14 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
             binding.setIsListEmpty(list.isEmpty());
         else
             binding.setIsListEmpty(true);
+    }
+
+
+    private void initSortingSpinner() {
+        List<String> options = new ArrayList<>();
+        for (Sort e : Sort.values())
+            options.add(e.getValue());
+        binding.exploreMoreTravelsSortSpinner.setItems(options);
     }
 
 
@@ -121,6 +142,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
         binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) ->
                 loadList(true)
         );
+        setOnScrollListener();
     }
 
 
@@ -132,42 +154,59 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     }
 
 
-    //LIST------------------------------------------------------------------------------------------
-
-
-    private void loadList(boolean clear) {
-        if (clear) list.clear();
-        startProgressBar();
-        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 10, getSelectedOrder(), getSelectedDirection());
-        itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
-            if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
-                for (DocumentSnapshot documentSnapshot : documentSnapshots)
-                    list.add(documentSnapshot.toObject(Itinerary.class));
-                lastDocument = documentSnapshots.get(documentSnapshots.size()-1);
+    private void setOnScrollListener() {
+        binding.exploreMoreTravelsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
+                    isScrolling = true;
             }
-            setListAdapter();
-            stopProgressBar();
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemsCount = layoutManager.getChildCount();
+                int totalItems = list.size();
+                int scrollOutItems = layoutManager.findFirstVisibleItemPosition();
+
+                if (isScrolling && (visibleItemsCount + scrollOutItems == totalItems)) {
+                    isScrolling = false;
+                    loadList(false);
+                }
+            }
         });
     }
 
 
-    private void setListAdapter() {
-        if (list != null) {
-            TravelAdapter adapter = new TravelAdapter(getContext(), list);
-            binding.exploreMoreTravelsRecyclerView.setAdapter(adapter);
-            adapter.setOnItemClickListener((object, position, view) ->
-                    changeFragment(TravelFragment.newInstance((Itinerary)object, user))
-            );
-        }
-        setIsListEmpty();
+    //LIST------------------------------------------------------------------------------------------
+
+
+    private void loadList(boolean clear) {
+        if (clear)
+            initListAdapter();
+        startProgressBar();
+        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 10, getSelectedOrder(), getSelectedDirection());
+        itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
+            if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
+                for (DocumentSnapshot documentSnapshot : documentSnapshots) {
+                    Itinerary i = documentSnapshot.toObject(Itinerary.class);
+                    list.add(i);
+                    adapter.notifyItemInserted(list.size() - 1);
+                }
+                lastDocument = documentSnapshots.get(documentSnapshots.size() - 1);
+            }
+            setIsListEmpty();
+            stopProgressBar();
+        });
     }
 
 
     private Query.Direction getSelectedDirection() {
         Query.Direction direction = Query.Direction.DESCENDING;
         if (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DATE_OLDEST
-            || Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DURATION_SHORTEST)
-                direction = Query.Direction.ASCENDING;
+                || Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DURATION_SHORTEST)
+            direction = Query.Direction.ASCENDING;
         return direction;
     }
 
