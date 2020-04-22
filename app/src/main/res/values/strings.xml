@@ -446,4 +446,6 @@
     <string name="travel_created_date">Created date</string>
     <string name="travel_popularity">Popularity</string>
 
+    <string name="explore_more_travels_title">Explore more</string>
+
 </resources>
