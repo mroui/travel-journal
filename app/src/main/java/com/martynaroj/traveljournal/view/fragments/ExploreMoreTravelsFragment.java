@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentExploreMoreTravelsBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.enums.Sort;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
@@ -30,6 +33,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private User user;
     private List<Itinerary> list;
+    private DocumentSnapshot lastDocument;
 
 
     public static ExploreMoreTravelsFragment newInstance(User user) {
@@ -76,8 +80,9 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
 
     private void initContentData() {
+        list = new ArrayList<>();
         initSortingSpinner();
-        setIsListEmpty();
+        loadList(false);
     }
 
 
@@ -91,7 +96,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void setIsListEmpty() {
         if (list != null)
-            binding.setIsListEmpty(list.size() == 0);
+            binding.setIsListEmpty(list.isEmpty());
         else
             binding.setIsListEmpty(true);
     }
@@ -113,16 +118,76 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void setListeners() {
         binding.exploreMoreTravelsArrowButton.setOnClickListener(this);
+        binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) ->
+                loadList(true)
+        );
     }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.explore_more_travels_arrow_button:
-                back();
+        if (view.getId() == R.id.explore_more_travels_arrow_button) {
+            back();
+        }
+    }
+
+
+    //LIST------------------------------------------------------------------------------------------
+
+
+    private void loadList(boolean clear) {
+        if (clear) list.clear();
+        startProgressBar();
+        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 10, getSelectedOrder(), getSelectedDirection());
+        itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
+            if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
+                for (DocumentSnapshot documentSnapshot : documentSnapshots)
+                    list.add(documentSnapshot.toObject(Itinerary.class));
+                lastDocument = documentSnapshots.get(documentSnapshots.size()-1);
+            }
+            setListAdapter();
+            stopProgressBar();
+        });
+    }
+
+
+    private void setListAdapter() {
+        if (list != null) {
+            TravelAdapter adapter = new TravelAdapter(getContext(), list);
+            binding.exploreMoreTravelsRecyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener((object, position, view) ->
+                    changeFragment(TravelFragment.newInstance((Itinerary)object, user))
+            );
+        }
+        setIsListEmpty();
+    }
+
+
+    private Query.Direction getSelectedDirection() {
+        Query.Direction direction = Query.Direction.DESCENDING;
+        if (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DATE_OLDEST
+            || Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()] == Sort.DURATION_SHORTEST)
+                direction = Query.Direction.ASCENDING;
+        return direction;
+    }
+
+
+    private String getSelectedOrder() {
+        String result = "";
+        switch (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()]) {
+            case POPULARITY:
+                result = Constants.DB_POPULARITY;
+                break;
+            case DATE_LATEST:
+            case DATE_OLDEST:
+                result = Constants.DB_CREATED_DATE;
+                break;
+            case DURATION_LONGEST:
+            case DURATION_SHORTEST:
+                result = Constants.DB_DAYS_AMOUNT;
                 break;
         }
+        return result;
     }
 
 
