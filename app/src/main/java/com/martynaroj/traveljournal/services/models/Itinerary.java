@@ -31,6 +31,7 @@ public class Itinerary extends BaseObservable implements Serializable {
     private int privacy;
     private long createdDate;
     private long popularity;
+    private long daysAmount;
 
 
     private Itinerary() {
@@ -54,6 +55,7 @@ public class Itinerary extends BaseObservable implements Serializable {
         this.tags = tags;
         this.file = file;
         this.privacy = privacy;
+        this.daysAmount = Travel.whatDay(datetimeTo, datetimeFrom);
     }
 
 
@@ -204,6 +206,12 @@ public class Itinerary extends BaseObservable implements Serializable {
     public void addPopularity() {
         this.popularity += 1;
         notifyPropertyChanged(BR.popularity);
+    }
+
+
+    @Bindable
+    public long getDaysAmount() {
+        return daysAmount;
     }
 
 
