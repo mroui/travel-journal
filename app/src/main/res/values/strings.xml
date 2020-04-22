@@ -447,5 +447,6 @@
     <string name="travel_popularity">Popularity</string>
 
     <string name="explore_more_travels_title">Explore more</string>
+    <string name="explore_more_travels_list_no_results">No travels results.</string>
 
 </resources>

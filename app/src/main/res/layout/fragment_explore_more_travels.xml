@@ -1,68 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_explore_more_travels"
-    tools:context=".view.fragments.ExploreMoreTravelsFragment"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:fillViewport="true"
-        tools:ignore="UselessParent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_regular"
-            android:paddingEnd="@dimen/margin_regular">
-
-            <ImageView
-                android:id="@+id/explore_more_travels_arrow_button"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/margin_regular"
-                android:contentDescription="@string/back_arrow"
-                android:background="?android:attr/selectableItemBackground"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_arrow_back"/>
-
-            <TextView
-                android:id="@+id/explore_more_travels_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/explore_more_travels_arrow_button"
-                app:layout_constraintTop_toBottomOf="@+id/explore_more_travels_arrow_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:fontFamily="@font/robotoslab_medium"
-                android:text="@string/explore_more_travels_title"
-                android:textSize="@dimen/text_bigger"
-                android:textColor="@color/black"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="isListEmpty"
+            type="Boolean" />
+    </data>
 
     <FrameLayout
-        android:id="@+id/explore_more_travels_progressbar_layout"
-        android:layout_width="match_parent"
+        android:id="@+id/fragment_explore_more_travels"
+        tools:context=".view.fragments.ExploreMoreTravelsFragment"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
-        android:visibility="invisible">
-        <com.victor.loading.rotate.RotateLoading
-            android:id="@+id/explore_more_travels_progressbar"
-            android:layout_width="@dimen/progressbar_size"
-            android:layout_height="@dimen/progressbar_size"
-            app:loading_width="@dimen/progressbar_loading_width"
-            app:loading_color="@color/white"
-            android:layout_gravity="center"/>
+        android:layout_width="match_parent"
+        android:background="@color/white">
+
+        <ScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            tools:ignore="UselessParent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_regular">
+
+                <ImageView
+                    android:id="@+id/explore_more_travels_arrow_button"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:contentDescription="@string/back_arrow"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_arrow_back"/>
+
+                <TextView
+                    android:id="@+id/explore_more_travels_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/explore_more_travels_arrow_button"
+                    app:layout_constraintTop_toBottomOf="@+id/explore_more_travels_arrow_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:fontFamily="@font/robotoslab_medium"
+                    android:text="@string/explore_more_travels_title"
+                    android:textSize="@dimen/text_bigger"
+                    android:textColor="@color/black"/>
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/explore_more_travels_sort_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/explore_more_travels_arrow_button"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:fontFamily="@font/raleway_medium"
+                    android:textSize="@dimen/text_smaller"
+                    app:ms_background_color="@color/dirty_white"
+                    app:ms_arrow_tint="@color/main_green"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/explore_more_travels_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/explore_more_travels_sort_spinner"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/margin_smaller"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+                <TextView
+                    android:id="@+id/explore_more_travels_list_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/explore_more_travels_arrow_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/margin_regular"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/gray"
+                    android:text="@string/explore_more_travels_list_no_results"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/raleway_medium"
+                    android:visibility="@{isListEmpty ? View.VISIBLE : View.GONE}"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/explore_more_travels_progressbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:visibility="invisible">
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/explore_more_travels_progressbar"
+                android:layout_width="@dimen/progressbar_size"
+                android:layout_height="@dimen/progressbar_size"
+                app:loading_width="@dimen/progressbar_loading_width"
+                app:loading_color="@color/white"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
     </FrameLayout>
 
-</FrameLayout>
+</layout>
