@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentHomeBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
@@ -61,7 +62,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void loadItineraries() {
         startProgressBar();
-        itineraryViewModel.getLimitItinerariesOrderBy(5, Constants.DB_POPULARITY);
+        itineraryViewModel.getPublicLimitItinerariesWithOrder(3, Constants.DB_POPULARITY, Query.Direction.DESCENDING);
         itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), list -> {
             if (list != null)
                 initExploreTravelsAdapter(list);

@@ -11,11 +11,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -80,17 +82,29 @@ public class ItineraryRepository {
     }
 
 
-    public LiveData<List<Itinerary>> getLimitItinerariesOrderBy(int limit, String orderBy) {
+    public LiveData<List<Itinerary>> getPublicLimitItinerariesWithOrder(int limit, String orderBy, Query.Direction direction) {
         MutableLiveData<List<Itinerary>> itinerariesData = new MutableLiveData<>();
-        itinerariesRef.limit(limit).orderBy(orderBy).get().addOnCompleteListener(task -> {
+        itinerariesRef.whereEqualTo(Constants.DB_PRIVACY, 0).limit(100).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<Itinerary> itineraries = new ArrayList<>();
                 for (DocumentSnapshot documentSnapshot : task.getResult())
                     itineraries.add(documentSnapshot.toObject(Itinerary.class));
-                itinerariesData.setValue(itineraries);
+                sortItinerariesBy(itineraries, orderBy, direction);
+                itinerariesData.setValue(itineraries.subList(0, limit));
             }
         });
         return itinerariesData;
+    }
+
+
+    private void sortItinerariesBy(List<Itinerary> list, String orderBy, Query.Direction direction) {
+        if (orderBy.equals(Constants.DB_POPULARITY))
+            Collections.sort(list, (i1, i2) -> {
+                if (direction == Query.Direction.ASCENDING)
+                    return (int) (i1.getPopularity() - i2.getPopularity());
+                else
+                    return (int) (i2.getPopularity() - i1.getPopularity());
+            });
     }
 
 }
