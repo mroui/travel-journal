@@ -11,17 +11,25 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentExploreMoreTravelsBinding;
+import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.enums.Sort;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
+import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnClickListener{
 
     private FragmentExploreMoreTravelsBinding binding;
     private UserViewModel userViewModel;
+    private ItineraryViewModel itineraryViewModel;
 
     private User user;
+    private List<Itinerary> list;
 
 
     public static ExploreMoreTravelsFragment newInstance(User user) {
@@ -62,11 +70,30 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     private void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+            itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
         }
     }
 
 
     private void initContentData() {
+        initSortingSpinner();
+        setIsListEmpty();
+    }
+
+
+    private void initSortingSpinner() {
+        List<String> options = new ArrayList<>();
+        for (Sort e : Sort.values())
+            options.add(e.getValue());
+        binding.exploreMoreTravelsSortSpinner.setItems(options);
+    }
+
+
+    private void setIsListEmpty() {
+        if (list != null)
+            binding.setIsListEmpty(list.size() == 0);
+        else
+            binding.setIsListEmpty(true);
     }
 
 
