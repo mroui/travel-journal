@@ -93,6 +93,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void setListeners() {
         binding.homeSearchFriendsButton.setOnClickListener(this);
         binding.homeExploreMapButton.setOnClickListener(this);
+        binding.homeExploreMoreButton.setOnClickListener(this);
     }
 
 
@@ -105,6 +106,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.home_explore_map_button:
                 changeFragment(PlanToVisitFragment.newInstance());
+                break;
+            case R.id.home_explore_more_button:
+                changeFragment(ExploreMoreTravelsFragment.newInstance(user));
                 break;
         }
     }
