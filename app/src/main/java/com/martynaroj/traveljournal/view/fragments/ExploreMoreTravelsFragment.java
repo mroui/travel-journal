@@ -87,9 +87,8 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
 
     private void initContentData() {
-        initListAdapter();
         initSortingSpinner();
-        loadList(false);
+        loadList(true);
     }
 
 
@@ -139,9 +138,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void setListeners() {
         binding.exploreMoreTravelsArrowButton.setOnClickListener(this);
-        binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) ->
-                loadList(true)
-        );
+        binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) -> loadList(true));
         setOnScrollListener();
     }
 
@@ -182,11 +179,12 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     //LIST------------------------------------------------------------------------------------------
 
 
-    private void loadList(boolean clear) {
-        if (clear)
+    private void loadList(boolean newAdapter) {
+        if (newAdapter) {
             initListAdapter();
-        startProgressBar();
-        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 10, getSelectedOrder(), getSelectedDirection());
+            startProgressBar();
+        }
+        itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, getSelectedOrder(), getSelectedDirection());
         itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
             if (documentSnapshots != null && !documentSnapshots.isEmpty()) {
                 for (DocumentSnapshot documentSnapshot : documentSnapshots) {
