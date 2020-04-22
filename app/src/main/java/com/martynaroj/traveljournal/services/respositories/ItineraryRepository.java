@@ -110,7 +110,7 @@ public class ItineraryRepository {
         MutableLiveData<List<DocumentSnapshot>> documentsData = new MutableLiveData<>();
         Query query = itinerariesRef.orderBy(orderBy, direction);
         if (last != null)
-            query.startAfter(last);
+            query = query.startAfter(last);
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<DocumentSnapshot> documentsList = new ArrayList<>();
