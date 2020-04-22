@@ -84,7 +84,7 @@ public class ItineraryRepository {
 
     public LiveData<List<Itinerary>> getPublicLimitItinerariesWithOrder(int limit, String orderBy, Query.Direction direction) {
         MutableLiveData<List<Itinerary>> itinerariesData = new MutableLiveData<>();
-        itinerariesRef.whereEqualTo(Constants.DB_PRIVACY, 0).limit(100).get().addOnCompleteListener(task -> {
+        itinerariesRef.whereEqualTo(Constants.DB_PRIVACY, 0).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<Itinerary> itineraries = new ArrayList<>();
                 for (DocumentSnapshot documentSnapshot : task.getResult())
