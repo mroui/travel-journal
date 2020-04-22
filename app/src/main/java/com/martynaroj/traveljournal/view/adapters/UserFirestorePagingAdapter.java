@@ -17,15 +17,12 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.interfaces.OnItemClickListener;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 
-import java.util.List;
 import java.util.Objects;
 
 public class UserFirestorePagingAdapter extends FirestorePagingAdapter<User, UserFirestorePagingAdapter.UserViewHolder> {
 
     private OnItemClickListener listener;
     private Context context;
-
-    private List<User> users;
 
     public UserFirestorePagingAdapter(FirestorePagingOptions<User> options, Context context) {
         super(options);
@@ -46,9 +43,9 @@ public class UserFirestorePagingAdapter extends FirestorePagingAdapter<User, Use
                 .placeholder(R.drawable.default_avatar)
                 .into(holder.binding.userItemImage);
         holder.binding.userItem.setOnClickListener(view -> listener.onItemClick(
-                        Objects.requireNonNull(getItem(position)).toObject(User.class),
-                        position,
-                        holder.binding.userItem));
+                Objects.requireNonNull(getItem(position)).toObject(User.class),
+                position,
+                holder.binding.userItem));
         holder.binding.userItemDeleteButton.setVisibility(View.GONE);
     }
 
@@ -68,6 +65,7 @@ public class UserFirestorePagingAdapter extends FirestorePagingAdapter<User, Use
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         private ItemUserBinding binding;
+
         UserViewHolder(ItemUserBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
