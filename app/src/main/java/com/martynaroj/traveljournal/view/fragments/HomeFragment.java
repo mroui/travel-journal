@@ -41,7 +41,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         View view = binding.getRoot();
 
         initViewModels();
-        loadItineraries();
         setListeners();
         observeUserChanges();
 
@@ -62,7 +61,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void loadItineraries() {
         startProgressBar();
-        itineraryViewModel.getPublicLimitItinerariesWithOrder(3, Constants.DB_POPULARITY, Query.Direction.DESCENDING);
+        itineraryViewModel.getItinerariesOrderBy(user, 5, Constants.DB_POPULARITY, Query.Direction.DESCENDING);
         itineraryViewModel.getItinerariesList().observe(getViewLifecycleOwner(), list -> {
             if (list != null)
                 initExploreTravelsAdapter(list);
@@ -84,6 +83,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
+            loadItineraries();
         });
     }
 

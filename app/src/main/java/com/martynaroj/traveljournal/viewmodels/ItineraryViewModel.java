@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.respositories.ItineraryRepository;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
@@ -60,8 +61,8 @@ public class ItineraryViewModel extends AndroidViewModel {
         itineraryRepository.updateItinerary(itinerary, map);
     }
 
-    public void getPublicLimitItinerariesWithOrder(int limit, String order, Query.Direction direction) {
-        itinerariesLiveData = itineraryRepository.getPublicLimitItinerariesWithOrder(limit, order, direction);
+    public void getItinerariesOrderBy(User user, int limit, String order, Query.Direction direction) {
+        itinerariesLiveData = itineraryRepository.getItinerariesOrderBy(user, limit, order, direction);
     }
 
 }

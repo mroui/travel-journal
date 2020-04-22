@@ -13,11 +13,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.services.models.Itinerary;
+import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -82,29 +83,25 @@ public class ItineraryRepository {
     }
 
 
-    public LiveData<List<Itinerary>> getPublicLimitItinerariesWithOrder(int limit, String orderBy, Query.Direction direction) {
+    public LiveData<List<Itinerary>> getItinerariesOrderBy(User user, int limit, String orderBy, Query.Direction direction) {
         MutableLiveData<List<Itinerary>> itinerariesData = new MutableLiveData<>();
-        itinerariesRef.whereEqualTo(Constants.DB_PRIVACY, 0).get().addOnCompleteListener(task -> {
+        itinerariesRef.orderBy(orderBy, direction).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<Itinerary> itineraries = new ArrayList<>();
-                for (DocumentSnapshot documentSnapshot : task.getResult())
-                    itineraries.add(documentSnapshot.toObject(Itinerary.class));
-                sortItinerariesBy(itineraries, orderBy, direction);
-                itinerariesData.setValue(itineraries.subList(0, limit));
+                for (int i = 0; i<task.getResult().size(); i++) {
+                    Itinerary itinerary = task.getResult().getDocuments().get(i).toObject(Itinerary.class);
+                    if (itinerary != null
+                            && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
+                            || ( itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                                && user.getFriends().contains(itinerary.getOwner()))))
+                        itineraries.add(itinerary);
+                    if(itineraries.size() == limit)
+                        break;
+                }
+                itinerariesData.setValue(itineraries);
             }
         });
         return itinerariesData;
-    }
-
-
-    private void sortItinerariesBy(List<Itinerary> list, String orderBy, Query.Direction direction) {
-        if (orderBy.equals(Constants.DB_POPULARITY))
-            Collections.sort(list, (i1, i2) -> {
-                if (direction == Query.Direction.ASCENDING)
-                    return (int) (i1.getPopularity() - i2.getPopularity());
-                else
-                    return (int) (i2.getPopularity() - i1.getPopularity());
-            });
     }
 
 }
