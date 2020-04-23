@@ -44,7 +44,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     private User user, loggedUser;
     private List<Itinerary> itineraries, savedItineraries;
     private TravelAdapter adapter;
-    boolean mineTravelsTab;
+    private boolean mineTravelsTab;
 
 
     public static TravelsListFragment newInstance(User loggedUser, User user) {
@@ -95,7 +95,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
     private void initContentData() {
         loadUserTravels();
-        if (loggedUser.equals(user))
+        if (user.equals(loggedUser))
             binding.travelsListButtonsContainer.setVisibility(View.VISIBLE);
         else
             binding.travelsListButtonsContainer.setVisibility(View.GONE);
@@ -104,13 +104,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
 
 
     private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            this.loggedUser = user;
-            if (user == null) {
-                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                back();
-            }
-        });
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> this.loggedUser = user);
     }
 
 
@@ -196,7 +190,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
                         list.add(i);
                         break;
                     case FRIENDS:
-                        if (user.getFriends().contains(loggedUser.getUid()))
+                        if (loggedUser != null && user.getFriends().contains(loggedUser.getUid()))
                             list.add(i);
                         break;
                     case ONLY_ME:

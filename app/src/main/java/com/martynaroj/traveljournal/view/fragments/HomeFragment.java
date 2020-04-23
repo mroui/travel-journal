@@ -102,8 +102,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.home_search_friends_button:
-                if (this.user != null)
-                    changeFragment(SearchFriendsFragment.newInstance());
+                changeFragment(SearchFriendsFragment.newInstance());
                 break;
             case R.id.home_explore_map_button:
                 changeFragment(PlanToVisitFragment.newInstance());

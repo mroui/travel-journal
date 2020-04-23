@@ -126,11 +126,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user == null) {
-                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                back();
-            } else
-                this.user = user;
+            this.user = user;
         });
     }
 
@@ -190,17 +186,20 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void downloadFile() {
         if (getContext() != null) {
-            Uri uri = Uri.parse(itinerary.getFile());
-            String fileName = FileUriUtils.getFileName(getContext(), uri);
-            DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
-            DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalFilesDir(getContext(), DIRECTORY_DOWNLOADS, fileName);
-            if (downloadManager != null) {
-                downloadManager.enqueue(request);
-                showSnackBar(getResources().getString(R.string.messages_downloading_file), Snackbar.LENGTH_SHORT);
+            if (user != null) {
+                Uri uri = Uri.parse(itinerary.getFile());
+                String fileName = FileUriUtils.getFileName(getContext(), uri);
+                DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalFilesDir(getContext(), DIRECTORY_DOWNLOADS, fileName);
+                if (downloadManager != null) {
+                    downloadManager.enqueue(request);
+                    showSnackBar(getResources().getString(R.string.messages_downloading_file), Snackbar.LENGTH_SHORT);
+                } else
+                    showSnackBar(getResources().getString(R.string.messages_error_failed_download_file), Snackbar.LENGTH_LONG);
             } else
-                showSnackBar(getResources().getString(R.string.messages_error_failed_download_file), Snackbar.LENGTH_LONG);
+                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
         }
     }
 
@@ -225,20 +224,23 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
 
     private void saveTravel() {
-        List<String> savedTravels = user.getSavedTravels();
-        savedTravels.add(itinerary.getId());
-        userViewModel.setUser(user);
-        userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
-            put(Constants.DB_SAVED_TRAVELS, savedTravels);
-        }});
-        itinerary.addPopularity();
-        binding.setItinerary(itinerary);
-        itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>(){{
-            put(Constants.DB_POPULARITY, itinerary.getPopularity());
-        }});
-        showSnackBar(getResources().getString(R.string.messages_save_travel_success), Snackbar.LENGTH_SHORT);
-        binding.travelSaveButton.setText(getResources().getString(R.string.travel_saved_travel));
-        binding.travelSaveButton.setEnabled(false);
+        if (user != null) {
+            List<String> savedTravels = user.getSavedTravels();
+            savedTravels.add(itinerary.getId());
+            userViewModel.setUser(user);
+            userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
+                put(Constants.DB_SAVED_TRAVELS, savedTravels);
+            }});
+            itinerary.addPopularity();
+            binding.setItinerary(itinerary);
+            itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>() {{
+                put(Constants.DB_POPULARITY, itinerary.getPopularity());
+            }});
+            showSnackBar(getResources().getString(R.string.messages_save_travel_success), Snackbar.LENGTH_SHORT);
+            binding.travelSaveButton.setText(getResources().getString(R.string.travel_saved_travel));
+            binding.travelSaveButton.setEnabled(false);
+        } else
+            showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
     }
 
 
@@ -246,7 +248,7 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
 
     private void disableSaveButton() {
-        if(user.getSavedTravels().contains(itinerary.getId()))
+        if(user == null || user.getSavedTravels().contains(itinerary.getId()))
             binding.travelSaveButton.setEnabled(false);
     }
 

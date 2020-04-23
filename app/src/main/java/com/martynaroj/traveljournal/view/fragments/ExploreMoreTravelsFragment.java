@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.R;
@@ -128,13 +127,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
 
     private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            this.user = user;
-            if (user == null) {
-                showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
-                back();
-            }
-        });
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> this.user = user);
     }
 
 
@@ -238,11 +231,6 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
 
     //OTHERS----------------------------------------------------------------------------------------
-
-
-    private void showSnackBar(String message, int duration) {
-        getSnackBarInteractions().showSnackBar(binding.getRoot(), getActivity(), message, duration);
-    }
 
 
     private void startProgressBar() {
