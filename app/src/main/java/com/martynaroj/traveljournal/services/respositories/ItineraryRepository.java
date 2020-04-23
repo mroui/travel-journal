@@ -93,13 +93,15 @@ public class ItineraryRepository {
                     if (itinerary != null
                             && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
                             || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                            && user != null
                             && user.getFriends().contains(itinerary.getOwner()))))
                         itineraries.add(itinerary);
                     if (itineraries.size() == limit)
                         break;
                 }
                 itinerariesData.setValue(itineraries);
-            }
+            } else
+                itinerariesData.setValue(null);
         });
         return itinerariesData;
     }
@@ -119,13 +121,15 @@ public class ItineraryRepository {
                     if (itinerary != null
                             && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
                             || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                            && user != null
                             && user.getFriends().contains(itinerary.getOwner()))))
                         documentsList.add(task.getResult().getDocuments().get(i));
                     if (documentsList.size() == limit)
                         break;
                 }
                 documentsData.setValue(documentsList);
-            }
+            } else
+                documentsData.setValue(null);
         });
         return documentsData;
     }
