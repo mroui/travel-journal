@@ -7,42 +7,18 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentExploreMoreTravelsBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
-import com.martynaroj.traveljournal.view.base.BaseFragment;
-import com.martynaroj.traveljournal.view.others.enums.Sort;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
-import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
-import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnClickListener {
+public class ExploreMoreTravelsFragment extends SearchTravelsFragment implements View.OnClickListener {
 
     private FragmentExploreMoreTravelsBinding binding;
-    private UserViewModel userViewModel;
-    private ItineraryViewModel itineraryViewModel;
-
-    private User user;
-    private List<Itinerary> list;
-
-    private TravelAdapter adapter;
-    private LinearLayoutManager layoutManager;
-    private DocumentSnapshot lastDocument;
-    private boolean isScrolling;
-    private String queryOrderBy;
-    private Query.Direction queryDirection;
-    private boolean noChangeOrderOption;
 
 
     public static ExploreMoreTravelsFragment newInstance(User user) {
@@ -80,33 +56,9 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initViewModels() {
-        if (getActivity() != null) {
-            userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
-            itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
-        }
-    }
-
-
     private void initContentData() {
-        initSortingSpinner();
-        setQueryOrderDirection();
+        initSortingSpinner(binding.exploreMoreTravelsSortSpinner);
         loadList(true);
-    }
-
-
-    private void initListAdapter() {
-        isScrolling = false;
-        layoutManager = new LinearLayoutManager(getContext());
-        list = new ArrayList<>();
-        lastDocument = null;
-        adapter = new TravelAdapter(getContext(), list);
-        binding.exploreMoreTravelsRecyclerView.setAdapter(adapter);
-        binding.exploreMoreTravelsRecyclerView.setLayoutManager(layoutManager);
-        adapter.setOnItemClickListener((object, position, view) -> {
-            noChangeOrderOption = true;
-            changeFragment(TravelFragment.newInstance((Itinerary) object, user));
-        });
     }
 
 
@@ -118,19 +70,6 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     }
 
 
-    private void initSortingSpinner() {
-        List<String> options = new ArrayList<>();
-        for (Sort e : Sort.values())
-            options.add(e.getValue());
-        binding.exploreMoreTravelsSortSpinner.setItems(options);
-    }
-
-
-    private void observeUserChanges() {
-        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> this.user = user);
-    }
-
-
     //LISTENERS-------------------------------------------------------------------------------------
 
 
@@ -138,7 +77,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
         binding.exploreMoreTravelsArrowButton.setOnClickListener(this);
         binding.exploreMoreTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) -> {
             noChangeOrderOption = false;
-            setQueryOrderDirection();
+            setQueryOrderDirection(binding.exploreMoreTravelsSortSpinner.getSelectedIndex());
             loadList(true);
         });
         setOnScrollListener();
@@ -183,7 +122,7 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
 
     private void loadList(boolean newAdapter) {
         if (newAdapter) {
-            initListAdapter();
+            initListAdapter(binding.exploreMoreTravelsRecyclerView);
             startProgressBar();
         }
         itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy, queryDirection);
@@ -202,34 +141,6 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     }
 
 
-    private void setQueryOrderDirection() {
-        if (!noChangeOrderOption) {
-            switch (Sort.values()[binding.exploreMoreTravelsSortSpinner.getSelectedIndex()]) {
-                case POPULARITY:
-                    queryOrderBy = Constants.DB_POPULARITY;
-                    queryDirection = Query.Direction.DESCENDING;
-                    break;
-                case DATE_LATEST:
-                    queryOrderBy = Constants.DB_CREATED_DATE;
-                    queryDirection = Query.Direction.DESCENDING;
-                    break;
-                case DATE_OLDEST:
-                    queryOrderBy = Constants.DB_CREATED_DATE;
-                    queryDirection = Query.Direction.ASCENDING;
-                    break;
-                case DURATION_LONGEST:
-                    queryOrderBy = Constants.DB_DAYS_AMOUNT;
-                    queryDirection = Query.Direction.DESCENDING;
-                    break;
-                case DURATION_SHORTEST:
-                    queryOrderBy = Constants.DB_CREATED_DATE;
-                    queryDirection = Query.Direction.ASCENDING;
-                    break;
-            }
-        }
-    }
-
-
     //OTHERS----------------------------------------------------------------------------------------
 
 
@@ -242,17 +153,6 @@ public class ExploreMoreTravelsFragment extends BaseFragment implements View.OnC
     private void stopProgressBar() {
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.exploreMoreTravelsProgressbarLayout,
                 binding.exploreMoreTravelsProgressbar);
-    }
-
-
-    private void changeFragment(BaseFragment next) {
-        getNavigationInteractions().changeFragment(getParentFragment(), next, true);
-    }
-
-
-    private void back() {
-        if (getParentFragmentManager().getBackStackEntryCount() > 0)
-            getParentFragmentManager().popBackStack();
     }
 
 

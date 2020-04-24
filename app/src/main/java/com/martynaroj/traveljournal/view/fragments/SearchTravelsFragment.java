@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.FragmentSearchTravelsBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
@@ -35,19 +36,19 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private FragmentSearchTravelsBinding binding;
     private UserViewModel userViewModel;
-    private ItineraryViewModel itineraryViewModel;
+    ItineraryViewModel itineraryViewModel;
 
-    private User user;
-    private List<Itinerary> list;
+    User user;
+    List<Itinerary> list;
 
-    private TravelAdapter adapter;
-    private LinearLayoutManager layoutManager;
-    private DocumentSnapshot lastDocument;
-    private boolean isScrolling;
+    TravelAdapter adapter;
+    LinearLayoutManager layoutManager;
+    DocumentSnapshot lastDocument;
+    boolean isScrolling;
 
-    private String queryOrderBy;
-    private Query.Direction queryDirection;
-    private boolean noChangeOrderOption;
+    String queryOrderBy;
+    Query.Direction queryDirection;
+    boolean noChangeOrderOption;
 
     private boolean isSearching;
     private boolean noChangeSearchResult;
@@ -88,7 +89,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     //INIT DATA-------------------------------------------------------------------------------------
 
 
-    private void initViewModels() {
+    void initViewModels() {
         if (getActivity() != null) {
             userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
             itineraryViewModel = new ViewModelProvider(getActivity()).get(ItineraryViewModel.class);
@@ -98,19 +99,19 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private void initContentData() {
         isSearching = false;
-        initSortingSpinner();
+        initSortingSpinner(binding.searchTravelsSortSpinner);
         reloadList();
     }
 
 
-    private void initListAdapter() {
+    void initListAdapter(RecyclerView recyclerView) {
         isScrolling = false;
         layoutManager = new LinearLayoutManager(getContext());
         list = new ArrayList<>();
         lastDocument = null;
         adapter = new TravelAdapter(getContext(), list);
-        binding.searchTravelsRecyclerView.setAdapter(adapter);
-        binding.searchTravelsRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
         adapter.setOnItemClickListener((object, position, view) -> {
             noChangeOrderOption = true;
             noChangeSearchResult = true;
@@ -119,11 +120,12 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private void initSortingSpinner() {
+    void initSortingSpinner(MaterialSpinner spinner) {
         List<String> options = new ArrayList<>();
         for (Sort e : Sort.values())
             options.add(e.getValue());
-        binding.searchTravelsSortSpinner.setItems(options);
+        spinner.setItems(options);
+        setQueryOrderDirection(spinner.getSelectedIndex());
     }
 
 
@@ -135,7 +137,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private void observeUserChanges() {
+    void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> this.user = user);
     }
 
@@ -196,7 +198,6 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                 noChangeSearchResult = false;
                 isSearching = true;
                 resetSorting();
-                reloadList();
                 return true;
             }
 
@@ -213,7 +214,6 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             binding.searchTravelsSearchView.setQuery("", true);
             isSearching = false;
             resetSorting();
-            reloadList();
         });
     }
 
@@ -225,7 +225,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private void loadList(boolean newAdapter) {
         if (newAdapter) {
-            initListAdapter();
+            initListAdapter(binding.searchTravelsRecyclerView);
             startProgressBar();
         }
 
@@ -252,7 +252,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
 
     private void reloadList() {
-        setQueryOrderDirection();
+        setQueryOrderDirection(binding.searchTravelsSortSpinner.getSelectedIndex());
         loadList(true);
     }
 
@@ -260,9 +260,9 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     //SORTING---------------------------------------------------------------------------------------
 
 
-    private void setQueryOrderDirection() {
+    void setQueryOrderDirection(int index) {
         if (!noChangeOrderOption) {
-            switch (Sort.values()[binding.searchTravelsSortSpinner.getSelectedIndex()]) {
+            switch (Sort.values()[index]) {
                 case POPULARITY:
                     queryOrderBy = Constants.DB_POPULARITY;
                     queryDirection = Query.Direction.DESCENDING;
@@ -290,7 +290,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private void resetSorting() {
         binding.searchTravelsSortSpinner.setSelectedIndex(0);
-        setQueryOrderDirection();
+        reloadList();
     }
 
 
@@ -324,7 +324,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private void back() {
+    void back() {
         hideKeyboard();
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
