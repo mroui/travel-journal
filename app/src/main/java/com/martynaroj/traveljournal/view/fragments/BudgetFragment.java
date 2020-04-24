@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.android.material.textview.MaterialAutoCompleteTextView;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddExpenseBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;

@@ -68,7 +68,7 @@
         app:hintEnabled="false"
         app:errorEnabled="true"
         app:errorIconDrawable="@null">
-        <com.google.android.material.textview.MaterialAutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/dialog_add_packing_item_category_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
