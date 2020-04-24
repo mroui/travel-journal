@@ -75,7 +75,6 @@
     <dimen name="weather_icon_height">50dp</dimen>
 
     <dimen name="progressbar_size">60dp</dimen>
-    <dimen name="progressbar_loading_width">4dp</dimen>
 
     <dimen name="password_strength_meter_height">4dp</dimen>
 

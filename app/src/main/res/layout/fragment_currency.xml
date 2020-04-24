@@ -189,12 +189,10 @@
         android:layout_height="match_parent"
         android:background="@color/transparent"
         android:visibility="invisible">
-        <com.victor.loading.rotate.RotateLoading
+        <ProgressBar
             android:id="@+id/currency_progressbar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            app:loading_width="4dp"
-            app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>
 

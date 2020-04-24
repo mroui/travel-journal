@@ -1157,12 +1157,10 @@
         android:layout_height="match_parent"
         android:background="@color/transparent"
         android:visibility="invisible">
-        <com.victor.loading.rotate.RotateLoading
+        <ProgressBar
             android:id="@+id/create_travel_progressbar"
             android:layout_width="@dimen/progressbar_size"
             android:layout_height="@dimen/progressbar_size"
-            app:loading_width="@dimen/progressbar_loading_width"
-            app:loading_color="@color/white"
             android:layout_gravity="center"/>
     </FrameLayout>
 

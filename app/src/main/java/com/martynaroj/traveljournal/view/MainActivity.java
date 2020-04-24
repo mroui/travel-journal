@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,6 @@ import com.martynaroj.traveljournal.view.interfaces.SnackbarListener;
 import com.martynaroj.traveljournal.view.others.classes.ViewPagerListener;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
-import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,16 +187,14 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
 
-    public void startProgressBar(View root, View progressBarLayout, RotateLoading progressBar) {
+    public void startProgressBar(View root, View progressBarLayout, ProgressBar progressBar) {
         progressBarLayout.setVisibility(View.VISIBLE);
-        progressBar.start();
         enableDisableViewGroup((ViewGroup) root, false);
     }
 
 
-    public void stopProgressBar(View root, View progressBarLayout, RotateLoading progressBar) {
+    public void stopProgressBar(View root, View progressBarLayout, ProgressBar progressBar) {
         progressBarLayout.setVisibility(View.INVISIBLE);
-        progressBar.stop();
         enableDisableViewGroup((ViewGroup) root, true);
     }
 
