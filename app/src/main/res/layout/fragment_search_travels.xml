@@ -73,7 +73,8 @@
                         android:background="@color/white"
                         app:queryBackground="@color/white"
                         app:queryHint="@string/search"
-                        app:iconifiedByDefault="false"/>
+                        app:iconifiedByDefault="false"
+                        android:showAsAction="always"/>
 
                 </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
 
