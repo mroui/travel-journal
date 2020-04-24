@@ -78,19 +78,39 @@
 
                 </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
 
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/search_travels_sort_spinner"
+                <LinearLayout
+                    android:id="@+id/search_travels_sort_filter_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/search_travels_search_view_layout"
-                    android:layout_marginHorizontal="@dimen/margin_tiniest"
                     android:layout_marginTop="@dimen/margin_smaller"
-                    android:fontFamily="@font/raleway_medium"
-                    android:textSize="@dimen/text_smaller"
-                    app:ms_background_color="@color/dirty_white"
-                    app:ms_arrow_tint="@color/main_red"/>
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/search_travels_filter_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_tiny"
+                        android:padding="@dimen/padding_small"
+                        app:rippleColor="@color/red_bg_light"
+                        app:backgroundTint="@color/main_red"
+                        android:text="@string/search_travels_filter"
+                        android:fontFamily="@font/raleway_bold"/>
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/search_travels_sort_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_tiny"
+                        android:fontFamily="@font/raleway_medium"
+                        android:textSize="@dimen/text_smaller"
+                        app:ms_background_color="@color/dirty_white"
+                        app:ms_arrow_tint="@color/main_red"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_travels_recycler_view"
@@ -98,7 +118,7 @@
                     android:layout_height="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/search_travels_sort_spinner"
+                    app:layout_constraintTop_toBottomOf="@+id/search_travels_sort_filter_container"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginTop="@dimen/margin_smaller"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
