@@ -62,6 +62,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     private boolean noChangeSearchResult;
 
     private boolean isFiltering;
+    private boolean noChangeFilterResult;
 
 
     public static SearchTravelsFragment newInstance(User user) {
@@ -126,6 +127,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
         adapter.setOnItemClickListener((object, position, view) -> {
             noChangeOrderOption = true;
             noChangeSearchResult = true;
+            noChangeFilterResult = true;
             changeFragment(TravelFragment.newInstance((Itinerary) object, user));
         });
     }
@@ -246,7 +248,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
         if (isSearching || !binding.searchTravelsSearchView.getQuery().toString().trim().isEmpty()) {
             Criterion.KEYWORDS.setValue(binding.searchTravelsSearchView.getQuery().toString());
-            if (isFiltering) {
+            if (isFiltering || areSetCriteria()) {
                 itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                         queryDirection, Criterion.KEYWORDS, Criterion.DAYS_FROM, Criterion.DAYS_TO,
                         Criterion.DESTINATION, Criterion.TAGS);
@@ -254,11 +256,10 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                 itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                         queryDirection, Criterion.KEYWORDS);
             }
-        } else if (isFiltering) {
-            //todo filter
+        } else if (isFiltering || areSetCriteria()) {
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                     queryDirection, Criterion.DAYS_FROM, Criterion.DAYS_TO, Criterion.DESTINATION, Criterion.TAGS);
-        } else if (!noChangeSearchResult)
+        } else if (!noChangeSearchResult || !noChangeFilterResult)
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy, queryDirection);
 
         itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
@@ -273,6 +274,11 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             setIsListEmpty();
             stopProgressBar();
         });
+    }
+
+    private boolean areSetCriteria() {
+        return Criterion.DAYS_FROM.getValue() != null || Criterion.DAYS_TO.getValue() != null
+                || Criterion.TAGS.getValue() != null || Criterion.DESTINATION.getValue() != null;
     }
 
 
@@ -338,6 +344,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                         binding.dialogFilterTravelsTagsInput
                 );
                 isFiltering = true;
+                noChangeFilterResult = false;
                 reloadList();
                 dialog.dismiss();
             });
