@@ -458,4 +458,7 @@
     <string name="dialog_filter_travels_title">Filter travels</string>
     <string name="dialog_filter_travels_desc">Choose filters to narrow search results.</string>
 
+    <string name="google_sign_in">Sign in with Google</string>
+    <string name="google_sign_up">Sign up with Google</string>
+
 </resources>

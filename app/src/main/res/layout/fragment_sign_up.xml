@@ -219,16 +219,14 @@
 
             </RelativeLayout>
 
-            <com.shobhitpuri.custombuttons.GoogleSignInButton
+            <com.google.android.gms.common.SignInButton
                 android:id="@+id/signup_google_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@id/signup_have_acc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/margin_regular"
-                android:text="@string/google_sign_up"
-                app:isDarkTheme="false"/>
+                android:layout_marginBottom="@dimen/margin_regular"/>
 
             <RelativeLayout
                 android:id="@+id/signup_have_acc"
