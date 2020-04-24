@@ -35,7 +35,6 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="@dimen/margin_regular"
                     android:contentDescription="@string/back_arrow"
                     android:background="?android:attr/selectableItemBackground"
                     android:adjustViewBounds="true"
@@ -54,18 +53,43 @@
                     android:textSize="@dimen/text_bigger"
                     android:textColor="@color/black"/>
 
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/search_travels_sort_spinner"
+                <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
+                    android:id="@+id/search_travels_search_view_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/search_travels_arrow_button"
                     android:layout_marginTop="@dimen/margin_regular"
+                    style="@style/ms9_DefaultShadowStyle"
+                    app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
+                    app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/search_travels_search_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_tiny"
+                        android:background="@color/white"
+                        app:queryBackground="@color/white"
+                        app:queryHint="@string/search"
+                        app:iconifiedByDefault="false"/>
+
+                </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/search_travels_sort_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/search_travels_search_view_layout"
+                    android:layout_marginHorizontal="@dimen/margin_tiniest"
+                    android:layout_marginTop="@dimen/margin_smaller"
                     android:fontFamily="@font/raleway_medium"
                     android:textSize="@dimen/text_smaller"
                     app:ms_background_color="@color/dirty_white"
-                    app:ms_arrow_tint="@color/main_green"/>
+                    app:ms_arrow_tint="@color/main_red"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_travels_recycler_view"
