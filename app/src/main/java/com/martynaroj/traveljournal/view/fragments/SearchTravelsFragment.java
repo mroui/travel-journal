@@ -1,5 +1,6 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,11 +18,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
+import com.martynaroj.traveljournal.databinding.DialogFilterTravelsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentSearchTravelsBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.SearchViewListener;
 import com.martynaroj.traveljournal.view.others.enums.Criterion;
 import com.martynaroj.traveljournal.view.others.enums.Sort;
@@ -147,6 +150,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private void setListeners() {
         binding.searchTravelsArrowButton.setOnClickListener(this);
+        binding.searchTravelsFilterButton.setOnClickListener(this);
         binding.searchTravelsSortSpinner.setOnItemSelectedListener((view, position, id, item) -> {
             noChangeOrderOption = false;
             reloadList();
@@ -161,6 +165,9 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.search_travels_arrow_button:
                 back();
+                break;
+            case R.id.search_travels_filter_button:
+                showFilterDialog();
                 break;
         }
     }
@@ -291,6 +298,26 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     private void resetSorting() {
         binding.searchTravelsSortSpinner.setSelectedIndex(0);
         reloadList();
+    }
+
+
+    //FILTER----------------------------------------------------------------------------------------
+
+
+    private void showFilterDialog() {
+        if (getContext() != null) {
+            Dialog dialog = DialogHandler.createDialog(getContext(), true);
+            DialogFilterTravelsBinding binding = DialogFilterTravelsBinding.inflate(LayoutInflater.from(getContext()));
+            dialog.setContentView(binding.getRoot());
+            binding.dialogFilterTravelsCancelButton.setOnClickListener(view -> dialog.dismiss());
+            binding.dialogFilterTravelsApplyButton.setOnClickListener(view -> {
+                //todo apply filters
+            });
+            binding.dialogFilterTravelsClearButton.setOnClickListener(view -> {
+                //todo clear filters
+            });
+            dialog.show();
+        }
     }
 
 
