@@ -27,7 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_small">
+                android:padding="@dimen/padding_regular">
 
                 <ImageView
                     android:id="@+id/travels_list_arrow_button"

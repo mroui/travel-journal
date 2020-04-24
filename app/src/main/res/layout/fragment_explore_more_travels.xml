@@ -35,7 +35,6 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="@dimen/margin_regular"
                     android:contentDescription="@string/back_arrow"
                     android:background="?android:attr/selectableItemBackground"
                     android:adjustViewBounds="true"

@@ -20,8 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_regular"
-            android:paddingEnd="@dimen/margin_regular">
+            android:padding="@dimen/padding_regular">
 
             <TextView
                 android:id="@+id/login_title"
@@ -31,7 +30,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/login_email_layout"
-                android:layout_marginTop="@dimen/margin_regular"
                 android:layout_marginBottom="@dimen/margin_regular"
                 android:fontFamily="@font/robotoslab_medium"
                 android:text="@string/login_title"
@@ -184,7 +182,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/margin_regular"
                 android:gravity="center_horizontal">
 
                 <TextView

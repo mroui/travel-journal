@@ -26,7 +26,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_regular">
 
             <ImageView
                 android:id="@+id/travel_arrow_button"
@@ -34,7 +35,6 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="@dimen/margin_small"
                 android:background="?android:attr/selectableItemBackground"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
@@ -48,7 +48,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/travel_arrow_button"
                 app:layout_constraintTop_toBottomOf="@+id/travel_arrow_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="@dimen/margin_small"
                 android:fontFamily="@font/robotoslab_medium"
                 android:text="@string/travel_title"
                 android:textSize="@dimen/text_bigger"
@@ -347,7 +346,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_margin="@dimen/margin_small"
                 android:padding="@dimen/padding_small"
                 style="@style/BlueTextButton"
                 app:rippleColor="@color/blue_bg_light"

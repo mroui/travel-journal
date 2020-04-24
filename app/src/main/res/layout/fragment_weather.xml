@@ -41,7 +41,6 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginBottom="@dimen/margin_medium"
                     android:background="?android:attr/selectableItemBackground"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
