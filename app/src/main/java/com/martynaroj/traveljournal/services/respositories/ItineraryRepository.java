@@ -155,11 +155,56 @@ public class ItineraryRepository {
         for (Criterion c : criteria) {
             switch (c) {
                 case KEYWORDS:
-                    result = checkKeywordsCriterion(itinerary, ((String) c.getValue()).trim().toLowerCase());
+                    result = checkKeywordsCriterion(itinerary, (c.getValue()).trim().toLowerCase());
+                    break;
+                case DAYS_FROM:
+                    result = checkDaysCriterion(itinerary, c.getValue(), true);
+                    break;
+                case DAYS_TO:
+                    result = checkDaysCriterion(itinerary, c.getValue(), false);
+                    break;
+                case DESTINATION:
+                    result = checkDestinationCriterion(itinerary, c.getValue());
+                    break;
+                case TAGS:
+                    result = checkTagsCriterion(itinerary, c.getValue());
                     break;
             }
+            if (!result)
+                break;
         }
         return result;
+    }
+
+
+    private boolean checkDestinationCriterion(Itinerary itinerary, String value) {
+        if (!value.trim().isEmpty())
+            return itinerary.getDestination().trim().toLowerCase().contains(value);
+        else
+            return true;
+    }
+
+
+    private boolean checkDaysCriterion(Itinerary itinerary, String value, boolean from) {
+        if (!value.trim().isEmpty())
+            if (from)
+                return itinerary.getDaysAmount() >= Integer.parseInt(value);
+            else
+                return itinerary.getDaysAmount() <= Integer.parseInt(value);
+        else
+            return true;
+    }
+
+
+    private boolean checkTagsCriterion(Itinerary itinerary, String value) {
+        List<String> tags = Arrays.asList(value.split("&"));
+        if (tags.size() > 0)
+            if ((tags.size() == 1 && tags.get(0).trim().isEmpty()))
+                return true;
+            else
+                return itinerary.getTags().containsAll(tags);
+        else
+            return true;
     }
 
 

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.hootsuite.nachos.NachoTextView;
@@ -36,6 +37,7 @@ import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class SearchTravelsFragment extends BaseFragment implements View.OnClickListener {
@@ -58,6 +60,8 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private boolean isSearching;
     private boolean noChangeSearchResult;
+
+    private boolean isFiltering;
 
 
     public static SearchTravelsFragment newInstance(User user) {
@@ -105,6 +109,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     private void initContentData() {
         isSearching = false;
+        isFiltering = false;
         initSortingSpinner(binding.searchTravelsSortSpinner);
         reloadList();
     }
@@ -241,8 +246,18 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
         if (isSearching || !binding.searchTravelsSearchView.getQuery().toString().trim().isEmpty()) {
             Criterion.KEYWORDS.setValue(binding.searchTravelsSearchView.getQuery().toString());
+            if (isFiltering) {
+                itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
+                        queryDirection, Criterion.KEYWORDS, Criterion.DAYS_FROM, Criterion.DAYS_TO,
+                        Criterion.DESTINATION, Criterion.TAGS);
+            } else {
+                itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
+                        queryDirection, Criterion.KEYWORDS);
+            }
+        } else if (isFiltering) {
+            //todo filter
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
-                    queryDirection, Criterion.KEYWORDS);
+                    queryDirection, Criterion.DAYS_FROM, Criterion.DAYS_TO, Criterion.DESTINATION, Criterion.TAGS);
         } else if (!noChangeSearchResult)
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy, queryDirection);
 
@@ -313,15 +328,60 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             DialogFilterTravelsBinding binding = DialogFilterTravelsBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
             setTagsView(binding.dialogFilterTravelsTagsInput);
+            fillFilterInputs(binding);
             binding.dialogFilterTravelsCancelButton.setOnClickListener(view -> dialog.dismiss());
             binding.dialogFilterTravelsApplyButton.setOnClickListener(view -> {
                 //todo apply filters
+                validateFilters(
+                        binding.dialogFilterTravelsDurationFromInput,
+                        binding.dialogFilterTravelsDurationToInput,
+                        binding.dialogFilterTravelsDestinationInput,
+                        binding.dialogFilterTravelsTagsInput
+                );
+                isFiltering = true;
+                reloadList();
+                dialog.dismiss();
             });
             binding.dialogFilterTravelsClearButton.setOnClickListener(view -> {
                 //todo clear filters
+                isFiltering = false;
+                reloadList();
             });
             dialog.show();
         }
+    }
+
+
+    private void fillFilterInputs(DialogFilterTravelsBinding binding) {
+        String cDaysFrom = Criterion.DAYS_FROM.getValue() != null ? Criterion.DAYS_FROM.getValue() : "";
+        binding.dialogFilterTravelsDurationFromInput.setText(cDaysFrom);
+
+        String cDaysTo = Criterion.DAYS_TO.getValue() != null ? Criterion.DAYS_TO.getValue() : "";
+        binding.dialogFilterTravelsDurationToInput.setText(cDaysTo);
+
+        String cDestination = Criterion.DESTINATION.getValue() != null ? Criterion.DESTINATION.getValue() : "";
+        binding.dialogFilterTravelsDestinationInput.setText(cDestination);
+
+        String cTags = Criterion.TAGS.getValue() != null ? Criterion.TAGS.getValue() : "";
+        List<String> tags = Arrays.asList(cTags.split("&"));
+        if (tags.size() > 0)
+            if (!tags.get(0).isEmpty())
+                binding.dialogFilterTravelsTagsInput.setText(tags);
+    }
+
+
+    private void validateFilters(TextInputEditText from, TextInputEditText to, TextInputEditText destination, NachoTextView tags) {
+        String sFrom = from.getText() != null ? from.getText().toString() : "";
+        String sTo = to.getText() != null ? to.getText().toString() : "";
+        String sDestination = destination.getText() != null ? destination.getText().toString() : "";
+        StringBuilder sTags = new StringBuilder();
+        for (String tag : new ArrayList<>(new LinkedHashSet<>(tags.getChipValues())))
+            sTags.append(tag).append("&");
+
+        Criterion.DAYS_FROM.setValue(sFrom);
+        Criterion.DAYS_TO.setValue(sTo);
+        Criterion.DESTINATION.setValue(sDestination);
+        Criterion.TAGS.setValue(sTags.toString());
     }
 
 

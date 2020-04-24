@@ -2,17 +2,17 @@ package com.martynaroj.traveljournal.view.others.enums;
 
 public enum Criterion {
 
-    KEYWORDS;
+    KEYWORDS,
+    DAYS_FROM,
+    DAYS_TO,
+    DESTINATION,
+    TAGS;
 
-    private Object value;
+    private String value;
 
     Criterion() {}
 
-    Criterion(Object value) {
-        this.value = value;
-    }
-
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
