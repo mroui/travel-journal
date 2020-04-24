@@ -331,7 +331,6 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             fillFilterInputs(binding);
             binding.dialogFilterTravelsCancelButton.setOnClickListener(view -> dialog.dismiss());
             binding.dialogFilterTravelsApplyButton.setOnClickListener(view -> {
-                //todo apply filters
                 validateFilters(
                         binding.dialogFilterTravelsDurationFromInput,
                         binding.dialogFilterTravelsDurationToInput,
@@ -343,9 +342,13 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                 dialog.dismiss();
             });
             binding.dialogFilterTravelsClearButton.setOnClickListener(view -> {
-                //todo clear filters
+                Criterion.DAYS_TO.setValue(null);
+                Criterion.DAYS_FROM.setValue(null);
+                Criterion.DESTINATION.setValue(null);
+                Criterion.TAGS.setValue(null);
                 isFiltering = false;
                 reloadList();
+                dialog.dismiss();
             });
             dialog.show();
         }
