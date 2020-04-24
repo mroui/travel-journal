@@ -12,13 +12,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.others.enums.Criterion;
 import com.martynaroj.traveljournal.view.others.enums.Privacy;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -108,30 +111,68 @@ public class ItineraryRepository {
 
 
     public LiveData<List<DocumentSnapshot>> getItinerariesDocumentsListStartAt(
-            User user, int limit, DocumentSnapshot last, String orderBy, Query.Direction direction) {
+            User user, int limit, DocumentSnapshot last, String orderBy, Query.Direction direction,
+            Criterion ... criteria) {
         MutableLiveData<List<DocumentSnapshot>> documentsData = new MutableLiveData<>();
         Query query = itinerariesRef.orderBy(orderBy, direction);
         if (last != null)
             query = query.startAfter(last);
         query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                List<DocumentSnapshot> documentsList = new ArrayList<>();
-                for (int i = 0; i < task.getResult().size(); i++) {
-                    Itinerary itinerary = task.getResult().getDocuments().get(i).toObject(Itinerary.class);
-                    if (itinerary != null
-                            && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
-                            || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
-                            && user != null
-                            && user.getFriends().contains(itinerary.getOwner()))))
-                        documentsList.add(task.getResult().getDocuments().get(i));
-                    if (documentsList.size() == limit)
-                        break;
-                }
-                documentsData.setValue(documentsList);
-            } else
+            if (task.isSuccessful() && task.getResult() != null)
+                documentsData.setValue(getListWithLimitAndCriterion(task.getResult(), user, limit, criteria));
+            else
                 documentsData.setValue(null);
         });
         return documentsData;
+    }
+
+
+    //CHECK CRITERIA--------------------------------------------------------------------------------
+
+
+    private List<DocumentSnapshot> getListWithLimitAndCriterion(QuerySnapshot querySnapshot,
+                                                                User user, int limit,
+                                                                Criterion... criteria) {
+        List<DocumentSnapshot> documentsList = new ArrayList<>();
+        for (int i = 0; i < querySnapshot.size(); i++) {
+            Itinerary itinerary = querySnapshot.getDocuments().get(i).toObject(Itinerary.class);
+            if (itinerary != null
+                    && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
+                    || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
+                    && user != null
+                    && user.getFriends().contains(itinerary.getOwner()))))
+                if (criteria.length == 0 || checkCriterion(itinerary, criteria))
+                    documentsList.add(querySnapshot.getDocuments().get(i));
+            if (documentsList.size() == limit)
+                break;
+        }
+        return documentsList;
+    }
+
+
+    private boolean checkCriterion(Itinerary itinerary, Criterion... criteria) {
+        boolean result = false;
+        for (Criterion c : criteria) {
+            switch (c) {
+                case KEYWORDS:
+                    result = checkKeywordsCriterion(itinerary, ((String) c.getValue()).trim().toLowerCase());
+                    break;
+            }
+        }
+        return result;
+    }
+
+
+    private boolean checkKeywordsCriterion(Itinerary itinerary, String value) {
+        List<String> keywords = Arrays.asList(value.split("\\s+"));
+        if (itinerary.getName().contains(value))
+            return true;
+        else if (itinerary.getDescription().trim().toLowerCase().contains(value))
+            return true;
+        else if (itinerary.getDestinationString().trim().toLowerCase().contains(value))
+            return true;
+        else
+            return itinerary.getTags().containsAll(keywords);
     }
 
 }

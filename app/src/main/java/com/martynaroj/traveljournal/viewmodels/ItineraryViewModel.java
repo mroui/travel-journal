@@ -12,6 +12,7 @@ import com.google.firebase.firestore.Query;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.services.respositories.ItineraryRepository;
+import com.martynaroj.traveljournal.view.others.enums.Criterion;
 import com.martynaroj.traveljournal.view.others.enums.Status;
 
 import java.util.List;
@@ -68,8 +69,8 @@ public class ItineraryViewModel extends AndroidViewModel {
     }
 
     public void getDocumentsListStartAt(User user, DocumentSnapshot last, int limit, String orderBy,
-                                                   Query.Direction direction) {
-        documentsLiveData = itineraryRepository.getItinerariesDocumentsListStartAt(user, limit, last, orderBy, direction);
+                                        Query.Direction direction, Criterion ... criteria) {
+        documentsLiveData = itineraryRepository.getItinerariesDocumentsListStartAt(user, limit, last, orderBy, direction, criteria);
     }
 
     public LiveData<List<DocumentSnapshot>> getDocumentsData() {
