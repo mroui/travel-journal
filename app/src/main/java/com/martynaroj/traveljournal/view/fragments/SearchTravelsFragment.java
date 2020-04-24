@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
+import com.hootsuite.nachos.NachoTextView;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogFilterTravelsBinding;
 import com.martynaroj.traveljournal.databinding.FragmentSearchTravelsBinding;
 import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.User;
+import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
@@ -33,6 +35,7 @@ import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchTravelsFragment extends BaseFragment implements View.OnClickListener {
@@ -309,6 +312,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             Dialog dialog = DialogHandler.createDialog(getContext(), true);
             DialogFilterTravelsBinding binding = DialogFilterTravelsBinding.inflate(LayoutInflater.from(getContext()));
             dialog.setContentView(binding.getRoot());
+            setTagsView(binding.dialogFilterTravelsTagsInput);
             binding.dialogFilterTravelsCancelButton.setOnClickListener(view -> dialog.dismiss());
             binding.dialogFilterTravelsApplyButton.setOnClickListener(view -> {
                 //todo apply filters
@@ -317,6 +321,18 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                 //todo clear filters
             });
             dialog.show();
+        }
+    }
+
+
+    private void setTagsView(NachoTextView tagsInput) {
+        if (getContext() != null) {
+            HashtagAdapter adapter = new HashtagAdapter(
+                    getContext(),
+                    new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.preferences)))
+            );
+            tagsInput.setAdapter(adapter);
+            tagsInput.setThreshold(1);
         }
     }
 

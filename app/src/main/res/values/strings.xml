@@ -457,6 +457,13 @@
 
     <string name="dialog_filter_travels_title">Filter travels</string>
     <string name="dialog_filter_travels_desc">Choose filters to narrow search results.</string>
+    <string name="dialog_filter_travels_duration_title">DURATION</string>
+    <string name="dialog_filter_travels_duration_from_hint">From</string>
+    <string name="dialog_filter_travels_duration_to_hint">To</string>
+    <string name="dialog_filter_travels_destination_title">DESTINATION</string>
+    <string name="dialog_filter_travels_destination_hint">Country, city…</string>
+    <string name="dialog_filter_travels_tags_title">TAGS</string>
+    <string name="dialog_filter_travels_tags_hint">Beach, europe, culture…</string>
 
     <string name="google_sign_in">Sign in with Google</string>
     <string name="google_sign_up">Sign up with Google</string>

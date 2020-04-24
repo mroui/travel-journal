@@ -28,7 +28,7 @@
         android:textColor="@color/gray"/>
 
     <ScrollView
-        android:id="@+id/dialog_add_note_content_container"
+        android:id="@+id/dialog_filter_travels_content_container"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/padding_smaller"
@@ -40,7 +40,149 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/dialog_filter_travels_duration_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_bold"
+                android:text="@string/dialog_filter_travels_duration_title"
+                android:textColor="@color/main_red"/>
 
+            <View
+                android:id="@+id/dialog_filter_travels_duration_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/main_red"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dialog_filter_travels_duration_from_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_tiny"
+                    style="@style/TextInput"
+                    app:boxStrokeColor="@color/main_red"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false"
+                    app:errorIconDrawable="@null"
+                    android:layout_weight="1">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_filter_travels_duration_from_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:inputType="number"
+                        android:hint="@string/dialog_filter_travels_duration_from_hint"
+                        android:maxLength="4"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dialog_filter_travels_duration_to_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_tiny"
+                    style="@style/TextInput"
+                    app:boxStrokeColor="@color/main_red"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false"
+                    app:errorIconDrawable="@null"
+                    android:layout_weight="1">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dialog_filter_travels_duration_to_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/raleway_regular"
+                        android:textSize="@dimen/text_small"
+                        android:textCursorDrawable="@null"
+                        android:inputType="number"
+                        android:hint="@string/dialog_filter_travels_duration_to_hint"
+                        android:maxLength="4"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/dialog_filter_travels_destination_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:fontFamily="@font/raleway_bold"
+                android:text="@string/dialog_filter_travels_destination_title"
+                android:textColor="@color/main_red"/>
+
+            <View
+                android:id="@+id/dialog_filter_travels_destination_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/main_red"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialog_filter_travels_destination_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
+                style="@style/TextInput"
+                app:boxStrokeColor="@color/main_red"
+                app:hintEnabled="false"
+                app:errorEnabled="false"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dialog_filter_travels_destination_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_regular"
+                    android:textSize="@dimen/text_small"
+                    android:textCursorDrawable="@null"
+                    android:hint="@string/dialog_filter_travels_destination_hint"
+                    android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/dialog_filter_travels_tags_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:fontFamily="@font/raleway_bold"
+                android:text="@string/dialog_filter_travels_tags_title"
+                android:textColor="@color/main_red"/>
+
+            <View
+                android:id="@+id/dialog_filter_travels_tags_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/main_red"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialog_filter_travels_tags_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
+                style="@style/TextInput"
+                app:boxStrokeColor="@color/main_red"
+                app:hintEnabled="false">
+                <com.hootsuite.nachos.NachoTextView
+                    android:id="@+id/dialog_filter_travels_tags_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_smaller"
+                    android:textSize="@dimen/text_small"
+                    android:hint="@string/dialog_filter_travels_tags_hint"
+                    android:textColorHint="@color/gray"
+                    android:fontFamily="@font/raleway_regular"
+                    app:chipBackground="@color/transparent_light"
+                    app:chipTextColor="@color/black"
+                    app:chipTextSize="@dimen/chip_text_size"
+                    app:chipHeight="@dimen/chip_height"
+                    android:textCursorDrawable="@null"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
