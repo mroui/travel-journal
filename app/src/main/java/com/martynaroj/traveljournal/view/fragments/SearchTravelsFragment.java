@@ -1,9 +1,11 @@
 package com.martynaroj.traveljournal.view.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 
 import androidx.annotation.NonNull;
@@ -308,12 +310,22 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
 
     private void changeFragment(BaseFragment next) {
-        //todo hide keyboard
+        hideKeyboard();
         getNavigationInteractions().changeFragment(getParentFragment(), next, true);
     }
 
 
+    @SuppressWarnings("ConstantConditions")
+    protected void hideKeyboard() {
+        if (getActivity() != null) {
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        }
+    }
+
+
     private void back() {
+        hideKeyboard();
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
     }
