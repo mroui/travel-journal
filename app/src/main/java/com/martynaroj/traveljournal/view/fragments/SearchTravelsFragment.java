@@ -220,7 +220,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if(noChangeSearchResult) {
+                if (noChangeSearchResult) {
                     noChangeSearchResult = false;
                     return false;
                 }
@@ -235,8 +235,6 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
     }
 
 
-
-
     //LIST------------------------------------------------------------------------------------------
 
 
@@ -248,18 +246,17 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
         if (isSearching || !binding.searchTravelsSearchView.getQuery().toString().trim().isEmpty()) {
             Criterion.KEYWORDS.setValue(binding.searchTravelsSearchView.getQuery().toString());
-            if (isFiltering || areSetCriteria()) {
+            if (isFiltering || areSetCriteria())
                 itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                         queryDirection, Criterion.KEYWORDS, Criterion.DAYS_FROM, Criterion.DAYS_TO,
                         Criterion.DESTINATION, Criterion.TAGS);
-            } else {
+            else
                 itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                         queryDirection, Criterion.KEYWORDS);
-            }
-        } else if (isFiltering || areSetCriteria()) {
+        } else if (isFiltering || areSetCriteria())
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy,
                     queryDirection, Criterion.DAYS_FROM, Criterion.DAYS_TO, Criterion.DESTINATION, Criterion.TAGS);
-        } else if (!noChangeSearchResult || !noChangeFilterResult)
+        else if (!noChangeSearchResult || !noChangeFilterResult)
             itineraryViewModel.getDocumentsListStartAt(user, lastDocument, 5, queryOrderBy, queryDirection);
 
         itineraryViewModel.getDocumentsData().observe(getViewLifecycleOwner(), documentSnapshots -> {
