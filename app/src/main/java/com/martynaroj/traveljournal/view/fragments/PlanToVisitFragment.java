@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.Status;
@@ -22,7 +23,6 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddMarkerBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
@@ -82,7 +82,6 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         View view = binding.getRoot();
 
         initViewModels();
-        initLoggedUser();
         initGoogleMap();
         initGooglePlaces();
 
@@ -90,6 +89,8 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
         disableButtons();
 
         checkTutorialSnackbar();
+
+        observeUserChanges();
 
         return view;
     }
@@ -107,27 +108,9 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    private void initLoggedUser() {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() != null) {
-            startProgressBar();
-            userViewModel.getUserData(firebaseAuth.getCurrentUser().getUid());
-            userViewModel.getUserLiveData().observe(getViewLifecycleOwner(), user -> {
-                if (user != null) {
-                    this.user = user;
-                    initLocation();
-                    initMarkers();
-                } else
-                    showSnackBar(getResources().getString(R.string.messages_error_current_user_not_available), Snackbar.LENGTH_LONG);
-                stopProgressBar();
-            });
-        }
-    }
-
-
     private void initMarkers() {
         markers = new ArrayList<>();
-        if (user.getMarkers() != null && !user.getMarkers().isEmpty()) {
+        if (user != null && user.getMarkers() != null && !user.getMarkers().isEmpty()) {
             startProgressBar();
             markerViewModel.getMarkersListData(user.getMarkers());
             markerViewModel.getMarkersList().observe(getViewLifecycleOwner(), markers -> {
@@ -150,7 +133,7 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
 
 
     private void initLocation() {
-        if (user.getLocation() != null && !user.getLocation().isEmpty()) {
+        if (user != null && user.getLocation() != null && !user.getLocation().isEmpty()) {
             startProgressBar();
             addressViewModel.getAddress(user.getLocation());
             addressViewModel.getAddressData().observe(getViewLifecycleOwner(), address -> {
@@ -170,6 +153,32 @@ public class PlanToVisitFragment extends BaseFragment implements View.OnClickLis
                     R.id.explore_map_search_view,
                     getChildFragmentManager()
             );
+        }
+    }
+
+
+    private void observeUserChanges() {
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            this.user = user;
+            if (this.user != null) {
+                initLocation();
+                initMarkers();
+            }
+            initVisibilitySearchView(this.user != null);
+        });
+    }
+
+
+    private void initVisibilitySearchView(boolean visible) {
+        Fragment fragmentMap = getChildFragmentManager().findFragmentById(R.id.explore_map_search_view);
+        if (visible) {
+            binding.exploreMapSearchViewLayout.setVisibility(View.VISIBLE);
+            if (fragmentMap != null && fragmentMap.getView() != null)
+                fragmentMap.getView().setVisibility(View.VISIBLE);
+        } else {
+            binding.exploreMapSearchViewLayout.setVisibility(View.GONE);
+            if (fragmentMap != null && fragmentMap.getView() != null)
+                fragmentMap.getView().setVisibility(View.GONE);
         }
     }
 
