@@ -250,7 +250,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             else
                 binding.setLocation(null);
         } catch (IOException e) {
-            showSnackBar(getResources().getString(R.string.messages_error_failed_locate), Snackbar.LENGTH_LONG);
+            binding.setLocation(address.getAddress().substring(address.getAddress().lastIndexOf(',') + 1));
         }
     }
 
