@@ -120,7 +120,7 @@
                             android:drawablePadding="@dimen/padding_tiniest"
                             android:textColor="@color/black"
                             android:gravity="center_vertical"
-                            android:layout_weight="2"/>
+                            android:layout_weight="3"/>
 
                         <TextView
                             android:id="@+id/details_destination_value"
@@ -133,7 +133,7 @@
                             android:text="@{destination.name + ',' + ' ' + destination.address}"
                             android:textColor="@color/darker_gray"
                             android:visibility="@{destination != null ? View.VISIBLE : View.INVISIBLE}"
-                            android:layout_weight="3"/>
+                            android:layout_weight="4"/>
 
                     </LinearLayout>
 
