@@ -36,8 +36,8 @@ public class User extends BaseObservable implements Serializable {
     private Map<String, Integer> privacy;
     private List<String> markers;
     private String activeTravelId;
-    private List<String> travels;
     private List<String> savedTravels;
+    private List<String> travels;
 
 
     public User() {
@@ -289,27 +289,39 @@ public class User extends BaseObservable implements Serializable {
 
 
     @Exclude
-    public boolean isEmailAvailableForUser (User loggedUser) {
-        return (!isUserProfile(loggedUser) && this.getPrivacyEmail() == 0) || isUserProfile(loggedUser);
+    public boolean isEmailAvailableForUser(User loggedUser) {
+        return ((!isUserProfile(loggedUser) && this.getPrivacyEmail() == 0)
+                    || (!isUserProfile(loggedUser) && this.getPrivacyEmail() == 1
+                        && loggedUser != null && friends != null
+                        && friends.contains(loggedUser.getUid())))
+                || isUserProfile(loggedUser);
     }
 
 
     @Exclude
-    public boolean isLocationAvailableForUser (User loggedUser) {
-        return ((!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0) || isUserProfile(loggedUser))
+    public boolean isLocationAvailableForUser(User loggedUser) {
+        return (((!isUserProfile(loggedUser) && this.getPrivacyLocation() == 0)
+                    || (!isUserProfile(loggedUser) && this.getPrivacyLocation() == 1
+                        && loggedUser != null && friends != null
+                        && friends.contains(loggedUser.getUid())))
+                || isUserProfile(loggedUser))
                 && this.location != null;
     }
 
 
     @Exclude
-    public boolean isPreferencesAvailableForUser (User loggedUser) {
-        return ((!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0) || isUserProfile(loggedUser))
+    public boolean isPreferencesAvailableForUser(User loggedUser) {
+        return (((!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 0)
+                    || (!isUserProfile(loggedUser) && this.getPrivacyPreferences() == 1
+                        && loggedUser != null && friends != null
+                        && friends.contains(loggedUser.getUid())))
+                || isUserProfile(loggedUser))
                 && this.preferences != null;
     }
 
 
     @Exclude
-    public boolean isUserProfile (User loggedUser) {
+    public boolean isUserProfile(User loggedUser) {
         return loggedUser != null && this.uid.equals(loggedUser.getUid());
     }
 
@@ -334,7 +346,7 @@ public class User extends BaseObservable implements Serializable {
 
 
     @BindingAdapter("imageUrl")
-    public static void loadImage(ImageView v, String imgUrl){
+    public static void loadImage(ImageView v, String imgUrl) {
         Glide.with(v.getContext())
                 .load(imgUrl)
                 .placeholder(R.drawable.default_avatar)
