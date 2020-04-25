@@ -27,6 +27,7 @@ import com.martynaroj.traveljournal.services.models.User;
 import com.martynaroj.traveljournal.view.adapters.HashtagAdapter;
 import com.martynaroj.traveljournal.view.adapters.TravelAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
+import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
 import com.martynaroj.traveljournal.view.others.classes.SearchViewListener;
 import com.martynaroj.traveljournal.view.others.enums.Criterion;
@@ -40,7 +41,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class SearchTravelsFragment extends BaseFragment implements View.OnClickListener {
+public class SearchTravelsFragment extends BaseFragment implements View.OnClickListener, IOnBackPressed {
 
     private FragmentSearchTravelsBinding binding;
     private UserViewModel userViewModel;
@@ -346,16 +347,21 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                 dialog.dismiss();
             });
             binding.dialogFilterTravelsClearButton.setOnClickListener(view -> {
-                Criterion.DAYS_TO.setValue(null);
-                Criterion.DAYS_FROM.setValue(null);
-                Criterion.DESTINATION.setValue(null);
-                Criterion.TAGS.setValue(null);
-                isFiltering = false;
+                resetFiltering();
                 reloadList();
                 dialog.dismiss();
             });
             dialog.show();
         }
+    }
+
+
+    private void resetFiltering() {
+        Criterion.DAYS_TO.setValue(null);
+        Criterion.DAYS_FROM.setValue(null);
+        Criterion.DESTINATION.setValue(null);
+        Criterion.TAGS.setValue(null);
+        isFiltering = false;
     }
 
 
@@ -436,8 +442,17 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
 
     void back() {
         hideKeyboard();
+        resetFiltering();
         if (getParentFragmentManager().getBackStackEntryCount() > 0)
             getParentFragmentManager().popBackStack();
+    }
+
+
+    @Override
+    public boolean onBackPressed() {
+        resetFiltering();
+        back();
+        return true;
     }
 
 
