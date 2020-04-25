@@ -234,7 +234,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void checkNewAccount() {
         if (getContext() != null) {
             if (!SharedPreferencesUtils.getBoolean(getContext(), Constants.UPDATE_PROFILE_DIALOG, false)
-                    && user.getLocation() == null && user.getPreferences() == null && user.getBio() == null
+                    && user.getLocation() == null && user.getPreferences().isEmpty()
+                    && user.getBio() == null
                     && user.getPhoto() == null)
                 openUpdateProfileDialog();
         }
