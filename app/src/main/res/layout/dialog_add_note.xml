@@ -230,7 +230,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="top"
                     android:fontFamily="@font/raleway_regular"
-                    android:lines="8"
                     android:maxLength="1000"
                     android:textSize="@dimen/text_small"
                     android:textCursorDrawable="@null"
