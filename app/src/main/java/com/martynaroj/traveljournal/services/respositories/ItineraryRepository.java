@@ -97,7 +97,9 @@ public class ItineraryRepository {
                             && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
                             || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
                             && user != null
-                            && user.getFriends().contains(itinerary.getOwner()))))
+                            && user.getFriends().contains(itinerary.getOwner()))
+                            || (user != null
+                            && user.getUid().equals(itinerary.getOwner()))))
                         itineraries.add(itinerary);
                     if (itineraries.size() == limit)
                         break;
@@ -112,7 +114,7 @@ public class ItineraryRepository {
 
     public LiveData<List<DocumentSnapshot>> getItinerariesDocumentsListStartAt(
             User user, int limit, DocumentSnapshot last, String orderBy, Query.Direction direction,
-            Criterion ... criteria) {
+            Criterion... criteria) {
         MutableLiveData<List<DocumentSnapshot>> documentsData = new MutableLiveData<>();
         Query query = itinerariesRef.orderBy(orderBy, direction);
         if (last != null)
@@ -140,7 +142,9 @@ public class ItineraryRepository {
                     && (itinerary.getPrivacy() == Privacy.PUBLIC.ordinal()
                     || (itinerary.getPrivacy() == Privacy.FRIENDS.ordinal()
                     && user != null
-                    && user.getFriends().contains(itinerary.getOwner()))))
+                    && user.getFriends().contains(itinerary.getOwner()))
+                    || (user != null
+                    && user.getUid().equals(itinerary.getOwner()))))
                 if (criteria.length == 0 || checkCriterion(itinerary, criteria))
                     documentsList.add(querySnapshot.getDocuments().get(i));
             if (documentsList.size() == limit)
