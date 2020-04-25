@@ -308,7 +308,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
                     queryDirection = Query.Direction.DESCENDING;
                     break;
                 case DURATION_SHORTEST:
-                    queryOrderBy = Constants.DB_CREATED_DATE;
+                    queryOrderBy = Constants.DB_DAYS_AMOUNT;
                     queryDirection = Query.Direction.ASCENDING;
                     break;
             }
