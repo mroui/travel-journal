@@ -351,7 +351,8 @@
                 app:rippleColor="@color/blue_bg_light"
                 android:text="@{user.savedTravels.contains(itinerary.id) ? @string/travel_saved_travel : @string/travel_save_travel}"
                 android:fontFamily="@font/raleway_bold"
-                android:visibility="@{user.equals(owner) ? View.GONE : View.VISIBLE}"/>
+                android:enabled="@{user == null || user.savedTravels.contains(itinerary.id) ? false : true}"
+                android:visibility="@{user == null || user.equals(owner) ? View.GONE : View.VISIBLE}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

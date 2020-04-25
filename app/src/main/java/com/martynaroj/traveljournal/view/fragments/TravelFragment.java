@@ -28,7 +28,6 @@ import com.martynaroj.traveljournal.viewmodels.ItineraryViewModel;
 import com.martynaroj.traveljournal.viewmodels.UserViewModel;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
@@ -225,11 +224,10 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
 
     private void saveTravel() {
         if (user != null) {
-            List<String> savedTravels = user.getSavedTravels();
-            savedTravels.add(itinerary.getId());
-            userViewModel.setUser(user);
+            user.getSavedTravels().add(itinerary.getId());
+            binding.setUser(user);
             userViewModel.updateUser(true, user, new HashMap<String, Object>() {{
-                put(Constants.DB_SAVED_TRAVELS, savedTravels);
+                put(Constants.DB_SAVED_TRAVELS, user.getSavedTravels());
             }});
             itinerary.addPopularity();
             binding.setItinerary(itinerary);
@@ -237,8 +235,6 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
                 put(Constants.DB_POPULARITY, itinerary.getPopularity());
             }});
             showSnackBar(getResources().getString(R.string.messages_save_travel_success), Snackbar.LENGTH_SHORT);
-            binding.travelSaveButton.setText(getResources().getString(R.string.travel_saved_travel));
-            binding.travelSaveButton.setEnabled(false);
         } else
             showSnackBar(getResources().getString(R.string.messages_not_logged_user), Snackbar.LENGTH_LONG);
     }
