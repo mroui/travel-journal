@@ -102,6 +102,7 @@
                         android:layout_marginStart="@dimen/margin_regular"
                         android:layout_marginEnd="@dimen/margin_regular"
                         android:layout_marginTop="100dp"
+                        android:layout_marginBottom="@dimen/margin_tiny"
                         android:background="@color/white">
 
                         <TextView
@@ -263,7 +264,7 @@
                     app:tagForeground="?android:attr/selectableItemBackground"
                     app:tagTextSize="@dimen/text_small"
                     app:tagTextColor="@color/dark_gray"
-                    android:visibility="@{user.isPreferencesAvailableForUser(loggedUser) ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{user.isPreferencesAvailableForUser(loggedUser) &amp;&amp; user.preferencesSize > 0 ? View.VISIBLE : View.GONE}"/>
 
                 <TextView
                     android:id="@+id/profile_see_all_preferences"
