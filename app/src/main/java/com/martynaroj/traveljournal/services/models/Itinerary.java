@@ -55,7 +55,7 @@ public class Itinerary extends BaseObservable implements Serializable {
         this.tags = tags;
         this.file = file;
         this.privacy = privacy;
-        this.daysAmount = Travel.whatDay(datetimeTo, datetimeFrom);
+        this.daysAmount = Travel.whatDay(datetimeFrom, datetimeTo);
     }
 
 
