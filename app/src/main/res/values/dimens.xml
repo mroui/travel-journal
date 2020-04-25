@@ -64,7 +64,7 @@
     <dimen name="packing_menu_button_2_height">130dp</dimen>
 
     <dimen name="dialog_input_width">250dp</dimen>
-    <dimen name="dialog_button_width">80dp</dimen>
+    <dimen name="dialog_button_width">85dp</dimen>
 
     <dimen name="item_user_height">80dp</dimen>
     <dimen name="item_travel_height">200dp</dimen>
