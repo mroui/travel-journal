@@ -449,10 +449,10 @@
     <string name="travel_popularity">Popularity</string>
 
     <string name="explore_more_travels_title">Explore more</string>
-    <string name="explore_more_travels_list_no_results">No travels results.</string>
+    <string name="explore_more_travels_list_no_results">No travels found.</string>
 
     <string name="search_travels_title">Search travels</string>
-    <string name="search_travels_list_no_results">No travels results.</string>
+    <string name="search_travels_list_no_results">No travels found.</string>
     <string name="search_travels_filter">Filter list</string>
 
     <string name="dialog_filter_travels_title">Filter travels</string>
