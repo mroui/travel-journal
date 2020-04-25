@@ -151,6 +151,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public int getPreferencesSize() {
         int count = 0;
         if (this.preferences != null) {
@@ -221,6 +222,7 @@ public class User extends BaseObservable implements Serializable {
     }
 
 
+    @Exclude
     public boolean isActiveTravel() {
         return activeTravelId != null && !activeTravelId.equals("");
     }
