@@ -177,6 +177,10 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
 
 
     private void drawText(String text, int size, int color, Typeface typeface, Layout.Alignment alignment) {
+        if (remainHeight <= 0) {
+            document.finishPage(page);
+            addNewPage();
+        }
         TextPaint textPaint = getTextPaint(size, color, typeface);
         StaticLayout textLayout = getTextLayout(text, textPaint, alignment);
         if (textLayout.getHeight() > remainHeight) {
@@ -217,6 +221,10 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
             if (drawable != null) {
                 drawable = (DrawableCompat.wrap(drawable)).mutate();
                 drawable.setBounds(left, 0, width + left, height);
+                if (height > remainHeight) {
+                    document.finishPage(page);
+                    addNewPage();
+                }
                 drawable.draw(canvas);
                 moveCanvas(height);
             }
@@ -224,6 +232,10 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
             VectorDrawableCompat vector = VectorDrawableCompat.create(context.getResources(), id, null);
             if (vector != null) {
                 vector.setBounds(left, 0, width + left, height);
+                if (height > remainHeight) {
+                    document.finishPage(page);
+                    addNewPage();
+                }
                 vector.draw(canvas);
                 moveCanvas(height);
             }
@@ -350,7 +362,10 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
     private int measureIndexToSubstring(double textHeight, StaticLayout textLayout) {
         double lineHeight = textHeight / textLayout.getLineCount();
         int howMuchLines = (int) Math.floor(remainHeight / lineHeight);
-        return textLayout.getLineStart(howMuchLines + 1);
+        if (howMuchLines == 0)
+            return 0;
+        else
+            return textLayout.getLineStart(howMuchLines + 1);
     }
 
 
