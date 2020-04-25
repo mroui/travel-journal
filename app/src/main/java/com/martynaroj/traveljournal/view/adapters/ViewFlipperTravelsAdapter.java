@@ -44,7 +44,7 @@ public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
 
     @Override
     public int getCount() {
-        return itineraries.size();
+        return itineraries.size() == 0 ? 0 : itineraries.size() + 2;
     }
 
 
@@ -57,24 +57,27 @@ public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
     @SuppressLint("SetTextI18n")
     @Override
     protected void bindView(View convertView, int position, int viewType) {
-        if (position >= 0 && position < itineraries.size()) {
-            Glide.with(context).load(itineraries.get(position).getImage()).fitCenter()
+        int index = position;
+        if (position == 0) {
+            index = itineraries.size() - 1;
+        } else if (position == itineraries.size() + 1) {
+            index = 0;
+        } else
+            index = position - 1;
+        Itinerary itinerary = itineraries.get(index);
+        if (itinerary != null) {
+            Glide.with(context).load(itinerary.getImage()).fitCenter()
                     .placeholder(R.drawable.no_image).centerCrop()
                     .into(binding.travelViewFlipperItemImage);
-            binding.travelViewFlipperItemName.setText(itineraries.get(position).getName());
-            binding.travelViewFlipperItemAddress.setText(itineraries.get(position).getDestination().replace("&", ", "));
-            binding.travelViewFlipperItemDate.setText(itineraries.get(position).getDateString(itineraries.get(position).getCreatedDate()));
-            binding.travelViewFlipperItemPopularity.setText(itineraries.get(position).getPopularity() + "");
+            binding.travelViewFlipperItemName.setText(itinerary.getName());
+            binding.travelViewFlipperItemAddress.setText(itinerary.getDestination().replace("&", ", "));
+            binding.travelViewFlipperItemDate.setText(itinerary.getDateString(itinerary.getCreatedDate()));
+            binding.travelViewFlipperItemPopularity.setText(itinerary.getPopularity() + "");
+            int finalIndex = index;
             binding.travelViewFlipperItem.setOnClickListener(v ->
-                    listener.onItemClick(itineraries.get(position), position, binding.travelViewFlipperItem)
+                    listener.onItemClick(itinerary, finalIndex, binding.travelViewFlipperItem)
             );
         }
-    }
-
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
     }
 
 }
