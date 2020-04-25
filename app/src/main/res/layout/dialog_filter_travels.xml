@@ -201,11 +201,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             style="@style/RedTextButton"
             app:rippleColor="@color/red_bg_lighter"
-            android:text="@string/dialog_button_reset"
+            android:text="@string/dialog_button_clear"
             android:fontFamily="@font/raleway_bold"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/dialog_filter_travels_apply_button"
+            android:id="@+id/dialog_filter_travels_save_button"
             android:layout_width="@dimen/dialog_button_width"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -213,14 +213,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             style="@style/RedTextButton"
             app:rippleColor="@color/red_bg_lighter"
-            android:text="@string/dialog_button_apply"
+            android:text="@string/dialog_button_save"
             android:fontFamily="@font/raleway_bold"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_filter_travels_cancel_button"
             android:layout_width="@dimen/dialog_button_width"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/dialog_filter_travels_apply_button"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_filter_travels_save_button"
             app:layout_constraintStart_toEndOf="@+id/dialog_filter_travels_clear_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

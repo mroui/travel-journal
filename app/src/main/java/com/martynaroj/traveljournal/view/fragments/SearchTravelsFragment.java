@@ -333,7 +333,7 @@ public class SearchTravelsFragment extends BaseFragment implements View.OnClickL
             setTagsView(binding.dialogFilterTravelsTagsInput);
             fillFilterInputs(binding);
             binding.dialogFilterTravelsCancelButton.setOnClickListener(view -> dialog.dismiss());
-            binding.dialogFilterTravelsApplyButton.setOnClickListener(view -> {
+            binding.dialogFilterTravelsSaveButton.setOnClickListener(view -> {
                 validateFilters(
                         binding.dialogFilterTravelsDurationFromInput,
                         binding.dialogFilterTravelsDurationToInput,

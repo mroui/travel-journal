@@ -312,8 +312,7 @@
     <string name="dialog_button_no_thanks">NO THANKS</string>
     <string name="dialog_button_previous">PREVIOUS</string>
     <string name="dialog_button_next">NEXT</string>
-    <string name="dialog_button_apply">APPLY</string>
-    <string name="dialog_button_reset">RESET</string>
+    <string name="dialog_button_save">SAVE</string>
 
     <string name="create_travel_title">Create travel</string>
     <string name="create_travel_stage_0_title">Hey Traveler!</string>
