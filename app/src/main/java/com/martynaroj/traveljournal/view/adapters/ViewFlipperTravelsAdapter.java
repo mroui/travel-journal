@@ -57,16 +57,18 @@ public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
     @SuppressLint("SetTextI18n")
     @Override
     protected void bindView(View convertView, int position, int viewType) {
-        Glide.with(context).load(itineraries.get(position).getImage()).fitCenter()
-                .placeholder(R.drawable.no_image).centerCrop()
-                .into(binding.travelViewFlipperItemImage);
-        binding.travelViewFlipperItemName.setText(itineraries.get(position).getName());
-        binding.travelViewFlipperItemAddress.setText(itineraries.get(position).getDestination().replace("&", ", "));
-        binding.travelViewFlipperItemDate.setText(itineraries.get(position).getDateString(itineraries.get(position).getCreatedDate()));
-        binding.travelViewFlipperItemPopularity.setText(itineraries.get(position).getPopularity()+"");
-        binding.travelViewFlipperItem.setOnClickListener(v -> {
-            listener.onItemClick(itineraries.get(position), position, binding.travelViewFlipperItem);
-        });
+        if (position >= 0 && position < itineraries.size()) {
+            Glide.with(context).load(itineraries.get(position).getImage()).fitCenter()
+                    .placeholder(R.drawable.no_image).centerCrop()
+                    .into(binding.travelViewFlipperItemImage);
+            binding.travelViewFlipperItemName.setText(itineraries.get(position).getName());
+            binding.travelViewFlipperItemAddress.setText(itineraries.get(position).getDestination().replace("&", ", "));
+            binding.travelViewFlipperItemDate.setText(itineraries.get(position).getDateString(itineraries.get(position).getCreatedDate()));
+            binding.travelViewFlipperItemPopularity.setText(itineraries.get(position).getPopularity() + "");
+            binding.travelViewFlipperItem.setOnClickListener(v ->
+                    listener.onItemClick(itineraries.get(position), position, binding.travelViewFlipperItem)
+            );
+        }
     }
 
 
