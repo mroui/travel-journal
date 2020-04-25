@@ -56,6 +56,7 @@
     <style name="DateTimePicker" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorAccent">@color/main_yellow</item>
         <item name="colorPrimary">@color/main_yellow</item>
+        <item name="android:buttonBarButtonStyle">@style/YellowTextButton</item>
     </style>
 
     <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
