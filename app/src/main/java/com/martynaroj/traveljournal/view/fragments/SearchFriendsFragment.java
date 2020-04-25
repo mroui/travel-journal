@@ -108,11 +108,13 @@ public class SearchFriendsFragment extends BaseFragment {
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 int totalNumberOfItems = adapter.getItemCount();
-                if (totalNumberOfItems == 0) {
-                    binding.searchFriendsMessage.setVisibility(View.VISIBLE);
-                    binding.searchFriendsMessage.setText(getResources().getString(R.string.search_friends_no_results));
-                } else {
-                    binding.searchFriendsMessage.setVisibility(View.GONE);
+                if (binding != null) {
+                    if (totalNumberOfItems == 0) {
+                        binding.searchFriendsMessage.setVisibility(View.VISIBLE);
+                        binding.searchFriendsMessage.setText(getResources().getString(R.string.search_friends_no_results));
+                    } else {
+                        binding.searchFriendsMessage.setVisibility(View.GONE);
+                    }
                 }
             }
         });
