@@ -583,6 +583,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void stopProgressBar() {
         getProgressBarInteractions().stopProgressBar(binding.getRoot(), binding.profileProgressbarLayout, binding.profileProgressbar);
+        if (!user.isEmailAvailableForUser(loggedUser))
+            disableView(binding.profileContact);
     }
 
 
