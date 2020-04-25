@@ -245,7 +245,7 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
             itineraries = adapter.getList();
             setBindingData(itineraries);
             updateUser(true, user, Constants.DB_TRAVELS, itineraries);
-            updateUsersSavedTravels(itinerary.getId(), true);
+            updateUsersSavedTravels(itinerary, true);
             removeItinerary(itinerary);
         } else {
             adapter.remove(index);
@@ -289,13 +289,17 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    private void updateUsersSavedTravels(String value, boolean all) {
-        userViewModel.getUsersWhereArrayContains(Constants.DB_SAVED_TRAVELS, value);
+    private void updateUsersSavedTravels(Itinerary itinerary, boolean all) {
+        userViewModel.getUsersWhereArrayContains(Constants.DB_SAVED_TRAVELS, itinerary.getId());
         userViewModel.getUsersList().observe(getViewLifecycleOwner(), users -> {
             if (users != null)
                 for (User user : users) {
                     if (all || !user.getFriends().contains(this.loggedUser.getUid())) {
-                        user.getSavedTravels().remove(value);
+                        user.getSavedTravels().remove(itinerary.getId());
+                        itinerary.subtractPopularity();
+                        itineraryViewModel.updateItinerary(itinerary, new HashMap<String, Object>(){{
+                            put(Constants.DB_POPULARITY, itinerary.getPopularity());
+                        }});
                         updateUser(false, user, Constants.DB_SAVED_TRAVELS, user.getSavedTravels());
                     }
                 }
@@ -313,10 +317,10 @@ public class TravelsListFragment extends BaseFragment implements View.OnClickLis
         updateUserLists();
         switch (Privacy.values()[privacy]) {
             case ONLY_ME:
-                updateUsersSavedTravels(itinerary.getId(), true);
+                updateUsersSavedTravels(itinerary, true);
                 break;
             case FRIENDS:
-                updateUsersSavedTravels(itinerary.getId(), false);
+                updateUsersSavedTravels(itinerary, false);
                 break;
             case PUBLIC:
                 break;

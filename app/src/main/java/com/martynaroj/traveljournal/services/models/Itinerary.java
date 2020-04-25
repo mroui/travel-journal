@@ -209,6 +209,12 @@ public class Itinerary extends BaseObservable implements Serializable {
     }
 
 
+    public void subtractPopularity() {
+        this.popularity -= 1;
+        notifyPropertyChanged(BR.popularity);
+    }
+
+
     @Bindable
     public long getDaysAmount() {
         return daysAmount;
