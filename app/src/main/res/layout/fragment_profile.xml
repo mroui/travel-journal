@@ -84,26 +84,27 @@
                     android:visibility="@{user.isUserProfile(loggedUser) &amp;&amp; user.hasNotifications() ? View.VISIBLE : View.GONE}"
                     android:background="@drawable/notifications_badge"/>
 
-                <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
-                    android:id="@+id/profile_user_details_container"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/profile_user_details_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    style="@style/ms9_DefaultShadowStyle"
-                    app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
-                    app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+                    android:layout_marginStart="@dimen/margin_regular"
+                    android:layout_marginEnd="@dimen/margin_regular"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginBottom="@dimen/margin_tiny"
+                    android:background="@color/white"
+                    app:cardUseCompatPadding="true"
+                    app:cardElevation="@dimen/cardview_default_elevation"
+                    app:cardCornerRadius="@dimen/corner_radius_tiny"
+                    tools:ignore="PrivateResource">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/profile_user_details"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/profile_user_details_height"
-                        android:layout_marginStart="@dimen/margin_regular"
-                        android:layout_marginEnd="@dimen/margin_regular"
-                        android:layout_marginTop="100dp"
-                        android:layout_marginBottom="@dimen/margin_tiny"
-                        android:background="@color/white">
+                        android:layout_height="@dimen/profile_user_details_height">
 
                         <TextView
                             android:id="@+id/profile_username"
@@ -225,14 +226,14 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+                </androidx.cardview.widget.CardView>
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profile_image"
                     android:layout_width="@dimen/profile_user_image_size"
                     android:layout_height="@dimen/profile_user_image_size"
-                    app:layout_constraintStart_toStartOf="@+id/profile_user_details_container"
-                    app:layout_constraintEnd_toEndOf="@+id/profile_user_details_container"
+                    app:layout_constraintStart_toStartOf="@+id/profile_user_details_layout"
+                    app:layout_constraintEnd_toEndOf="@+id/profile_user_details_layout"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="@dimen/profile_user_image_margin_top"
                     android:contentDescription="@string/profile_image"
@@ -252,7 +253,7 @@
                     android:layout_marginEnd="@dimen/margin_regular"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_user_details_container"
+                    app:layout_constraintTop_toBottomOf="@+id/profile_user_details_layout"
                     app:tagTextGravity="center"
                     app:tagMargin="@dimen/margin_smaller"
                     app:rowMargin="@dimen/margin_smaller"

@@ -44,7 +44,7 @@
                 android:textSize="@dimen/text_bigger"
                 android:textColor="@color/black"/>
 
-            <com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/search_friends_search_view_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,21 +52,21 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_friends_title"
                 android:layout_marginTop="@dimen/margin_regular"
-                style="@style/ms9_DefaultShadowStyle"
-                app:ms9_shadowTranslationZ="@dimen/shadow_translation_z_minimal"
-                app:ms9_shadowElevation="@dimen/shadow_elevation_minimal">
+                android:background="@color/white"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="@dimen/cardview_default_elevation"
+                app:cardCornerRadius="@dimen/corner_radius_tiny"
+                tools:ignore="PrivateResource">
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_friends_search_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_tiny"
-                    android:background="@color/white"
                     app:queryBackground="@color/white"
                     app:queryHint="@string/search"
                     app:iconifiedByDefault="false"/>
 
-            </com.h6ah4i.android.materialshadowninepatch.MaterialShadowContainerView>
+            </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_friends_recycler_view"
