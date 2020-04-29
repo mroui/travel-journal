@@ -228,7 +228,6 @@ public class ProfileSettingsFragment extends BaseFragment implements View.OnClic
                 binding.profileSettingsAccountEmailConfirmLayout);
         new FormHandler(getContext()).addWatcher(binding.profileSettingsAccountUsernameInput,
                 binding.profileSettingsAccountUsernameLayout);
-        binding.profileSettingsAccountPasswordStrengthMeter.setEditText(binding.profileSettingsAccountPasswordInput);
         binding.profileSettingsArrowButton.setOnClickListener(this);
         binding.profileSettingsPersonalPictureSection.setOnClickListener(this);
         binding.profileSettingsPersonalLocationButton.setOnClickListener(this);

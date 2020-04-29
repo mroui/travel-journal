@@ -85,7 +85,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         binding.signupSignUpButton.setOnClickListener(this);
         binding.signupGoogleButton.setOnClickListener(this);
         binding.signupLogInButton.setOnClickListener(this);
-        binding.signupPasswordStrengthMeter.setEditText(binding.signupPasswordInput);
     }
 
 

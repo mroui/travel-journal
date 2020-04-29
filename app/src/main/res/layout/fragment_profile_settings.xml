@@ -720,28 +720,13 @@
                             android:inputType="textPassword"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <se.aaro.gustav.passwordstrengthmeter.PasswordStrengthMeter
-                        android:id="@+id/profile_settings_account_password_strength_meter"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/profile_settings_account_password_layout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="1dp"
-                        app:strengthBarHeight="4dp"
-                        app:animateChanges="true"
-                        app:showStrengthLabel="true"
-                        app:showStrengthBar="true"
-                        app:animationDuration="250"
-                        app:labelTextSize="@dimen/text_small"/>
-
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/profile_settings_account_password_confirm_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/profile_settings_account_password_strength_meter"
+                        app:layout_constraintTop_toBottomOf="@id/profile_settings_account_password_layout"
                         style="@style/TextInput"
                         android:layout_marginTop="@dimen/margin_tiny"
                         app:hintEnabled="false"
