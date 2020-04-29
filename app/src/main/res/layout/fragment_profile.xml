@@ -238,11 +238,13 @@
                     android:layout_marginTop="@dimen/profile_user_image_margin_top"
                     android:contentDescription="@string/profile_image"
                     app:imageUrl="@{user.photo}"
+                    android:elevation="@dimen/elevation_small"
                     app:civ_border_width="1dp"
                     app:civ_border_color="@color/white"
                     app:civ_shadow="true"
                     app:civ_shadow_radius="10"
-                    app:civ_shadow_color="@color/gray"/>
+                    app:civ_shadow_color="@color/gray"
+                    tools:ignore="UnusedAttribute" />
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/profile_preferences"

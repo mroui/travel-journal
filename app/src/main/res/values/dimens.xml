@@ -94,5 +94,6 @@
 
     <dimen name="details_hashtag_view_height">104dp</dimen>
     <dimen name="travel_tags_view_height">104dp</dimen>
+    <dimen name="elevation_small">4dp</dimen>
 
 </resources>
