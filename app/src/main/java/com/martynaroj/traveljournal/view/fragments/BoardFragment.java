@@ -138,9 +138,11 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     private void observeUserChanges() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             this.user = user;
-            initContentData();
             if (user != null && user.getActiveTravelId() != null && !user.getActiveTravelId().equals(""))
                 loadTravel(user.getActiveTravelId());
+            else
+                this.travel = null;
+            initContentData();
         });
     }
 
