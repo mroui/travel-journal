@@ -168,7 +168,10 @@ public class TravelFragment extends BaseFragment implements View.OnClickListener
                 downloadFile();
                 break;
             case R.id.travel_owner_value:
-                changeFragment(ProfileFragment.newInstance(owner));
+                if (owner.equals(user))
+                    showSnackBar(getResources().getString(R.string.messages_its_you), Snackbar.LENGTH_SHORT);
+                else
+                    changeFragment(ProfileFragment.newInstance(owner));
                 break;
             case R.id.travel_tags_see_all_button:
                 seeAllTags();
