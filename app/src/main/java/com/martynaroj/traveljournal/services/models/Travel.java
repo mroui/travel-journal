@@ -25,21 +25,21 @@ import java.util.concurrent.TimeUnit;
 @IgnoreExtraProperties
 public class Travel extends BaseObservable implements Serializable {
 
-    private String id;
-    private String owner;
-    private String name;
-    private String image;
-    private long datetimeFrom;
-    private long datetimeTo;
-    private String destination;
+    String id;
+    String owner;
+    String name;
+    String image;
+    long datetimeFrom;
+    long datetimeTo;
+    String destination;
     private String transport;
     private String accommodation;
     private Double budget;
-    private List<String> tags;
+    List<String> tags;
     private List<PackingCategory> packingList;
     private boolean packing;
     private List<String> days;
-    private String description;
+    String description;
 
 
     public Travel() {

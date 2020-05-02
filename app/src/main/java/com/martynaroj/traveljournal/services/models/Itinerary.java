@@ -2,12 +2,12 @@ package com.martynaroj.traveljournal.services.models;
 
 import android.annotation.SuppressLint;
 
-import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
+import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -16,22 +16,26 @@ import java.util.Calendar;
 import java.util.List;
 
 @IgnoreExtraProperties
-public class Itinerary extends BaseObservable implements Serializable {
+public class Itinerary extends Travel implements Serializable {
 
-    private String id;
-    private String owner;
-    private String name;
-    private String image;
-    private long datetimeFrom;
-    private long datetimeTo;
-    private String destination;
-    private String description;
-    private List<String> tags;
     private String file;
     private int privacy;
     private long createdDate;
     private long popularity;
     private long daysAmount;
+
+    @Exclude
+    private String transport;
+    @Exclude
+    private String accommodation;
+    @Exclude
+    private Double budget;
+    @Exclude
+    private List<PackingCategory> packingList;
+    @Exclude
+    private boolean packing;
+    @Exclude
+    private List<String> days;
 
 
     private Itinerary() {
