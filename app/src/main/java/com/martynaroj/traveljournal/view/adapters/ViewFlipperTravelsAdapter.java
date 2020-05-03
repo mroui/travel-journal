@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-
 import com.asksira.loopingviewpager.LoopingPagerAdapter;
 import com.bumptech.glide.Glide;
 import com.martynaroj.traveljournal.R;
@@ -42,29 +40,10 @@ public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
     }
 
 
-    @Override
-    public int getCount() {
-        return itineraries.size() == 0 ? 0 : itineraries.size() + 2;
-    }
-
-
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view.equals(object);
-    }
-
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void bindView(View convertView, int position, int viewType) {
-        int index = position;
-        if (position == 0) {
-            index = itineraries.size() - 1;
-        } else if (position == itineraries.size() + 1) {
-            index = 0;
-        } else
-            index = position - 1;
-        Itinerary itinerary = itineraries.get(index);
+        Itinerary itinerary = itineraries.get(position);
         if (itinerary != null) {
             Glide.with(context).load(itinerary.getImage()).fitCenter()
                     .placeholder(R.drawable.no_image).centerCrop()
@@ -73,9 +52,8 @@ public class ViewFlipperTravelsAdapter extends LoopingPagerAdapter<Itinerary> {
             binding.travelViewFlipperItemAddress.setText(itinerary.getDestination().replace("&", ", "));
             binding.travelViewFlipperItemDate.setText(itinerary.getDateString(itinerary.getCreatedDate()));
             binding.travelViewFlipperItemPopularity.setText(itinerary.getPopularity() + "");
-            int finalIndex = index;
             binding.travelViewFlipperItem.setOnClickListener(v ->
-                    listener.onItemClick(itinerary, finalIndex, binding.travelViewFlipperItem)
+                    listener.onItemClick(itinerary, position, binding.travelViewFlipperItem)
             );
         }
     }
