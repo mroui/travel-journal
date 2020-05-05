@@ -23,9 +23,9 @@ import com.martynaroj.traveljournal.R;
 import com.martynaroj.traveljournal.databinding.DialogAddPackingItemBinding;
 import com.martynaroj.traveljournal.databinding.DialogCustomBinding;
 import com.martynaroj.traveljournal.databinding.FragmentPackingListBinding;
+import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Itinerary;
 import com.martynaroj.traveljournal.services.models.Travel;
-import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
-import com.martynaroj.traveljournal.services.models.packing.PackingItem;
 import com.martynaroj.traveljournal.view.adapters.PackingAdapter;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.interfaces.IOnBackPressed;
@@ -123,8 +123,8 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
 
     private void initListData() {
         if (travel != null) {
-            Map<PackingCategory, List<PackingItem>> items = new HashMap<>();
-            for (PackingCategory category : travel.getPackingList())
+            Map<Day.PackingCategory, List<Itinerary.PackingItem>> items = new HashMap<>();
+            for (Day.PackingCategory category : travel.getPackingList())
                 items.put(category, category.getItems());
             adapter = new PackingAdapter(getContext(), travel.getPackingList(), items);
             binding.packingListExpandableList.setAdapter(adapter);
@@ -259,8 +259,8 @@ public class PackingListFragment extends BaseFragment implements View.OnClickLis
     private void addItem(TextInputEditText nameInput, MaterialAutoCompleteTextView categoryInput) {
         String itemName = nameInput.getText() != null ? nameInput.getText().toString() : "";
         String categoryName = categoryInput.getText() != null ? categoryInput.getText().toString() : "";
-        PackingCategory newCategory = new PackingCategory(categoryName);
-        PackingItem newItem = new PackingItem(itemName);
+        Day.PackingCategory newCategory = new Day.PackingCategory(categoryName);
+        Itinerary.PackingItem newItem = new Itinerary.PackingItem(itemName);
         if (!adapter.getGroupNamesList().contains(categoryName))
             adapter.addGroup(newCategory);
         adapter.addItem(newCategory, newItem);

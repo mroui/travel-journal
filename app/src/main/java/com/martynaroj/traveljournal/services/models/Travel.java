@@ -12,7 +12,6 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.view.others.interfaces.Constants;
 
 import java.io.Serializable;
@@ -36,7 +35,7 @@ public class Travel extends BaseObservable implements Serializable {
     private String accommodation;
     private Double budget;
     List<String> tags;
-    private List<PackingCategory> packingList;
+    private List<Day.PackingCategory> packingList;
     private boolean packing;
     private List<String> days;
     String description;
@@ -210,12 +209,12 @@ public class Travel extends BaseObservable implements Serializable {
 
 
     @Bindable
-    public List<PackingCategory> getPackingList() {
+    public List<Day.PackingCategory> getPackingList() {
         return packingList;
     }
 
 
-    public void setPackingList(List<PackingCategory> packingList) {
+    public void setPackingList(List<Day.PackingCategory> packingList) {
         this.packingList = packingList;
         notifyPropertyChanged(BR.packingList);
     }

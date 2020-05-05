@@ -10,8 +10,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.martynaroj.traveljournal.R;
-import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
-import com.martynaroj.traveljournal.services.models.packing.PackingItem;
+import com.martynaroj.traveljournal.services.models.Day;
+import com.martynaroj.traveljournal.services.models.Itinerary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,11 @@ import java.util.Map;
 public class PackingAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<PackingCategory> listGroup;
-    private Map<PackingCategory, List<PackingItem>> listItem;
+    private List<Day.PackingCategory> listGroup;
+    private Map<Day.PackingCategory, List<Itinerary.PackingItem>> listItem;
 
-    public PackingAdapter(Context context, List<PackingCategory> listGroup,
-                          Map<PackingCategory, List<PackingItem>> listItem) {
+    public PackingAdapter(Context context, List<Day.PackingCategory> listGroup,
+                          Map<Day.PackingCategory, List<Itinerary.PackingItem>> listItem) {
         this.context = context;
         this.listGroup = listGroup;
         this.listItem = listItem;
@@ -39,20 +39,20 @@ public class PackingAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupIndex) {
-        List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+        List<Itinerary.PackingItem> children = listItem.get(listGroup.get(groupIndex));
         return children != null ? children.size() : 0;
     }
 
 
     @Override
-    public PackingCategory getGroup(int groupIndex) {
+    public Day.PackingCategory getGroup(int groupIndex) {
         return listGroup.get(groupIndex);
     }
 
 
     @Override
-    public PackingItem getChild(int groupIndex, int itemIndex) {
-        List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+    public Itinerary.PackingItem getChild(int groupIndex, int itemIndex) {
+        List<Itinerary.PackingItem> children = listItem.get(listGroup.get(groupIndex));
         return children != null ? children.get(itemIndex) : null;
     }
 
@@ -78,7 +78,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
     public View getGroupView(int groupIndex, boolean b, View view, ViewGroup viewGroup) {
-        final PackingCategory category = getGroup(groupIndex);
+        final Day.PackingCategory category = getGroup(groupIndex);
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -95,7 +95,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getChildView(int groupIndex, int itemIndex, boolean b, View view, ViewGroup viewGroup) {
-        final PackingItem item = getChild(groupIndex, itemIndex);
+        final Itinerary.PackingItem item = getChild(groupIndex, itemIndex);
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -122,10 +122,10 @@ public class PackingAdapter extends BaseExpandableListAdapter {
 
 
     private long getUncheckedChildCount(int groupIndex) {
-        List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+        List<Itinerary.PackingItem> children = listItem.get(listGroup.get(groupIndex));
         if (children != null) {
             long size = 0;
-            for (PackingItem item : children)
+            for (Itinerary.PackingItem item : children)
                 if (!item.isChecked())
                     size++;
             return size;
@@ -139,7 +139,7 @@ public class PackingAdapter extends BaseExpandableListAdapter {
             listItem.remove(listGroup.get(groupIndex));
             listGroup.remove(groupIndex);
         } else {
-            List<PackingItem> children = listItem.get(listGroup.get(groupIndex));
+            List<Itinerary.PackingItem> children = listItem.get(listGroup.get(groupIndex));
             if (children != null)
                 children.remove(itemIndex);
         }
@@ -147,29 +147,29 @@ public class PackingAdapter extends BaseExpandableListAdapter {
     }
 
 
-    public List<PackingCategory> getList() {
+    public List<Day.PackingCategory> getList() {
         return listGroup;
     }
 
 
     public List<String> getGroupNamesList() {
         List<String> groupsNames = new ArrayList<>();
-        for(PackingCategory category : getList())
+        for(Day.PackingCategory category : getList())
             groupsNames.add(category.getName());
         return groupsNames;
     }
 
 
-    public void addGroup(PackingCategory newCategory) {
+    public void addGroup(Day.PackingCategory newCategory) {
         listGroup.add(newCategory);
         listItem.put(newCategory, new ArrayList<>());
         notifyDataSetChanged();
     }
 
 
-    public void addItem(PackingCategory group, PackingItem item) {
+    public void addItem(Day.PackingCategory group, Itinerary.PackingItem item) {
         int groupIndex = getGroupNamesList().indexOf(group.getName());
-        List<PackingItem> items = listItem.get(listGroup.get(groupIndex));
+        List<Itinerary.PackingItem> items = listItem.get(listGroup.get(groupIndex));
         if (items != null)
             items.add(item);
         notifyDataSetChanged();

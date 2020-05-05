@@ -2,12 +2,12 @@ package com.martynaroj.traveljournal.services.models;
 
 import android.annotation.SuppressLint;
 
+import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.martynaroj.traveljournal.BR;
-import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -31,7 +31,7 @@ public class Itinerary extends Travel implements Serializable {
     @Exclude
     private Double budget;
     @Exclude
-    private List<PackingCategory> packingList;
+    private List<Day.PackingCategory> packingList;
     @Exclude
     private boolean packing;
     @Exclude
@@ -258,4 +258,33 @@ public class Itinerary extends Travel implements Serializable {
         return count;
     }
 
+    public static class PackingItem extends BaseObservable implements Serializable {
+
+        private String name;
+        private boolean checked;
+
+        public PackingItem() {
+        }
+
+
+        public PackingItem(String name) {
+            this.name = name;
+        }
+
+        @Bindable
+        public String getName() {
+            return name;
+        }
+
+        @Bindable
+        public boolean isChecked() {
+            return checked;
+        }
+
+        public void setChecked(boolean checked) {
+            this.checked = checked;
+            notifyPropertyChanged(BR.checked);
+        }
+
+    }
 }

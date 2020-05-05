@@ -25,7 +25,6 @@ import com.martynaroj.traveljournal.services.models.Address;
 import com.martynaroj.traveljournal.services.models.Day;
 import com.martynaroj.traveljournal.services.models.Travel;
 import com.martynaroj.traveljournal.services.models.User;
-import com.martynaroj.traveljournal.services.models.packing.PackingCategory;
 import com.martynaroj.traveljournal.services.models.weatherAPI.WeatherResult;
 import com.martynaroj.traveljournal.view.base.BaseFragment;
 import com.martynaroj.traveljournal.view.others.classes.DialogHandler;
@@ -206,10 +205,10 @@ public class BoardFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private List<PackingCategory> getBasicPackingList() {
-        List<PackingCategory> basicList = new ArrayList<>();
+    private List<Day.PackingCategory> getBasicPackingList() {
+        List<Day.PackingCategory> basicList = new ArrayList<>();
         for (String category : getResources().getStringArray(R.array.packing_categories))
-            basicList.add(new PackingCategory(category));
+            basicList.add(new Day.PackingCategory(category));
         return basicList;
     }
 

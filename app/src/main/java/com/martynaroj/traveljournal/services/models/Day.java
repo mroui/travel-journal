@@ -162,4 +162,33 @@ public class Day extends BaseObservable implements Serializable {
         }
     }
 
+    public static class PackingCategory extends BaseObservable implements Serializable {
+
+        private String name;
+        private List<Itinerary.PackingItem> items;
+
+        public PackingCategory() {
+        }
+
+
+        public PackingCategory(String name) {
+            this.name = name;
+            items = new ArrayList<>();
+        }
+
+        @Bindable
+        public String getName() {
+            return name;
+        }
+
+        @Bindable
+        public List<Itinerary.PackingItem> getItems() {
+            return items;
+        }
+
+        public void addItem(Itinerary.PackingItem item) {
+            items.add(item);
+        }
+
+    }
 }
