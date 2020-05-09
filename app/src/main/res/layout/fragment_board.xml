@@ -27,15 +27,9 @@
         android:layout_width="match_parent"
         android:background="@color/white">
 
-        <ScrollView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:fillViewport="true"
-            tools:ignore="UselessParent">
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="@dimen/padding_regular">
 
                 <TextView
@@ -459,8 +453,6 @@
                     app:bmb_inFragment="true"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
 
         <FrameLayout
             android:id="@+id/board_progressbar_layout"
