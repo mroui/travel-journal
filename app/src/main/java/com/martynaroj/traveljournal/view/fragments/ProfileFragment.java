@@ -334,10 +334,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             notificationsDialog.setContentView(binding.getRoot());
             binding.dialogNotificationsOkButton.setOnClickListener(v -> notificationsDialog.dismiss());
             if (!notifications.isEmpty()) {
-                binding.dialogNotificationsNoResults.setVisibility(View.INVISIBLE);
+                binding.dialogNotificationsNoResults.setVisibility(View.GONE);
                 setNotificationsList(notifications);
             } else
-                binding.dialogNotificationsRecyclerView.setVisibility(View.INVISIBLE);
+                binding.dialogNotificationsRecyclerView.setVisibility(View.VISIBLE);
             notificationsDialog.show();
         }
     }
