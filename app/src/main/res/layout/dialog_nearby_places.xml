@@ -33,7 +33,7 @@
     <ListView
         android:id="@+id/dialog_nearby_places_list"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dialog_nearby_list_height"
+        android:layout_height="@dimen/dialog_list_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_nearby_places_desc"
         app:layout_constraintEnd_toEndOf="parent"
