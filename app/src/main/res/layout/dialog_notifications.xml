@@ -23,7 +23,8 @@
             android:layout_height="0dp"
             android:maxHeight="@dimen/dialog_list_height"
             android:layout_marginTop="@dimen/margin_regular"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/dialog_notifications_recycler_view"

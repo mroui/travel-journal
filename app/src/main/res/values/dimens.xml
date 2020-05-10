@@ -91,7 +91,7 @@
     <dimen name="home_search_travels_icon_size">40dp</dimen>
 
     <dimen name="dialog_list_height">350dp</dimen>
-    <dimen name="dialog_list_width">280dp</dimen>
+    <dimen name="dialog_list_width">300dp</dimen>
 
     <dimen name="details_hashtag_view_height">104dp</dimen>
     <dimen name="travel_tags_view_height">104dp</dimen>
