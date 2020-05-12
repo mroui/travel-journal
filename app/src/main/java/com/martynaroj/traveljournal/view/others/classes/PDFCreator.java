@@ -120,7 +120,7 @@ public class PDFCreator extends AsyncTask<Void, Void, Void> {
 
 
     private void createDayContent(Day day) {
-        long whatDay = travel.whatDay(travel.getDatetimeFrom(), day.getDate());
+        long whatDay = Travel.whatDay(travel.getDatetimeFrom(), day.getDate());
         List<Note> allNotes = day.getAllSortedNotes();
         if (!allNotes.isEmpty()) {
             addNewPage();
