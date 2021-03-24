@@ -13,8 +13,7 @@
     </b>
 </p>
 
-> Mobile application dedicated to people, who want to travel in an organized way, to be able to entirely enjoy the previously planned journeys, possessing all necessary data in one place. 
-It's an advanced equivalent of a travel journal with social functions.
+> Mobile application dedicated to people, who want to travel in an organized way, to be able to entirely enjoy the previously planned journeys, possessing all necessary data in one place. In one sentence it's an advanced equivalent of a travel journal with social functions.
 
 *Application was made as a part of my engineer's thesis.*
 
@@ -31,10 +30,40 @@ It's an advanced equivalent of a travel journal with social functions.
 * [License](#license)
 
 ## Introduction
+**Travel Journal** is an android mobile application that is literally...a travel journal. :frog: _What a surprise!_
+<br/>
+It's hard to describe the application in one word, so i'll try in more of them. So, let's start at the beginning. _Ekhem..._
+<br/><br/>
+**Travel Journal** is travel and social application for those, **who would like to plan it from the beginning** in a **organized** way and later **document** it in this way too. It's for those, who would like to feel like a **journalist**, **traveler of own journey**. :notebook:
+<br/>
+Starting from the beginning of our journey, the first step is to create a **traveler account**. It's possible either with an e-mail address and password, or by a Google account. We choose a catchy nickname and we can start our **adventure**! :rocket:
+<br/>
+It is also recommended to **complete your profile** with additional information so that others can also get to know you. Profile icon, short description, set location, preferences in form of tags like **#camping, #beach, #exploration, #landscape, #mountains**... all this can show **what kind of person** you are and what kind of traveling is **"yours"**. :smiley: :two_hearts:
+<br/>
+Every user has the opportunity to create a **dream list** of **places to visit**. This is possible by setting **pins** on a special **map**. These can be small trips in the form of a dream cafe, but also large travels to **unexplored** places, beyond our reach at the moment and those remaining in the sphere of dreams. By **adding pins** with an added description and a properly selected color, **you will never forget about them**! :star:
+<br/>
+Do you already have an initial **travel plan**? Yes? So **let's start planning!** Add fundamental informations like destination, date of departure and return with hours, recognizable name, and also tags with pictorial photo, which are identify your **journey**! It's good to add transport and accommodation details like types, possible contact details and also files f.e. tickets. **It's really helpful to have it all in one place.** In the application it is also possible to manage the budget for the trip, so don't forget to fill it too. Have not planned detailed informations yet? No problem, complete or edit them later. **No rush, just still be organized.** :raised_hands:
+<br/>
+**The travel is planned**, it's time to **start packing**. Create a packing list divided into specific categories. Check off items that you have already packed. Use those offered by the application and **you will not forget anything**. :bikini: :handbag:
+<br/>
+...And that's what the first day of the trip was about. You have tickets **at hand** that you can download at any time. You have all the information entered and you have finished the packing list. **The journey has begun!** Document your trip by: writing notes, adding journal entries, adding photos and visited places. Evaluate each of the days - was it boring / interesting / funny / cheerful / sad? **Document all days from your trip to the end  and create memories by journal entries.** :memo:
+<br/><br/>
+**Use functions that will be useful on every trip.**
+* :world_map: **The map** will allow you to orientate yourself in the field, it will show your location as well as places in the vicinity of the type you are looking for. 
+* :money_with_wings: **The currency converter** will allow you to check the current exchange rate.
+* :speech_balloon: **The translator** will help you abroad.
+* :sunrise: **The alarm** will send you a notification at the given time with a note made by you. You will never be late for a trip / plane / sunrise / whatever - again!
+* :sunny: The sky is overcast? Or maybe you are planning something until tomorrow? Check **the weather forecast** and be forewarned. 
 
-The collected data will be used to create final document, which could be an album with memories, travel journal or to other users an itinerary for their own trips. This will contribute to the creation of a community that shares itineraries with others and uses these already shared.
-
-The main assumption of the application is to enable the consumer to conveniently and easily coordinate, document and plan travel with quick access to the necessary functions and data, which would help to enjoy the trip in a pleasant and clear way.
+**The journey is over** - summarize it and write conclusions at note with what you saw, how it was and whether you liked it, what is worth to see, who do you recommend it to and what someone should be careful about. Finally, **the collected data will be used to create document**, which could be an **album with memories - a travel journal**. All notes, journal entries, photos, visited and rated places and days - everything will be written to one simple **PDF document**, which you can download at any time.  :open_book: :eyes:
+<br/>
+What is also important that it's also possible to **share this document with other users** as **an itinerary for their own trips**! This will contribute to the creation of a **community that shares itineraries with others and uses these already shared**. Everyone (or only your friends) can use it to plan their own travels by reading your notes, visiting places you recommend. You also can be **inspired by the trips created by other users**. This can be of great help in planning future adventures! :bomb: :boom: 
+<br/>
+You can **browse such travel plans** created and shared by the community, **search for specific ones** by filling in the appropriate filters, as well as **sort by the newest, closest, most popular**. You can **save the ones that catch your eye** for quick access later or **download travel plan to your smartphone.** :relieved: :iphone:
+<br/>
+As mentioned before, you can also **add other users to your friends list**. you can **find them** by searching by their name or by **discovering people** who share their travel plans. You **send an invitation** to such people and you can accept / reject such an invitation. You can also **contact with people** if they shared their email address. By creating such small groups of friends, we can **track their trips** and **check their travel status**. In addition, they can only share their plan with friends that we will then have access to! :astonished: :revolving_hearts:
+<br/><br/>
+_The main assumption of the application is to enable the consumer to conveniently and easily coordinate, document and plan travel with quick access to the necessary functions and data, which would help to enjoy the trip in a pleasant and clear way. All this was to combine social functions with the possibility of exchanging travel plans with others, communicating and creating small communities._
 
 ## Presentation
 
