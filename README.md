@@ -248,6 +248,30 @@ The presentation was placed on Google Drive and contains descriptions of functio
 * Ability to search for friends by username. 
 
 ## Database
+
+**The database consists of collections storing:**
+* Addresses - locations of places
+* Days - days of ongoing travel
+* Itineraries - finished travel plans with ending document
+* Markers - pins to set on the map with dream places to visit
+* Notifications - about friend's travel status or invitation to friends list
+* Reservations - transports and accommodations of travel
+* Travels
+* Users
+
+Each collection has a set of documents with a given identifier. It is in the document that the data of a specific object are contained. The illustration below shows the database and the developed structure of one of the Addresses collection documents.
+
+<p align="center">
+	<img src="./resources/database/travel_journal_db_01.png" alt="Travel Journal database"/>
+</p>
+
+The rest of the collections is shown in the image below.
+
+<p align="center">
+	<img src="./resources/database/travel_journal_db_02.png" alt="Travel Journal database"/>
+	<img src="./resources/database/travel_journal_db_03.png" alt="Travel Journal database"/>
+</p>
+
 ## Screenshots
 [Move on quickly to setup](#setup)
 <p align="center">
