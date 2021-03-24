@@ -291,5 +291,32 @@ The rest of the collections is shown in the image below.
 	<img src="./resources/screenshots/screenshot_travel_journal_14.png" alt="Travel Journal app screenshot"/>
 </p>
 
-
 ## Setup
+* [Install Android Studio](https://developer.android.com/studio/install.html?pkg=studio)
+* Clone repository
+```
+git clone https://github.com/mroui/travel-journal.git
+```
+* Import project by Android Studio
+* [Install the Google Play services SDK](https://developer.android.com/studio/intro/update.html#sdk-manager)
+* [Add Firebase to the project](https://firebase.google.com/docs/android/setup)
+    * Add the ```google-services.json``` file to the ```app``` directory
+    * [Enable Firebase Authentication](https://firebase.google.com/docs/auth/android/start)
+        * Enable Email/Password & Google sign-in providers
+    * Enable Cloud Firestore database [Instruction](https://firebase.google.com/docs/firestore/quickstart)
+    * [Enable Cloud Storage](https://firebase.google.com/docs/storage/android/start)
+* Add Google Maps Platform modules:
+    * [Maps SDK for Android Step 3 & 4](https://developers.google.com/maps/documentation/android-sdk/start)
+    * [Places API Step 2](https://developers.google.com/maps/documentation/places/android-sdk/start)
+* Get [OpenWeatherMap](https://openweathermap.org/) API
+* Get [Yandex.Translate](https://cloud.yandex.com/docs/translate/) API
+* Create ```services.xml``` file in ```./app/src/main/res/values/```.
+The file should looks like:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_weather_api_key" translatable="false">PUT_KEY_HERE</string>
+    <string name="yandex_translate_api_key" translatable="false">PUT_KEY_HERE</string>
+</resources>
+```
+* Run with emulator or android device connected via usb
