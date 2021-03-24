@@ -15,7 +15,7 @@
 
 > Mobile application dedicated to people, who want to travel in an organized way, to be able to entirely enjoy the previously planned journeys, possessing all necessary data in one place. In one sentence it's an advanced equivalent of a travel journal with social functions.
 
-*Application was made as a part of my engineer's thesis.*
+*Application was made as a part of my Engineer's Thesis.*
 
 ## Table of contents
 * [Introduction](#introduction)
@@ -41,7 +41,7 @@ It is also recommended to **complete your profile** with additional information 
 <br/>
 Every user has the opportunity to create a **dream list** of **places to visit**. This is possible by setting **pins** on a special **map**. These can be small trips in the form of a dream cafe, but also large travels to **unexplored** places, beyond our reach at the moment and those remaining in the sphere of dreams. By **adding pins** with an added description and a properly selected color, **you will never forget about them**! :star:
 <br/>
-Do you already have an initial **travel plan**? Yes? So **let's start planning!** Add fundamental informations like destination, date of departure and return with hours, recognizable name, and also tags with pictorial photo, which are identify your **journey**! It's good to add transport and accommodation details like types, possible contact details and also files f.e. tickets. **It's really helpful to have it all in one place.** In the application it is also possible to manage the budget for the trip, so don't forget to fill it too. Have not planned detailed informations yet? No problem, complete or edit them later. **No rush, just still be organized.** :raised_hands:
+Do you already have an initial **travel plan**? Yes? So **let's start planning!** Add fundamental informations like destination, date of departure and return with hours, recognizable name, and also tags with pictorial photo, which identify your **journey**! It's good to add transport and accommodation details like types, possible contact details and also files f.e. tickets. **It's really helpful to have it all in one place.** In the application it is also possible to manage the budget for the trip, so don't forget to fill it too. Have not planned detailed informations yet? No problem, complete or edit them later. **No rush, just still be organized.** :raised_hands:
 <br/>
 **The travel is planned**, it's time to **start packing**. Create a packing list divided into specific categories. Check off items that you have already packed. Use those offered by the application and **you will not forget anything**. :bikini: :handbag:
 <br/>
@@ -56,16 +56,16 @@ Do you already have an initial **travel plan**? Yes? So **let's start planning!*
 
 **The journey is over** - summarize it and write conclusions at note with what you saw, how it was and whether you liked it, what is worth to see, who do you recommend it to and what someone should be careful about. Finally, **the collected data will be used to create document**, which could be an **album with memories - a travel journal**. All notes, journal entries, photos, visited and rated places and days - everything will be written to one simple **PDF document**, which you can download at any time.  :open_book: :eyes:
 <br/>
-What is also important that it's also possible to **share this document with other users** as **an itinerary for their own trips**! This will contribute to the creation of a **community that shares itineraries with others and uses these already shared**. Everyone (or only your friends) can use it to plan their own travels by reading your notes, visiting places you recommend. You also can be **inspired by the trips created by other users**. This can be of great help in planning future adventures! :bomb: :boom: 
+What is also important that it's possible to **share this document with other users** as **an itinerary for their own trips**! This will contribute to the creation of a **community that shares itineraries with others and uses these already shared**. Everyone (or only your friends) can use it to plan their own travels by reading your notes, visiting places you recommend. You also can be **inspired by the trips created by other users**. This can be of great help in planning future adventures! :bomb: :boom: 
 <br/>
 You can **browse such travel plans** created and shared by the community, **search for specific ones** by filling in the appropriate filters, as well as **sort by the newest, closest, most popular**. You can **save the ones that catch your eye** for quick access later or **download travel plan to your smartphone.** :relieved: :iphone:
 <br/>
-As mentioned before, you can also **add other users to your friends list**. you can **find them** by searching by their name or by **discovering people** who share their travel plans. You **send an invitation** to such people and you can accept / reject such an invitation. You can also **contact with people** if they shared their email address. By creating such small groups of friends, we can **track their trips** and **check their travel status**. In addition, they can only share their plan with friends that we will then have access to! :astonished: :revolving_hearts:
+As mentioned before, you can also **add other users to your friends list**. you can **find them** by searching their name or by **discovering people** who share their travel plans. You **send an invitation** to such people and you can accept / reject such an invitation. You can also **contact with people** if they shared their email address. By creating such small groups of friends, we can **track their trips** and **check their travel status**. In addition, they can only share their plan with friends that we will then have access to! :astonished: :revolving_hearts:
 <br/><br/>
 _The main assumption of the application is to enable the consumer to conveniently and easily coordinate, document and plan travel with quick access to the necessary functions and data, which would help to enjoy the trip in a pleasant and clear way. All this was to combine social functions with the possibility of exchanging travel plans with others, communicating and creating small communities._
 
 ## Presentation
-The presentation was placed on Google Drive and contains descriptions of functionalities with many GIFs straight from the application. [Check it out](https://drive.google.com/file/d/1lUZCNzaE11b7k1tHZqj14VzPzHPK9DiP/view?usp=sharing) :D
+The presentation was placed on Google Drive and contains descriptions of functionalities with many GIFs straight from the application. [Check it out](https://drive.google.com/file/d/1lUZCNzaE11b7k1tHZqj14VzPzHPK9DiP/view?usp=sharing) :smile:
 
 ## Assumptions
 #### Objectives:
@@ -130,7 +130,7 @@ The presentation was placed on Google Drive and contains descriptions of functio
 
 ## Features
 ##### :last_quarter_moon_with_face: Creating an account, logging in, registration
-* Creating an account, hereinafter referred to as an Traveler's account or profile:
+* Creating an account, hereinafter referred as an Traveler's account or profile:
     * By e-mail address and password, additionally specifying the username
     * By Google account
 * After registering with an e-mail address and password, account verification is required. The message with a link for verification will be sent to the provided e-mail
@@ -149,7 +149,7 @@ The presentation was placed on Google Drive and contains descriptions of functio
 * Access to the list of incoming notifications such as:
     * friendship invitation - the ability to accept and add someone to the friends list or decline the invitation
     * preview of friend's travel status
-* Possibility to send an invitation to the friends list - only in the case of a profile other than your own and no connection to a given profile (users are not friends)
+* Possibility to send an invitation to the friends list - only in the case of a profile other than yours and no connection to a given profile (users are not friends)
 * Access to the list of friends with the option of visiting selected profile or removing a person from the list (only in case of own profile)
 * Access to the list of user's own trips and those saved with the possibility of previewing the trip or deleting a given entity (only in case of own profile)
 * Access to the settings (only in case of own profile)
