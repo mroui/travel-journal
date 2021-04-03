@@ -22,7 +22,7 @@
 * [Presentation](#presentation)
 * [Assumptions](#assumptions)
 * [Requirements](#requirements)
-* [Tools&Technologies](#tools&technologies)
+* [Technologies](#technologies)
 * [Database](#database)
 * [Features](#features)
 * [Screenshots](#screenshots)
@@ -92,7 +92,7 @@ The presentation was placed on Google Drive and contains descriptions of functio
     * Granted permission to receive notifications for the alarm function.
     * To use Google services, the Google Play Services application must be installed 
 
-## Tools&Technologies
+## Technologies
 * Java 1.8
 * Android Studio 3.6.3
 * Gradle 3.6.3
